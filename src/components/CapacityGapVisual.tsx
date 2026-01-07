@@ -290,7 +290,13 @@ export const CapacityGapVisual: React.FC = () => {
 
                 {/* Expanded detail panel */}
                 {isActive && (
-                  <div className="detail-panel absolute top-full mt-6 w-64 md:w-80 p-5 bg-[#1E1C1A] border border-radiance-gold/30 rounded-xl shadow-2xl z-20" style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(232, 184, 74, 0.15)' }}>
+                  <div 
+                    className="detail-panel absolute top-full mt-6 w-64 md:w-80 p-5 rounded-xl shadow-2xl z-20 border border-radiance-gold/30" 
+                    style={{ 
+                      backgroundColor: '#0F0E0D',
+                      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 30px rgba(232, 184, 74, 0.15), inset 0 1px 0 rgba(255,255,255,0.05)' 
+                    }}
+                  >
                     <p className="text-text-secondary text-sm mb-4 leading-relaxed">
                       {stage.description}
                     </p>
@@ -300,7 +306,8 @@ export const CapacityGapVisual: React.FC = () => {
                       {stage.metrics.map((metric, i) => (
                         <div 
                           key={i}
-                          className="flex items-center justify-between p-2 bg-[#141210] rounded-lg"
+                          className="flex items-center justify-between p-2 rounded-lg"
+                          style={{ backgroundColor: '#0A0908' }}
                         >
                           <span className="text-text-muted text-xs">{metric.label}</span>
                           <div className="flex items-center gap-2">
@@ -319,7 +326,10 @@ export const CapacityGapVisual: React.FC = () => {
                     </div>
 
                     {/* Arrow pointer */}
-                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#1E1C1A] border-l border-t border-radiance-gold/30 rotate-45" />
+                    <div 
+                      className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 border-l border-t border-radiance-gold/30 rotate-45" 
+                      style={{ backgroundColor: '#0F0E0D' }}
+                    />
                   </div>
                 )}
               </div>
