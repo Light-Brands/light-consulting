@@ -9,7 +9,6 @@ import {
   Card,
   Tag,
   ServiceCard,
-  TestimonialCarousel,
   NewsletterCapture,
   LightbulbIcon,
   BlueprintIcon,
@@ -219,22 +218,80 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Featured Partnership Section */}
       <section className="section-spacing bg-depth-elevated">
-        <div className="container-wide">
-          <div className="text-center mb-12">
-            <Tag variant="default" className="mb-4">
-              Testimonials
+        <div className="container-narrow">
+          <div className="text-center">
+            <Tag variant="premium" className="mb-6">
+              Statement Project
             </Tag>
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-              What Our Clients Say
-            </h2>
-            <p className="text-text-secondary max-w-xl mx-auto">
-              Don't take our word for it—hear from business leaders who've experienced the transformation.
-            </p>
+            
+            {/* Featured Testimonial Card */}
+            <Card elevation="elevated" className="p-8 md:p-12 relative overflow-hidden max-w-3xl mx-auto">
+              {/* Decorative glow */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-radiance-gold/10 blur-3xl pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-radiance-amber/10 blur-3xl pointer-events-none" />
+              
+              {/* Large Quote Icon */}
+              <div className="flex justify-center mb-6">
+                <div className="w-16 h-16 rounded-full bg-radiance-gold/10 flex items-center justify-center">
+                  <svg className="w-8 h-8 text-radiance-gold" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                  </svg>
+                </div>
+              </div>
+              
+              {/* Quote */}
+              <blockquote className="text-text-primary text-xl md:text-2xl font-medium leading-relaxed mb-8 relative z-10 text-center">
+                "{TESTIMONIALS[0]?.quote}"
+              </blockquote>
+              
+              {/* Author - Centered */}
+              <div className="flex flex-col items-center gap-4 relative z-10">
+                {/* Avatar */}
+                <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-radiance-gold/30">
+                  <img
+                    src={TESTIMONIALS[0]?.avatar}
+                    alt={TESTIMONIALS[0]?.author}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      target.parentElement!.innerHTML = `<div class="w-full h-full bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center text-depth-base font-bold text-2xl">${TESTIMONIALS[0]?.author?.charAt(0) || 'J'}</div>`;
+                    }}
+                  />
+                </div>
+                
+                {/* Name and Company */}
+                <div className="text-center">
+                  <p className="text-text-primary font-semibold text-lg">{TESTIMONIALS[0]?.author}</p>
+                  <p className="text-text-muted text-sm mb-3">
+                    {TESTIMONIALS[0]?.role}
+                  </p>
+                  
+                  {/* Company Link - Prominent */}
+                  <a
+                    href={TESTIMONIALS[0]?.companyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-radiance-gold/10 hover:bg-radiance-gold/20 border border-radiance-gold/30 rounded-full text-radiance-gold font-semibold transition-all duration-300 group"
+                  >
+                    <span>Visit {TESTIMONIALS[0]?.company}</span>
+                    <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+              
+              {/* Divider */}
+              <div className="border-t border-depth-border mt-8 pt-6">
+                <p className="text-text-muted text-sm text-center">
+                  See how we helped transform Growth Mastery AI into a leader in AI-powered business growth
+                </p>
+              </div>
+            </Card>
           </div>
-
-          <TestimonialCarousel testimonials={TESTIMONIALS} />
         </div>
       </section>
 
