@@ -578,15 +578,55 @@ export const IMAGE_CONFIG = {
     },
     origin: {
       src: '/images/about/origin-story.jpg',
-      alt: 'Small spark of light expanding outward',
+      alt: 'Three flames joining to become one light',
       dimensions: '600x400',
-      prompt: 'Abstract illustration representing the origin of "Light Brand Consulting." A small spark or flame of warm golden light (#E8B84A) at the center, with gentle ripples of light expanding outward. The visual metaphor of an idea becoming something bigger. Perhaps suggest the shape of a lantern being lit or a single match igniting. Dark charcoal background with warm, hopeful illumination. The feeling is "the moment of founding, the beginning of the mission." Sophisticated and symbolic.',
+      prompt: 'Abstract illustration representing the origin of "Light Brand Consulting" - three families uniting with a shared mission. Three distinct but harmonious flames or light sources in warm gold (#E8B84A), amber (#D4944C), and cream (#FDF6E3) converging at the center to form one brilliant, unified light. The visual metaphor of families coming together, each bringing unique gifts that combine into something greater. Perhaps subtle suggestion of intertwining paths leading to the central illumination. Dark charcoal background with warm, hopeful glow. The feeling is "built upon families that care - united by purpose." Sophisticated, symbolic, and warm.',
     },
     industries: {
       src: '/images/about/industries-collage.jpg',
       alt: 'Abstract mosaic representing multiple industries',
       dimensions: '1000x400',
       prompt: 'Abstract collage or mosaic representing multiple industries served by an AI consulting firm. Eight interconnected abstract shapes, each with subtle visual hints of: healthcare (organic curves), finance (precise lines), e-commerce (flowing commerce), professional services (people shapes), manufacturing (geometric mechanics), media (flowing creativity), education (growth symbols), real estate (architectural forms). All rendered in warm golden (#E8B84A) and amber (#D4944C) light on charcoal background. Connected by subtle light threads suggesting shared principles across industries.',
+    },
+  },
+
+  // Founder Avatars
+  founders: {
+    danielLawless: {
+      src: '/images/founders/daniel-lawless.jpg',
+      alt: 'Daniel Lawless - Master Architect & Technologist',
+      dimensions: '400x400',
+      prompt: 'Professional headshot of Daniel Lawless, Master Architect and Technologist. A seasoned male technologist in his 40s-50s with 20+ years of experience. Warm and confident expression, approachable yet authoritative. Modern business casual attire. Warm natural lighting with golden hour quality. Slightly blurred professional background in earth tones. High-quality editorial portrait style. The feeling is "trusted technical leader who has seen it all." Sharp focus on eyes, genuine expression.',
+    },
+    jenniferLawless: {
+      src: '/images/founders/jennifer-lawless.jpg',
+      alt: 'Jennifer Lawless - Master of Relationships & Quantum Exploration',
+      dimensions: '400x400',
+      prompt: 'Professional headshot of Jennifer Lawless, Master of Relationships and Quantum Exploration. A warm and intuitive woman in her 40s-50s. Genuine smile, approachable yet wise expression that suggests deep inner knowing. Elegant business casual attire with perhaps a subtle crystal or meaningful jewelry. Warm soft lighting with golden quality. Slightly blurred warm-toned background. Editorial portrait photography style. The feeling is "someone who connects you to your inner technology."',
+    },
+    nicholasCourchesne: {
+      src: '/images/founders/nicholas-courchesne.jpg',
+      alt: 'Nicholas Courchesne - Master of Business Development',
+      dimensions: '400x400',
+      prompt: 'Professional headshot of Nicholas Courchesne, Master of Business Development. A strong, muscular man in his 30s-40s with a warm, genuine smile that reveals his big heart. Approachable and kind expression - the contrast between physical strength and gentle spirit should be evident. Smart casual attire. Warm natural lighting. Professional background. Editorial portrait style. The feeling is "don\'t let the muscles fool you - this is a man of light with a huge heart."',
+    },
+    nancyCourchesne: {
+      src: '/images/founders/nancy-courchesne.jpg',
+      alt: 'Nancy Courchesne - Master of Illumination',
+      dimensions: '400x400',
+      prompt: 'Professional headshot of Nancy Courchesne, Master of Illumination. A wise, intuitive woman in her 30s-40s with a warm and knowing expression. Elegant yet approachable attire. Soft golden lighting creating warmth that suggests her intuitive gift. Slightly blurred professional background. High-quality editorial portrait. The feeling is "someone who sees what others cannot and illuminates the right path."',
+    },
+    andreasDemou: {
+      src: '/images/founders/andreas-demou.jpg',
+      alt: 'Andreas Demou - Master of Technical Design',
+      dimensions: '400x400',
+      prompt: 'Professional headshot of Andreas Demou, Master of Technical Design and Frontend Development. A focused, powerful man in his 30s-40s with a calm and composed expression suggesting inner strength and mastery. A man of few words but great presence. Modern minimal attire. Clean professional lighting. Subtle background. Editorial portrait photography style. The feeling is "wields great power through body, mind, and spirit" - quiet confidence.',
+    },
+    mikeDemou: {
+      src: '/images/founders/mike-demou.jpg',
+      alt: 'Mike Demou - Master of Expression',
+      dimensions: '400x400',
+      prompt: 'Professional headshot of Mike Demou, Master of Expression. A creative, expressive man in his 30s-40s with an artistic yet professional demeanor. Warm confident smile. Stylish creative attire that shows personality. Warm lighting with artistic quality. Professional background. Editorial portrait style. The feeling is "someone who sees every brand and person as a piece of art waiting to be expressed."',
     },
   },
 
