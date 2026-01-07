@@ -359,6 +359,85 @@ export const INDUSTRIES_SERVED = [
 ];
 
 // ============================================================================
+// Industry AI Optimization Descriptions (for hover tooltips)
+// ============================================================================
+
+export const INDUSTRY_AI_INSIGHTS: Record<string, { headline: string; optimizations: string[] }> = {
+  'Healthcare & Life Sciences': {
+    headline: 'AI transforms patient care and operational efficiency',
+    optimizations: [
+      'Automated patient intake & documentation—reclaim 2+ hours daily per provider',
+      'Intelligent appointment scheduling that reduces no-shows by 30%',
+      'Clinical decision support from vast medical literature in seconds',
+      'Predictive analytics for patient readmission risk',
+    ],
+  },
+  'Financial Services': {
+    headline: 'AI accelerates decisions and deepens client relationships',
+    optimizations: [
+      'Automated compliance monitoring & regulatory reporting',
+      'Intelligent fraud detection with real-time transaction analysis',
+      'Personalized wealth management recommendations at scale',
+      'Document processing that turns days of analysis into minutes',
+    ],
+  },
+  'E-commerce & Retail': {
+    headline: 'AI creates hyper-personalized shopping experiences',
+    optimizations: [
+      'Dynamic product recommendations that boost AOV by 15-25%',
+      'Automated inventory forecasting reducing stockouts by 40%',
+      'AI-powered customer service handling 70% of inquiries instantly',
+      'Intelligent pricing optimization across thousands of SKUs',
+    ],
+  },
+  'Professional Services': {
+    headline: 'AI multiplies expertise and client capacity',
+    optimizations: [
+      'Proposal generation that captures your firm\'s voice and expertise',
+      'Research synthesis—hours of analysis compressed to minutes',
+      'Client communication drafting and follow-up automation',
+      'Knowledge management that makes your whole team\'s expertise searchable',
+    ],
+  },
+  'Manufacturing & Logistics': {
+    headline: 'AI optimizes every link in the supply chain',
+    optimizations: [
+      'Predictive maintenance reducing downtime by 25-40%',
+      'Demand forecasting with 95%+ accuracy',
+      'Route optimization saving 15% on logistics costs',
+      'Quality control using computer vision for defect detection',
+    ],
+  },
+  'Media & Entertainment': {
+    headline: 'AI amplifies creativity and audience engagement',
+    optimizations: [
+      'Content ideation and variation at unprecedented speed',
+      'Audience analytics revealing what resonates and why',
+      'Automated editing, transcription, and localization',
+      'Personalized content recommendations that increase engagement 3x',
+    ],
+  },
+  'Education & EdTech': {
+    headline: 'AI enables truly personalized learning at scale',
+    optimizations: [
+      'Adaptive learning paths that meet students where they are',
+      'Instant feedback on assignments and assessments',
+      'Administrative automation freeing educators to teach',
+      'Early intervention alerts for at-risk students',
+    ],
+  },
+  'Real Estate & PropTech': {
+    headline: 'AI transforms property insights and transactions',
+    optimizations: [
+      'Market analysis and property valuation in seconds, not days',
+      'Lead scoring that identifies serious buyers immediately',
+      'Automated document preparation for transactions',
+      'Virtual staging and property visualization at 1/10th the cost',
+    ],
+  },
+};
+
+// ============================================================================
 // Company Values (for About page)
 // ============================================================================
 

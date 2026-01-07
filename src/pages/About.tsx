@@ -3,7 +3,7 @@
  * Light Brand Consulting
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Card,
@@ -12,7 +12,7 @@ import {
   ValueIcon,
   IndustryIcon,
 } from '../components';
-import { COMPANY_VALUES, INDUSTRIES_SERVED, IMAGE_CONFIG, FOUNDERS_INTRO, FOUNDER_FAMILIES } from '../lib/constants';
+import { COMPANY_VALUES, INDUSTRIES_SERVED, IMAGE_CONFIG, FOUNDERS_INTRO, FOUNDER_FAMILIES, INDUSTRY_AI_INSIGHTS } from '../lib/constants';
 import { PageKey } from '../types';
 
 interface AboutPageProps {
@@ -362,12 +362,12 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               Industries We Serve
             </h2>
             <p className="text-text-secondary max-w-xl mx-auto">
-              AI opportunities exist in every industry. Our expertise spans:
+              AI opportunities exist in every industry. <span className="text-radiance-gold">Hover to see how AI transforms each.</span>
             </p>
           </div>
 
-          {/* Industries Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          {/* Industries Grid with Hover Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
             {INDUSTRIES_SERVED.map((industry, index) => {
               const industryKeyMap: Record<string, keyof typeof IMAGE_CONFIG.industries> = {
                 'Healthcare & Life Sciences': 'healthcare',
@@ -381,19 +381,67 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               };
               const iconKey = industryKeyMap[industry] || 'healthcare';
               const iconConfig = IMAGE_CONFIG.industries[iconKey];
+              const insights = INDUSTRY_AI_INSIGHTS[industry];
 
               return (
-                <IndustryIcon
-                  key={index}
-                  src={iconConfig?.src}
-                  alt={iconConfig?.alt || industry}
-                  label={industry}
-                />
+                <div key={index} className="group relative">
+                  {/* Base Card */}
+                  <div className="relative cursor-pointer transition-all duration-300 group-hover:scale-105 group-hover:z-10">
+                    <IndustryIcon
+                      src={iconConfig?.src}
+                      alt={iconConfig?.alt || industry}
+                      label={industry}
+                    />
+                    
+                    {/* Glow effect on hover */}
+                    <div className="absolute inset-0 rounded-xl bg-radiance-gold/0 group-hover:bg-radiance-gold/5 transition-colors duration-300 pointer-events-none" />
+                  </div>
+                  
+                  {/* Hover Popover */}
+                  {insights && (
+                    <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-80 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                      {/* Arrow */}
+                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#1E1C1A] border-l border-t border-radiance-gold/30 rotate-45" />
+                      
+                      {/* Card Content */}
+                      <div 
+                        className="relative bg-[#1E1C1A] border border-radiance-gold/30 rounded-xl p-5 shadow-2xl"
+                        style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(232, 184, 74, 0.15)' }}
+                      >
+                        {/* Headline */}
+                        <p className="text-radiance-gold font-semibold text-sm mb-3">
+                          {insights.headline}
+                        </p>
+                        
+                        {/* Optimizations */}
+                        <ul className="space-y-2">
+                          {insights.optimizations.map((opt, i) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <span className="text-radiance-gold mt-1 flex-shrink-0">
+                                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                              </span>
+                              <span className="text-text-secondary text-xs leading-relaxed">{opt}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        
+                        {/* Subtle CTA */}
+                        <div className="mt-4 pt-3 border-t border-depth-border">
+                          <p className="text-text-muted text-xs italic text-center">
+                            Book an Illumination Session to explore your opportunities
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
 
-          <p className="text-text-muted text-sm text-center mt-8 max-w-2xl mx-auto">
+          <p className="text-text-muted text-sm text-center mt-12 max-w-2xl mx-auto">
             The specific AI opportunities vary by industry, but the approach is the same:
             understand your unique context, reveal the opportunities hiding in plain sight,
             and give you a clear path forward.
