@@ -131,6 +131,7 @@ export interface Testimonial {
   author: string;
   role: string;
   company: string;
+  companyUrl?: string;
   avatar?: string;
   avatarPrompt?: string;
 }

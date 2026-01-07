@@ -217,57 +217,13 @@ export const SERVICES: Record<string, Service> = {
 export const TESTIMONIALS: Testimonial[] = [
   {
     id: '1',
-    quote: 'In 90 minutes, I saw possibilities I\'d been blind to for years. The clarity was immediate and actionable. Within a week, we had our first AI pilot running.',
-    author: 'Sarah Chen',
-    role: 'CEO',
-    company: 'TechStart Inc',
-    avatar: '/images/avatars/avatar-sarah-chen.jpg',
-    avatarPrompt: 'Professional headshot portrait of an Asian-American woman in her early 40s, CEO of a technology startup. Confident, warm expression with a subtle smile. Modern business casual attire - perhaps a blazer in a muted color. Warm, natural lighting from the side, creating depth. Background slightly blurred in warm earth tones or soft cream. High-quality professional photography style. She looks approachable yet decisive - someone who makes things happen. Sharp focus on eyes. Style: editorial business portrait, not generic stock photo.',
-  },
-  {
-    id: '2',
-    quote: 'The blueprint gave us exactly what we needed—a clear path forward without the overwhelm. Our board was impressed by the strategic rigor and realistic timelines.',
-    author: 'Marcus Johnson',
+    quote: 'Light Brand Consulting helped us see possibilities we never knew existed. Their approach is unlike anything else—authentic, insightful, and transformative. The time is now to get ahead tomorrow.',
+    author: 'Joseph McVeen',
     role: 'Founder',
-    company: 'Growth Labs',
-    avatar: '/images/avatars/avatar-marcus-johnson.jpg',
-    avatarPrompt: 'Professional headshot portrait of an African-American man in his late 30s, founder of a business growth consultancy. Warm, engaging expression with a confident smile. Smart casual attire - perhaps a well-fitted dark sweater or open-collar shirt. Warm lighting that creates depth and dimension. Background in muted charcoal or warm gray tones, slightly blurred. He conveys both creativity and business acumen. High-quality editorial portrait photography style. Sharp focus, natural but polished look.',
-  },
-  {
-    id: '3',
-    quote: 'Finally, AI consulting that speaks business, not jargon. Worth every penny. We\'ve already 3x\'d our investment through the first opportunity they identified.',
-    author: 'Emily Rodriguez',
-    role: 'COO',
-    company: 'Velocity Partners',
-    avatar: '/images/avatars/avatar-emily-rodriguez.jpg',
-    avatarPrompt: 'Professional headshot portrait of a Latina woman in her mid-30s, COO of a fast-growing company. Sharp, intelligent expression with a warm but professional demeanor. Business professional attire - perhaps a structured jacket in a rich color. Natural lighting with a touch of warmth. Background in soft neutral tones, slightly blurred for depth. She looks like someone who gets results and leads teams effectively. High-quality editorial business photography. Sharp focus, polished but authentic.',
-  },
-  {
-    id: '4',
-    quote: 'I was skeptical another consultant could understand our complex operations. By hour two of discovery, they were asking questions our own team hadn\'t thought to ask.',
-    author: 'David Park',
-    role: 'VP Operations',
-    company: 'Meridian Manufacturing',
-    avatar: '/images/avatars/avatar-david-park.jpg',
-    avatarPrompt: 'Professional headshot portrait of a Korean-American man in his mid-40s, VP of Operations at a manufacturing company. Thoughtful, experienced expression with a confident slight smile. Business attire - perhaps a suit jacket in navy or charcoal. Warm, directional lighting creating depth. Background in muted professional tones, slightly blurred. He conveys operational expertise and strategic thinking. High-quality corporate portrait style that feels authentic, not staged. Sharp focus on face.',
-  },
-  {
-    id: '5',
-    quote: 'The narrative work transformed how I show up. Speaking invitations tripled, and I finally have language that captures what I\'ve been trying to say for a decade.',
-    author: 'Rachel Torres',
-    role: 'Founder & Author',
-    company: 'Future Forward Consulting',
-    avatar: '/images/avatars/avatar-rachel-torres.jpg',
-    avatarPrompt: 'Professional headshot portrait of a Latina woman in her late 40s, consultant and published author. Warm, wise expression with an approachable smile. Smart professional attire with a creative edge - perhaps a sophisticated blouse or modern blazer. Warm, flattering lighting with soft shadows. Background in cream or warm gray tones, slightly blurred. She looks like a thought leader - someone who writes and speaks professionally. Editorial portrait photography style, warm and authentic.',
-  },
-  {
-    id: '6',
-    quote: 'We\'d wasted six months with another firm that gave us a generic AI playbook. Light Brand\'s approach was completely different—specific, actionable, and honest about what wouldn\'t work for us.',
-    author: 'Michael Okonkwo',
-    role: 'CTO',
-    company: 'HealthBridge Solutions',
-    avatar: '/images/avatars/avatar-michael-okonkwo.jpg',
-    avatarPrompt: 'Professional headshot portrait of a Nigerian-American man in his early 40s, CTO of a healthcare technology company. Sharp, analytical expression with a confident, friendly demeanor. Smart business casual - perhaps a dark polo or open-collar button-down. Warm lighting with professional quality. Background in muted charcoal or navy tones, slightly blurred. He conveys technical expertise and leadership. High-quality editorial business portrait, feels genuine not generic stock. Sharp focus.',
+    company: 'Growth Mastery AI',
+    companyUrl: 'https://www.growthmastery.ai',
+    avatar: '/images/avatars/avatar-joseph-mcveen.jpg',
+    avatarPrompt: 'Professional headshot portrait of a confident male entrepreneur in his 30s-40s, founder of an AI growth company. Warm, genuine expression with an approachable smile. Smart business casual attire. Warm, natural lighting creating depth. Background in warm earth tones or soft charcoal, slightly blurred. He conveys both innovation and authenticity. High-quality editorial portrait photography style. Sharp focus, natural but polished look.',
   },
 ];
 
@@ -380,33 +336,6 @@ export const PHILOSOPHY_ITEMS = [
 ];
 
 // ============================================================================
-// Success Metrics (for Services page)
-// ============================================================================
-
-export const SUCCESS_METRICS = [
-  {
-    metric: '94%',
-    label: 'Client satisfaction rate',
-    description: 'Of clients report their session exceeded expectations',
-  },
-  {
-    metric: '3.2x',
-    label: 'Average ROI',
-    description: 'Return on first implemented AI opportunity',
-  },
-  {
-    metric: '< 30 days',
-    label: 'Time to first win',
-    description: 'Average time to implement first recommendation',
-  },
-  {
-    metric: '200+',
-    label: 'Sessions delivered',
-    description: 'Across industries from healthcare to e-commerce',
-  },
-];
-
-// ============================================================================
 // Industry Experience (for About page)
 // ============================================================================
 
@@ -441,6 +370,82 @@ export const COMPANY_VALUES = [
   {
     title: 'Client Independence',
     description: 'The goal isn\'t recurring revenue from you—it\'s your ability to navigate AI decisions confidently without us.',
+  },
+];
+
+// ============================================================================
+// Founders - Three Families United by Mission
+// ============================================================================
+
+export interface Founder {
+  name: string;
+  role: string;
+  description: string;
+  avatarPrompt: string;
+}
+
+export interface FounderFamily {
+  familyName: string;
+  members: Founder[];
+}
+
+export const FOUNDERS_INTRO = {
+  headline: 'Built Upon Families That Care',
+  tagline: 'All founders united by a similar mission: to help you elevate your business to its highest potential.',
+  closing: 'Together, this is the dream team that makes your dreams come true.',
+};
+
+export const FOUNDER_FAMILIES: FounderFamily[] = [
+  {
+    familyName: 'Lawless',
+    members: [
+      {
+        name: 'Daniel Lawless',
+        role: 'Master Architect & Technologist',
+        description: 'Daniel oversees all development and strategy. A seasoned full stack developer with over 20 years of experience and a wide range of skills in the technical space.',
+        avatarPrompt: 'Professional headshot of a seasoned male technologist and architect in his 40s-50s, warm and confident expression, modern business casual attire, warm natural lighting, slightly blurred professional background in earth tones, high-quality editorial portrait style.',
+      },
+      {
+        name: 'Jennifer Lawless',
+        role: 'Master of Relationships & Quantum Exploration',
+        description: 'Jennifer guides our quantum technology exploration, helping us align with our inner technology through tools that leverage the quantum field. We believe a sound outer tech comes from a sound inner tech.',
+        avatarPrompt: 'Professional headshot of a warm and intuitive woman in her 40s-50s, genuine smile, approachable yet wise expression, elegant business casual attire, warm soft lighting, slightly blurred warm-toned background, editorial portrait photography style.',
+      },
+    ],
+  },
+  {
+    familyName: 'Courchesne',
+    members: [
+      {
+        name: 'Nicholas Courchesne',
+        role: 'Master of Business Development',
+        description: 'Nicholas leads strategic partnerships, living the path of light and ready to share his journey with those ready to begin their own. A big guy with an even bigger heart—don\'t let his muscles fool you!',
+        avatarPrompt: 'Professional headshot of a strong, muscular man in his 30s-40s with a warm, genuine smile, approachable and kind expression that shows his big heart, smart casual attire, warm natural lighting, professional background, editorial portrait style.',
+      },
+      {
+        name: 'Nancy Courchesne',
+        role: 'Master of Illumination',
+        description: 'Nancy helps us illuminate the path we follow. Her unbelievable intuitive gift allows us to align with the right projects and guide our mission forward.',
+        avatarPrompt: 'Professional headshot of a wise, intuitive woman in her 30s-40s, warm and knowing expression, elegant yet approachable attire, soft golden lighting creating warmth, slightly blurred professional background, high-quality editorial portrait.',
+      },
+    ],
+  },
+  {
+    familyName: 'Demou',
+    members: [
+      {
+        name: 'Andreas Demou',
+        role: 'Master of Technical Design',
+        description: 'Andreas leads frontend development and technical design. There isn\'t anyone out there better than this one. A man of few words who wields great power through body, mind, and spirit.',
+        avatarPrompt: 'Professional headshot of a focused, powerful male designer/developer in his 30s-40s, calm and composed expression suggesting inner strength, modern minimal attire, clean professional lighting, subtle background, editorial portrait photography style.',
+      },
+      {
+        name: 'Mike Demou',
+        role: 'Master of Expression',
+        description: 'Mike enables every brand to express itself to its fullest potential, showcasing everyone as if they were a piece of art.',
+        avatarPrompt: 'Professional headshot of a creative, expressive man in his 30s-40s, artistic yet professional demeanor, warm confident smile, stylish creative attire, warm lighting with artistic quality, professional background, editorial portrait style.',
+      },
+    ],
   },
 ];
 
@@ -567,9 +572,9 @@ export const IMAGE_CONFIG = {
   about: {
     team: {
       src: '/images/about/team-photo.jpg',
-      alt: 'Professional team of AI strategy consultants',
-      dimensions: '800x600',
-      prompt: 'Professional team photo of 2-3 AI strategy consultants in a modern, warm office setting. Diverse group including a confident woman and man in smart business casual attire. They are engaged in genuine conversation, perhaps around a small table or standing together comfortably. Warm, natural lighting - perhaps near a window with golden hour light. Background suggests a premium, minimal office space with warm tones. The mood is collaborative, approachable, and expert. Not posed stiffly - natural and authentic. High-quality editorial photography style.',
+      alt: 'Light Brand Consulting founding families',
+      dimensions: '1200x800',
+      prompt: 'Professional group photo of 6 people representing three families united by a shared mission. The group includes couples standing together warmly - conveying genuine connection and family bonds. Diverse ages and backgrounds, all with approachable, authentic expressions. Smart business casual attire. Warm, natural lighting suggesting golden hour. Background is an elegant, minimal space with warm earth tones. The mood is collaborative, genuine, and grounded - a team built on family values and shared purpose. High-quality editorial photography style, not overly corporate.',
     },
     origin: {
       src: '/images/about/origin-story.jpg',

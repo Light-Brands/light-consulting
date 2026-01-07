@@ -15,7 +15,7 @@ import {
   SparkleIcon,
   ImagePlaceholder,
 } from '../components';
-import { SERVICES, SUCCESS_METRICS, IMAGE_CONFIG } from '../lib/constants';
+import { SERVICES, IMAGE_CONFIG } from '../lib/constants';
 import { PageKey } from '../types';
 
 interface ServicesPageProps {
@@ -97,39 +97,6 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
                 onLearnMore={() => onNavigate(`services/${key}` as PageKey)}
                 onBook={() => onNavigate('book')}
               />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Results Section */}
-      <section className="section-spacing bg-depth-elevated">
-        <div className="container-wide">
-          <div className="text-center mb-12">
-            <Tag variant="default" className="mb-4">
-              Track Record
-            </Tag>
-            <h2 className="text-3xl font-bold text-text-primary mb-4">
-              Results That Speak
-            </h2>
-            <p className="text-text-secondary max-w-xl mx-auto">
-              Clarity creates momentum. Momentum creates results.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-            {SUCCESS_METRICS.map((item, index) => (
-              <Card key={index} elevation="subtle" className="text-center p-6">
-                <p className="text-3xl md:text-4xl font-black text-radiance-gold mb-2">
-                  {item.metric}
-                </p>
-                <p className="text-text-primary font-semibold text-sm mb-1">
-                  {item.label}
-                </p>
-                <p className="text-text-muted text-xs">
-                  {item.description}
-                </p>
-              </Card>
             ))}
           </div>
         </div>
@@ -381,8 +348,8 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
 
               <div className="mt-8 pt-6 border-t border-depth-border">
                 <p className="text-text-muted text-sm italic">
-                  Most clients start with an Illumination Session. 60% continue to Blueprint.
-                  30% add Story work. But each service delivers standalone value.
+                  Most clients start with an Illumination Session and go from there.
+                  Each service delivers standalone value—choose what fits your needs.
                 </p>
               </div>
             </Card>
@@ -411,7 +378,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
               },
               {
                 q: 'What industries do you work with?',
-                a: 'We\'ve worked across healthcare, financial services, e-commerce, professional services, manufacturing, media, education, and real estate. AI opportunities exist everywhere.',
+                a: 'We serve healthcare, financial services, e-commerce, professional services, manufacturing, media, education, and real estate. AI opportunities exist in every industry.',
               },
               {
                 q: 'How do you stay current with AI developments?',

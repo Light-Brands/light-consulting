@@ -12,7 +12,7 @@ import {
   CheckIcon,
   ImagePlaceholder,
 } from '../components';
-import { PHILOSOPHY_ITEMS, COMPANY_VALUES, INDUSTRIES_SERVED, IMAGE_CONFIG } from '../lib/constants';
+import { PHILOSOPHY_ITEMS, COMPANY_VALUES, INDUSTRIES_SERVED, IMAGE_CONFIG, FOUNDERS_INTRO, FOUNDER_FAMILIES } from '../lib/constants';
 import { PageKey } from '../types';
 
 interface AboutPageProps {
@@ -175,8 +175,75 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* Philosophy Section */}
+      {/* Founders Section */}
       <section className="section-spacing">
+        <div className="container-wide">
+          <div className="text-center mb-12">
+            <Tag variant="premium" className="mb-4">
+              Our Founders
+            </Tag>
+            <h2 className="text-3xl font-bold text-text-primary mb-4">
+              {FOUNDERS_INTRO.headline}
+            </h2>
+            <p className="text-text-secondary max-w-2xl mx-auto">
+              {FOUNDERS_INTRO.tagline}
+            </p>
+          </div>
+
+          <div className="space-y-12">
+            {FOUNDER_FAMILIES.map((family, familyIndex) => (
+              <div key={family.familyName} className="relative">
+                {/* Family Name Badge */}
+                <div className="flex items-center justify-center mb-8">
+                  <div className="h-px flex-1 bg-depth-border max-w-[100px]" />
+                  <span className="px-4 text-radiance-gold font-semibold text-sm uppercase tracking-wider">
+                    The {family.familyName} Family
+                  </span>
+                  <div className="h-px flex-1 bg-depth-border max-w-[100px]" />
+                </div>
+
+                {/* Family Members */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                  {family.members.map((member, memberIndex) => (
+                    <Card key={member.name} elevation="subtle" className="p-6">
+                      <div className="flex items-start gap-4">
+                        {/* Avatar Placeholder */}
+                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center text-depth-base font-bold text-xl flex-shrink-0">
+                          {member.name.split(' ').map(n => n[0]).join('')}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold text-text-primary mb-1">
+                            {member.name}
+                          </h3>
+                          <p className="text-radiance-gold text-sm font-medium mb-3">
+                            {member.role}
+                          </p>
+                          <p className="text-text-secondary text-sm leading-relaxed">
+                            {member.description}
+                          </p>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Closing Statement */}
+          <div className="text-center mt-12">
+            <Card elevation="elevated" className="inline-block p-8 max-w-2xl">
+              <SparkleIcon className="text-radiance-gold mx-auto mb-4" size={32} />
+              <p className="text-text-primary text-lg font-medium italic">
+                "{FOUNDERS_INTRO.closing}"
+              </p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Philosophy Section */}
+      <section className="section-spacing bg-depth-elevated">
         <div className="container-wide">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-text-primary mb-4">
@@ -354,10 +421,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         <div className="container-wide">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-text-primary mb-4">
-              Industries We've Served
+              Industries We Serve
             </h2>
             <p className="text-text-secondary max-w-xl mx-auto">
-              AI opportunities exist in every industry. We've helped businesses across:
+              AI opportunities exist in every industry. Our expertise spans:
             </p>
           </div>
 
