@@ -1,6 +1,6 @@
 /**
  * IconPlaceholder Component
- * Displays icon placeholders with AI generation prompts for custom icons
+ * Displays icons with graceful fallback to placeholder
  */
 
 import React, { useState } from 'react';
@@ -8,8 +8,6 @@ import React, { useState } from 'react';
 interface IconPlaceholderProps {
   src?: string;
   alt: string;
-  prompt: string;
-  dimensions: string;
   size?: number;
   className?: string;
   color?: 'gold' | 'amber' | 'cream';
@@ -19,14 +17,11 @@ interface IconPlaceholderProps {
 export const IconPlaceholder: React.FC<IconPlaceholderProps> = ({
   src,
   alt,
-  prompt,
-  dimensions,
   size = 80,
   className = '',
   color = 'gold',
   fallbackIcon,
 }) => {
-  const [showPrompt, setShowPrompt] = useState(false);
   const [imgError, setImgError] = useState(false);
 
   const hasIcon = src && !imgError;
@@ -65,8 +60,6 @@ export const IconPlaceholder: React.FC<IconPlaceholderProps> = ({
     <div
       className={`relative inline-flex items-center justify-center ${className}`}
       style={{ width: size, height: size }}
-      onMouseEnter={() => setShowPrompt(true)}
-      onMouseLeave={() => setShowPrompt(false)}
     >
       {hasIcon ? (
         <img
@@ -85,39 +78,6 @@ export const IconPlaceholder: React.FC<IconPlaceholderProps> = ({
           {fallbackIcon || <DefaultFallbackIcon />}
         </div>
       )}
-
-      {/* Prompt tooltip on hover */}
-      {showPrompt && (
-        <div className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 p-4 bg-depth-base/95 border border-depth-border rounded-brand-card shadow-xl animate-fade-in">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 rounded-full bg-radiance-gold/20 flex items-center justify-center flex-shrink-0">
-              <svg
-                className="w-4 h-4 text-radiance-gold"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
-              </svg>
-            </div>
-            <span className="text-radiance-gold text-sm font-semibold">Custom Icon Prompt</span>
-          </div>
-          <p className="text-text-muted text-xs mb-2 font-medium">{alt}</p>
-          <p className="text-text-secondary text-xs leading-relaxed">{prompt}</p>
-          <div className="mt-3 pt-3 border-t border-depth-border">
-            <p className="text-text-muted text-xs">
-              <span className="text-radiance-gold">Dimensions:</span> {dimensions}
-            </p>
-          </div>
-          {/* Arrow pointing down */}
-          <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-depth-border" />
-        </div>
-      )}
     </div>
   );
 };
@@ -129,7 +89,6 @@ export const IconPlaceholder: React.FC<IconPlaceholderProps> = ({
 interface IndustryIconProps {
   src?: string;
   alt: string;
-  prompt: string;
   label: string;
   className?: string;
 }
@@ -137,20 +96,16 @@ interface IndustryIconProps {
 export const IndustryIcon: React.FC<IndustryIconProps> = ({
   src,
   alt,
-  prompt,
   label,
   className = '',
 }) => {
-  const [showPrompt, setShowPrompt] = useState(false);
   const [imgError, setImgError] = useState(false);
 
   const hasIcon = src && !imgError;
 
   return (
     <div
-      className={`relative flex flex-col items-center gap-3 p-4 rounded-brand-card bg-depth-subtle hover:bg-depth-elevated transition-colors cursor-pointer ${className}`}
-      onMouseEnter={() => setShowPrompt(true)}
-      onMouseLeave={() => setShowPrompt(false)}
+      className={`relative flex flex-col items-center gap-3 p-4 rounded-brand-card bg-depth-subtle hover:bg-depth-elevated transition-colors ${className}`}
     >
       <div className="w-12 h-12 flex items-center justify-center">
         {hasIcon ? (
@@ -175,30 +130,6 @@ export const IndustryIcon: React.FC<IndustryIconProps> = ({
         )}
       </div>
       <span className="text-text-primary text-sm font-medium text-center">{label}</span>
-
-      {/* Prompt tooltip */}
-      {showPrompt && (
-        <div className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 p-3 bg-depth-base/95 border border-depth-border rounded-brand-card shadow-xl animate-fade-in">
-          <div className="flex items-center gap-2 mb-2">
-            <svg
-              className="w-4 h-4 text-radiance-gold"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
-            </svg>
-            <span className="text-radiance-gold text-xs font-semibold">Industry Icon Prompt</span>
-          </div>
-          <p className="text-text-secondary text-xs leading-relaxed">{prompt}</p>
-          <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-depth-border" />
-        </div>
-      )}
     </div>
   );
 };
@@ -210,7 +141,6 @@ export const IndustryIcon: React.FC<IndustryIconProps> = ({
 interface ValueIconProps {
   src?: string;
   alt: string;
-  prompt: string;
   title: string;
   description: string;
   className?: string;
@@ -219,23 +149,17 @@ interface ValueIconProps {
 export const ValueIcon: React.FC<ValueIconProps> = ({
   src,
   alt,
-  prompt,
   title,
   description,
   className = '',
 }) => {
-  const [showPrompt, setShowPrompt] = useState(false);
   const [imgError, setImgError] = useState(false);
 
   const hasIcon = src && !imgError;
 
   return (
     <div className={`flex items-start gap-4 ${className}`}>
-      <div
-        className="relative flex-shrink-0"
-        onMouseEnter={() => setShowPrompt(true)}
-        onMouseLeave={() => setShowPrompt(false)}
-      >
+      <div className="relative flex-shrink-0">
         <div className="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden">
           {hasIcon ? (
             <img
@@ -258,30 +182,6 @@ export const ValueIcon: React.FC<ValueIconProps> = ({
             </div>
           )}
         </div>
-
-        {/* Prompt tooltip */}
-        {showPrompt && (
-          <div className="absolute z-50 bottom-full left-0 mb-2 w-72 p-3 bg-depth-base/95 border border-depth-border rounded-brand-card shadow-xl animate-fade-in">
-            <div className="flex items-center gap-2 mb-2">
-              <svg
-                className="w-4 h-4 text-radiance-gold"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
-              </svg>
-              <span className="text-radiance-gold text-xs font-semibold">Value Icon Prompt</span>
-            </div>
-            <p className="text-text-secondary text-xs leading-relaxed">{prompt}</p>
-            <div className="absolute top-full left-4 border-8 border-transparent border-t-depth-border" />
-          </div>
-        )}
       </div>
       <div>
         <h3 className="text-lg font-semibold text-text-primary mb-2">{title}</h3>

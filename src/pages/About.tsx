@@ -3,7 +3,7 @@
  * Light Brand Consulting
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Button,
   Card,
@@ -21,47 +21,21 @@ interface AboutPageProps {
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
-  const [showHeroPrompt, setShowHeroPrompt] = useState(false);
-
   return (
     <div className="min-h-screen pt-24 md:pt-32">
       {/* Hero */}
-      <section className="section-spacing relative">
-        {/* Hero Image Prompt Button */}
-        <button
-          onClick={() => setShowHeroPrompt(!showHeroPrompt)}
-          className="absolute top-4 right-6 z-20 w-10 h-10 rounded-full bg-depth-base/80 border border-depth-border flex items-center justify-center hover:bg-depth-elevated transition-colors group"
-          title="View hero background image prompt"
-        >
-          <svg className="w-5 h-5 text-radiance-gold group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-        </button>
-        {showHeroPrompt && (
-          <div className="absolute top-16 right-6 z-20 w-96 p-5 bg-depth-base/95 border border-depth-border rounded-brand-card shadow-xl animate-fade-in">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-radiance-gold font-semibold flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                About Hero Background
-              </span>
-              <button onClick={() => setShowHeroPrompt(false)} className="text-text-muted hover:text-text-primary">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <div className="p-3 bg-depth-elevated rounded-lg mb-3">
-              <p className="text-text-secondary text-sm leading-relaxed">{IMAGE_CONFIG.heroes.about.prompt}</p>
-            </div>
-            <p className="text-text-muted text-xs">
-              <span className="text-radiance-gold">Dimensions:</span> {IMAGE_CONFIG.heroes.about.dimensions}
-            </p>
-          </div>
-        )}
-
-        <div className="container-wide">
+      <section 
+        className="section-spacing relative"
+        style={{
+          backgroundImage: `url(${IMAGE_CONFIG.heroes.about.src})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-depth-base/80" />
+        
+        <div className="container-wide relative z-10">
           <div className="max-w-3xl">
             <Tag variant="premium" className="mb-4">
               About Us
@@ -87,21 +61,17 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       <section className="section-spacing bg-depth-elevated">
         <div className="container-wide">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Team Photo Placeholder */}
+            {/* Team Photo */}
             <div className="order-2 lg:order-1">
               <ImagePlaceholder
                 src={IMAGE_CONFIG.about.team.src}
                 alt={IMAGE_CONFIG.about.team.alt}
-                prompt={IMAGE_CONFIG.about.team.prompt}
-                dimensions={IMAGE_CONFIG.about.team.dimensions}
                 aspectRatio="video"
                 className="mb-6"
               />
               <ImagePlaceholder
                 src={IMAGE_CONFIG.about.origin.src}
                 alt={IMAGE_CONFIG.about.origin.alt}
-                prompt={IMAGE_CONFIG.about.origin.prompt}
-                dimensions={IMAGE_CONFIG.about.origin.dimensions}
                 aspectRatio="video"
               />
             </div>
@@ -192,7 +162,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           </div>
 
           <div className="space-y-12">
-            {FOUNDER_FAMILIES.map((family, familyIndex) => (
+            {FOUNDER_FAMILIES.map((family) => (
               <div key={family.familyName} className="relative">
                 {/* Family Name Badge */}
                 <div className="flex items-center justify-center mb-8">
@@ -205,7 +175,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
 
                 {/* Family Members */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                  {family.members.map((member, memberIndex) => {
+                  {family.members.map((member) => {
                     const imagePath = `/images/founders/${member.name.toLowerCase().replace(/\s+/g, '-')}.jpg`;
                     const initials = member.name.split(' ').map(n => n[0]).join('');
                     
@@ -219,7 +189,6 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                               alt={member.name}
                               className="w-full h-full object-cover"
                               onError={(e) => {
-                                // Fallback to initials if image fails
                                 const target = e.target as HTMLImageElement;
                                 target.style.display = 'none';
                                 target.parentElement!.innerHTML = `<div class="w-full h-full bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center text-depth-base font-bold text-xl">${initials}</div>`;
@@ -343,23 +312,20 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {COMPANY_VALUES.map((value, index) => {
-              // Map value titles to icon configs
-              const iconKey = value.title.toLowerCase().replace(/\s+/g, '') as keyof typeof IMAGE_CONFIG.values;
               const iconKeyMap: Record<string, keyof typeof IMAGE_CONFIG.values> = {
-                'radicalhonesty': 'radicalHonesty',
-                'outcomeobsession': 'outcomeObsession',
-                'intellectualhumility': 'intellectualHumility',
-                'clientindependence': 'clientIndependence',
+                'Radical Honesty': 'radicalHonesty',
+                'Outcome Obsession': 'outcomeObsession',
+                'Intellectual Humility': 'intellectualHumility',
+                'Client Independence': 'clientIndependence',
               };
-              const mappedKey = iconKeyMap[iconKey] || 'radicalHonesty';
-              const iconConfig = IMAGE_CONFIG.values[mappedKey];
+              const iconKey = iconKeyMap[value.title] || 'radicalHonesty';
+              const iconConfig = IMAGE_CONFIG.values[iconKey];
 
               return (
                 <Card key={index} elevation="subtle" className="p-6">
                   <ValueIcon
                     src={iconConfig?.src}
                     alt={iconConfig?.alt || value.title}
-                    prompt={iconConfig?.prompt || ''}
                     title={value.title}
                     description={value.description}
                   />
@@ -451,10 +417,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             </p>
           </div>
 
-          {/* Industries Grid with Individual Icons */}
+          {/* Industries Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {INDUSTRIES_SERVED.map((industry, index) => {
-              // Map industry names to icon configs
               const industryKeyMap: Record<string, keyof typeof IMAGE_CONFIG.industries> = {
                 'Healthcare & Life Sciences': 'healthcare',
                 'Financial Services': 'finance',
@@ -473,7 +438,6 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                   key={index}
                   src={iconConfig?.src}
                   alt={iconConfig?.alt || industry}
-                  prompt={iconConfig?.prompt || ''}
                   label={industry}
                 />
               );

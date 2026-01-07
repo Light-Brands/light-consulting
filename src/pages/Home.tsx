@@ -3,7 +3,7 @@
  * Light Brand Consulting
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Button,
   Card,
@@ -26,71 +26,27 @@ interface HomePageProps {
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
-  const [showHeroPrompt, setShowHeroPrompt] = useState(false);
-
   const serviceIcons: Record<string, React.ReactNode> = {
     illumination: <LightbulbIcon size={24} />,
     blueprint: <BlueprintIcon size={24} />,
     story: <BookIcon size={24} />,
   };
 
-  const heroImage = IMAGE_CONFIG.heroes.home;
-
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="min-h-[90vh] relative overflow-hidden flex flex-col justify-center px-6 md:px-12 lg:px-16 pt-20">
-        {/* Hero Background Image Prompt Indicator */}
-        <button
-          onClick={() => setShowHeroPrompt(!showHeroPrompt)}
-          className="absolute top-24 right-6 z-20 w-10 h-10 rounded-full bg-depth-base/80 border border-depth-border flex items-center justify-center hover:bg-depth-elevated transition-colors group"
-          title="View hero background image prompt"
-        >
-          <svg
-            className="w-5 h-5 text-radiance-gold group-hover:scale-110 transition-transform"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
-        </button>
-
-        {/* Hero Image Prompt Panel */}
-        {showHeroPrompt && (
-          <div className="absolute top-36 right-6 z-20 w-96 max-h-[70vh] overflow-auto p-5 bg-depth-base/95 border border-depth-border rounded-brand-card shadow-xl animate-fade-in">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-radiance-gold/20 flex items-center justify-center">
-                  <svg className="w-4 h-4 text-radiance-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
-                <span className="text-radiance-gold font-semibold">Hero Background</span>
-              </div>
-              <button onClick={() => setShowHeroPrompt(false)} className="text-text-muted hover:text-text-primary">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            <p className="text-text-muted text-sm mb-3">{heroImage.alt}</p>
-            <div className="p-3 bg-depth-elevated rounded-lg mb-4">
-              <p className="text-text-secondary text-sm leading-relaxed">{heroImage.prompt}</p>
-            </div>
-            <div className="flex items-center justify-between text-xs text-text-muted border-t border-depth-border pt-3">
-              <span><span className="text-radiance-gold">Dimensions:</span> {heroImage.dimensions}</span>
-              <span><span className="text-radiance-gold">File:</span> hero-home-bg.jpg</span>
-            </div>
-          </div>
-        )}
-
-        {/* Illumination glow effect */}
+      {/* Hero Section with Background Image */}
+      <section 
+        className="min-h-[90vh] relative overflow-hidden flex flex-col justify-center px-6 md:px-12 lg:px-16 pt-20"
+        style={{
+          backgroundImage: `url(${IMAGE_CONFIG.heroes.home.src})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        {/* Overlay for readability */}
+        <div className="absolute inset-0 bg-depth-base/70" />
+        
+        {/* Additional glow effects */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-radial-gradient from-radiance-gold/8 to-transparent blur-3xl pointer-events-none" />
         <div className="absolute top-20 right-10 w-[300px] h-[300px] bg-radiance-gold/5 blur-[100px] rounded-full pointer-events-none animate-float" />
 
@@ -157,18 +113,16 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               Every business has untapped potential—opportunities hidden in plain sight. The gap between where you are and where AI can take you isn't about technology. It's about seeing clearly.
             </p>
 
-            {/* Visual diagram with Image Placeholder */}
+            {/* Visual diagram with Image */}
             <div className="mb-8">
               <ImagePlaceholder
                 src={IMAGE_CONFIG.capacityGap.src}
                 alt={IMAGE_CONFIG.capacityGap.alt}
-                prompt={IMAGE_CONFIG.capacityGap.prompt}
-                dimensions={IMAGE_CONFIG.capacityGap.dimensions}
                 aspectRatio="wide"
                 className="mb-4"
               />
 
-              {/* Fallback visual diagram (shown alongside placeholder) */}
+              {/* Fallback visual diagram */}
               <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 py-4">
                 <div className="text-center">
                   <div className="w-16 h-16 rounded-full bg-depth-surface border border-depth-border flex items-center justify-center mb-2">

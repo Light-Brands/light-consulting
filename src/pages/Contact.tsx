@@ -112,8 +112,19 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
 
   return (
     <div className="min-h-screen pt-24 md:pt-32">
-      <section className="section-spacing">
-        <div className="container-wide">
+      {/* Hero with Background */}
+      <section 
+        className="section-spacing relative"
+        style={{
+          backgroundImage: `url(${IMAGE_CONFIG.heroes.contact.src})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-depth-base/85" />
+
+        <div className="container-wide relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
             {/* Left Column - Info */}
             <div>
@@ -329,8 +340,6 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                 <IconPlaceholder
                   src={IMAGE_CONFIG.contact.speaking.src}
                   alt={IMAGE_CONFIG.contact.speaking.alt}
-                  prompt={IMAGE_CONFIG.contact.speaking.prompt}
-                  dimensions={IMAGE_CONFIG.contact.speaking.dimensions}
                   size={80}
                   color="gold"
                 />
@@ -351,8 +360,6 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                 <IconPlaceholder
                   src={IMAGE_CONFIG.contact.media.src}
                   alt={IMAGE_CONFIG.contact.media.alt}
-                  prompt={IMAGE_CONFIG.contact.media.prompt}
-                  dimensions={IMAGE_CONFIG.contact.media.dimensions}
                   size={80}
                   color="amber"
                 />
@@ -373,8 +380,6 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                 <IconPlaceholder
                   src={IMAGE_CONFIG.contact.partnerships.src}
                   alt={IMAGE_CONFIG.contact.partnerships.alt}
-                  prompt={IMAGE_CONFIG.contact.partnerships.prompt}
-                  dimensions={IMAGE_CONFIG.contact.partnerships.dimensions}
                   size={80}
                   color="cream"
                 />

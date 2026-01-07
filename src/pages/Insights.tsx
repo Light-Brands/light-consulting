@@ -312,8 +312,6 @@ export const InsightsPage: React.FC<InsightsPageProps> = ({ onNavigate }) => {
                 <ImagePlaceholder
                   src={IMAGE_CONFIG.blog['strategic-moment'].src}
                   alt={IMAGE_CONFIG.blog['strategic-moment'].alt}
-                  prompt={IMAGE_CONFIG.blog['strategic-moment'].prompt}
-                  dimensions={IMAGE_CONFIG.blog['strategic-moment'].dimensions}
                   aspectRatio="video"
                 />
               </div>
@@ -337,8 +335,6 @@ export const InsightsPage: React.FC<InsightsPageProps> = ({ onNavigate }) => {
                       <ImagePlaceholder
                         src={blogImage.src}
                         alt={blogImage.alt}
-                        prompt={blogImage.prompt}
-                        dimensions={blogImage.dimensions}
                         aspectRatio="video"
                         className="rounded-t-brand-card rounded-b-none"
                       />
