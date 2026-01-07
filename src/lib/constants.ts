@@ -405,36 +405,36 @@ export const FOUNDERS_INTRO = {
 
 export const FOUNDER_FAMILIES: FounderFamily[] = [
   {
-    familyName: 'Lawless',
-    members: [
-      {
-        name: 'Daniel Lawless',
-        role: 'Master Architect & Technologist',
-        description: 'Daniel oversees all development and strategy. A seasoned full stack developer with over 20 years of experience and a wide range of skills in the technical space.',
-        avatarPrompt: 'Professional headshot of a seasoned male technologist and architect in his 40s-50s, warm and confident expression, modern business casual attire, warm natural lighting, slightly blurred professional background in earth tones, high-quality editorial portrait style.',
-      },
-      {
-        name: 'Jennifer Lawless',
-        role: 'Master of Relationships & Quantum Exploration',
-        description: 'Jennifer guides our quantum technology exploration, helping us align with our inner technology through tools that leverage the quantum field. We believe a sound outer tech comes from a sound inner tech.',
-        avatarPrompt: 'Professional headshot of a warm and intuitive woman in her 40s-50s, genuine smile, approachable yet wise expression, elegant business casual attire, warm soft lighting, slightly blurred warm-toned background, editorial portrait photography style.',
-      },
-    ],
-  },
-  {
     familyName: 'Courchesne',
     members: [
       {
         name: 'Nicholas Courchesne',
-        role: 'Master of Business Development',
-        description: 'Nicholas leads strategic partnerships, living the path of light and ready to share his journey with those ready to begin their own. A big guy with an even bigger heart—don\'t let his muscles fool you!',
+        role: 'Master of Strategic Partnerships',
+        description: 'Nicholas leads strategic partnerships and relationships—the bridge between Light Brand and the world. Living the path of light and ready to share his journey with those ready to begin their own. A big guy with an even bigger heart—don\'t let his muscles fool you!',
         avatarPrompt: 'Professional headshot of a strong, muscular man in his 30s-40s with a warm, genuine smile, approachable and kind expression that shows his big heart, smart casual attire, warm natural lighting, professional background, editorial portrait style.',
       },
       {
         name: 'Nancy Courchesne',
         role: 'Master of Illumination',
-        description: 'Nancy helps us illuminate the path we follow. Her unbelievable intuitive gift allows us to align with the right projects and guide our mission forward.',
+        description: 'Nancy helps us illuminate the path we follow. Her unbelievable intuitive gift allows us to align with the right projects, nurture the right relationships, and guide our mission forward.',
         avatarPrompt: 'Professional headshot of a wise, intuitive woman in her 30s-40s, warm and knowing expression, elegant yet approachable attire, soft golden lighting creating warmth, slightly blurred professional background, high-quality editorial portrait.',
+      },
+    ],
+  },
+  {
+    familyName: 'Lawless',
+    members: [
+      {
+        name: 'Daniel Lawless',
+        role: 'Master Architect & Technologist',
+        description: 'Daniel architects both internal and external technologies—the systems that power everything. A seasoned full stack developer with over 20 years of experience building and scaling the technical foundations that transform businesses.',
+        avatarPrompt: 'Professional headshot of a seasoned male technologist and architect in his 40s-50s, warm and confident expression, modern business casual attire, warm natural lighting, slightly blurred professional background in earth tones, high-quality editorial portrait style.',
+      },
+      {
+        name: 'Jennifer Lawless',
+        role: 'Master of Inner Technology',
+        description: 'Jennifer guides our quantum technology exploration, helping us align with our inner technology through tools that leverage the quantum field. We believe a sound outer tech comes from a sound inner tech.',
+        avatarPrompt: 'Professional headshot of a warm and intuitive woman in her 40s-50s, genuine smile, approachable yet wise expression, elegant business casual attire, warm soft lighting, slightly blurred warm-toned background, editorial portrait photography style.',
       },
     ],
   },
@@ -443,14 +443,14 @@ export const FOUNDER_FAMILIES: FounderFamily[] = [
     members: [
       {
         name: 'Andreas Demou',
-        role: 'Master of Technical Design',
-        description: 'Andreas leads frontend development and technical design. There isn\'t anyone out there better than this one. A man of few words who wields great power through body, mind, and spirit.',
+        role: 'Master of Development & Design',
+        description: 'Andreas develops and implements everything to look beautifully amazing—front to back, inside and out. There isn\'t anyone out there better than this one. A man of few words who wields great power through body, mind, and spirit.',
         avatarPrompt: 'Professional headshot of a focused, powerful male designer/developer in his 30s-40s, calm and composed expression suggesting inner strength, modern minimal attire, clean professional lighting, subtle background, editorial portrait photography style.',
       },
       {
         name: 'Mike Demou',
         role: 'Master of Expression',
-        description: 'Mike enables every brand to express itself to its fullest potential, showcasing everyone as if they were a piece of art.',
+        description: 'Mike ensures every brand expresses itself to its fullest potential—the visual artistry that brings everything to life. Showcasing everyone as if they were a piece of art, inside and out.',
         avatarPrompt: 'Professional headshot of a creative, expressive man in his 30s-40s, artistic yet professional demeanor, warm confident smile, stylish creative attire, warm lighting with artistic quality, professional background, editorial portrait style.',
       },
     ],
