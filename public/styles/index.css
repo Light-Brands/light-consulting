@@ -1,0 +1,317 @@
+/**
+ * Light Brand Consulting - Global Styles
+ * The Illumination Palette: Light emerging from depth
+ */
+
+/* ============================================================================
+ * CSS Custom Properties - Design Tokens
+ * ============================================================================ */
+
+:root {
+  /* Radiance Scale (Primary Accent) */
+  --color-radiance-gold: #E8B84A;
+  --color-radiance-amber: #D4944C;
+  --color-radiance-warm: #C67D4E;
+
+  /* Clarity Scale (Secondary Accent) */
+  --color-clarity-cream: #FDF6E3;
+  --color-clarity-soft: #F5E6C8;
+  --color-clarity-muted: #D9C9A5;
+
+  /* Wisdom Scale (AI Features) */
+  --color-wisdom-violet: #8B7EC8;
+  --color-wisdom-soft: #A599D4;
+  --color-wisdom-muted: #7A6BA8;
+
+  /* Depth Scale (Background) */
+  --color-depth-base: #0F0E0D;
+  --color-depth-elevated: #151413;
+  --color-depth-surface: #1C1A18;
+  --color-depth-border: #2A2724;
+
+  /* Text Scale */
+  --color-text-primary: #F8F5F0;
+  --color-text-secondary: #E5E0D8;
+  --color-text-muted: #A8A299;
+
+  /* Semantic Colors */
+  --color-success: #5CB85C;
+  --color-warning: #F0A030;
+  --color-error: #E85A5A;
+  --color-info: #5DADE2;
+
+  /* Fonts */
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ============================================================================
+ * Base Resets
+ * ============================================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-depth-base);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================================
+ * Typography Hierarchy
+ * ============================================================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+p {
+  font-family: var(--font-body);
+  line-height: 1.7;
+}
+
+/* ============================================================================
+ * Gradient Utilities
+ * ============================================================================ */
+
+.gradient-illumination {
+  background: linear-gradient(135deg, var(--color-radiance-gold) 0%, var(--color-radiance-amber) 100%);
+}
+
+.gradient-dawn {
+  background: linear-gradient(180deg, var(--color-depth-base) 0%, var(--color-depth-surface) 50%, var(--color-depth-border) 100%);
+}
+
+.gradient-clarity-fade {
+  background: linear-gradient(180deg, rgba(253, 246, 227, 0.12) 0%, transparent 100%);
+}
+
+.gradient-wisdom-glow {
+  background: radial-gradient(ellipse at center, rgba(139, 126, 200, 0.15) 0%, transparent 70%);
+}
+
+.gradient-capacity-bridge {
+  background: linear-gradient(90deg, var(--color-text-muted) 0%, var(--color-radiance-gold) 50%, var(--color-clarity-cream) 100%);
+}
+
+/* Text gradients */
+.text-gradient-illumination {
+  background: linear-gradient(135deg, var(--color-radiance-gold) 0%, var(--color-radiance-amber) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================================
+ * Glow Effects
+ * ============================================================================ */
+
+.glow-illumination {
+  box-shadow: 0 0 30px rgba(232, 184, 74, 0.25);
+}
+
+.glow-illumination-intense {
+  box-shadow: 0 0 40px rgba(232, 184, 74, 0.35);
+}
+
+.glow-wisdom {
+  box-shadow: 0 0 30px rgba(139, 126, 200, 0.2);
+}
+
+.glow-clarity {
+  box-shadow: 0 0 20px rgba(253, 246, 227, 0.15);
+}
+
+/* ============================================================================
+ * Animations
+ * ============================================================================ */
+
+@keyframes illuminate-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+.animate-illuminate {
+  animation: illuminate-pulse 4s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 6s infinite ease-in-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.8s ease-out forwards;
+}
+
+/* Staggered animation delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* ============================================================================
+ * Scrollbar Styles
+ * ============================================================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-depth-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-depth-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-radiance-gold);
+}
+
+/* ============================================================================
+ * Selection Styles
+ * ============================================================================ */
+
+::selection {
+  background: var(--color-radiance-gold);
+  color: var(--color-depth-base);
+}
+
+::-moz-selection {
+  background: var(--color-radiance-gold);
+  color: var(--color-depth-base);
+}
+
+/* ============================================================================
+ * Focus Styles
+ * ============================================================================ */
+
+:focus-visible {
+  outline: 2px solid var(--color-radiance-gold);
+  outline-offset: 2px;
+}
+
+/* ============================================================================
+ * Utility Classes
+ * ============================================================================ */
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Container utilities */
+.container-narrow {
+  max-width: 768px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.container-wide {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Section spacing */
+.section-spacing {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+@media (min-width: 768px) {
+  .section-spacing {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+}
+
+/* ============================================================================
+ * Form Input Overrides
+ * ============================================================================ */
+
+input, textarea, select {
+  font-family: var(--font-body);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+/* Autofill styling */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-text-primary);
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-depth-surface) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}

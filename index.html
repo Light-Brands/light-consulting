@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Light Brand Consulting - Transform your business into an AI super intelligence. Illuminate the path between where you are and where AI can take you.">
+  <meta name="keywords" content="AI consulting, business transformation, AI strategy, AI acceleration">
+  <title>Light Brand Consulting | AI Business Transformation</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <!-- Fonts - Inter for modern, professional typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN for development -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            // Radiance Scale (Primary Accent) - Illumination moments
+            'radiance-gold': '#E8B84A',
+            'radiance-amber': '#D4944C',
+            'radiance-warm': '#C67D4E',
+
+            // Clarity Scale (Secondary Accent) - Pure light
+            'clarity-cream': '#FDF6E3',
+            'clarity-soft': '#F5E6C8',
+            'clarity-muted': '#D9C9A5',
+
+            // Wisdom Scale (AI Features) - Intelligence
+            'wisdom-violet': '#8B7EC8',
+            'wisdom-soft': '#A599D4',
+            'wisdom-muted': '#7A6BA8',
+
+            // Depth Scale (Background) - Professional darkness
+            'depth-base': '#0F0E0D',
+            'depth-elevated': '#151413',
+            'depth-surface': '#1C1A18',
+            'depth-border': '#2A2724',
+
+            // Text Scale - Warm moonlight
+            'text-primary': '#F8F5F0',
+            'text-secondary': '#E5E0D8',
+            'text-muted': '#A8A299',
+
+            // Semantic Colors
+            'success': '#5CB85C',
+            'warning': '#F0A030',
+            'error': '#E85A5A',
+            'info': '#5DADE2',
+          },
+          fontFamily: {
+            'display': ['Inter', 'system-ui', 'sans-serif'],
+            'heading': ['Inter', 'system-ui', 'sans-serif'],
+            'body': ['Inter', 'system-ui', 'sans-serif'],
+            'sans': ['Inter', 'system-ui', 'sans-serif'],
+          },
+          borderRadius: {
+            'brand-btn': '12px',
+            'brand-card': '16px',
+            'brand-modal': '20px',
+          },
+          boxShadow: {
+            'illumination': '0 0 30px rgba(232, 184, 74, 0.25)',
+            'illumination-intense': '0 0 40px rgba(232, 184, 74, 0.35)',
+            'wisdom': '0 0 30px rgba(139, 126, 200, 0.2)',
+            'clarity': '0 0 20px rgba(253, 246, 227, 0.15)',
+            'subtle': '0 2px 8px rgba(0, 0, 0, 0.3)',
+            'elevated': '0 4px 24px rgba(0, 0, 0, 0.4)',
+            'floating': '0 8px 40px rgba(0, 0, 0, 0.5)',
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/styles/index.css">
+</head>
+<body class="bg-depth-base text-text-primary antialiased">
+  <div id="root"></div>
+  <script type="module" src="/src/index.tsx"></script>
+</body>
+</html>
