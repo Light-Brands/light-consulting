@@ -10,7 +10,9 @@ import {
   Tag,
   NewsletterCapture,
   ArrowRightIcon,
+  ImagePlaceholder,
 } from '../components';
+import { IMAGE_CONFIG } from '../lib/constants';
 import { PageKey } from '../types';
 
 interface InsightsPageProps {
@@ -307,35 +309,55 @@ export const InsightsPage: React.FC<InsightsPageProps> = ({ onNavigate }) => {
                 </Button>
               </div>
               <div className="hidden lg:block">
-                <div className="aspect-video rounded-brand-card bg-gradient-to-br from-radiance-gold/20 to-radiance-amber/10 flex items-center justify-center">
-                  <span className="text-6xl">✦</span>
-                </div>
+                <ImagePlaceholder
+                  src={IMAGE_CONFIG.blog['strategic-moment'].src}
+                  alt={IMAGE_CONFIG.blog['strategic-moment'].alt}
+                  prompt={IMAGE_CONFIG.blog['strategic-moment'].prompt}
+                  dimensions={IMAGE_CONFIG.blog['strategic-moment'].dimensions}
+                  aspectRatio="video"
+                />
               </div>
             </div>
           </Card>
 
           {/* All Posts Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-            {BLOG_POSTS.slice(1).map((post) => (
-              <Card
-                key={post.id}
-                elevation="subtle"
-                className="cursor-pointer hover:border-radiance-gold/30 transition-colors group"
-                onClick={() => setSelectedPost(post)}
-              >
-                <Tag variant="default" size="sm" className="mb-3">
-                  {post.category}
-                </Tag>
-                <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-radiance-gold transition-colors">
-                  {post.title}
-                </h3>
-                <p className="text-text-secondary text-sm mb-4">{post.excerpt}</p>
-                <div className="flex items-center justify-between text-text-muted text-xs">
-                  <span>{post.date}</span>
-                  <span>{post.readTime}</span>
-                </div>
-              </Card>
-            ))}
+            {BLOG_POSTS.slice(1).map((post) => {
+              const blogImageKey = post.id as keyof typeof IMAGE_CONFIG.blog;
+              const blogImage = IMAGE_CONFIG.blog[blogImageKey];
+              return (
+                <Card
+                  key={post.id}
+                  elevation="subtle"
+                  className="cursor-pointer hover:border-radiance-gold/30 transition-colors group overflow-hidden"
+                  onClick={() => setSelectedPost(post)}
+                >
+                  {blogImage && (
+                    <div className="-mx-6 -mt-6 mb-4">
+                      <ImagePlaceholder
+                        src={blogImage.src}
+                        alt={blogImage.alt}
+                        prompt={blogImage.prompt}
+                        dimensions={blogImage.dimensions}
+                        aspectRatio="video"
+                        className="rounded-t-brand-card rounded-b-none"
+                      />
+                    </div>
+                  )}
+                  <Tag variant="default" size="sm" className="mb-3">
+                    {post.category}
+                  </Tag>
+                  <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-radiance-gold transition-colors">
+                    {post.title}
+                  </h3>
+                  <p className="text-text-secondary text-sm mb-4">{post.excerpt}</p>
+                  <div className="flex items-center justify-between text-text-muted text-xs">
+                    <span>{post.date}</span>
+                    <span>{post.readTime}</span>
+                  </div>
+                </Card>
+              );
+            })}
           </div>
 
           {/* Newsletter Capture */}
