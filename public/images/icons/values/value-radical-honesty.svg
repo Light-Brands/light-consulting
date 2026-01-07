@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+  <!-- Radical Honesty: Open eye with mirror reflection -->
+  <defs>
+    <linearGradient id="honestyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8B84A"/>
+      <stop offset="100%" stop-color="#D4944C"/>
+    </linearGradient>
+  </defs>
+  <!-- Large open eye -->
+  <ellipse cx="40" cy="40" rx="28" ry="18" stroke="url(#honestyGrad)" stroke-width="3" fill="none"/>
+  <!-- Iris -->
+  <circle cx="40" cy="40" r="12" stroke="#E8B84A" stroke-width="2.5" fill="none"/>
+  <!-- Pupil with light reflection -->
+  <circle cx="40" cy="40" r="6" fill="#E8B84A"/>
+  <circle cx="36" cy="37" r="2" fill="#FDF6E3"/>
+  <!-- Eye sparkle lines radiating -->
+  <path d="M40 18V22M40 58V62" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+  <path d="M14 40H18M62 40H66" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+  <path d="M20 26L23 29M57 51L60 54" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M57 26L54 29M23 51L20 54" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Speech clarity waves -->
+  <path d="M68 34C70 36 70 44 68 46" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M72 30C76 34 76 46 72 50" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

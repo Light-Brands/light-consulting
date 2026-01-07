@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <!-- Manufacturing: Interlocking gears with conveyor -->
+  <defs>
+    <linearGradient id="mfgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8B84A"/>
+      <stop offset="100%" stop-color="#D4944C"/>
+    </linearGradient>
+  </defs>
+  <!-- Large gear -->
+  <circle cx="24" cy="24" r="12" stroke="url(#mfgGrad)" stroke-width="2.5" fill="none"/>
+  <circle cx="24" cy="24" r="4" stroke="#E8B84A" stroke-width="2" fill="none"/>
+  <!-- Gear teeth on large gear -->
+  <path d="M24 10V14M24 34V38M10 24H14M34 24H38" stroke="#E8B84A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M14.1 14.1L16.9 16.9M31.1 31.1L33.9 33.9M14.1 33.9L16.9 31.1M31.1 16.9L33.9 14.1" stroke="#E8B84A" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Small gear -->
+  <circle cx="44" cy="34" r="8" stroke="#E8B84A" stroke-width="2" fill="none"/>
+  <circle cx="44" cy="34" r="3" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <!-- Small gear teeth -->
+  <path d="M44 24V27M44 41V44M34 34H37M51 34H54" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+  <!-- Conveyor belt -->
+  <path d="M8 52H56" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="12" cy="52" r="3" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <circle cx="52" cy="52" r="3" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <!-- Box on conveyor -->
+  <rect x="28" y="44" width="8" height="8" rx="1" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+  <!-- Speaking & Workshops: Podium with microphone and radiating impact -->
+  <defs>
+    <linearGradient id="speakGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D4944C"/>
+      <stop offset="100%" stop-color="#E8B84A"/>
+    </linearGradient>
+  </defs>
+  <!-- Stage/podium -->
+  <path d="M20 50H60L56 70H24L20 50Z" stroke="url(#speakGrad)" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+  <!-- Podium top surface -->
+  <path d="M16 50H64" stroke="#E8B84A" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Microphone -->
+  <ellipse cx="40" cy="30" rx="6" ry="10" stroke="#E8B84A" stroke-width="2.5" fill="none"/>
+  <path d="M34 34C34 42 40 46 40 46C40 46 46 42 46 34" stroke="#E8B84A" stroke-width="2" fill="none"/>
+  <path d="M40 46V54" stroke="#E8B84A" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M34 54H46" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+  <!-- Microphone detail -->
+  <path d="M36 26H44M36 30H44M36 34H44" stroke="#E8B84A" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+  <!-- Sound/impact waves radiating -->
+  <path d="M52 24C56 28 56 36 52 40" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+  <path d="M58 18C66 26 66 38 58 46" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M28 24C24 28 24 36 28 40" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+  <path d="M22 18C14 26 14 38 22 46" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Spotlight effect -->
+  <path d="M40 8L36 16M40 8L44 16M40 8V14" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

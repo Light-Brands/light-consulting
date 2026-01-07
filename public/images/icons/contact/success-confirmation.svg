@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" fill="none">
+  <!-- Success Confirmation: Celebratory burst with checkmark -->
+  <defs>
+    <linearGradient id="successGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8B84A"/>
+      <stop offset="100%" stop-color="#D4944C"/>
+    </linearGradient>
+    <linearGradient id="burstGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#E8B84A" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#D4944C" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer glow circle -->
+  <circle cx="100" cy="100" r="80" stroke="url(#burstGrad)" stroke-width="2" fill="none" opacity="0.5"/>
+  <circle cx="100" cy="100" r="65" stroke="url(#successGrad)" stroke-width="3" fill="none" opacity="0.7"/>
+  <!-- Main circle -->
+  <circle cx="100" cy="100" r="50" stroke="url(#successGrad)" stroke-width="4" fill="none"/>
+  <!-- Checkmark -->
+  <path d="M72 100L92 120L130 80" stroke="#E8B84A" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Radiating burst lines -->
+  <path d="M100 30V10" stroke="#E8B84A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M100 170V190" stroke="#E8B84A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M30 100H10" stroke="#E8B84A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M170 100H190" stroke="#E8B84A" stroke-width="3" stroke-linecap="round"/>
+  <!-- Diagonal burst lines -->
+  <path d="M50 50L36 36" stroke="#E8B84A" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M150 50L164 36" stroke="#E8B84A" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M50 150L36 164" stroke="#E8B84A" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M150 150L164 164" stroke="#E8B84A" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Sparkle particles -->
+  <circle cx="40" cy="70" r="4" fill="#E8B84A"/>
+  <circle cx="160" cy="70" r="4" fill="#E8B84A"/>
+  <circle cx="40" cy="130" r="4" fill="#D4944C"/>
+  <circle cx="160" cy="130" r="4" fill="#D4944C"/>
+  <!-- Small floating sparkles -->
+  <circle cx="70" cy="30" r="2" fill="#E8B84A" opacity="0.7"/>
+  <circle cx="130" cy="30" r="2" fill="#E8B84A" opacity="0.7"/>
+  <circle cx="30" cy="90" r="2" fill="#D4944C" opacity="0.7"/>
+  <circle cx="170" cy="110" r="2" fill="#D4944C" opacity="0.7"/>
+  <circle cx="80" cy="170" r="2" fill="#E8B84A" opacity="0.7"/>
+  <circle cx="120" cy="170" r="2" fill="#E8B84A" opacity="0.7"/>
+  <!-- Star accents -->
+  <path d="M24 50L26 54L30 54L27 57L28 61L24 59L20 61L21 57L18 54L22 54Z" fill="#E8B84A"/>
+  <path d="M176 50L178 54L182 54L179 57L180 61L176 59L172 61L173 57L170 54L174 54Z" fill="#E8B84A"/>
+</svg>

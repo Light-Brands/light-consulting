@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+  <!-- Book/Schedule: Calendar with highlighted slot and clock -->
+  <defs>
+    <linearGradient id="bookGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8B84A"/>
+      <stop offset="100%" stop-color="#D4944C"/>
+    </linearGradient>
+  </defs>
+  <!-- Calendar outline -->
+  <rect x="10" y="16" width="44" height="50" rx="4" stroke="url(#bookGrad)" stroke-width="2.5" fill="none"/>
+  <!-- Calendar top binding -->
+  <path d="M10 28H54" stroke="#E8B84A" stroke-width="2"/>
+  <!-- Calendar rings -->
+  <path d="M20 12V20M34 12V20M44 12V20" stroke="#E8B84A" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Calendar grid -->
+  <rect x="16" y="34" width="8" height="8" rx="1" stroke="#E8B84A" stroke-width="1" fill="none" opacity="0.4"/>
+  <rect x="28" y="34" width="8" height="8" rx="1" stroke="#E8B84A" stroke-width="1" fill="none" opacity="0.4"/>
+  <rect x="40" y="34" width="8" height="8" rx="1" stroke="#E8B84A" stroke-width="1" fill="none" opacity="0.4"/>
+  <rect x="16" y="46" width="8" height="8" rx="1" stroke="#E8B84A" stroke-width="1" fill="none" opacity="0.4"/>
+  <!-- Highlighted/selected date -->
+  <rect x="28" y="46" width="8" height="8" rx="1" fill="#E8B84A"/>
+  <path d="M30 50L32 52L36 48" stroke="#1A1A1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="40" y="46" width="8" height="8" rx="1" stroke="#E8B84A" stroke-width="1" fill="none" opacity="0.4"/>
+  <!-- Clock accent -->
+  <circle cx="60" cy="52" r="14" stroke="#E8B84A" stroke-width="2.5" fill="none"/>
+  <path d="M60 44V52L66 56" stroke="#E8B84A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Clock ticks -->
+  <path d="M60 40V42M60 62V64M48 52H50M70 52H72" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Sparkle indicating selection -->
+  <circle cx="64" cy="20" r="3" fill="#E8B84A"/>
+  <path d="M64 14V16M64 24V26M58 20H60M68 20H70" stroke="#E8B84A" stroke-width="1" stroke-linecap="round"/>
+</svg>

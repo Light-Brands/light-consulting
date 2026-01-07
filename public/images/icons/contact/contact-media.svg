@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+  <!-- Media & Press: Camera/recording with article/newspaper -->
+  <defs>
+    <linearGradient id="mediaContactGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8B84A"/>
+      <stop offset="100%" stop-color="#D4944C"/>
+    </linearGradient>
+  </defs>
+  <!-- Video camera body -->
+  <rect x="10" y="24" width="36" height="28" rx="4" stroke="url(#mediaContactGrad)" stroke-width="2.5" fill="none"/>
+  <!-- Camera lens -->
+  <circle cx="28" cy="38" r="8" stroke="#E8B84A" stroke-width="2" fill="none"/>
+  <circle cx="28" cy="38" r="3" fill="#E8B84A"/>
+  <!-- Camera viewfinder -->
+  <rect x="38" y="28" width="6" height="4" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <!-- Recording indicator -->
+  <circle cx="16" cy="30" r="3" fill="#E8B84A"/>
+  <!-- Camera side/mic extension -->
+  <path d="M46 32L56 24V52L46 44" stroke="#E8B84A" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+  <!-- Newspaper/article -->
+  <rect x="50" y="40" width="22" height="30" rx="2" stroke="#E8B84A" stroke-width="2" fill="none"/>
+  <!-- Article headline -->
+  <path d="M54 48H68" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+  <!-- Article text lines -->
+  <path d="M54 54H66M54 58H64M54 62H68" stroke="#E8B84A" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+  <!-- Quote marks accent -->
+  <path d="M12 60C14 58 14 62 12 64" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+  <path d="M18 60C20 58 20 62 18 64" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+  <!-- Podcast waveform -->
+  <path d="M62 12V20M66 14V18M70 10V22M74 14V18" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+</svg>
