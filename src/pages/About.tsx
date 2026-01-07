@@ -9,11 +9,10 @@ import {
   Card,
   Tag,
   SparkleIcon,
-  ImagePlaceholder,
   ValueIcon,
   IndustryIcon,
 } from '../components';
-import { PHILOSOPHY_ITEMS, COMPANY_VALUES, INDUSTRIES_SERVED, IMAGE_CONFIG, FOUNDERS_INTRO, FOUNDER_FAMILIES } from '../lib/constants';
+import { COMPANY_VALUES, INDUSTRIES_SERVED, IMAGE_CONFIG, FOUNDERS_INTRO, FOUNDER_FAMILIES } from '../lib/constants';
 import { PageKey } from '../types';
 
 interface AboutPageProps {
@@ -57,92 +56,77 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* Origin Story */}
+      {/* Origin Story - Centered and Prominent */}
       <section className="section-spacing bg-depth-elevated">
-        <div className="container-wide">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Team Photo */}
-            <div className="order-2 lg:order-1">
-              <ImagePlaceholder
-                src={IMAGE_CONFIG.about.team.src}
-                alt={IMAGE_CONFIG.about.team.alt}
-                aspectRatio="video"
-                className="mb-6"
-              />
-              <ImagePlaceholder
-                src={IMAGE_CONFIG.about.origin.src}
-                alt={IMAGE_CONFIG.about.origin.alt}
-                aspectRatio="video"
-              />
+        <div className="container-narrow">
+          <div className="text-center mb-8">
+            <Tag variant="default" className="mb-4">
+              Our Origin
+            </Tag>
+            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6">
+              Why We Built Light Brand Consulting
+            </h2>
+          </div>
+          
+          <Card elevation="elevated" className="p-8 md:p-12 relative overflow-hidden">
+            {/* Decorative glow */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-radiance-gold/5 blur-3xl pointer-events-none" />
+            
+            <div className="relative z-10 space-y-6 text-text-secondary text-lg leading-relaxed">
+              <p>
+                We've spent years watching businesses struggle with AI. Not because AI is hard to understand—
+                but because the people explaining it make it complicated. Jargon-filled presentations.
+                Endless "assessments" that never lead anywhere. Consultants who seem more interested in
+                extending engagements than delivering results.
+              </p>
+              <p>
+                The truth is: most businesses already have what they need to benefit from AI. The opportunities
+                are hiding in plain sight. What's missing isn't more technology or bigger budgets. It's
+                <span className="text-radiance-gold font-semibold"> clarity</span>.
+              </p>
+              <p>
+                That's why we built Light Brand Consulting. We wanted to create a different kind of AI
+                consulting—one focused on speed, clarity, and independence. One conversation. Clear insights.
+                Actionable next steps. No ongoing dependency required.
+              </p>
             </div>
-            <div className="order-1 lg:order-2">
-              <Tag variant="default" className="mb-4">
-                Our Origin
-              </Tag>
-              <h2 className="text-3xl font-bold text-text-primary mb-6">
-                Why We Built Light Brand Consulting
-              </h2>
-              <div className="space-y-4 text-text-secondary">
-                <p>
-                  We've spent years watching businesses struggle with AI. Not because AI is hard to understand—
-                  but because the people explaining it make it complicated. Jargon-filled presentations.
-                  Endless "assessments" that never lead anywhere. Consultants who seem more interested in
-                  extending engagements than delivering results.
-                </p>
-                <p>
-                  The truth is: most businesses already have what they need to benefit from AI. The opportunities
-                  are hiding in plain sight. What's missing isn't more technology or bigger budgets. It's
-                  <span className="text-radiance-gold font-medium"> clarity</span>.
-                </p>
-                <p>
-                  That's why we built Light Brand Consulting. We wanted to create a different kind of AI
-                  consulting—one focused on speed, clarity, and independence. One conversation. Clear insights.
-                  Actionable next steps. No ongoing dependency required.
-                </p>
-              </div>
-            </div>
-
-            <Card elevation="elevated" className="p-8">
-              <div className="flex items-center gap-3 mb-6">
+            
+            {/* The Light Touch - Integrated */}
+            <div className="mt-10 pt-8 border-t border-depth-border">
+              <div className="flex items-center gap-3 mb-6 justify-center">
                 <SparkleIcon className="text-radiance-gold" size={24} />
                 <h3 className="text-xl font-bold text-text-primary">
-                  The Light Touch
+                  Why "Light"?
                 </h3>
               </div>
-              <p className="text-text-secondary mb-6">
-                The name "Light" isn't accidental. It captures everything we believe:
+              <p className="text-text-muted text-center mb-6">
+                The name isn't accidental. It captures everything we believe:
               </p>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-radiance-gold/10 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5 font-bold">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="w-12 h-12 rounded-xl bg-radiance-gold/10 text-radiance-gold flex items-center justify-center mx-auto mb-3 font-bold">
                     1
                   </div>
-                  <div>
-                    <p className="text-text-primary font-medium">Illumination</p>
-                    <p className="text-text-muted text-sm">We shine light on what's already there—we don't add something foreign</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-radiance-amber/10 text-radiance-amber flex items-center justify-center flex-shrink-0 mt-0.5 font-bold">
+                  <p className="text-text-primary font-semibold mb-1">Illumination</p>
+                  <p className="text-text-muted text-sm">We shine light on what's already there</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 rounded-xl bg-radiance-amber/10 text-radiance-amber flex items-center justify-center mx-auto mb-3 font-bold">
                     2
                   </div>
-                  <div>
-                    <p className="text-text-primary font-medium">Light Touch</p>
-                    <p className="text-text-muted text-sm">We engage with minimum friction, maximum impact</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-clarity-cream/10 text-clarity-cream flex items-center justify-center flex-shrink-0 mt-0.5 font-bold">
+                  <p className="text-text-primary font-semibold mb-1">Light Touch</p>
+                  <p className="text-text-muted text-sm">Minimum friction, maximum impact</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 rounded-xl bg-clarity-cream/10 text-clarity-cream flex items-center justify-center mx-auto mb-3 font-bold">
                     3
                   </div>
-                  <div>
-                    <p className="text-text-primary font-medium">Light Weight</p>
-                    <p className="text-text-muted text-sm">We're here and gone—not embedded for months</p>
-                  </div>
-                </li>
-              </ul>
-            </Card>
-          </div>
+                  <p className="text-text-primary font-semibold mb-1">Light Weight</p>
+                  <p className="text-text-muted text-sm">Here and gone—not embedded for months</p>
+                </div>
+              </div>
+            </div>
+          </Card>
         </div>
       </section>
 
@@ -227,69 +211,26 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* Philosophy Section */}
-      <section className="section-spacing bg-depth-elevated">
-        <div className="container-wide">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-text-primary mb-4">
-              The Light Touch Principle
-            </h2>
-            <p className="text-text-secondary max-w-2xl mx-auto">
-              We believe consulting should create capacity, not dependency.
-              Our approach reveals what's already within your business.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {PHILOSOPHY_ITEMS.map((item, index) => (
-              <Card key={index} elevation="subtle" className="text-center">
-                <div
-                  className={`w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center bg-${item.accent}/10`}
-                >
-                  <SparkleIcon
-                    size={28}
-                    className={`text-${item.accent}`}
-                    style={{ color: item.accent === 'radiance-gold' ? '#E8B84A' : item.accent === 'radiance-amber' ? '#D4944C' : '#FDF6E3' }}
-                  />
-                </div>
-                <h3 className="text-xl font-semibold text-text-primary mb-3">
-                  {item.title}
-                </h3>
-                <p className="text-text-secondary">{item.description}</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Our Belief */}
-      <section className="section-spacing bg-depth-elevated">
+      {/* Our Belief About This Moment */}
+      <section className="section-spacing">
         <div className="container-narrow">
-          <Card elevation="elevated" className="p-8 md:p-12 relative overflow-hidden">
+          <Card elevation="elevated" className="p-8 md:p-12 relative overflow-hidden text-center">
             <div className="absolute top-0 right-0 w-64 h-64 bg-radiance-gold/5 blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-radiance-amber/5 blur-3xl pointer-events-none" />
 
             <div className="relative z-10">
+              <SparkleIcon className="text-radiance-gold mx-auto mb-4" size={32} />
               <h2 className="text-2xl font-bold text-text-primary mb-6">
-                Our Belief About This Moment
+                The Strategic Moment
               </h2>
 
-              <div className="space-y-6 text-text-secondary">
-                <p>
-                  We're in a strategic moment. <span className="text-radiance-gold font-semibold">2024-2026 will be remembered the way we remember 1995 for the web, 2008 for mobile.</span> The businesses that move now—with clarity, not chaos—will define the next decade.
-                </p>
+              <p className="text-text-secondary text-lg mb-6 max-w-2xl mx-auto">
+                <span className="text-radiance-gold font-semibold">2024-2026 will be remembered the way we remember 1995 for the web, 2008 for mobile.</span> The businesses that move now—with clarity, not chaos—will define the next decade.
+              </p>
 
-                <p>
-                  But here's what most AI consultants won't tell you: the opportunity isn't in doing everything AI can do. It's in doing the right things AI can do <em>for your specific business</em>. Most companies don't need a 50-point AI transformation roadmap. They need to identify the 3-5 opportunities that will actually move the needle—and then execute on them.
-                </p>
-
-                <p>
-                  That's what illumination means. Not adding complexity. Not creating dependency. Just <span className="text-radiance-gold font-medium">clarity</span>—about what's possible, what's practical, and what's powerful for you.
-                </p>
-
-                <p className="border-l-4 border-radiance-gold pl-4 italic">
-                  "The businesses that win won't be the ones that did the most AI. They'll be the ones that did the right AI, at the right time, in the right places."
-                </p>
-              </div>
+              <p className="border-l-4 border-radiance-gold pl-4 text-left italic text-text-muted max-w-xl mx-auto">
+                "The businesses that win won't be the ones that did the most AI. They'll be the ones that did the right AI, at the right time, in the right places."
+              </p>
             </div>
           </Card>
         </div>
