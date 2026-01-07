@@ -212,7 +212,7 @@ export const CapacityGapVisual: React.FC = () => {
         </svg>
 
         {/* Stage nodes */}
-        <div className="relative flex justify-between items-center px-[5%] md:px-[10%] py-12">
+        <div className="relative flex justify-between items-center px-[5%] md:px-[10%] py-12 z-10">
           {STAGES.map((stage, index) => {
             const isActive = activeStage === stage.id;
             const stageProgress = progress > (index * 50) ? Math.min(100, (progress - index * 50) * 2) : 0;
@@ -291,10 +291,11 @@ export const CapacityGapVisual: React.FC = () => {
                 {/* Expanded detail panel */}
                 {isActive && (
                   <div 
-                    className="detail-panel absolute top-full mt-6 w-64 md:w-80 p-5 rounded-xl shadow-2xl z-20 border border-radiance-gold/30" 
+                    className="detail-panel absolute top-full mt-6 w-64 md:w-80 p-5 rounded-xl shadow-2xl z-50 border border-radiance-gold/30" 
                     style={{ 
                       backgroundColor: '#0F0E0D',
-                      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 30px rgba(232, 184, 74, 0.15), inset 0 1px 0 rgba(255,255,255,0.05)' 
+                      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 30px rgba(232, 184, 74, 0.15), inset 0 1px 0 rgba(255,255,255,0.05)',
+                      isolation: 'isolate',
                     }}
                   >
                     <p className="text-text-secondary text-sm mb-4 leading-relaxed">
@@ -345,7 +346,7 @@ export const CapacityGapVisual: React.FC = () => {
 
       {/* Bottom stats bar */}
       <div 
-        className="mt-8 grid grid-cols-3 gap-4 p-4 bg-depth-base/50 rounded-xl border border-depth-border"
+        className={`mt-8 grid grid-cols-3 gap-4 p-4 bg-depth-base/50 rounded-xl border border-depth-border relative z-0 ${activeStage ? 'pointer-events-none' : ''}`}
         style={{
           opacity: isVisible ? 1 : 0,
           transform: isVisible ? 'translateY(0)' : 'translateY(20px)',

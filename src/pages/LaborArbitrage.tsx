@@ -58,8 +58,9 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
   // Animated counters for the main stats
   const humanYears = useAnimatedCounter(60, 2500);
   const aiDays = useAnimatedCounter(30, 2500);
-  const costSavings = useAnimatedCounter(7200000, 3000);
+  const costSavings = useAnimatedCounter(72, 3000); // $7.2M represented as 72 (will display as 7.2)
   const linesPerHour = useAnimatedCounter(5000, 2000);
+  const efficiencyMultiplier = useAnimatedCounter(9000, 2500);
 
   return (
     <div className="min-h-screen pt-24 md:pt-32">
@@ -368,10 +369,10 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
                   <span className="text-text-muted">Benefits & Overhead</span>
                   <span className="text-text-primary">~30% additional</span>
                 </div>
-                <div className="flex justify-between pt-4 border-t border-red-500/20">
+                <div ref={costSavings.ref} className="flex justify-between pt-4 border-t border-red-500/20">
                   <span className="text-red-400 font-semibold">Career Cost</span>
                   <span className="text-3xl font-bold text-red-400">
-                    ${(costSavings.count / 1000000).toFixed(1)}M
+                    ${(costSavings.count / 10).toFixed(1)}M
                   </span>
                 </div>
               </div>
@@ -426,12 +427,88 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
             </div>
           </div>
 
+          {/* Efficiency Multiplier */}
+          <div ref={efficiencyMultiplier.ref} className="mb-12">
+            <Card elevation="elevated" className="p-8 bg-gradient-to-br from-radiance-gold/10 via-depth-elevated to-depth-base border-2 border-radiance-gold/30">
+              <div className="text-center mb-8">
+                <p className="text-text-muted mb-2">Single Agent Efficiency Multiplier</p>
+                <div className="flex items-center justify-center gap-4">
+                  <span className="text-7xl md:text-9xl font-black text-radiance-gold">
+                    {efficiencyMultiplier.count.toLocaleString()}x
+                  </span>
+                </div>
+                <p className="text-text-secondary mt-4 text-lg">
+                  More efficient than traditional human development
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <div className="p-4 bg-depth-base/80 rounded-xl">
+                  <p className="text-3xl font-bold text-text-primary">720</p>
+                  <p className="text-text-muted text-sm">Hours/Month (AI)</p>
+                </div>
+                <div className="p-4 bg-depth-base/80 rounded-xl">
+                  <p className="text-3xl font-bold text-text-primary">÷</p>
+                  <p className="text-text-muted text-sm">Compared To</p>
+                </div>
+                <div className="p-4 bg-depth-base/80 rounded-xl">
+                  <p className="text-3xl font-bold text-text-primary">~160</p>
+                  <p className="text-text-muted text-sm">Hours/Month (Human)</p>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Horizontal Scaling */}
+          <Card elevation="elevated" className="p-8 mb-12 border border-radiance-amber/30">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-radiance-amber/20 text-radiance-amber flex items-center justify-center flex-shrink-0">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-text-primary mb-2">
+                  Horizontal Scaling: The Real Power
+                </h3>
+                <p className="text-text-secondary">
+                  Here's where it gets exponential. AI agents can be <span className="text-radiance-gold font-semibold">scaled horizontally</span>.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              {[
+                { agents: 1, equivalent: '60 years', cost: '$800/mo' },
+                { agents: 5, equivalent: '300 years', cost: '$4,000/mo' },
+                { agents: 10, equivalent: '600 years', cost: '$8,000/mo' },
+                { agents: 20, equivalent: '1,200 years', cost: '$16,000/mo' },
+              ].map((item, index) => (
+                <div key={index} className="p-4 bg-depth-base rounded-xl text-center">
+                  <p className="text-3xl font-bold text-radiance-gold">{item.agents}</p>
+                  <p className="text-text-muted text-xs mb-2">Agent{item.agents > 1 ? 's' : ''}</p>
+                  <p className="text-lg font-semibold text-text-primary">{item.equivalent}</p>
+                  <p className="text-text-muted text-xs">equivalent output</p>
+                  <p className="text-radiance-amber text-sm mt-2">{item.cost}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-4 bg-radiance-gold/10 rounded-lg border-l-4 border-radiance-gold">
+              <p className="text-text-primary font-semibold mb-1">The Limiting Factor</p>
+              <p className="text-text-secondary text-sm">
+                The only constraint is having enough <span className="text-radiance-gold">quality work to feed them</span>. 
+                If you have the specifications, direction, and review capacity—you can scale agents as wide as your business demands.
+              </p>
+            </div>
+          </Card>
+
           {/* Savings Calculator */}
           <Card elevation="elevated" className="p-8 text-center">
             <h3 className="text-2xl font-bold text-text-primary mb-4">
               The Bottom Line
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center mb-6">
               <div>
                 <p className="text-4xl font-bold text-red-400 line-through opacity-60">$7.2M</p>
                 <p className="text-text-muted text-sm">60-Year Career Cost</p>
@@ -442,7 +519,11 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
                 <p className="text-text-muted text-sm">30-Day AI Cost</p>
               </div>
             </div>
-            <p className="text-text-secondary mt-6 max-w-2xl mx-auto">
+            <div className="inline-flex items-center gap-3 px-6 py-3 bg-radiance-gold/10 rounded-full border border-radiance-gold/30 mb-6">
+              <span className="text-text-muted">Cost Reduction:</span>
+              <span className="text-2xl font-black text-radiance-gold">99.99%</span>
+            </div>
+            <p className="text-text-secondary max-w-2xl mx-auto">
               This isn't about replacing humans—it's about understanding the fundamental shift in how value is created 
               and captured. The businesses that adapt to this reality will thrive. Those that don't...
             </p>
