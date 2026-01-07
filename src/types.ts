@@ -29,6 +29,7 @@ export type PageKey =
   | 'about'
   | 'book'
   | 'insights'
+  | 'insights/labor-arbitrage'
   | 'contact';
 
 export interface NavItem {

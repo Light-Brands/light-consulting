@@ -13,6 +13,7 @@ import {
   BookPage,
   ContactPage,
   InsightsPage,
+  LaborArbitragePage,
 } from './pages';
 import { PageKey } from './types';
 import { scrollToTop } from './lib/utils';
@@ -61,6 +62,11 @@ const App: React.FC = () => {
           onNavigate={handleNavigate}
         />
       );
+    }
+
+    // Handle insights sub-pages
+    if (activePage === 'insights/labor-arbitrage') {
+      return <LaborArbitragePage onNavigate={handleNavigate} />;
     }
 
     switch (activePage) {

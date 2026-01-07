@@ -16,7 +16,8 @@ import {
   BookIcon,
   SparkleIcon,
   CheckIcon,
-  ImagePlaceholder,
+  CapacityGapVisual,
+  LaborArbitrageHighlight,
 } from '../components';
 import { SERVICES, TESTIMONIALS, IMAGE_CONFIG } from '../lib/constants';
 import { PageKey } from '../types';
@@ -98,10 +99,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* Capacity Gap Section */}
+      {/* Capacity Gap Section - Interactive */}
       <section className="section-spacing bg-depth-elevated">
         <div className="container-wide">
-          <Card elevation="elevated" className="p-8 md:p-12">
+          <Card elevation="elevated" className="p-8 md:p-12 overflow-hidden">
             <div className="flex items-center gap-3 mb-6">
               <SparkleIcon className="text-radiance-gold" size={28} />
               <h2 className="text-2xl md:text-3xl font-bold text-text-primary">
@@ -109,51 +110,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               </h2>
             </div>
 
-            <p className="text-text-secondary mb-8 max-w-3xl">
+            <p className="text-text-secondary mb-4 max-w-3xl">
               Every business has untapped potential—opportunities hidden in plain sight. The gap between where you are and where AI can take you isn't about technology. It's about seeing clearly.
             </p>
 
-            {/* Visual diagram with Image */}
-            <div className="mb-8">
-              <ImagePlaceholder
-                src={IMAGE_CONFIG.capacityGap.src}
-                alt={IMAGE_CONFIG.capacityGap.alt}
-                aspectRatio="wide"
-                className="mb-4"
-              />
+            {/* Interactive Visualization */}
+            <CapacityGapVisual />
 
-              {/* Fallback visual diagram */}
-              <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 py-4">
-                <div className="text-center">
-                  <div className="w-16 h-16 rounded-full bg-depth-surface border border-depth-border flex items-center justify-center mb-2">
-                    <span className="text-text-muted text-2xl">?</span>
-                  </div>
-                  <p className="text-text-muted text-xs font-medium">Where You Are</p>
-                </div>
-
-                <div className="hidden md:block flex-1 h-0.5 gradient-capacity-bridge rounded-full max-w-[120px]" />
-                <div className="md:hidden w-0.5 h-8 gradient-capacity-bridge rounded-full" />
-
-                <div className="text-center">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center mb-2 shadow-illumination animate-illuminate">
-                    <SparkleIcon className="text-depth-base" size={24} />
-                  </div>
-                  <p className="text-radiance-gold text-xs font-medium">The Bridge</p>
-                </div>
-
-                <div className="hidden md:block flex-1 h-0.5 gradient-capacity-bridge rounded-full max-w-[120px]" />
-                <div className="md:hidden w-0.5 h-8 gradient-capacity-bridge rounded-full" />
-
-                <div className="text-center">
-                  <div className="w-16 h-16 rounded-full bg-clarity-cream/10 border border-clarity-cream/30 flex items-center justify-center mb-2 glow-clarity">
-                    <span className="text-clarity-cream text-2xl">★</span>
-                  </div>
-                  <p className="text-clarity-cream text-xs font-medium">Fullest Capacity</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="border-t border-depth-border pt-8">
+            <div className="border-t border-depth-border pt-8 mt-4">
               <p className="text-text-secondary text-center max-w-2xl mx-auto mb-6">
                 <span className="text-radiance-gold font-semibold">2024-2026 is the strategic moment.</span> Like 1995 for the web, like 2008 for mobile.
                 The businesses that move now—with clarity, not chaos—will define the next decade.
@@ -163,6 +127,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               </p>
             </div>
           </Card>
+        </div>
+      </section>
+
+      {/* Labor Arbitrage Highlight */}
+      <section className="section-spacing">
+        <div className="container-wide">
+          <LaborArbitrageHighlight onLearnMore={() => onNavigate('insights/labor-arbitrage')} />
         </div>
       </section>
 
