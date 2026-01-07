@@ -15,6 +15,7 @@ export { default as TestimonialCard, TestimonialCarousel } from './Testimonial';
 export { default as NewsletterCapture } from './NewsletterCapture';
 export { default as Accordion, AccordionItem } from './Accordion';
 export { ImagePlaceholder, AvatarPlaceholder, HeroBackground } from './ImagePlaceholder';
+export { IconPlaceholder, IndustryIcon, ValueIcon } from './IconPlaceholder';
 
 // Icons
 export * from './Icons';

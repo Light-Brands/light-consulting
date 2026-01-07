@@ -9,8 +9,9 @@ import {
   Card,
   Tag,
   SparkleIcon,
-  CheckIcon,
   ImagePlaceholder,
+  ValueIcon,
+  IndustryIcon,
 } from '../components';
 import { PHILOSOPHY_ITEMS, COMPANY_VALUES, INDUSTRIES_SERVED, IMAGE_CONFIG, FOUNDERS_INTRO, FOUNDER_FAMILIES } from '../lib/constants';
 import { PageKey } from '../types';
@@ -326,23 +327,30 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {COMPANY_VALUES.map((value, index) => (
-              <Card key={index} elevation="subtle" className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-radiance-gold/10 text-radiance-gold flex items-center justify-center flex-shrink-0">
-                    <CheckIcon size={20} />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-text-primary mb-2">
-                      {value.title}
-                    </h3>
-                    <p className="text-text-secondary text-sm">
-                      {value.description}
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            ))}
+            {COMPANY_VALUES.map((value, index) => {
+              // Map value titles to icon configs
+              const iconKey = value.title.toLowerCase().replace(/\s+/g, '') as keyof typeof IMAGE_CONFIG.values;
+              const iconKeyMap: Record<string, keyof typeof IMAGE_CONFIG.values> = {
+                'radicalhonesty': 'radicalHonesty',
+                'outcomeobsession': 'outcomeObsession',
+                'intellectualhumility': 'intellectualHumility',
+                'clientindependence': 'clientIndependence',
+              };
+              const mappedKey = iconKeyMap[iconKey] || 'radicalHonesty';
+              const iconConfig = IMAGE_CONFIG.values[mappedKey];
+
+              return (
+                <Card key={index} elevation="subtle" className="p-6">
+                  <ValueIcon
+                    src={iconConfig?.src}
+                    alt={iconConfig?.alt || value.title}
+                    prompt={iconConfig?.prompt || ''}
+                    title={value.title}
+                    description={value.description}
+                  />
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -428,23 +436,33 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             </p>
           </div>
 
-          {/* Industries Visual */}
-          <div className="max-w-4xl mx-auto mb-8">
-            <ImagePlaceholder
-              src={IMAGE_CONFIG.about.industries.src}
-              alt={IMAGE_CONFIG.about.industries.alt}
-              prompt={IMAGE_CONFIG.about.industries.prompt}
-              dimensions={IMAGE_CONFIG.about.industries.dimensions}
-              aspectRatio="wide"
-            />
-          </div>
-
+          {/* Industries Grid with Individual Icons */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            {INDUSTRIES_SERVED.map((industry, index) => (
-              <Card key={index} elevation="subtle" className="p-4 text-center">
-                <p className="text-text-primary text-sm font-medium">{industry}</p>
-              </Card>
-            ))}
+            {INDUSTRIES_SERVED.map((industry, index) => {
+              // Map industry names to icon configs
+              const industryKeyMap: Record<string, keyof typeof IMAGE_CONFIG.industries> = {
+                'Healthcare & Life Sciences': 'healthcare',
+                'Financial Services': 'finance',
+                'E-commerce & Retail': 'ecommerce',
+                'Professional Services': 'professional',
+                'Manufacturing & Logistics': 'manufacturing',
+                'Media & Entertainment': 'media',
+                'Education & EdTech': 'education',
+                'Real Estate & PropTech': 'realestate',
+              };
+              const iconKey = industryKeyMap[industry] || 'healthcare';
+              const iconConfig = IMAGE_CONFIG.industries[iconKey];
+
+              return (
+                <IndustryIcon
+                  key={index}
+                  src={iconConfig?.src}
+                  alt={iconConfig?.alt || industry}
+                  prompt={iconConfig?.prompt || ''}
+                  label={industry}
+                />
+              );
+            })}
           </div>
 
           <p className="text-text-muted text-sm text-center mt-8 max-w-2xl mx-auto">
