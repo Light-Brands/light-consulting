@@ -46,6 +46,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         {/* Overlay for readability */}
         <div className="absolute inset-0 bg-depth-base/70" />
         
+        {/* Bottom fade gradient - dissolves into next section */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-[20%] pointer-events-none z-[1]"
+          style={{
+            background: 'linear-gradient(to bottom, transparent 0%, rgba(15, 14, 13, 0.5) 50%, rgba(15, 14, 13, 1) 100%)',
+          }}
+        />
+        
         {/* Additional glow effects */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-radial-gradient from-radiance-gold/8 to-transparent blur-3xl pointer-events-none" />
         <div className="absolute top-20 right-10 w-[300px] h-[300px] bg-radiance-gold/5 blur-[100px] rounded-full pointer-events-none animate-float" />

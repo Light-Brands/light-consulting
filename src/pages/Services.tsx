@@ -42,6 +42,14 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-depth-base/80" />
+        
+        {/* Bottom fade gradient - dissolves into next section */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-[20%] pointer-events-none z-[1]"
+          style={{
+            background: 'linear-gradient(to bottom, transparent 0%, rgba(15, 14, 13, 0.5) 50%, rgba(15, 14, 13, 1) 100%)',
+          }}
+        />
 
         <div className="container-wide relative z-10">
           <div className="text-center mb-16">
