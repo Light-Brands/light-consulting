@@ -13,7 +13,7 @@ import {
   BookIcon,
   CheckIcon,
   SparkleIcon,
-  ImagePlaceholder,
+  IconPlaceholder,
 } from '../components';
 import { SERVICES, IMAGE_CONFIG } from '../lib/constants';
 import { PageKey } from '../types';
@@ -117,14 +117,14 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             <div className="text-center">
-              <div className="mb-4">
-                <ImagePlaceholder
+              <div className="mb-4 flex justify-center">
+                <IconPlaceholder
                   src={IMAGE_CONFIG.process.discover.src}
                   alt={IMAGE_CONFIG.process.discover.alt}
                   prompt={IMAGE_CONFIG.process.discover.prompt}
                   dimensions={IMAGE_CONFIG.process.discover.dimensions}
-                  aspectRatio="square"
-                  className="w-24 h-24 mx-auto"
+                  size={96}
+                  color="gold"
                 />
               </div>
               <h3 className="text-xl font-semibold text-text-primary mb-3">
@@ -150,14 +150,14 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
             </div>
 
             <div className="text-center">
-              <div className="mb-4">
-                <ImagePlaceholder
+              <div className="mb-4 flex justify-center">
+                <IconPlaceholder
                   src={IMAGE_CONFIG.process.illuminate.src}
                   alt={IMAGE_CONFIG.process.illuminate.alt}
                   prompt={IMAGE_CONFIG.process.illuminate.prompt}
                   dimensions={IMAGE_CONFIG.process.illuminate.dimensions}
-                  aspectRatio="square"
-                  className="w-24 h-24 mx-auto"
+                  size={96}
+                  color="amber"
                 />
               </div>
               <h3 className="text-xl font-semibold text-text-primary mb-3">
@@ -183,14 +183,14 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
             </div>
 
             <div className="text-center">
-              <div className="mb-4">
-                <ImagePlaceholder
+              <div className="mb-4 flex justify-center">
+                <IconPlaceholder
                   src={IMAGE_CONFIG.process.activate.src}
                   alt={IMAGE_CONFIG.process.activate.alt}
                   prompt={IMAGE_CONFIG.process.activate.prompt}
                   dimensions={IMAGE_CONFIG.process.activate.dimensions}
-                  aspectRatio="square"
-                  className="w-24 h-24 mx-auto"
+                  size={96}
+                  color="cream"
                 />
               </div>
               <h3 className="text-xl font-semibold text-text-primary mb-3">
