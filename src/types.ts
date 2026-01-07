@@ -118,6 +118,13 @@ export interface IntakeQuestion {
 // Content Types
 // ============================================================================
 
+export interface ImagePlaceholder {
+  src?: string;
+  alt: string;
+  prompt: string;
+  dimensions: string;
+}
+
 export interface Testimonial {
   id: string;
   quote: string;
@@ -125,6 +132,7 @@ export interface Testimonial {
   role: string;
   company: string;
   avatar?: string;
+  avatarPrompt?: string;
 }
 
 export interface InsightPost {

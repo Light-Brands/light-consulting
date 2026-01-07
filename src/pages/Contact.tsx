@@ -13,7 +13,9 @@ import {
   CheckIcon,
   MailIcon,
   ClockIcon,
+  ImagePlaceholder,
 } from '../components';
+import { IMAGE_CONFIG } from '../lib/constants';
 import { ContactFormData, PageKey } from '../types';
 import { isValidEmail } from '../lib/utils';
 
@@ -323,6 +325,16 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card elevation="subtle" className="p-6 text-center">
+              <div className="mb-4">
+                <ImagePlaceholder
+                  src={IMAGE_CONFIG.contact.speaking.src}
+                  alt={IMAGE_CONFIG.contact.speaking.alt}
+                  prompt={IMAGE_CONFIG.contact.speaking.prompt}
+                  dimensions={IMAGE_CONFIG.contact.speaking.dimensions}
+                  aspectRatio="square"
+                  className="w-20 h-20 mx-auto"
+                />
+              </div>
               <h3 className="text-text-primary font-semibold mb-2">
                 Speaking & Workshops
               </h3>
@@ -335,6 +347,16 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
             </Card>
 
             <Card elevation="subtle" className="p-6 text-center">
+              <div className="mb-4">
+                <ImagePlaceholder
+                  src={IMAGE_CONFIG.contact.media.src}
+                  alt={IMAGE_CONFIG.contact.media.alt}
+                  prompt={IMAGE_CONFIG.contact.media.prompt}
+                  dimensions={IMAGE_CONFIG.contact.media.dimensions}
+                  aspectRatio="square"
+                  className="w-20 h-20 mx-auto"
+                />
+              </div>
               <h3 className="text-text-primary font-semibold mb-2">
                 Media & Press
               </h3>
@@ -347,6 +369,16 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
             </Card>
 
             <Card elevation="subtle" className="p-6 text-center">
+              <div className="mb-4">
+                <ImagePlaceholder
+                  src={IMAGE_CONFIG.contact.partnerships.src}
+                  alt={IMAGE_CONFIG.contact.partnerships.alt}
+                  prompt={IMAGE_CONFIG.contact.partnerships.prompt}
+                  dimensions={IMAGE_CONFIG.contact.partnerships.dimensions}
+                  aspectRatio="square"
+                  className="w-20 h-20 mx-auto"
+                />
+              </div>
               <h3 className="text-text-primary font-semibold mb-2">
                 Partnerships
               </h3>

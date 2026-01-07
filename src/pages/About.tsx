@@ -3,15 +3,16 @@
  * Light Brand Consulting
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Card,
   Tag,
   SparkleIcon,
   CheckIcon,
+  ImagePlaceholder,
 } from '../components';
-import { PHILOSOPHY_ITEMS, COMPANY_VALUES, INDUSTRIES_SERVED } from '../lib/constants';
+import { PHILOSOPHY_ITEMS, COMPANY_VALUES, INDUSTRIES_SERVED, IMAGE_CONFIG } from '../lib/constants';
 import { PageKey } from '../types';
 
 interface AboutPageProps {
@@ -19,10 +20,46 @@ interface AboutPageProps {
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
+  const [showHeroPrompt, setShowHeroPrompt] = useState(false);
+
   return (
     <div className="min-h-screen pt-24 md:pt-32">
       {/* Hero */}
-      <section className="section-spacing">
+      <section className="section-spacing relative">
+        {/* Hero Image Prompt Button */}
+        <button
+          onClick={() => setShowHeroPrompt(!showHeroPrompt)}
+          className="absolute top-4 right-6 z-20 w-10 h-10 rounded-full bg-depth-base/80 border border-depth-border flex items-center justify-center hover:bg-depth-elevated transition-colors group"
+          title="View hero background image prompt"
+        >
+          <svg className="w-5 h-5 text-radiance-gold group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </button>
+        {showHeroPrompt && (
+          <div className="absolute top-16 right-6 z-20 w-96 p-5 bg-depth-base/95 border border-depth-border rounded-brand-card shadow-xl animate-fade-in">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-radiance-gold font-semibold flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                About Hero Background
+              </span>
+              <button onClick={() => setShowHeroPrompt(false)} className="text-text-muted hover:text-text-primary">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-3 bg-depth-elevated rounded-lg mb-3">
+              <p className="text-text-secondary text-sm leading-relaxed">{IMAGE_CONFIG.heroes.about.prompt}</p>
+            </div>
+            <p className="text-text-muted text-xs">
+              <span className="text-radiance-gold">Dimensions:</span> {IMAGE_CONFIG.heroes.about.dimensions}
+            </p>
+          </div>
+        )}
+
         <div className="container-wide">
           <div className="max-w-3xl">
             <Tag variant="premium" className="mb-4">
@@ -49,7 +86,25 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       <section className="section-spacing bg-depth-elevated">
         <div className="container-wide">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
+            {/* Team Photo Placeholder */}
+            <div className="order-2 lg:order-1">
+              <ImagePlaceholder
+                src={IMAGE_CONFIG.about.team.src}
+                alt={IMAGE_CONFIG.about.team.alt}
+                prompt={IMAGE_CONFIG.about.team.prompt}
+                dimensions={IMAGE_CONFIG.about.team.dimensions}
+                aspectRatio="video"
+                className="mb-6"
+              />
+              <ImagePlaceholder
+                src={IMAGE_CONFIG.about.origin.src}
+                alt={IMAGE_CONFIG.about.origin.alt}
+                prompt={IMAGE_CONFIG.about.origin.prompt}
+                dimensions={IMAGE_CONFIG.about.origin.dimensions}
+                aspectRatio="video"
+              />
+            </div>
+            <div className="order-1 lg:order-2">
               <Tag variant="default" className="mb-4">
                 Our Origin
               </Tag>
@@ -304,6 +359,17 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             <p className="text-text-secondary max-w-xl mx-auto">
               AI opportunities exist in every industry. We've helped businesses across:
             </p>
+          </div>
+
+          {/* Industries Visual */}
+          <div className="max-w-4xl mx-auto mb-8">
+            <ImagePlaceholder
+              src={IMAGE_CONFIG.about.industries.src}
+              alt={IMAGE_CONFIG.about.industries.alt}
+              prompt={IMAGE_CONFIG.about.industries.prompt}
+              dimensions={IMAGE_CONFIG.about.industries.dimensions}
+              aspectRatio="wide"
+            />
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
