@@ -502,9 +502,35 @@ export const InsightsPage: React.FC<InsightsPageProps> = ({ onNavigate }) => {
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
 
   if (selectedPost) {
+    const postImageKey = selectedPost.id as keyof typeof IMAGE_CONFIG.blog;
+    const postImage = IMAGE_CONFIG.blog[postImageKey];
+    
     return (
       <div className="min-h-screen pt-24 md:pt-32">
-        <article className="section-spacing">
+        {/* Hero Banner Image */}
+        {postImage && (
+          <div 
+            className="relative w-full h-[300px] md:h-[400px] mb-8"
+            style={{
+              backgroundImage: `url(${postImage.src})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            {/* Gradient overlay for readability */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-depth-base" />
+            
+            {/* Bottom fade */}
+            <div 
+              className="absolute bottom-0 left-0 right-0 h-[30%]"
+              style={{
+                background: 'linear-gradient(to bottom, transparent 0%, rgba(15, 14, 13, 0.7) 50%, rgba(15, 14, 13, 1) 100%)',
+              }}
+            />
+          </div>
+        )}
+        
+        <article className="section-spacing -mt-16 relative z-10">
           <div className="container-narrow">
             <button
               onClick={() => setSelectedPost(null)}
