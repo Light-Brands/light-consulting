@@ -12,6 +12,7 @@ import {
   Tag,
   CheckIcon,
   MailIcon,
+  ClockIcon,
 } from '../components';
 import { ContactFormData, PageKey } from '../types';
 import { isValidEmail } from '../lib/utils';
@@ -86,12 +87,21 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
             <h1 className="text-3xl font-bold text-text-primary mb-4">
               Message Sent!
             </h1>
-            <p className="text-text-secondary mb-8">
-              Thank you for reaching out. We'll get back to you within 24 hours.
+            <p className="text-text-secondary mb-4">
+              Thank you for reaching out. We read every message personally.
             </p>
-            <Button variant="primary" onClick={() => onNavigate('home')}>
-              Back to Home
-            </Button>
+            <p className="text-text-muted text-sm mb-8">
+              Expect a response within 24 hours during business days. If your inquiry is about booking,
+              we'll include next steps and availability.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button variant="primary" onClick={() => onNavigate('home')}>
+                Back to Home
+              </Button>
+              <Button variant="ghost" onClick={() => onNavigate('insights')}>
+                Read Our Insights
+              </Button>
+            </div>
           </Card>
         </div>
       </div>
@@ -112,9 +122,13 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                 Let's Start a{' '}
                 <span className="text-radiance-gold">Conversation</span>
               </h1>
-              <p className="text-text-secondary text-lg mb-8">
+              <p className="text-text-secondary text-lg mb-4">
                 Have questions about our services? Want to explore how AI can
                 transform your business? We'd love to hear from you.
+              </p>
+              <p className="text-text-muted mb-8">
+                We read every message personally. No auto-responders, no sales bots.
+                Just honest conversation about whether and how we can help.
               </p>
 
               <div className="space-y-6">
@@ -125,7 +139,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                     </div>
                     <div>
                       <h3 className="text-text-primary font-semibold mb-1">
-                        Email Us
+                        Email Us Directly
                       </h3>
                       <a
                         href="mailto:hello@lightbrandconsulting.com"
@@ -133,29 +147,42 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                       >
                         hello@lightbrandconsulting.com
                       </a>
+                      <p className="text-text-muted text-xs mt-1">
+                        Prefer email? Skip the form and write directly.
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+
+                <Card elevation="subtle" className="p-4">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-radiance-amber/10 text-radiance-amber flex items-center justify-center flex-shrink-0">
+                      <ClockIcon size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-text-primary font-semibold mb-1">
+                        Response Time
+                      </h3>
+                      <p className="text-text-secondary text-sm">
+                        We respond within 24 hours during business days.
+                      </p>
+                      <p className="text-text-muted text-xs mt-1">
+                        Urgent? Mention it in your message and we'll prioritize.
+                      </p>
                     </div>
                   </div>
                 </Card>
 
                 <div className="p-6 bg-depth-elevated rounded-brand-card border border-depth-border">
-                  <h3 className="text-text-primary font-semibold mb-2">
-                    Response Time
-                  </h3>
-                  <p className="text-text-secondary text-sm">
-                    We typically respond within 24 hours during business days.
-                    For urgent matters, please mention it in your message.
-                  </p>
-                </div>
-
-                <div className="p-6 bg-depth-elevated rounded-brand-card border border-depth-border">
-                  <h3 className="text-text-primary font-semibold mb-2">
+                  <h3 className="text-text-primary font-semibold mb-3">
                     Ready to Book?
                   </h3>
                   <p className="text-text-secondary text-sm mb-4">
-                    If you're ready to get started, you can book directly.
+                    If you already know you want to work with us, skip the contact form and book directly.
+                    You'll get instant access to our calendar.
                   </p>
                   <Button
-                    variant="outline"
+                    variant="primary"
                     size="sm"
                     onClick={() => onNavigate('book')}
                   >
@@ -163,14 +190,49 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                   </Button>
                 </div>
               </div>
+
+              {/* FAQ Section */}
+              <div className="mt-12">
+                <h3 className="text-lg font-bold text-text-primary mb-6">
+                  Common Questions Before Reaching Out
+                </h3>
+                <div className="space-y-4">
+                  {[
+                    {
+                      q: 'Is this the right first step?',
+                      a: 'If you have questions, yes. If you\'re ready to book, go directly to our booking page—it\'s faster.',
+                    },
+                    {
+                      q: 'What should I include in my message?',
+                      a: 'Tell us about your business, what you\'re hoping AI might help with, and any specific questions. The more context, the better we can help.',
+                    },
+                    {
+                      q: 'Will you try to sell me?',
+                      a: 'No. We\'ll answer your questions honestly. If we\'re not the right fit, we\'ll tell you that too.',
+                    },
+                    {
+                      q: 'What if I\'m not sure AI is right for my business?',
+                      a: 'That\'s exactly what an Illumination Session is for. But feel free to ask questions first—we\'re happy to help you figure that out.',
+                    },
+                  ].map((item, index) => (
+                    <div key={index}>
+                      <h4 className="text-text-primary font-medium text-sm mb-1">{item.q}</h4>
+                      <p className="text-text-muted text-sm">{item.a}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
             {/* Right Column - Form */}
             <div>
               <Card elevation="elevated" className="p-6 md:p-8">
-                <h2 className="text-xl font-bold text-text-primary mb-6">
+                <h2 className="text-xl font-bold text-text-primary mb-2">
                   Send a Message
                 </h2>
+                <p className="text-text-muted text-sm mb-6">
+                  Fill out the form below and we'll get back to you within 24 hours.
+                </p>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <Input
@@ -201,11 +263,11 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
 
                   <Textarea
                     label="Your Message"
-                    placeholder="Tell us about your goals and how we can help..."
+                    placeholder="Tell us about your business, what you're hoping AI might help with, and any questions you have..."
                     value={formData.message}
                     onChange={(e) => updateField('message', e.target.value)}
                     error={errors.message}
-                    rows={5}
+                    rows={6}
                     required
                   />
 
@@ -217,9 +279,84 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                   >
                     Send Message
                   </Button>
+
+                  <p className="text-text-muted text-xs text-center">
+                    We read every message personally. Your information stays private.
+                  </p>
                 </form>
               </Card>
+
+              {/* What Happens Next */}
+              <Card elevation="subtle" className="mt-6 p-6">
+                <h3 className="text-text-primary font-semibold mb-4">
+                  What Happens After You Send
+                </h3>
+                <ol className="space-y-3">
+                  {[
+                    'We read your message and consider how we can best help',
+                    'Within 24 hours, you\'ll get a personal response',
+                    'If booking makes sense, we\'ll share available times',
+                    'If we\'re not the right fit, we\'ll tell you honestly',
+                  ].map((step, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <span className="w-6 h-6 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                        {index + 1}
+                      </span>
+                      <span className="text-text-secondary text-sm">{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </Card>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Additional Context Section */}
+      <section className="section-spacing bg-depth-elevated">
+        <div className="container-wide">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl font-bold text-text-primary mb-4">
+              Other Ways We Can Help
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card elevation="subtle" className="p-6 text-center">
+              <h3 className="text-text-primary font-semibold mb-2">
+                Speaking & Workshops
+              </h3>
+              <p className="text-text-secondary text-sm mb-4">
+                Looking for an AI speaker for your conference, leadership team, or board meeting?
+              </p>
+              <p className="text-text-muted text-xs">
+                Mention "speaking inquiry" in your message
+              </p>
+            </Card>
+
+            <Card elevation="subtle" className="p-6 text-center">
+              <h3 className="text-text-primary font-semibold mb-2">
+                Media & Press
+              </h3>
+              <p className="text-text-secondary text-sm mb-4">
+                Journalists and podcasters: we're happy to share insights on AI strategy for business.
+              </p>
+              <p className="text-text-muted text-xs">
+                Mention "media inquiry" in your message
+              </p>
+            </Card>
+
+            <Card elevation="subtle" className="p-6 text-center">
+              <h3 className="text-text-primary font-semibold mb-2">
+                Partnerships
+              </h3>
+              <p className="text-text-secondary text-sm mb-4">
+                Are you an implementation partner, agency, or complementary service? Let's explore working together.
+              </p>
+              <p className="text-text-muted text-xs">
+                Mention "partnership inquiry" in your message
+              </p>
+            </Card>
           </div>
         </div>
       </section>

@@ -15,8 +15,9 @@ import {
   BlueprintIcon,
   BookIcon,
   SparkleIcon,
+  CheckIcon,
 } from '../components';
-import { SERVICES, TESTIMONIALS } from '../lib/constants';
+import { SERVICES, TESTIMONIALS, SUCCESS_METRICS } from '../lib/constants';
 import { PageKey } from '../types';
 
 interface HomePageProps {
@@ -41,7 +42,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         <div className="relative z-10 max-w-4xl mx-auto">
           <div className="animate-fade-in">
             <Tag variant="premium" className="mb-6">
-              AI Consulting
+              AI Strategy Consulting
             </Tag>
           </div>
 
@@ -50,9 +51,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <span className="text-radiance-gold block md:inline"> fullest capacity</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-text-secondary mb-12 max-w-2xl leading-relaxed animate-slide-up delay-200">
+          <p className="text-lg md:text-xl text-text-secondary mb-6 max-w-2xl leading-relaxed animate-slide-up delay-200">
             Transform your business into an AI super intelligence.
             Light consulting creates capacity, not dependency.
+          </p>
+
+          <p className="text-base text-text-muted mb-12 max-w-2xl leading-relaxed animate-slide-up delay-250">
+            We don't do AI for you—we illuminate the path so you can move with clarity and confidence.
+            In one conversation, see possibilities you've been blind to.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 animate-slide-up delay-300">
@@ -92,46 +98,91 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               </h2>
             </div>
 
+            <p className="text-text-secondary mb-8 max-w-3xl">
+              Every business has untapped potential—opportunities hidden in plain sight. The gap between where you are and where AI can take you isn't about technology. It's about seeing clearly.
+            </p>
+
             {/* Visual diagram */}
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 py-8 mb-8">
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-depth-surface border border-depth-border flex items-center justify-center mb-3">
-                  <span className="text-text-muted text-2xl">?</span>
+                <div className="w-20 h-20 rounded-full bg-depth-surface border border-depth-border flex items-center justify-center mb-3">
+                  <span className="text-text-muted text-3xl">?</span>
                 </div>
-                <p className="text-text-muted text-sm">Where You Are</p>
+                <p className="text-text-muted text-sm font-medium">Where You Are</p>
+                <p className="text-text-muted/60 text-xs mt-1">Uncertain potential</p>
               </div>
 
               <div className="hidden md:block flex-1 h-1 gradient-capacity-bridge rounded-full max-w-[200px]" />
               <div className="md:hidden w-1 h-12 gradient-capacity-bridge rounded-full" />
 
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center mb-3 shadow-illumination animate-illuminate">
-                  <SparkleIcon className="text-depth-base" size={28} />
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center mb-3 shadow-illumination animate-illuminate">
+                  <SparkleIcon className="text-depth-base" size={32} />
                 </div>
                 <p className="text-radiance-gold text-sm font-medium">The Bridge</p>
+                <p className="text-radiance-gold/60 text-xs mt-1">Clarity + Strategy</p>
               </div>
 
               <div className="hidden md:block flex-1 h-1 gradient-capacity-bridge rounded-full max-w-[200px]" />
               <div className="md:hidden w-1 h-12 gradient-capacity-bridge rounded-full" />
 
               <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-clarity-cream/10 border border-clarity-cream/30 flex items-center justify-center mb-3 glow-clarity">
-                  <span className="text-clarity-cream text-2xl">★</span>
+                <div className="w-20 h-20 rounded-full bg-clarity-cream/10 border border-clarity-cream/30 flex items-center justify-center mb-3 glow-clarity">
+                  <span className="text-clarity-cream text-3xl">★</span>
                 </div>
-                <p className="text-clarity-cream text-sm">Fullest Capacity</p>
+                <p className="text-clarity-cream text-sm font-medium">Fullest Capacity</p>
+                <p className="text-clarity-cream/60 text-xs mt-1">AI-amplified business</p>
               </div>
             </div>
 
-            <p className="text-text-secondary text-center max-w-2xl mx-auto">
-              2024-2026 is the strategic moment. Like 1995 for the web, like 2008 for mobile.
-              The question isn't if—it's how fast.
-            </p>
+            <div className="border-t border-depth-border pt-8">
+              <p className="text-text-secondary text-center max-w-2xl mx-auto mb-6">
+                <span className="text-radiance-gold font-semibold">2024-2026 is the strategic moment.</span> Like 1995 for the web, like 2008 for mobile.
+                The businesses that move now—with clarity, not chaos—will define the next decade.
+              </p>
+              <p className="text-text-muted text-center text-sm max-w-xl mx-auto">
+                The question isn't if AI will transform your industry—it's whether you'll lead that transformation or react to it.
+              </p>
+            </div>
           </Card>
         </div>
       </section>
 
-      {/* Services Section */}
+      {/* Success Metrics Section */}
       <section className="section-spacing">
+        <div className="container-wide">
+          <div className="text-center mb-12">
+            <Tag variant="default" className="mb-4">
+              Results
+            </Tag>
+            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
+              Clarity Creates Results
+            </h2>
+            <p className="text-text-secondary max-w-2xl mx-auto">
+              Our clients don't just leave with insights—they leave with momentum.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {SUCCESS_METRICS.map((item, index) => (
+              <Card key={index} elevation="subtle" className="text-center p-6">
+                <p className="text-3xl md:text-4xl font-black text-radiance-gold mb-2">
+                  {item.metric}
+                </p>
+                <p className="text-text-primary font-semibold text-sm mb-1">
+                  {item.label}
+                </p>
+                <p className="text-text-muted text-xs">
+                  {item.description}
+                </p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="section-spacing bg-depth-elevated">
         <div className="container-wide">
           <div className="text-center mb-12">
             <Tag variant="default" className="mb-4">
@@ -142,6 +193,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </h2>
             <p className="text-text-secondary max-w-2xl mx-auto">
               Each service is designed to meet you where you are and take you where you need to go.
+              No lock-in, no dependency—just clarity and actionable next steps.
             </p>
           </div>
 
@@ -160,6 +212,57 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
+      {/* What We Do Differently Section */}
+      <section className="section-spacing">
+        <div className="container-wide">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <Tag variant="premium" className="mb-4">
+                Our Approach
+              </Tag>
+              <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6">
+                We Illuminate,{' '}
+                <span className="text-radiance-gold">You Execute</span>
+              </h2>
+              <p className="text-text-secondary mb-8">
+                Most AI consultants want to become your permanent dependency. We want to become unnecessary.
+                Our job is to give you the clarity and confidence to move forward—on your own terms.
+              </p>
+
+              <div className="space-y-4">
+                {[
+                  'We speak business, not jargon',
+                  'We reveal opportunities, not impose solutions',
+                  'We build your capacity, not our recurring revenue',
+                  'We move fast—the window is now',
+                ].map((item, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckIcon size={14} />
+                    </div>
+                    <span className="text-text-primary">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <Card elevation="elevated" className="p-8">
+              <h3 className="text-xl font-bold text-text-primary mb-4">
+                The Light Touch Principle
+              </h3>
+              <p className="text-text-secondary mb-6">
+                Your business already contains its own genius. AI doesn't add something foreign—it amplifies what's already there. Our role is illumination: helping you see clearly what you couldn't see before.
+              </p>
+              <div className="border-t border-depth-border pt-6">
+                <p className="text-text-muted text-sm italic">
+                  "One clear decision, properly executed, outperforms a dozen confused ones."
+                </p>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials Section */}
       <section className="section-spacing bg-depth-elevated">
         <div className="container-wide">
@@ -170,6 +273,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
               What Our Clients Say
             </h2>
+            <p className="text-text-secondary max-w-xl mx-auto">
+              Don't take our word for it—hear from business leaders who've experienced the transformation.
+            </p>
           </div>
 
           <TestimonialCarousel testimonials={TESTIMONIALS} />
@@ -190,17 +296,29 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             Ready to See Your{' '}
             <span className="text-radiance-gold">Fullest Capacity</span>?
           </h2>
-          <p className="text-text-secondary mb-8 max-w-xl mx-auto">
+          <p className="text-text-secondary mb-4 max-w-xl mx-auto">
             Start with a 90-minute Illumination Session. In one conversation,
-            you'll see possibilities you've been blind to.
+            you'll see possibilities you've been blind to—and leave with a clear path forward.
           </p>
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={() => onNavigate('book')}
-          >
-            Book Your Session
-          </Button>
+          <p className="text-text-muted text-sm mb-8 max-w-lg mx-auto">
+            No pitch, no pressure, no jargon. Just clarity about what AI can actually do for your business.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => onNavigate('book')}
+            >
+              Book Your Session — $500
+            </Button>
+            <Button
+              variant="ghost"
+              size="lg"
+              onClick={() => onNavigate('services/illumination')}
+            >
+              Learn More First
+            </Button>
+          </div>
         </div>
       </section>
     </div>
