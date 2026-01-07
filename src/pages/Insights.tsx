@@ -649,7 +649,10 @@ export const InsightsPage: React.FC<InsightsPageProps> = ({ onNavigate }) => {
           <Card
             elevation="elevated"
             className="p-8 md:p-12 mb-12 cursor-pointer hover:border-radiance-gold/30 transition-colors"
-            onClick={() => setSelectedPost(BLOG_POSTS[0])}
+            onClick={() => {
+              setSelectedPost(BLOG_POSTS[0]);
+              window.scrollTo(0, 0);
+            }}
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               <div>
@@ -691,7 +694,10 @@ export const InsightsPage: React.FC<InsightsPageProps> = ({ onNavigate }) => {
                   key={post.id}
                   elevation="subtle"
                   className="cursor-pointer hover:border-radiance-gold/30 transition-colors group overflow-hidden"
-                  onClick={() => setSelectedPost(post)}
+                  onClick={() => {
+                    setSelectedPost(post);
+                    window.scrollTo(0, 0);
+                  }}
                 >
                   {blogImage && (
                     <div className="-mx-6 -mt-6 mb-4">
