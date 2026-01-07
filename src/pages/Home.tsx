@@ -18,7 +18,7 @@ import {
   CheckIcon,
   ImagePlaceholder,
 } from '../components';
-import { SERVICES, TESTIMONIALS, SUCCESS_METRICS, IMAGE_CONFIG } from '../lib/constants';
+import { SERVICES, TESTIMONIALS, IMAGE_CONFIG } from '../lib/constants';
 import { PageKey } from '../types';
 
 interface HomePageProps {
@@ -209,39 +209,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               </p>
             </div>
           </Card>
-        </div>
-      </section>
-
-      {/* Success Metrics Section */}
-      <section className="section-spacing">
-        <div className="container-wide">
-          <div className="text-center mb-12">
-            <Tag variant="default" className="mb-4">
-              Results
-            </Tag>
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-              Clarity Creates Results
-            </h2>
-            <p className="text-text-secondary max-w-2xl mx-auto">
-              Our clients don't just leave with insights—they leave with momentum.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {SUCCESS_METRICS.map((item, index) => (
-              <Card key={index} elevation="subtle" className="text-center p-6">
-                <p className="text-3xl md:text-4xl font-black text-radiance-gold mb-2">
-                  {item.metric}
-                </p>
-                <p className="text-text-primary font-semibold text-sm mb-1">
-                  {item.label}
-                </p>
-                <p className="text-text-muted text-xs">
-                  {item.description}
-                </p>
-              </Card>
-            ))}
-          </div>
         </div>
       </section>
 

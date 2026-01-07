@@ -83,7 +83,19 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial })
         <div>
           <p className="text-text-primary font-semibold">{testimonial.author}</p>
           <p className="text-text-muted text-sm">
-            {testimonial.role}, {testimonial.company}
+            {testimonial.role},{' '}
+            {testimonial.companyUrl ? (
+              <a
+                href={testimonial.companyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-radiance-gold hover:text-radiance-amber transition-colors"
+              >
+                {testimonial.company}
+              </a>
+            ) : (
+              testimonial.company
+            )}
           </p>
         </div>
       </div>
