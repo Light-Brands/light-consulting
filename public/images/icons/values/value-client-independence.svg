@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+  <!-- Client Independence: Bird taking flight from hands -->
+  <defs>
+    <linearGradient id="indepGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D4944C"/>
+      <stop offset="100%" stop-color="#E8B84A"/>
+    </linearGradient>
+  </defs>
+  <!-- Bird in flight -->
+  <path d="M48 16C44 20 40 18 36 14C32 18 28 20 24 16"
+        stroke="url(#indepGrad)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Bird body -->
+  <ellipse cx="36" cy="20" rx="6" ry="4" stroke="#E8B84A" stroke-width="2" fill="none"/>
+  <!-- Bird wing up -->
+  <path d="M30 18C24 12 18 10 14 12" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+  <!-- Bird wing down motion -->
+  <path d="M42 22C48 18 52 16 58 18" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+  <!-- Flight trail/motion lines -->
+  <path d="M20 28L28 24" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  <path d="M16 32L26 28" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+  <!-- Open hands releasing -->
+  <path d="M24 50C20 46 16 48 14 52C12 56 16 60 20 60C24 60 28 56 30 52"
+        stroke="#E8B84A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M56 50C60 46 64 48 66 52C68 56 64 60 60 60C56 60 52 56 50 52"
+        stroke="#E8B84A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- Fingers suggestion -->
+  <path d="M18 52L16 48M22 50L22 46M26 52L28 48" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M62 52L64 48M58 50L58 46M54 52L52 48" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Key being passed/released -->
+  <circle cx="40" cy="42" r="4" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <path d="M40 46V54M40 50H44M40 53H42" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Freedom sparkles -->
+  <circle cx="60" cy="10" r="2" fill="#E8B84A"/>
+  <path d="M60 6V8M60 12V14M56 10H58M62 10H64" stroke="#E8B84A" stroke-width="1" stroke-linecap="round"/>
+</svg>

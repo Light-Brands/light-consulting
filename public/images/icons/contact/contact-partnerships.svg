@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+  <!-- Partnerships: Interlocking hands/puzzle with synergy -->
+  <defs>
+    <linearGradient id="partnerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8B84A"/>
+      <stop offset="100%" stop-color="#D4944C"/>
+    </linearGradient>
+  </defs>
+  <!-- Handshake main shape -->
+  <path d="M12 36L20 28H32L40 36L48 28H60L68 36"
+        stroke="url(#partnerGrad)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Interlocking hands detail -->
+  <path d="M20 36L32 48L44 36L56 48"
+        stroke="#E8B84A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Wrist cuffs -->
+  <path d="M8 40L12 36V44L8 48"
+        stroke="#E8B84A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M72 40L68 36V44L72 48"
+        stroke="#E8B84A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Puzzle piece accent top -->
+  <path d="M34 12H46C46 12 44 16 40 16C36 16 34 12 34 12Z"
+        stroke="#E8B84A" stroke-width="2" fill="none"/>
+  <rect x="30" y="8" width="20" height="8" rx="2" stroke="#E8B84A" stroke-width="2" fill="none"/>
+  <!-- Synergy arrows/connection -->
+  <path d="M24 58L32 66L40 58" stroke="#E8B84A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M40 58L48 66L56 58" stroke="#E8B84A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Connection nodes -->
+  <circle cx="20" cy="66" r="4" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <circle cx="40" cy="72" r="4" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <circle cx="60" cy="66" r="4" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <!-- Node connections -->
+  <path d="M24 66L36 72M44 72L56 66" stroke="#E8B84A" stroke-width="1.5"/>
+  <!-- Plus/growth symbol -->
+  <path d="M66 14V22M62 18H70" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <!-- Finance: Rising chart with coins stack -->
+  <defs>
+    <linearGradient id="finGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D4944C"/>
+      <stop offset="100%" stop-color="#E8B84A"/>
+    </linearGradient>
+  </defs>
+  <!-- Chart bars ascending -->
+  <rect x="10" y="40" width="8" height="14" rx="2" fill="url(#finGrad)" opacity="0.6"/>
+  <rect x="22" y="32" width="8" height="22" rx="2" fill="url(#finGrad)" opacity="0.8"/>
+  <rect x="34" y="24" width="8" height="30" rx="2" fill="url(#finGrad)"/>
+  <!-- Trend line with arrow -->
+  <path d="M12 44L26 34L38 28L54 14" stroke="#E8B84A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M46 14H54V22" stroke="#E8B84A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Coin accent -->
+  <circle cx="50" cy="46" r="8" stroke="#E8B84A" stroke-width="2" fill="none"/>
+  <path d="M50 42V50M47 46H53" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

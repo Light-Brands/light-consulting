@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" fill="none">
+  <!-- Activate: Rocket launch / forward momentum -->
+  <defs>
+    <linearGradient id="activateGrad" x1="100%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#D4944C"/>
+      <stop offset="100%" stop-color="#FDF6E3"/>
+    </linearGradient>
+    <linearGradient id="flameGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#E8B84A"/>
+      <stop offset="100%" stop-color="#D4944C"/>
+    </linearGradient>
+  </defs>
+  <!-- Launch platform/ground -->
+  <path d="M20 95H55" stroke="#FDF6E3" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+  <!-- Rocket body -->
+  <path d="M70 55L85 20L100 55L85 50L70 55Z" stroke="url(#activateGrad)" stroke-width="3" fill="none" stroke-linejoin="round"/>
+  <!-- Rocket nose cone -->
+  <path d="M85 20L85 8" stroke="#FDF6E3" stroke-width="3" stroke-linecap="round"/>
+  <!-- Rocket fins -->
+  <path d="M70 55L60 70L70 65" stroke="#FDF6E3" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+  <path d="M100 55L110 70L100 65" stroke="#FDF6E3" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+  <!-- Rocket window -->
+  <circle cx="85" cy="38" r="5" stroke="#FDF6E3" stroke-width="2" fill="none"/>
+  <!-- Flame/exhaust -->
+  <path d="M75 65L85 95L95 65" stroke="url(#flameGrad)" stroke-width="3" fill="none" stroke-linejoin="round"/>
+  <path d="M80 70L85 85L90 70" stroke="#E8B84A" stroke-width="2" fill="none" stroke-linejoin="round"/>
+  <!-- Launch trail/momentum lines -->
+  <path d="M60 80L40 100" stroke="#FDF6E3" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  <path d="M55 75L30 95" stroke="#FDF6E3" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+  <path d="M50 70L25 85" stroke="#FDF6E3" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+  <!-- Stars being reached -->
+  <circle cx="95" cy="10" r="3" fill="#FDF6E3"/>
+  <circle cx="108" cy="25" r="2" fill="#FDF6E3" opacity="0.7"/>
+  <circle cx="75" cy="5" r="2" fill="#FDF6E3" opacity="0.6"/>
+  <!-- Independence sparkle -->
+  <path d="M20 20L22 24L26 24L23 27L24 31L20 29L16 31L17 27L14 24L18 24Z" fill="#FDF6E3" opacity="0.8"/>
+</svg>

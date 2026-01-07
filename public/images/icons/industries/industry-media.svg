@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <!-- Media & Entertainment: Play button with film reel and stars -->
+  <defs>
+    <linearGradient id="mediaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8B84A"/>
+      <stop offset="100%" stop-color="#D4944C"/>
+    </linearGradient>
+  </defs>
+  <!-- Play button circle -->
+  <circle cx="32" cy="32" r="18" stroke="url(#mediaGrad)" stroke-width="2.5" fill="none"/>
+  <!-- Play triangle -->
+  <path d="M26 22L44 32L26 42Z" fill="#E8B84A"/>
+  <!-- Film reel accent top-left -->
+  <circle cx="12" cy="12" r="8" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <circle cx="12" cy="12" r="2" fill="#E8B84A"/>
+  <circle cx="12" cy="6" r="1.5" fill="#E8B84A"/>
+  <circle cx="12" cy="18" r="1.5" fill="#E8B84A"/>
+  <circle cx="6" cy="12" r="1.5" fill="#E8B84A"/>
+  <circle cx="18" cy="12" r="1.5" fill="#E8B84A"/>
+  <!-- Star accents -->
+  <path d="M52 10L53.5 13L57 13.5L54.5 16L55 19.5L52 18L49 19.5L49.5 16L47 13.5L50.5 13Z" fill="#E8B84A"/>
+  <path d="M10 50L11 52L13 52.5L11.5 54L12 56L10 55L8 56L8.5 54L7 52.5L9 52Z" fill="#E8B84A" opacity="0.7"/>
+  <!-- Sound waves -->
+  <path d="M52 28C54 30 54 34 52 36" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M56 24C60 28 60 36 56 40" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

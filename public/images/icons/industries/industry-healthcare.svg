@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <!-- Healthcare: Heart with pulse line and DNA strand -->
+  <defs>
+    <linearGradient id="healthGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8B84A"/>
+      <stop offset="100%" stop-color="#D4944C"/>
+    </linearGradient>
+  </defs>
+  <!-- Heart shape -->
+  <path d="M32 52C32 52 12 38 12 24C12 18 17 12 24 12C28 12 31 14 32 17C33 14 36 12 40 12C47 12 52 18 52 24C52 38 32 52 32 52Z"
+        stroke="url(#healthGrad)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Pulse line through heart -->
+  <path d="M18 30H24L27 22L32 38L37 26L40 30H46"
+        stroke="#E8B84A" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Small cross accent -->
+  <path d="M50 14V20M47 17H53" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
