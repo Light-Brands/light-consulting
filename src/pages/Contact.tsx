@@ -216,12 +216,12 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                       a: 'If you have questions, yes. If you\'re ready to book, go directly to our booking page—it\'s faster.',
                     },
                     {
-                      q: 'What should I include in my message?',
-                      a: 'Tell us about your business, what you\'re hoping AI might help with, and any specific questions. The more context, the better we can help.',
+                      q: 'Do you build and implement solutions?',
+                      a: 'Yes—for aligned partners. Brand Development and implementation are available after completing an AI Acceleration Blueprint and being accepted through our Stewardship Council. We partner deeply with the right brands rather than working broadly with everyone.',
                     },
                     {
                       q: 'Will you try to sell me?',
-                      a: 'No. We\'ll answer your questions honestly. If we\'re not the right fit, we\'ll tell you that too.',
+                      a: 'No. We\'ll answer your questions honestly. If we\'re not the right fit, we\'ll tell you that too. We believe those meant to work with us will come forward naturally.',
                     },
                     {
                       q: 'What if I\'m not sure AI is right for my business?',

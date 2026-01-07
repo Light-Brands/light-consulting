@@ -80,6 +80,10 @@ export const SERVICES: Record<string, Service> = {
         question: 'Is this a sales pitch for more services?',
         answer: 'No. The session is designed to deliver standalone value. You\'ll leave with actionable insights whether you ever work with us again or not. That said, many clients do choose to continue—but there\'s zero pressure.',
       },
+      {
+        question: 'Do you offer implementation services?',
+        answer: 'Yes—for aligned partners. Implementation and Brand Development services are available to those who complete our AI Acceleration Blueprint and are accepted through our Stewardship Council review process. We believe in working deeply with the right partners rather than broadly with anyone who asks.',
+      },
     ],
   },
   blueprint: {
@@ -129,7 +133,11 @@ export const SERVICES: Record<string, Service> = {
       },
       {
         question: 'Can you help implement the recommendations?',
-        answer: 'The blueprint is designed to be actionable by your internal team or partners. We maintain relationships with vetted implementation partners and can make warm referrals. Some clients also engage us for quarterly advisory check-ins.',
+        answer: 'Yes—for the right partners. After completing your AI Acceleration Blueprint, brands that align with our Stewardship Council may qualify for full implementation and Brand Development services. We conduct a comprehensive review of your concept, business model, and approach, including interviews with founders to ensure mutual alignment. We don\'t work with everyone—we work with those ready to step into the light alongside us.',
+      },
+      {
+        question: 'What is the Stewardship Council?',
+        answer: 'The Stewardship Council is our selective review process for implementation partnerships. We believe those meant to work with us will come forward with equal excitement. Our mission is to steward light to the planet—we only partner with brands that share this mindset. Brand Development and implementation opportunities are available exclusively to those who complete an AI Acceleration Blueprint and align with our values.',
       },
       {
         question: 'What determines the price within the $3,000-$7,500 range?',

@@ -500,8 +500,86 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* Stewardship Council */}
       <section className="section-spacing">
+        <div className="container-wide">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <Tag variant="premium" className="mb-4">
+                Our Partnership Philosophy
+              </Tag>
+              <h2 className="text-3xl font-bold text-text-primary mb-6">
+                The Stewardship Council
+              </h2>
+              <div className="space-y-4 text-text-secondary">
+                <p>
+                  We don't want to work with everyone—and that's intentional. We believe those 
+                  meant to work with us will come forward, equally excited as we are to greet 
+                  them with open arms.
+                </p>
+                <p>
+                  Our mission is to <span className="text-radiance-gold font-medium">steward light to the planet</span>. 
+                  We only want to work with brands that share this mindset—those ready to step into the light.
+                </p>
+                <p>
+                  For brands that align with our values, we offer <span className="text-radiance-gold font-medium">full implementation 
+                  and Brand Development services</span>. This opportunity only becomes available after completing 
+                  an AI Acceleration Blueprint, which is what empowers the development.
+                </p>
+              </div>
+            </div>
+
+            <Card elevation="elevated" className="p-8">
+              <h3 className="text-xl font-bold text-text-primary mb-6">
+                The Council Review Process
+              </h3>
+              <div className="space-y-4">
+                {[
+                  {
+                    step: '01',
+                    title: 'Comprehensive Review',
+                    description: 'We evaluate your concept, business model, and overall approach to ensure alignment.',
+                  },
+                  {
+                    step: '02',
+                    title: 'Founder Interviews',
+                    description: 'We conduct in-depth conversations with founders to understand vision and values.',
+                  },
+                  {
+                    step: '03',
+                    title: 'Mutual Alignment',
+                    description: 'We ensure both parties are ready and excited to work together toward a shared mission.',
+                  },
+                  {
+                    step: '04',
+                    title: 'Brand Development',
+                    description: 'Aligned partners gain access to full implementation and development services.',
+                  },
+                ].map((item) => (
+                  <div key={item.step} className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-radiance-gold/10 text-radiance-gold flex items-center justify-center flex-shrink-0 font-bold text-sm">
+                      {item.step}
+                    </div>
+                    <div>
+                      <h4 className="text-text-primary font-medium mb-1">{item.title}</h4>
+                      <p className="text-text-muted text-sm">{item.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-6 pt-6 border-t border-depth-border">
+                <p className="text-text-muted text-sm italic">
+                  "We believe in working deeply with the right partners rather than broadly with anyone who asks."
+                </p>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="section-spacing bg-depth-elevated">
         <div className="container-narrow text-center">
           <h2 className="text-3xl font-bold text-text-primary mb-4">
             Ready to See Clearly?

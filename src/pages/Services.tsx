@@ -342,7 +342,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
               },
               {
                 q: 'Can you help us implement the recommendations?',
-                a: 'Our focus is strategy and clarity, not implementation. However, we maintain relationships with vetted implementation partners and can make warm referrals.',
+                a: 'Yes—for aligned partners. Implementation and Brand Development are available to those who complete our AI Acceleration Blueprint and align with our Stewardship Council. We only work with brands ready to step into the light alongside us.',
               },
               {
                 q: 'What industries do you work with?',
