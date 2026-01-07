@@ -205,27 +205,42 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
 
                 {/* Family Members */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                  {family.members.map((member, memberIndex) => (
-                    <Card key={member.name} elevation="subtle" className="p-6">
-                      <div className="flex items-start gap-4">
-                        {/* Avatar Placeholder */}
-                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center text-depth-base font-bold text-xl flex-shrink-0">
-                          {member.name.split(' ').map(n => n[0]).join('')}
+                  {family.members.map((member, memberIndex) => {
+                    const imagePath = `/images/founders/${member.name.toLowerCase().replace(/\s+/g, '-')}.jpg`;
+                    const initials = member.name.split(' ').map(n => n[0]).join('');
+                    
+                    return (
+                      <Card key={member.name} elevation="subtle" className="p-6">
+                        <div className="flex items-start gap-4">
+                          {/* Founder Avatar */}
+                          <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-depth-elevated">
+                            <img
+                              src={imagePath}
+                              alt={member.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                // Fallback to initials if image fails
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                                target.parentElement!.innerHTML = `<div class="w-full h-full bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center text-depth-base font-bold text-xl">${initials}</div>`;
+                              }}
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-lg font-semibold text-text-primary mb-1">
+                              {member.name}
+                            </h3>
+                            <p className="text-radiance-gold text-sm font-medium mb-3">
+                              {member.role}
+                            </p>
+                            <p className="text-text-secondary text-sm leading-relaxed">
+                              {member.description}
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex-1">
-                          <h3 className="text-lg font-semibold text-text-primary mb-1">
-                            {member.name}
-                          </h3>
-                          <p className="text-radiance-gold text-sm font-medium mb-3">
-                            {member.role}
-                          </p>
-                          <p className="text-text-secondary text-sm leading-relaxed">
-                            {member.description}
-                          </p>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
+                      </Card>
+                    );
+                  })}
                 </div>
               </div>
             ))}
