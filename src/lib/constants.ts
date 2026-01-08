@@ -282,7 +282,7 @@ export const SERVICES: Record<string, Service> = {
     name: 'Authority Engine',
     tagline: 'Convert expertise into market position and compounding demand',
     description: 'Transform your story, insight, and intellectual property into a systematic engine that generates thought leadership, market narrative, and competitive differentiation. This is how you build a moat that compounds over time.',
-    investment: '$50,000 – $150,000+',
+    investment: '$50,000 – $150,000',
     duration: '8–16 weeks',
     deliverables: [
       'Brand narrative framework and market positioning',
@@ -335,7 +335,7 @@ export const SERVICES: Record<string, Service> = {
         answer: 'Strongly recommended. Authority Engine generates demand—you need infrastructure to capture and convert that demand. Building authority without operational infrastructure is like turning on a firehose with no bucket.',
       },
       {
-        question: 'What makes this worth $50,000+?',
+        question: 'What makes this worth the investment?',
         answer: 'ROI. Authority Engine clients typically see 3-5x return within 12 months through increased deal flow, premium pricing power, and reduced sales friction. This isn\'t a cost—it\'s infrastructure that generates returns for years.',
       },
     ],
@@ -345,7 +345,7 @@ export const SERVICES: Record<string, Service> = {
     name: 'AI Architect Ascension',
     tagline: '90-day infrastructure + authority build',
     description: 'The complete transformation from wherever you are to Level 5 AI Architect. This flagship engagement includes AI Level Diagnostic, Command Center Build, and Authority Engine—everything needed to install operating infrastructure that compounds.',
-    investment: '$50,000 – $150,000',
+    investment: '$250,000',
     duration: '90 days',
     deliverables: [
       'Complete AI Level Diagnostic with maturity mapping',
