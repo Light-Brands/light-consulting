@@ -48,17 +48,16 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               About Us
             </Tag>
             <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-6">
-              Illuminate the Path Between{' '}
-              <span className="text-radiance-gold">Where You Are</span> and{' '}
-              <span className="text-clarity-cream">Where AI Can Take You</span>
+              We Are{' '}
+              <span className="text-radiance-gold">AI Architects</span>
             </h1>
             <p className="text-text-secondary text-lg mb-4">
-              Light Brand Consulting exists to help businesses see and realize their
-              fullest AI potential—not through dependency, but through clarity.
+              Not "prompt engineers." Not "automation agencies." Not "AI builders."
+              We design <span className="text-radiance-gold">how your business will function in an AI economy</span>.
             </p>
             <p className="text-text-muted">
-              We're not here to become your permanent AI team. We're here to give you the clarity
-              and confidence to move forward—and then get out of your way.
+              Light Brand Consulting delivers enterprise-grade value through the AI Maturity Ladder framework—
+              moving founders from wherever they are to Level 5, where AI becomes a structural advantage.
             </p>
           </div>
         </div>
@@ -69,68 +68,65 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         <div className="container-narrow">
           <div className="text-center mb-8">
             <Tag variant="default" className="mb-4">
-              Our Origin
+              The Core Insight
             </Tag>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6">
-              Why We Built Light Brand Consulting
+              Why the AI Maturity Ladder
             </h2>
           </div>
-          
+
           <Card elevation="elevated" className="p-8 md:p-12 relative overflow-hidden">
             {/* Decorative glow */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-radiance-gold/5 blur-3xl pointer-events-none" />
-            
+
             <div className="relative z-10 space-y-6 text-text-secondary text-lg leading-relaxed">
               <p>
-                We've spent years watching businesses struggle with AI. Not because AI is hard to understand—
-                but because the people explaining it make it complicated. Jargon-filled presentations.
-                Endless "assessments" that never lead anywhere. Consultants who seem more interested in
-                extending engagements than delivering results.
+                AI adoption has shifted from "tools" to organizational maturity. The competitive advantage is not using AI—
+                it's <span className="text-radiance-gold font-semibold">building structure that AI can amplify</span>.
               </p>
               <p>
-                The truth is: most businesses already have what they need to benefit from AI. The opportunities
-                are hiding in plain sight. What's missing isn't more technology or bigger budgets. It's
-                <span className="text-radiance-gold font-semibold"> clarity</span>.
+                Most companies remain stuck in early-stage adoption: experimenting, prompting, disconnected automations.
+                The winners build systematized infrastructure and eventually owned intelligence.
               </p>
               <p>
-                That's why we built Light Brand Consulting. We wanted to create a different kind of AI
-                consulting—one focused on speed, clarity, and independence. One conversation. Clear insights.
-                Actionable next steps. No ongoing dependency required.
+                Light Brand is already operating in that lane. The AI Maturity Ladder fixes the mismatch by:
+                giving buyers a self-diagnostic map, turning vague AI "services" into measurable progression, and
+                creating a clear narrative for premium, outcome-based engagements.
               </p>
             </div>
             
-            {/* The Light Touch - Integrated */}
+            {/* The Category Claim - Integrated */}
             <div className="mt-10 pt-8 border-t border-depth-border">
               <div className="flex items-center gap-3 mb-6 justify-center">
                 <SparkleIcon className="text-radiance-gold" size={24} />
                 <h3 className="text-xl font-bold text-text-primary">
-                  Why "Light"?
+                  AI Architect: The Category
                 </h3>
               </div>
               <p className="text-text-muted text-center mb-6">
-                The name isn't accidental. It captures everything we believe:
+                This is the correct category to own:
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
                   <div className="w-12 h-12 rounded-xl bg-radiance-gold/10 text-radiance-gold flex items-center justify-center mx-auto mb-3 font-bold">
                     1
                   </div>
-                  <p className="text-text-primary font-semibold mb-1">Illumination</p>
-                  <p className="text-text-muted text-sm">We shine light on what's already there</p>
+                  <p className="text-text-primary font-semibold mb-1">Operating Infrastructure</p>
+                  <p className="text-text-muted text-sm">Not "AI installs"—systems that compound</p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 rounded-xl bg-radiance-amber/10 text-radiance-amber flex items-center justify-center mx-auto mb-3 font-bold">
                     2
                   </div>
-                  <p className="text-text-primary font-semibold mb-1">Light Touch</p>
-                  <p className="text-text-muted text-sm">Minimum friction, maximum impact</p>
+                  <p className="text-text-primary font-semibold mb-1">Founder Independence</p>
+                  <p className="text-text-muted text-sm">Reducing dependence through systems</p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 rounded-xl bg-clarity-cream/10 text-clarity-cream flex items-center justify-center mx-auto mb-3 font-bold">
                     3
                   </div>
-                  <p className="text-text-primary font-semibold mb-1">Light Weight</p>
-                  <p className="text-text-muted text-sm">Here and gone—not embedded for months</p>
+                  <p className="text-text-primary font-semibold mb-1">Compounding Workflows</p>
+                  <p className="text-text-muted text-sm">Across revenue, delivery, and ops</p>
                 </div>
               </div>
             </div>
@@ -579,13 +575,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
       <section className="section-spacing bg-depth-elevated">
         <div className="container-narrow text-center">
           <h2 className="text-3xl font-bold text-text-primary mb-4">
-            Ready to See Clearly?
+            Ready to Reach Level 5?
           </h2>
           <p className="text-text-secondary mb-4">
-            Start with an Illumination Session. In 90 minutes, you'll see your business in a new light.
+            Start with an AI Level Diagnostic. See exactly where you are on the maturity ladder and get a clear roadmap forward.
           </p>
           <p className="text-text-muted text-sm mb-8 max-w-lg mx-auto">
-            No sales pitch. No obligation. Just clarity about what AI can actually do for your business.
+            This is not consulting. This is the installation of operating infrastructure that compounds.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
@@ -593,7 +589,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               size="lg"
               onClick={() => onNavigate('book')}
             >
-              Book Your Session
+              Discover Your AI Level
             </Button>
             <Button
               variant="ghost"
