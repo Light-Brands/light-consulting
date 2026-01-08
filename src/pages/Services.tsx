@@ -242,8 +242,8 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
                     <td className="p-4 text-text-secondary">Investment</td>
                     <td className="p-4 text-center text-text-primary">$1,500 – $15,000</td>
                     <td className="p-4 text-center text-text-primary">$20,000 – $80,000</td>
-                    <td className="p-4 text-center text-text-primary">$50,000 – $150,000+</td>
-                    <td className="p-4 text-center text-text-primary border-l border-depth-border bg-radiance-gold/5">$50,000 – $150,000</td>
+                    <td className="p-4 text-center text-text-primary">$50,000 – $150,000</td>
+                    <td className="p-4 text-center text-text-primary border-l border-depth-border bg-radiance-gold/5">$250,000</td>
                   </tr>
                   <tr className="border-b border-depth-border/50">
                     <td className="p-4 text-text-secondary">Duration</td>
