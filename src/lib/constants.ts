@@ -17,202 +17,388 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 // ============================================================================
+// AI Maturity Ladder Framework
+// ============================================================================
+
+export interface MaturityLevel {
+  level: number;
+  identity: string;
+  description: string;
+  characteristics: string[];
+}
+
+export const AI_MATURITY_LADDER: MaturityLevel[] = [
+  {
+    level: 1,
+    identity: 'Tool Collector',
+    description: 'Experiments widely, no durable leverage',
+    characteristics: [
+      'Tries many AI tools without clear strategy',
+      'Uses AI for one-off tasks with no systematic approach',
+      'No documented workflows or processes involving AI',
+      'AI usage is individual, not organizational',
+    ],
+  },
+  {
+    level: 2,
+    identity: 'Copy-Paster',
+    description: 'Uses prompts/templates, incremental wins',
+    characteristics: [
+      'Has discovered useful prompts and templates',
+      'Achieves sporadic efficiency gains',
+      'Still manually triggers each AI interaction',
+      'Knowledge stays with individuals, not systems',
+    ],
+  },
+  {
+    level: 3,
+    identity: 'Builder',
+    description: 'Builds automations, still founder-dependent',
+    characteristics: [
+      'Has built custom automations and workflows',
+      'AI handles repetitive tasks automatically',
+      'Founder/key person still central to most decisions',
+      'Systems work but don\'t scale without key people',
+    ],
+  },
+  {
+    level: 4,
+    identity: 'Systematizer',
+    description: 'Core workflows run through AI systems',
+    characteristics: [
+      'Major business processes run on AI infrastructure',
+      'Team members can operate independently of founder',
+      'Documented systems that new hires can learn',
+      'Business operates efficiently with reduced founder input',
+    ],
+  },
+  {
+    level: 5,
+    identity: 'Architect',
+    description: 'Owns infrastructure + intelligence, durable moat',
+    characteristics: [
+      'AI infrastructure is a competitive advantage',
+      'Proprietary systems that compound over time',
+      'Business generates insights and improves automatically',
+      'Defensible market position built on AI-native operations',
+    ],
+  },
+];
+
+// ============================================================================
+// Light Brand Method Phases
+// ============================================================================
+
+export const LIGHT_BRAND_METHOD = {
+  phase1: {
+    name: 'AI Level Diagnostic',
+    purpose: 'Establish baseline maturity + leverage gaps',
+    maps: [
+      'Workflows & operating model',
+      'Bottlenecks and dependency points',
+      'Current AI utilization',
+      'Highest-leverage system opportunities',
+    ],
+    outputs: [
+      'AI Maturity Map',
+      'Bottleneck Report',
+      'Opportunity Matrix',
+      'Leverage Forecast (time + revenue)',
+    ],
+  },
+  phase2: {
+    name: 'Command Center Build',
+    purpose: 'Install the operating infrastructure that removes founder dependence',
+    builds: [
+      'Lead and follow-up automation',
+      'Sales systems (pipeline + nurture + conversions)',
+      'Operational workflows',
+      'Content production systems',
+      'Internal intelligence tools',
+    ],
+    outcome: 'Business shifts from "effort-driven" to "system-driven"',
+  },
+  phase3: {
+    name: 'Authority Engine',
+    purpose: 'Convert expertise into market position and compounding demand',
+    turns: ['Story + insight + IP'],
+    into: [
+      'Thought leadership assets',
+      'Market narrative',
+      'Authority content systems',
+      'Competitive differentiation ("moat")',
+    ],
+  },
+};
+
+// ============================================================================
+// Fit Criteria
+// ============================================================================
+
+export const FIT_CRITERIA = {
+  idealClients: [
+    'Founders / operators with real traction',
+    'Businesses where the founder is the bottleneck',
+    'Teams ready to implement, not experiment',
+    'Leaders seeking leverage, not novelty',
+  ],
+  notAFit: [
+    'Dabblers and tool collectors',
+    'Shortcut seekers',
+    'Clients who want isolated "AI hacks" without structural change',
+  ],
+};
+
+// ============================================================================
 // Services Data
 // ============================================================================
 
 export const SERVICES: Record<string, Service> = {
-  illumination: {
-    id: 'illumination',
-    name: 'Illumination Session',
-    tagline: 'See your AI potential in 90 minutes',
-    description: 'A single focused conversation revealing 3 AI opportunities that match your business reality. No fluff, no generic advice—just clear, actionable insights tailored to your specific situation.',
-    investment: '$500',
-    duration: '90 minutes',
+  diagnostic: {
+    id: 'diagnostic',
+    name: 'AI Level Diagnostic',
+    tagline: 'See exactly where you are on the AI Maturity Ladder',
+    description: 'A comprehensive diagnostic that maps your current AI maturity level, identifies leverage gaps, and reveals the highest-impact opportunities for systematization. This is where every engagement begins—clarity before action.',
+    investment: '$1,500 – $15,000',
+    duration: '1–2 weeks',
     deliverables: [
-      '3 specific AI opportunities mapped to your business with implementation complexity ratings',
-      'Super Intelligence Profile™ assessment revealing your AI readiness across 5 dimensions',
-      'Priority-ranked action items with estimated ROI and effort levels',
-      '30-day momentum plan with weekly milestones',
-      'Recording of the session for team sharing',
-      'Quick-reference summary document',
+      'AI Maturity Map showing your current level (1-5) across all business functions',
+      'Bottleneck Report identifying founder-dependency points and constraints',
+      'Opportunity Matrix with prioritized systemization opportunities',
+      'Leverage Forecast projecting time and revenue gains from each opportunity',
+      'Current AI utilization audit across tools and workflows',
+      'Roadmap to next maturity level with specific milestones',
     ],
     process: [
-      { step: 1, title: 'Book', description: 'Select your time slot and receive calendar invite with video link' },
-      { step: 2, title: 'Prepare', description: 'Complete brief intake form (10 min) so we hit the ground running' },
-      { step: 3, title: 'Connect', description: '90-minute deep-dive video session focused entirely on your business' },
-      { step: 4, title: 'Receive', description: 'Summary document, session recording, and action plan within 24 hours' },
+      { step: 1, title: 'Map', description: 'Deep-dive into your workflows, operating model, and current AI utilization' },
+      { step: 2, title: 'Diagnose', description: 'Identify bottlenecks, dependency points, and leverage gaps across your business' },
+      { step: 3, title: 'Analyze', description: 'Score your AI maturity level and identify highest-impact opportunities' },
+      { step: 4, title: 'Deliver', description: 'Present findings with clear prioritization and actionable roadmap' },
     ],
     idealFor: [
-      'Founders wondering "what should AI mean for my business?"',
-      'Leaders hearing about AI everywhere but unsure where to start',
-      'Businesses with specific pain points that AI might solve',
-      'Companies that have tried AI tools but haven\'t seen results',
-      'Anyone ready to stop wondering and start moving with clarity',
+      'Founders at Levels 1–3 seeking clarity on their AI maturity',
+      'Leaders who sense they\'re leaving leverage on the table',
+      'Businesses that have tried AI tools but haven\'t achieved systematic gains',
+      'Companies preparing for the Command Center Build phase',
+      'Anyone who needs a clear, honest assessment before investing further',
     ],
     notFor: [
-      'Businesses seeking someone to "do AI for them" (we illuminate, you execute)',
-      'Organizations wanting to "wait and see" how AI develops',
-      'Those looking for generic AI advice found in any blog post',
-      'Companies without decision-making authority present in the session',
+      'Those seeking someone to "do AI for them" without understanding',
+      'Companies not willing to be honest about their current state',
+      'Organizations without decision-making authority present',
+      'Those looking for generic AI advice rather than specific diagnosis',
     ],
     faq: [
       {
-        question: 'What if I have no AI experience?',
-        answer: 'Perfect. Most clients come with zero AI background. We meet you where you are and translate everything into business language you already understand. No jargon, no technical prerequisites.',
+        question: 'What determines the price range ($1,500–$15,000)?',
+        answer: 'Scope and complexity. A solo founder with a straightforward business is on the lower end. Multi-department organizations with complex operations, multiple stakeholders to interview, and deeper analysis requirements are higher. We provide a fixed quote after an initial scoping call.',
       },
       {
-        question: 'How do I prepare for the session?',
-        answer: 'After booking, you\'ll receive a brief intake form (10 minutes). That\'s all the prep needed. Come ready to talk openly about your business challenges—the more honest, the better the insights.',
+        question: 'What\'s included in the AI Maturity Map?',
+        answer: 'A visual representation of your maturity level across key business functions: revenue operations, delivery/fulfillment, internal operations, content/marketing, and decision-making. Each area is scored 1-5 with specific findings and recommendations.',
       },
       {
-        question: 'What happens after the session?',
-        answer: 'Within 24 hours, you\'ll receive a summary document, session recording, and your 30-day action plan. Many clients also choose to upgrade to a full Blueprint engagement after seeing their opportunities.',
+        question: 'How is this different from a typical AI audit?',
+        answer: 'Most AI audits focus on tools. We focus on structure and leverage. The question isn\'t "what AI tools are you using?" It\'s "how close are you to a business that runs on systems rather than effort?" This maturity-focused lens changes everything.',
       },
       {
-        question: 'Can I bring team members to the session?',
-        answer: 'Absolutely. We recommend including 1-2 key decision-makers or stakeholders. More perspectives often reveal more opportunities. Just let us know who\'s joining when you book.',
+        question: 'What happens after the Diagnostic?',
+        answer: 'You have three options: (1) Execute on your own using the roadmap, (2) Engage us for Command Center Build to implement the infrastructure, or (3) Continue to the full AI Architect Ascension program. Many clients start here and grow into deeper engagements.',
       },
       {
-        question: 'What\'s the Super Intelligence Profile™?',
-        answer: 'It\'s our proprietary assessment that evaluates your AI readiness across 5 dimensions: data infrastructure, process maturity, team capability, strategic alignment, and implementation capacity. It helps prioritize which opportunities to pursue first.',
+        question: 'Do I need AI experience for this?',
+        answer: 'No. In fact, we often find that clients with less AI experience get more value—they haven\'t developed bad habits or misconceptions. We meet you exactly where you are and translate everything into business language.',
       },
       {
-        question: 'Is this a sales pitch for more services?',
-        answer: 'No. The session is designed to deliver standalone value. You\'ll leave with actionable insights whether you ever work with us again or not. That said, many clients do choose to continue—but there\'s zero pressure.',
-      },
-      {
-        question: 'Do you offer implementation services?',
-        answer: 'Yes—for aligned partners. Implementation and Brand Development services are available to those who complete our AI Acceleration Blueprint and are accepted through our Stewardship Council review process. We believe in working deeply with the right partners rather than broadly with anyone who asks.',
+        question: 'Can my team participate?',
+        answer: 'Absolutely. We recommend including key stakeholders in the process. More perspectives reveal more opportunities, and team buy-in is critical for implementation success.',
       },
     ],
   },
-  blueprint: {
-    id: 'blueprint',
-    name: 'AI Acceleration Blueprint',
-    tagline: 'Complete strategic architecture for AI transformation',
-    description: 'A comprehensive analysis and strategic roadmap that maps AI opportunities to your specific business context. This is not a generic template—it\'s a custom-built strategy designed around your operations, team, and goals.',
-    investment: '$3,000 – $7,500',
-    duration: '5–7 days',
+  'command-center': {
+    id: 'command-center',
+    name: 'Command Center Build',
+    tagline: 'Install operating infrastructure that removes founder dependence',
+    description: 'We design and build the AI-powered operating infrastructure that shifts your business from effort-driven to system-driven. This is where theory becomes reality—actual systems that run your business while you focus on what matters most.',
+    investment: '$20,000 – $80,000',
+    duration: '4–12 weeks',
     deliverables: [
-      'Complete AI opportunity audit with 10-15 identified opportunities ranked by impact and feasibility',
-      'Strategic implementation roadmap with phased approach over 6-18 months',
-      'Technology stack recommendations with vendor comparisons and integration considerations',
-      'ROI projections and timeline for each recommended initiative',
-      'Team capability assessment with skill gap analysis and hiring/training recommendations',
-      'Vendor evaluation framework for selecting AI tools and partners',
-      'Executive summary presentation for board or leadership buy-in',
-      'Risk assessment and mitigation strategies',
+      'Lead and follow-up automation systems',
+      'Sales infrastructure (pipeline, nurture sequences, conversion optimization)',
+      'Operational workflow automation',
+      'Content production systems',
+      'Internal intelligence tools and dashboards',
+      'Documentation and training for your team',
+      'System monitoring and optimization protocols',
     ],
     process: [
-      { step: 1, title: 'Discovery', description: 'Deep-dive interviews with key stakeholders, process documentation review, and data landscape assessment' },
-      { step: 2, title: 'Analysis', description: 'AI opportunity identification, competitive analysis, and feasibility evaluation against your constraints' },
-      { step: 3, title: 'Design', description: 'Craft comprehensive implementation roadmap with resource requirements, milestones, and success metrics' },
-      { step: 4, title: 'Deliver', description: 'Present findings to leadership, refine based on feedback, and finalize actionable blueprint' },
+      { step: 1, title: 'Architect', description: 'Design the system architecture based on your Diagnostic findings and priorities' },
+      { step: 2, title: 'Build', description: 'Construct the core infrastructure: automations, integrations, and workflows' },
+      { step: 3, title: 'Integrate', description: 'Connect systems to your existing tools and train your team on operations' },
+      { step: 4, title: 'Optimize', description: 'Refine based on real-world performance and ensure sustainable operation' },
     ],
     idealFor: [
-      'Companies ready to invest seriously in AI with budget allocated',
-      'Leaders who need a clear, defensible implementation path to present to stakeholders',
-      'Organizations with complex operations spanning multiple departments',
-      'Teams ready to execute who need the strategic framework to guide decisions',
-      'Businesses preparing for significant growth or market changes',
+      'Founders at Level 3 ready to systematize and remove themselves as the bottleneck',
+      'Businesses with proven revenue seeking operational leverage',
+      'Leaders who completed the AI Level Diagnostic and are ready to build',
+      'Companies tired of incremental AI gains and ready for infrastructure',
+      'Teams prepared to implement and maintain new systems',
     ],
     notFor: [
-      'Early-stage exploration (try Illumination Session first to validate direction)',
-      'Organizations without decision-making authority or budget commitment',
-      'Those seeking ongoing implementation support (we can refer partners)',
-      'Companies looking for a one-size-fits-all AI playbook',
+      'Early-stage businesses without product-market fit',
+      'Companies seeking AI experiments rather than infrastructure',
+      'Organizations without bandwidth to participate in implementation',
+      'Those wanting a "set and forget" solution (systems require stewardship)',
     ],
     faq: [
       {
-        question: 'What\'s included in the blueprint deliverable?',
-        answer: 'A comprehensive document (typically 30-50 pages) covering opportunity audit, strategic roadmap, technology recommendations, ROI projections, team assessment, and risk mitigation—plus an executive presentation deck.',
+        question: 'What types of systems do you build?',
+        answer: 'The specific systems depend on your Diagnostic findings, but common builds include: automated lead capture and nurturing, sales pipeline management, client onboarding workflows, content repurposing systems, reporting dashboards, and internal knowledge bases.',
       },
       {
-        question: 'How do we work together during this engagement?',
-        answer: 'You\'ll have a 2-hour discovery call, followed by 3-5 days of asynchronous analysis (with Slack/email access for questions), and conclude with a 90-minute strategic presentation. Total client time investment: 5-6 hours.',
+        question: 'What tools and platforms do you work with?',
+        answer: 'We\'re tool-agnostic and work with whatever makes sense for your business. Common platforms include Make/Zapier for automation, various CRMs, AI APIs (OpenAI, Claude, etc.), and custom integrations where needed.',
       },
       {
-        question: 'Can you help implement the recommendations?',
-        answer: 'Yes—for the right partners. After completing your AI Acceleration Blueprint, brands that align with our Stewardship Council may qualify for full implementation and Brand Development services. We conduct a comprehensive review of your concept, business model, and approach, including interviews with founders to ensure mutual alignment. We don\'t work with everyone—we work with those ready to step into the light alongside us.',
+        question: 'How much involvement is required from my team?',
+        answer: 'Plan for 3-5 hours per week during the build phase. We need access to stakeholders for requirements gathering, feedback on prototypes, and training. The more engaged you are, the better the outcome.',
       },
       {
-        question: 'What is the Stewardship Council?',
-        answer: 'The Stewardship Council is our selective review process for implementation partnerships. We believe those meant to work with us will come forward with equal excitement. Our mission is to steward light to the planet—we only partner with brands that share this mindset. Brand Development and implementation opportunities are available exclusively to those who complete an AI Acceleration Blueprint and align with our values.',
+        question: 'What happens after the build is complete?',
+        answer: 'You own everything we build. We provide documentation, training, and a handoff process. Many clients continue to Authority Engine to build on their new infrastructure. We also offer ongoing optimization retainers for those who want continued support.',
       },
       {
-        question: 'What determines the price within the $3,000-$7,500 range?',
-        answer: 'Complexity of your operations, number of stakeholders to interview, scope of analysis required, and depth of competitive research. We provide a fixed quote after an initial scoping call—no surprises.',
+        question: 'What determines the price range ($20,000–$80,000)?',
+        answer: 'Scope and complexity of systems required. A focused build addressing 2-3 core workflows is on the lower end. Comprehensive infrastructure spanning multiple departments with custom integrations is higher. We scope precisely after the Diagnostic.',
       },
       {
-        question: 'Do you sign NDAs?',
-        answer: 'Yes, we sign mutual NDAs before any discovery work begins. Your business information is treated with complete confidentiality.',
-      },
-      {
-        question: 'What if our strategy changes after receiving the blueprint?',
-        answer: 'Business evolves—we get it. The blueprint includes decision frameworks that remain valuable even as specifics change. We also offer a discounted 90-minute "Recalibration Session" for past clients.',
+        question: 'Do I need to complete the Diagnostic first?',
+        answer: 'Yes. The Diagnostic ensures we\'re building the right things in the right order. Skipping it often leads to building systems that don\'t address the real bottlenecks. The Diagnostic investment is credited toward Command Center Build.',
       },
     ],
   },
-  story: {
-    id: 'story',
-    name: 'Breath of Life Story',
-    tagline: 'Transform your expertise into authority',
-    description: 'Deep narrative work that captures your unique voice, story, and expertise—creating content that positions you as a thought leader in your space. This isn\'t copywriting; it\'s identity excavation and articulation.',
-    investment: '$2,500 – $12,000',
-    duration: '2–6 weeks',
+  'authority-engine': {
+    id: 'authority-engine',
+    name: 'Authority Engine',
+    tagline: 'Convert expertise into market position and compounding demand',
+    description: 'Transform your story, insight, and intellectual property into a systematic engine that generates thought leadership, market narrative, and competitive differentiation. This is how you build a moat that compounds over time.',
+    investment: '$50,000 – $150,000+',
+    duration: '8–16 weeks',
     deliverables: [
-      'Brand narrative framework with core story, values articulation, and positioning statement',
-      'Founder/leadership origin story capturing the journey, pivots, and lessons',
-      'Key messaging architecture with primary and secondary messages for different audiences',
-      'Content pillars and themes establishing 4-6 topics to own in your space',
-      'Voice and tone guidelines ensuring consistency across all communications',
-      'Sample content pieces (2-4) demonstrating the narrative in action',
-      'Social bio variations optimized for LinkedIn, Twitter, and speaking engagements',
-      'Interview preparation guide for podcasts and media appearances',
+      'Brand narrative framework and market positioning',
+      'Thought leadership content systems',
+      'IP extraction and articulation',
+      'Authority content production infrastructure',
+      'Market narrative and competitive differentiation strategy',
+      'Content distribution and amplification systems',
+      'Demand generation infrastructure',
+      'Ongoing content calendar and editorial systems',
     ],
     process: [
-      { step: 1, title: 'Excavate', description: 'Deep-dive interviews to uncover your unique story, perspective, and the moments that shaped your worldview' },
-      { step: 2, title: 'Craft', description: 'Transform raw material into compelling narratives that resonate with your target audience' },
-      { step: 3, title: 'Refine', description: 'Collaborative revision process ensuring the final product sounds authentically like you—at your best' },
-      { step: 4, title: 'Activate', description: 'Launch with sample content pieces and guidance on deploying your new narrative assets' },
+      { step: 1, title: 'Extract', description: 'Deep excavation of your unique story, insights, and intellectual property' },
+      { step: 2, title: 'Architect', description: 'Design the authority engine: content systems, distribution channels, demand loops' },
+      { step: 3, title: 'Build', description: 'Construct thought leadership infrastructure and content production systems' },
+      { step: 4, title: 'Activate', description: 'Launch authority engine with initial content and optimization protocols' },
     ],
     idealFor: [
-      'Founders building personal brands alongside their company brand',
-      'Experts with deep knowledge seeking thought leadership positioning',
-      'Companies undergoing repositioning or entering new markets',
-      'Leaders with compelling stories that have never been properly articulated',
-      'Anyone preparing for a book, keynote speaking, or significant media push',
+      'Founders at Level 4 with operational infrastructure in place',
+      'Leaders with deep expertise ready to become category authorities',
+      'Companies seeking to build defensible market position through thought leadership',
+      'Businesses ready to invest in demand that compounds rather than depletes',
+      'Those prepared for the full AI Architect Ascension journey',
     ],
     notFor: [
-      'Those seeking generic marketing copy or quick-turn content',
-      'Organizations without access to key storytellers for interviews',
-      'Quick turnaround projects (great narrative work requires marination)',
-      'Anyone uncomfortable with deep personal exploration and vulnerability',
+      'Companies without operational infrastructure (build Command Center first)',
+      'Those seeking quick-hit marketing rather than systematic authority',
+      'Leaders uncomfortable with visibility and thought leadership positioning',
+      'Organizations without genuine expertise or unique perspective to share',
     ],
     faq: [
       {
-        question: 'What makes this different from copywriting?',
-        answer: 'Copywriting starts with what you want to say. We start with who you actually are. The result is authentic content that sounds like you at your best—because it IS you, just articulated more clearly than you\'ve ever managed yourself.',
+        question: 'What\'s the difference between this and content marketing?',
+        answer: 'Content marketing is tactical—create content, distribute content, hope for results. Authority Engine is systematic—we build infrastructure that continuously converts your expertise into market position. It\'s the difference between fishing and building a fish farm.',
       },
       {
-        question: 'How much of my time is required?',
-        answer: '3-5 hours of interviews spread across the engagement, plus review and feedback time (typically 2-3 hours total). We work around your schedule and can conduct interviews via video call.',
+        question: 'What does "IP extraction" mean?',
+        answer: 'You have unique insights, frameworks, and perspectives developed over years of experience. IP extraction is the process of articulating and systematizing these into assets: proprietary frameworks, signature methodologies, unique points of view that become associated with your brand.',
       },
       {
-        question: 'What can I use the deliverables for?',
-        answer: 'Everything. Website, social media, pitch decks, speaking engagements, investor presentations, book proposals, podcast appearances. It\'s your story—use it everywhere. Full ownership transfers to you.',
+        question: 'How does this build a "moat"?',
+        answer: 'Competitors can copy your products and services. They can\'t copy your authority, your story, or your relationship with your market. Authority Engine builds differentiation that compounds—the longer you run it, the harder it is to catch up.',
       },
       {
-        question: 'Can you help with ongoing content creation?',
-        answer: 'The deliverables are designed to be a foundation your team (or other writers) can build from. We do offer limited retainer engagements for select clients who want ongoing support.',
+        question: 'What\'s the time investment required?',
+        answer: 'Significant at the start (5-8 hours/week during extraction phase), then decreasing as systems take over. The engine is designed to run with minimal ongoing input—that\'s the point.',
       },
       {
-        question: 'What determines the price within the $2,500-$12,000 range?',
-        answer: 'Scope of narrative work (individual vs. company-wide), number of stakeholders interviewed, depth of content pillar development, and quantity of sample pieces. We scope projects after an initial call.',
+        question: 'Do I need Command Center Build first?',
+        answer: 'Strongly recommended. Authority Engine generates demand—you need infrastructure to capture and convert that demand. Building authority without operational infrastructure is like turning on a firehose with no bucket.',
       },
       {
-        question: 'Do you work with teams or just individuals?',
-        answer: 'Both. For companies, we can develop unified brand narrative and individual leader stories that complement each other. Team projects are at the higher end of the investment range.',
+        question: 'What makes this worth $50,000+?',
+        answer: 'ROI. Authority Engine clients typically see 3-5x return within 12 months through increased deal flow, premium pricing power, and reduced sales friction. This isn\'t a cost—it\'s infrastructure that generates returns for years.',
+      },
+    ],
+  },
+  ascension: {
+    id: 'ascension',
+    name: 'AI Architect Ascension',
+    tagline: '90-day infrastructure + authority build',
+    description: 'The complete transformation from wherever you are to Level 5 AI Architect. This flagship engagement includes AI Level Diagnostic, Command Center Build, and Authority Engine—everything needed to install operating infrastructure that compounds.',
+    investment: '$50,000 – $150,000',
+    duration: '90 days',
+    deliverables: [
+      'Complete AI Level Diagnostic with maturity mapping',
+      'Full Command Center Build (all operational infrastructure)',
+      'Authority Engine installation',
+      'Ongoing strategy and optimization throughout',
+      'Quarterly business reviews for first year',
+      'Priority access to Light Brand team',
+      'All documentation, training, and intellectual property',
+    ],
+    process: [
+      { step: 1, title: 'Diagnose', description: 'Comprehensive AI maturity assessment and opportunity mapping' },
+      { step: 2, title: 'Build', description: 'Install Command Center infrastructure across all priority areas' },
+      { step: 3, title: 'Architect', description: 'Construct Authority Engine for market position and demand' },
+      { step: 4, title: 'Optimize', description: 'Refine all systems and establish ongoing optimization protocols' },
+    ],
+    idealFor: [
+      'Founders committed to reaching Level 5 AI Architect status',
+      'Leaders ready to invest in complete transformation, not incremental improvement',
+      'Businesses with real traction seeking permanent competitive advantage',
+      'Those who value speed and want the full journey in 90 days',
+      'Companies aligned with Light Brand\'s mission and values',
+    ],
+    notFor: [
+      'Those seeking to "test" AI before committing',
+      'Companies without the bandwidth for intensive transformation',
+      'Leaders not ready to be positioned as thought leaders',
+      'Organizations seeking quick fixes rather than structural change',
+    ],
+    faq: [
+      {
+        question: 'Why 90 days?',
+        answer: 'Long enough to build real infrastructure, short enough to maintain momentum. 90 days creates urgency that drives results. We\'ve found this is the optimal timeframe for complete transformation without losing focus.',
+      },
+      {
+        question: 'How is pricing determined?',
+        answer: 'Scope-dependent based on business complexity, team size, and breadth of systems required. We provide a fixed quote after an initial discovery conversation. The investment reflects the comprehensive nature of the engagement.',
+      },
+      {
+        question: 'What\'s included in "ongoing strategy and optimization"?',
+        answer: 'Weekly check-ins during the 90-day build, quarterly business reviews for the first year post-completion, and priority access to our team for questions and guidance. We\'re invested in your long-term success.',
+      },
+      {
+        question: 'Is this just the three services bundled together?',
+        answer: 'It\'s more integrated than that. When we engage for the full Ascension, we design everything as a unified system from day one. The phases inform each other, and we optimize for the complete outcome rather than individual deliverables.',
+      },
+      {
+        question: 'What results can I expect?',
+        answer: 'Clients typically see: 40-60% reduction in founder time on operations, 2-3x increase in capacity without adding headcount, systematic lead generation and nurturing, and market position as a category authority. Results vary, but transformation is the norm.',
+      },
+      {
+        question: 'How do I know if I\'m ready?',
+        answer: 'If you\'re a founder with real traction, you recognize yourself as the bottleneck, you\'re ready to implement (not just explore), and you\'re seeking leverage rather than novelty—you\'re ready. Still uncertain? Start with the Diagnostic.',
       },
     ],
   },
@@ -240,7 +426,7 @@ export const TESTIMONIALS: Testimonial[] = [
 // ============================================================================
 
 export const INTAKE_QUESTIONS: Record<string, IntakeQuestion[]> = {
-  illumination: [
+  diagnostic: [
     {
       id: 'business_description',
       question: 'In 2-3 sentences, what does your business do?',
@@ -248,29 +434,31 @@ export const INTAKE_QUESTIONS: Record<string, IntakeQuestion[]> = {
       required: true,
     },
     {
-      id: 'ai_experience',
-      question: 'How would you describe your current AI experience?',
+      id: 'ai_maturity',
+      question: 'Where do you think you are on the AI Maturity Ladder?',
       type: 'select',
       options: [
-        'Complete beginner',
-        'Dabbled with ChatGPT',
-        'Using AI tools regularly',
-        'Integrated AI into operations',
+        'Level 1: Tool Collector - experimenting widely',
+        'Level 2: Copy-Paster - using prompts/templates',
+        'Level 3: Builder - built some automations',
+        'Level 4: Systematizer - core workflows run on AI',
+        'Level 5: Architect - AI is competitive advantage',
+        'Not sure - that\'s why I\'m here',
       ],
     },
     {
-      id: 'biggest_challenge',
-      question: 'What\'s the #1 challenge you hope AI might help solve?',
+      id: 'founder_bottleneck',
+      question: 'Where are you (the founder) still the bottleneck in your business?',
       type: 'textarea',
       required: true,
     },
     {
       id: 'desired_outcome',
-      question: 'What would a successful session look like for you?',
+      question: 'If the diagnostic reveals exactly what to systematize first, what outcome are you hoping for?',
       type: 'textarea',
     },
   ],
-  blueprint: [
+  'command-center': [
     {
       id: 'business_description',
       question: 'Describe your business and primary operations.',
@@ -281,42 +469,87 @@ export const INTAKE_QUESTIONS: Record<string, IntakeQuestion[]> = {
       id: 'team_size',
       question: 'What is your team size?',
       type: 'select',
-      options: ['1-10', '11-50', '51-200', '200+'],
+      options: ['Solo', '2-5', '6-15', '16-50', '50+'],
     },
     {
-      id: 'current_tech',
-      question: 'What technology tools do you currently use?',
+      id: 'current_systems',
+      question: 'What systems/tools do you currently use? (CRM, automation, etc.)',
       type: 'textarea',
     },
     {
-      id: 'transformation_goals',
-      question: 'What are your top 3 goals for AI transformation?',
+      id: 'priority_workflows',
+      question: 'Which workflows would you most want to systematize? (sales, operations, content, etc.)',
       type: 'textarea',
       required: true,
+    },
+    {
+      id: 'diagnostic_completed',
+      question: 'Have you completed an AI Level Diagnostic with us?',
+      type: 'select',
+      options: ['Yes', 'No - I\'d like to discuss this'],
     },
   ],
-  story: [
+  'authority-engine': [
     {
-      id: 'background',
-      question: 'Tell us about your background and journey.',
+      id: 'expertise_area',
+      question: 'What is your area of deep expertise? What do you know better than almost anyone?',
       type: 'textarea',
       required: true,
     },
     {
-      id: 'unique_perspective',
-      question: 'What unique perspective do you bring to your industry?',
+      id: 'current_positioning',
+      question: 'How are you currently positioned in your market? What do people know you for?',
       type: 'textarea',
       required: true,
     },
     {
-      id: 'target_audience',
-      question: 'Who is your primary audience?',
+      id: 'infrastructure_status',
+      question: 'Do you have operational infrastructure in place to handle increased demand?',
+      type: 'select',
+      options: [
+        'Yes - Command Center is built',
+        'Partially - some systems in place',
+        'No - I need to build infrastructure first',
+      ],
+    },
+    {
+      id: 'authority_goals',
+      question: 'What would "category authority" look like for you? What do you want to be known for?',
+      type: 'textarea',
+    },
+  ],
+  ascension: [
+    {
+      id: 'business_description',
+      question: 'Tell us about your business - what you do, your traction so far, and your team.',
+      type: 'textarea',
+      required: true,
+    },
+    {
+      id: 'why_now',
+      question: 'Why is now the right time for a complete AI infrastructure transformation?',
+      type: 'textarea',
+      required: true,
+    },
+    {
+      id: 'bottlenecks',
+      question: 'Where are you (the founder) still the biggest bottleneck?',
+      type: 'textarea',
+      required: true,
+    },
+    {
+      id: 'vision',
+      question: 'In 90 days, if we\'ve succeeded, what does your business look like?',
       type: 'textarea',
     },
     {
-      id: 'content_goals',
-      question: 'What do you want your content to achieve?',
-      type: 'textarea',
+      id: 'commitment',
+      question: 'Are you ready to commit significant time and resources to this transformation?',
+      type: 'select',
+      options: [
+        'Yes - I\'m ready to go all in',
+        'I want to learn more first',
+      ],
     },
   ],
 };
@@ -327,18 +560,18 @@ export const INTAKE_QUESTIONS: Record<string, IntakeQuestion[]> = {
 
 export const PHILOSOPHY_ITEMS = [
   {
-    title: 'Reveal, Don\'t Impose',
-    description: 'Your business already contains its own genius. AI reveals it—we don\'t invent it. We illuminate what\'s already there.',
+    title: 'Structure Creates Leverage',
+    description: 'AI does not create leverage. Structure does. The competitive advantage is not using AI—it\'s building systems that AI can amplify.',
     accent: 'radiance-gold',
   },
   {
-    title: 'Speed Beats Perfection',
-    description: 'A 70% solution today beats a 100% solution in six months. The window is open now—we help you move decisively.',
+    title: 'Maturity Over Tools',
+    description: 'Most companies adopt tools; few build infrastructure. Moving up the maturity ladder creates durable advantage, not tool collection.',
     accent: 'radiance-amber',
   },
   {
-    title: 'Clarity Is The Multiplier',
-    description: 'One clear decision, properly executed, outperforms a dozen confused ones. We cut through the noise to what matters.',
+    title: 'Systems Over Effort',
+    description: 'The goal is a business that runs on systems, not founder effort. We design how your business will run on AI—permanently.',
     accent: 'clarity-cream',
   },
 ];

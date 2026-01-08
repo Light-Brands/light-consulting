@@ -18,6 +18,7 @@ export { ImagePlaceholder, AvatarPlaceholder, HeroBackground } from './ImagePlac
 export { IconPlaceholder, IndustryIcon, ValueIcon } from './IconPlaceholder';
 export { default as CapacityGapVisual } from './CapacityGapVisual';
 export { default as LaborArbitrageHighlight } from './LaborArbitrageHighlight';
+export { default as MaturityLadder } from './MaturityLadder';
 
 // Icons
 export * from './Icons';

@@ -23,9 +23,10 @@ export interface BaseComponentProps {
 export type PageKey =
   | 'home'
   | 'services'
-  | 'services/illumination'
-  | 'services/blueprint'
-  | 'services/story'
+  | 'services/diagnostic'
+  | 'services/command-center'
+  | 'services/authority-engine'
+  | 'services/ascension'
   | 'about'
   | 'book'
   | 'insights'
@@ -98,7 +99,7 @@ export interface NewsletterFormData {
 // ============================================================================
 
 export interface BookingFormData {
-  service?: 'illumination' | 'blueprint' | 'story';
+  service?: 'diagnostic' | 'command-center' | 'authority-engine' | 'ascension';
   name?: string;
   email?: string;
   company?: string;

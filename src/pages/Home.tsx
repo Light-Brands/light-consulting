@@ -10,16 +10,40 @@ import {
   Tag,
   ServiceCard,
   NewsletterCapture,
-  LightbulbIcon,
-  BlueprintIcon,
-  BookIcon,
   SparkleIcon,
   CheckIcon,
-  CapacityGapVisual,
+  MaturityLadder,
   LaborArbitrageHighlight,
 } from '../components';
-import { SERVICES, TESTIMONIALS, IMAGE_CONFIG } from '../lib/constants';
+import { SERVICES, TESTIMONIALS, IMAGE_CONFIG, FIT_CRITERIA } from '../lib/constants';
 import { PageKey } from '../types';
+
+// Service icons for the new offerings
+const DiagnosticIcon = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M9 12h6M12 9v6M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0" />
+  </svg>
+);
+
+const CommandCenterIcon = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="M3 9h18M9 21V9" />
+  </svg>
+);
+
+const AuthorityIcon = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+  </svg>
+);
+
+const AscensionIcon = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+    <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
+  </svg>
+);
 
 interface HomePageProps {
   onNavigate: (page: PageKey) => void;
@@ -27,15 +51,16 @@ interface HomePageProps {
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   const serviceIcons: Record<string, React.ReactNode> = {
-    illumination: <LightbulbIcon size={24} />,
-    blueprint: <BlueprintIcon size={24} />,
-    story: <BookIcon size={24} />,
+    diagnostic: <DiagnosticIcon size={24} />,
+    'command-center': <CommandCenterIcon size={24} />,
+    'authority-engine': <AuthorityIcon size={24} />,
+    ascension: <AscensionIcon size={24} />,
   };
 
   return (
     <div className="min-h-screen">
       {/* Hero Section with Background Image */}
-      <section 
+      <section
         className="min-h-[90vh] relative overflow-hidden flex flex-col justify-center px-6 md:px-12 lg:px-16 pt-20"
         style={{
           backgroundImage: `url(${IMAGE_CONFIG.heroes.home.src})`,
@@ -45,15 +70,15 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       >
         {/* Overlay for readability */}
         <div className="absolute inset-0 bg-depth-base/70" />
-        
+
         {/* Bottom fade gradient - dissolves into next section */}
-        <div 
+        <div
           className="absolute bottom-0 left-0 right-0 h-[20%] pointer-events-none z-[1]"
           style={{
             background: 'linear-gradient(to bottom, transparent 0%, rgba(15, 14, 13, 0.5) 50%, rgba(15, 14, 13, 1) 100%)',
           }}
         />
-        
+
         {/* Additional glow effects */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-radial-gradient from-radiance-gold/8 to-transparent blur-3xl pointer-events-none" />
         <div className="absolute top-20 right-10 w-[300px] h-[300px] bg-radiance-gold/5 blur-[100px] rounded-full pointer-events-none animate-float" />
@@ -61,23 +86,23 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         <div className="relative z-10 max-w-4xl mx-auto">
           <div className="animate-fade-in">
             <Tag variant="premium" className="mb-6">
-              AI Strategy Consulting
+              AI Architects
             </Tag>
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-text-primary mb-8 animate-slide-up">
-            Let us help you see your
-            <span className="text-radiance-gold block md:inline"> fullest capacity</span>
+            Most businesses are stuck at{' '}
+            <span className="text-text-muted">Levels 1–3</span> with AI.
+            <span className="text-radiance-gold block mt-2">We move founders to Level 5.</span>
           </h1>
 
           <p className="text-lg md:text-xl text-text-secondary mb-6 max-w-2xl leading-relaxed animate-slide-up delay-200">
-            Transform your business into an AI super intelligence.
-            Light consulting creates capacity, not dependency.
+            Where AI becomes a structural advantage—not just another tool.
           </p>
 
           <p className="text-base text-text-muted mb-12 max-w-2xl leading-relaxed animate-slide-up delay-250">
-            We don't do AI for you—we illuminate the path so you can move with clarity and confidence.
-            In one conversation, see possibilities you've been blind to.
+            The AI economy will not reward tool usage. It will reward businesses with operating systems AI can amplify.
+            We design how your business will run on AI—permanently.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 animate-slide-up delay-300">
@@ -86,7 +111,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               size="lg"
               onClick={() => onNavigate('book')}
             >
-              Book Illumination Session
+              Discover Your AI Level
             </Button>
             <Button
               variant="secondary"
@@ -106,31 +131,31 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* Capacity Gap Section - Interactive */}
+      {/* AI Maturity Ladder Section */}
       <section className="section-spacing bg-depth-elevated">
         <div className="container-wide">
           <Card elevation="elevated" className="p-8 md:p-12 overflow-hidden">
             <div className="flex items-center gap-3 mb-6">
               <SparkleIcon className="text-radiance-gold" size={28} />
               <h2 className="text-2xl md:text-3xl font-bold text-text-primary">
-                The Capacity Gap
+                The AI Maturity Ladder
               </h2>
             </div>
 
             <p className="text-text-secondary mb-4 max-w-3xl">
-              Every business has untapped potential—opportunities hidden in plain sight. The gap between where you are and where AI can take you isn't about technology. It's about seeing clearly.
+              AI adoption is a maturity curve. Most companies adopt tools; few build infrastructure.
+              The competitive advantage isn't using AI—it's building structure that AI can amplify.
             </p>
 
-            {/* Interactive Visualization */}
-            <CapacityGapVisual />
+            {/* Interactive Maturity Ladder */}
+            <MaturityLadder />
 
             <div className="border-t border-depth-border pt-8 mt-4">
               <p className="text-text-secondary text-center max-w-2xl mx-auto mb-6">
-                <span className="text-radiance-gold font-semibold">2024-2026 is the strategic moment.</span> Like 1995 for the web, like 2008 for mobile.
-                The businesses that move now—with clarity, not chaos—will define the next decade.
+                <span className="text-radiance-gold font-semibold">Light Brand designs the systems</span> that move you up the curve—permanently.
               </p>
               <p className="text-text-muted text-center text-sm max-w-xl mx-auto">
-                The question isn't if AI will transform your industry—it's whether you'll lead that transformation or react to it.
+                From: "We build AI systems." → To: "We design how your business will run on AI."
               </p>
             </div>
           </Card>
@@ -149,23 +174,23 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         <div className="container-wide">
           <div className="text-center mb-12">
             <Tag variant="default" className="mb-4">
-              Services
+              The Light Brand Method
             </Tag>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-              Choose Your Path to Illumination
+              Three Phases to Level 5
             </h2>
             <p className="text-text-secondary max-w-2xl mx-auto">
-              Each service is designed to meet you where you are and take you where you need to go.
-              No lock-in, no dependency—just clarity and actionable next steps.
+              Each phase builds on the last. Start with diagnosis, progress to infrastructure, ascend to authority.
+              This is not consulting—it's the installation of operating infrastructure that compounds.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {Object.entries(SERVICES).map(([key, service]) => (
               <ServiceCard
                 key={key}
                 service={service}
-                featured={key === 'blueprint'}
+                featured={key === 'ascension'}
                 icon={serviceIcons[key]}
                 onLearnMore={() => onNavigate(`services/${key}` as PageKey)}
                 onBook={() => onNavigate('book')}
@@ -175,29 +200,32 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* What We Do Differently Section */}
+      {/* Category Claim Section */}
       <section className="section-spacing">
         <div className="container-wide">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <Tag variant="premium" className="mb-4">
-                Our Approach
+                Category Claim
               </Tag>
               <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6">
-                We Illuminate,{' '}
-                <span className="text-radiance-gold">You Execute</span>
+                We Are{' '}
+                <span className="text-radiance-gold">AI Architects</span>
               </h2>
+              <p className="text-text-secondary mb-4">
+                Not "prompt engineers." Not "automation agencies." Not "AI builders."
+              </p>
               <p className="text-text-secondary mb-8">
-                Most AI consultants want to become your permanent dependency. We want to become unnecessary.
-                Our job is to give you the clarity and confidence to move forward—on your own terms.
+                We are the team that designs <span className="text-radiance-gold font-medium">how your business will function in an AI economy</span>.
+                This removes us from agency comparison and supports enterprise-level outcomes.
               </p>
 
               <div className="space-y-4">
                 {[
-                  'We speak business, not jargon',
-                  'We reveal opportunities, not impose solutions',
-                  'We build your capacity, not our recurring revenue',
-                  'We move fast—the window is now',
+                  'We design operating infrastructure, not "AI installs"',
+                  'We reduce founder-dependence through systems',
+                  'We build compounding workflows across revenue, delivery, and ops',
+                  'We create structural advantage, not tool collections',
                 ].map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -211,16 +239,64 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
             <Card elevation="elevated" className="p-8">
               <h3 className="text-xl font-bold text-text-primary mb-4">
-                The Light Touch Principle
+                The Core Insight
               </h3>
               <p className="text-text-secondary mb-6">
-                Your business already contains its own genius. AI doesn't add something foreign—it amplifies what's already there. Our role is illumination: helping you see clearly what you couldn't see before.
+                Light Brand is delivering enterprise-grade value but often perceived as a small agency.
+                The market interprets us as "AI implementation + brand studio"—that frame drives lower pricing ceilings, shallow engagements, and unnecessary friction.
+              </p>
+              <p className="text-text-secondary mb-6">
+                <span className="text-radiance-gold font-semibold">The reality:</span> We're designing operating infrastructure that compounds.
+                The AI Maturity Ladder fixes the mismatch by giving buyers a self-diagnostic map and turning vague "AI services" into measurable progression.
               </p>
               <div className="border-t border-depth-border pt-6">
                 <p className="text-text-muted text-sm italic">
-                  "One clear decision, properly executed, outperforms a dozen confused ones."
+                  "Light Brand does not need additional services. It needs a strategic frame that matches the work it already does."
                 </p>
               </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Fit Criteria Section */}
+      <section className="section-spacing bg-depth-elevated">
+        <div className="container-wide">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-text-primary mb-4">
+              Is This For You?
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <Card elevation="elevated" className="p-8">
+              <h3 className="text-xl font-bold text-radiance-gold mb-6">Ideal Clients</h3>
+              <ul className="space-y-4">
+                {FIT_CRITERIA.idealClients.map((item, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <CheckIcon size={12} />
+                    </div>
+                    <span className="text-text-secondary">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+
+            <Card elevation="subtle" className="p-8">
+              <h3 className="text-xl font-bold text-text-muted mb-6">Not a Fit</h3>
+              <ul className="space-y-4">
+                {FIT_CRITERIA.notAFit.map((item, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-depth-border text-text-muted flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </div>
+                    <span className="text-text-muted">{item}</span>
+                  </li>
+                ))}
+              </ul>
             </Card>
           </div>
         </div>
@@ -314,15 +390,15 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       <section className="section-spacing bg-gradient-to-b from-depth-base to-depth-elevated">
         <div className="container-narrow text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6">
-            Ready to See Your{' '}
-            <span className="text-radiance-gold">Fullest Capacity</span>?
+            Ready to Reach{' '}
+            <span className="text-radiance-gold">Level 5</span>?
           </h2>
           <p className="text-text-secondary mb-4 max-w-xl mx-auto">
-            Start with a 90-minute Illumination Session. In one conversation,
-            you'll see possibilities you've been blind to—and leave with a clear path forward.
+            Start with an AI Level Diagnostic. See exactly where you are on the maturity ladder
+            and get a clear roadmap to structural advantage.
           </p>
           <p className="text-text-muted text-sm mb-8 max-w-lg mx-auto">
-            No pitch, no pressure, no jargon. Just clarity about what AI can actually do for your business.
+            This is not consulting. This is the installation of operating infrastructure that compounds.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
@@ -330,14 +406,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               size="lg"
               onClick={() => onNavigate('book')}
             >
-              Book Your Session — $500
+              Discover Your AI Level
             </Button>
             <Button
               variant="ghost"
               size="lg"
-              onClick={() => onNavigate('services/illumination')}
+              onClick={() => onNavigate('services/ascension')}
             >
-              Learn More First
+              Learn About Ascension
             </Button>
           </div>
         </div>

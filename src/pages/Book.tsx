@@ -11,19 +11,43 @@ import {
   Textarea,
   Tag,
   CheckIcon,
-  LightbulbIcon,
-  BlueprintIcon,
-  BookIcon,
 } from '../components';
 import { SERVICES, INTAKE_QUESTIONS } from '../lib/constants';
 import { BookingFormData, PageKey } from '../types';
 import { cn, isValidEmail } from '../lib/utils';
 
+// Service icons for the new offerings
+const DiagnosticIcon = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M9 12h6M12 9v6M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0" />
+  </svg>
+);
+
+const CommandCenterIcon = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="M3 9h18M9 21V9" />
+  </svg>
+);
+
+const AuthorityIcon = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+  </svg>
+);
+
+const AscensionIcon = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+    <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
+  </svg>
+);
+
 interface BookPageProps {
   onNavigate: (page: PageKey) => void;
 }
 
-type ServiceKey = 'illumination' | 'blueprint' | 'story';
+type ServiceKey = 'diagnostic' | 'command-center' | 'authority-engine' | 'ascension';
 
 export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
   const [step, setStep] = useState(1);
@@ -33,9 +57,10 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
   const [isComplete, setIsComplete] = useState(false);
 
   const serviceIcons: Record<ServiceKey, React.ReactNode> = {
-    illumination: <LightbulbIcon size={24} />,
-    blueprint: <BlueprintIcon size={24} />,
-    story: <BookIcon size={24} />,
+    diagnostic: <DiagnosticIcon size={24} />,
+    'command-center': <CommandCenterIcon size={24} />,
+    'authority-engine': <AuthorityIcon size={24} />,
+    ascension: <AscensionIcon size={24} />,
   };
 
   const validateStep = (currentStep: number): boolean => {
@@ -57,7 +82,7 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
     }
 
     if (currentStep === 3) {
-      const questions = INTAKE_QUESTIONS[formData.service || 'illumination'];
+      const questions = INTAKE_QUESTIONS[formData.service || 'diagnostic'];
       questions.forEach((q) => {
         if (q.required && !formData.intake?.[q.id]?.trim()) {
           newErrors[q.id] = 'This field is required';
