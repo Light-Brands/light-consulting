@@ -22,6 +22,7 @@ export interface BaseComponentProps {
 
 export type PageKey =
   | 'home'
+  | 'funnel'
   | 'services'
   | 'services/diagnostic'
   | 'services/command-center'
