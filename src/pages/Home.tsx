@@ -16,6 +16,9 @@ import {
   Tag,
   NewsletterCapture,
   CheckIcon,
+  SparkleIcon,
+  CapacityGapVisual,
+  LaborArbitrageHighlight,
 } from '../components';
 import { TESTIMONIALS, IMAGE_CONFIG, FIT_CRITERIA } from '../lib/constants';
 import { PageKey } from '../types';
@@ -129,6 +132,44 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Capacity Gap Section - Interactive */}
+      <section className="section-spacing">
+        <div className="container-wide">
+          <Card elevation="elevated" className="p-8 md:p-12 overflow-hidden">
+            <div className="flex items-center gap-3 mb-6">
+              <SparkleIcon className="text-radiance-gold" size={28} />
+              <h2 className="text-2xl md:text-3xl font-bold text-text-primary">
+                The Capacity Gap
+              </h2>
+            </div>
+
+            <p className="text-text-secondary mb-4 max-w-3xl">
+              Every business has untapped potential—opportunities hidden in plain sight. The gap between where you are and where AI can take you isn't about technology. It's about seeing clearly.
+            </p>
+
+            {/* Interactive Visualization */}
+            <CapacityGapVisual />
+
+            <div className="border-t border-depth-border pt-8 mt-4">
+              <p className="text-text-secondary text-center max-w-2xl mx-auto mb-6">
+                <span className="text-radiance-gold font-semibold">2024-2026 is the strategic moment.</span> Like 1995 for the web, like 2008 for mobile.
+                The businesses that move now—with clarity, not chaos—will define the next decade.
+              </p>
+              <p className="text-text-muted text-center text-sm max-w-xl mx-auto">
+                The question isn't if AI will transform your industry—it's whether you'll lead that transformation or react to it.
+              </p>
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      {/* Labor Arbitrage Highlight */}
+      <section className="section-spacing bg-depth-elevated">
+        <div className="container-wide">
+          <LaborArbitrageHighlight onLearnMore={() => onNavigate('insights/labor-arbitrage')} />
         </div>
       </section>
 
