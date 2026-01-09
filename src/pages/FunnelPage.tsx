@@ -379,41 +379,39 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {TESTIMONIALS.slice(0, 2).map((testimonial, index) => (
-              <Card key={index} elevation="subtle" className="p-8">
-                <div className="space-y-6">
-                  <div className="flex gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} className="w-5 h-5 text-radiance-gold fill-current" viewBox="0 0 20 20">
-                        <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                      </svg>
-                    ))}
-                  </div>
+          <div className="max-w-3xl mx-auto">
+            <Card elevation="elevated" className="p-10 md:p-12 bg-gradient-to-br from-depth-elevated to-depth-surface border border-radiance-gold/30">
+              <div className="space-y-8">
+                <div className="flex justify-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="w-6 h-6 text-radiance-gold fill-current" viewBox="0 0 20 20">
+                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                    </svg>
+                  ))}
+                </div>
 
-                  <blockquote className="text-lg text-text-secondary leading-relaxed">
-                    "{testimonial.quote}"
-                  </blockquote>
+                <blockquote className="text-xl md:text-2xl text-text-primary leading-relaxed text-center font-medium">
+                  "{TESTIMONIALS[0].quote}"
+                </blockquote>
 
-                  <div className="flex items-center gap-4 pt-4">
-                    {testimonial.avatar && (
-                      <img
-                        src={testimonial.avatar}
-                        alt={testimonial.name}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
+                <div className="flex flex-col items-center gap-4 pt-6">
+                  {TESTIMONIALS[0].avatar && (
+                    <img
+                      src={TESTIMONIALS[0].avatar}
+                      alt={TESTIMONIALS[0].author}
+                      className="w-16 h-16 rounded-full object-cover ring-2 ring-radiance-gold/30"
+                    />
+                  )}
+                  <div className="text-center">
+                    <p className="font-bold text-lg text-text-primary">{TESTIMONIALS[0].author}</p>
+                    <p className="text-text-muted">{TESTIMONIALS[0].role}</p>
+                    {TESTIMONIALS[0].company && (
+                      <p className="text-text-muted">{TESTIMONIALS[0].company}</p>
                     )}
-                    <div>
-                      <p className="font-semibold text-text-primary">{testimonial.name}</p>
-                      <p className="text-sm text-text-muted">{testimonial.title}</p>
-                      {testimonial.company && (
-                        <p className="text-sm text-text-muted">{testimonial.company}</p>
-                      )}
-                    </div>
                   </div>
                 </div>
-              </Card>
-            ))}
+              </div>
+            </Card>
           </div>
         </div>
       </section>
