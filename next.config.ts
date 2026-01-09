@@ -10,6 +10,13 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
 
+  // Turbopack configuration
+  experimental: {
+    turbo: {
+      root: process.cwd(),
+    },
+  },
+
   // Configure image optimization
   images: {
     // Allow images from the public directory
