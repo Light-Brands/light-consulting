@@ -4,6 +4,7 @@
  */
 
 export { default as HomePage } from './Home';
+export { FunnelPage } from './FunnelPage';
 export { default as ServicesPage } from './Services';
 export { default as ServiceDetailPage } from './ServiceDetail';
 export { default as AboutPage } from './About';

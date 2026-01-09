@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { Navigation, Footer } from './components';
 import {
   HomePage,
+  FunnelPage,
   ServicesPage,
   ServiceDetailPage,
   AboutPage,
@@ -72,6 +73,8 @@ const App: React.FC = () => {
     switch (activePage) {
       case 'home':
         return <HomePage onNavigate={handleNavigate} />;
+      case 'funnel':
+        return <FunnelPage onNavigate={handleNavigate} />;
       case 'services':
         return <ServicesPage onNavigate={handleNavigate} />;
       case 'about':
