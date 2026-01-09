@@ -20,21 +20,17 @@ import { PageKey } from './types';
 import { scrollToTop } from './lib/utils';
 
 const App: React.FC = () => {
-  const [activePage, setActivePage] = useState<PageKey>('home');
+  // Initialize state from URL hash immediately
+  const [activePage, setActivePage] = useState<PageKey>(() => {
+    const hash = window.location.hash.slice(1) || 'home';
+    return hash as PageKey;
+  });
 
   // Handle navigation
   const handleNavigate = (page: PageKey) => {
     setActivePage(page);
     scrollToTop();
   };
-
-  // Parse URL hash on mount
-  useEffect(() => {
-    const hash = window.location.hash.slice(1) || 'home';
-    if (hash) {
-      setActivePage(hash as PageKey);
-    }
-  }, []);
 
   // Update URL hash when page changes
   useEffect(() => {
