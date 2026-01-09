@@ -284,7 +284,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
             {[
               {
                 q: 'What if the diagnostic shows no opportunity?',
-                a: 'Then you leave with clarity—which is valuable in itself. We\'ll tell you honestly if AI systems aren\'t the right move for your business right now. Zero reputational cost, trust built.',
+                a: 'Then you leave with clarity, which is valuable in itself. We\'ll tell you honestly if AI systems aren\'t the right move for your business right now. Zero reputational cost, trust built.',
               },
               {
                 q: 'Can I skip the diagnostic and go straight to building?',
@@ -332,7 +332,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
       <section className="py-12 bg-depth-elevated border-t border-depth-border">
         <div className="container-narrow text-center">
           <p className="text-text-muted">
-            <span className="text-radiance-gold">Light Brand</span> designs intelligence systems —
+            <span className="text-radiance-gold">Light Brand</span> designs intelligence systems
             so businesses don't just use AI, they're built for it.
           </p>
         </div>

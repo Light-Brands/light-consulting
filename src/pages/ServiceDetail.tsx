@@ -235,7 +235,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({
               size="lg"
               onClick={() => onNavigate('book')}
             >
-              Book Now — {service.investment}
+              Book Now - {service.investment}
             </Button>
             <Button
               variant="ghost"
