@@ -64,7 +64,7 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
                 This diagnostic exists to answer one question:
               </p>
               <p className="text-radiance-gold mt-2 text-xl font-semibold">
-                Is your business structured to benefit from AI — or be disrupted by it?
+                Is your business structured to benefit from AI, or be disrupted by it?
               </p>
             </div>
 
@@ -127,7 +127,7 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
             </div>
 
             <p className="text-radiance-amber font-medium pt-4">
-              That creates motion — not leverage.
+              That creates motion, not leverage.
             </p>
 
             <Card elevation="elevated" className="p-8 mt-8">
@@ -278,7 +278,7 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
                 Most companies believe they're further along than they are.
               </p>
               <p className="text-radiance-gold font-medium text-lg">
-                This diagnostic reveals the truth — without hype, pressure, or technical jargon.
+                This diagnostic reveals the truth: no hype, no pressure, no technical jargon.
               </p>
             </div>
           </div>
@@ -318,7 +318,7 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
               </div>
               <h3 className="text-lg font-bold text-text-primary mb-2">A Leverage Snapshot</h3>
               <p className="text-text-secondary text-sm">
-                Where effort is leaking — and where structure would compound results.
+                Where effort is leaking, and where structure would compound results.
               </p>
             </Card>
 
@@ -419,7 +419,7 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
                 3
               </div>
               <div>
-                <p className="text-text-primary font-medium">You receive a clear snapshot of where you stand — and why</p>
+                <p className="text-text-primary font-medium">You receive a clear snapshot of where you stand, and why</p>
               </div>
             </div>
           </div>
@@ -502,7 +502,7 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
       <section className="py-12 bg-depth-base border-t border-depth-border">
         <div className="container-narrow text-center">
           <p className="text-text-muted">
-            <span className="text-radiance-gold">Light Brand</span> designs intelligence systems —
+            <span className="text-radiance-gold">Light Brand</span> designs intelligence systems
             so businesses don't just use AI, they're built for it.
           </p>
         </div>

@@ -56,7 +56,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               We design <span className="text-radiance-gold">how your business will function in an AI economy</span>.
             </p>
             <p className="text-text-muted">
-              Light Brand Consulting delivers enterprise-grade value through the AI Maturity Ladder framework—
+              Light Brand Consulting delivers enterprise-grade value through the AI Maturity Ladder framework,
               moving founders from wherever they are to Level 5, where AI becomes a structural advantage.
             </p>
           </div>
@@ -81,8 +81,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
 
             <div className="relative z-10 space-y-6 text-text-secondary text-lg leading-relaxed">
               <p>
-                AI adoption has shifted from "tools" to organizational maturity. The competitive advantage is not using AI—
-                it's <span className="text-radiance-gold font-semibold">building structure that AI can amplify</span>.
+                AI adoption has shifted from "tools" to organizational maturity. The competitive advantage is not using AI.
+                It's <span className="text-radiance-gold font-semibold">building structure that AI can amplify</span>.
               </p>
               <p>
                 Most companies remain stuck in early-stage adoption: experimenting, prompting, disconnected automations.
@@ -112,7 +112,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                     1
                   </div>
                   <p className="text-text-primary font-semibold mb-1">Operating Infrastructure</p>
-                  <p className="text-text-muted text-sm">Not "AI installs"—systems that compound</p>
+                  <p className="text-text-muted text-sm">Not "AI installs" but systems that compound</p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 rounded-xl bg-radiance-amber/10 text-radiance-amber flex items-center justify-center mx-auto mb-3 font-bold">
@@ -229,7 +229,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               </h2>
 
               <p className="text-text-secondary text-lg mb-6 max-w-2xl mx-auto">
-                <span className="text-radiance-gold font-semibold">2024-2026 will be remembered the way we remember 1995 for the web, 2008 for mobile.</span> The businesses that move now—with clarity, not chaos—will define the next decade.
+                <span className="text-radiance-gold font-semibold">2024-2026 will be remembered the way we remember 1995 for the web, 2008 for mobile.</span> The businesses that move now, with clarity not chaos, will define the next decade.
               </p>
 
               <p className="border-l-4 border-radiance-gold pl-4 text-left italic text-text-muted max-w-xl mx-auto">
@@ -295,7 +295,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                   Business First, Technology Second
                 </h3>
                 <p className="text-text-secondary">
-                  We don't lead with AI jargon. We lead with your business reality, your challenges, your opportunities. AI is the tool—your success is the goal. Every recommendation ties directly to business outcomes you care about.
+                  We don't lead with AI jargon. We lead with your business reality, your challenges, your opportunities. AI is the tool. Your success is the goal. Every recommendation ties directly to business outcomes you care about.
                 </p>
               </div>
 
@@ -313,7 +313,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                   Speed With Intention
                 </h3>
                 <p className="text-text-secondary">
-                  The window is open now. We move fast—but with purpose. A 70% solution today beats a 100% solution in six months. We help you make progress while others are still planning.
+                  The window is open now. We move fast, but with purpose. A 70% solution today beats a 100% solution in six months. We help you make progress while others are still planning.
                 </p>
               </div>
             </div>
@@ -333,7 +333,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                   Revelation, Not Imposition
                 </h3>
                 <p className="text-text-secondary">
-                  Your business already contains its own genius. We don't impose external frameworks—we reveal what's already there and show you how AI amplifies it. The best solutions feel obvious in hindsight.
+                  Your business already contains its own genius. We don't impose external frameworks. We reveal what's already there and show you how AI amplifies it. The best solutions feel obvious in hindsight.
                 </p>
               </div>
 
@@ -342,7 +342,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
                   Quality Over Quantity
                 </h3>
                 <p className="text-text-secondary">
-                  We work with a limited number of clients at a time. This isn't about scale—it's about impact. Every engagement gets our full attention and best thinking.
+                  We work with a limited number of clients at a time. This isn't about scale. It's about impact. Every engagement gets our full attention and best thinking.
                 </p>
               </div>
             </div>
@@ -470,7 +470,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               },
               {
                 title: 'We move fast',
-                description: 'Our engagements are measured in hours, days, and weeks—not months. You\'ll have clarity quickly.',
+                description: 'Our engagements are measured in hours, days, and weeks, not months. You\'ll have clarity quickly.',
               },
               {
                 title: 'We let go',
@@ -506,13 +506,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               </h2>
               <div className="space-y-4 text-text-secondary">
                 <p>
-                  We don't want to work with everyone—and that's intentional. We believe those 
-                  meant to work with us will come forward, equally excited as we are to greet 
+                  We don't want to work with everyone, and that's intentional. We believe those
+                  meant to work with us will come forward, equally excited as we are to greet
                   them with open arms.
                 </p>
                 <p>
-                  Our mission is to <span className="text-radiance-gold font-medium">steward light to the planet</span>. 
-                  We only want to work with brands that share this mindset—those ready to step into the light.
+                  Our mission is to <span className="text-radiance-gold font-medium">steward light to the planet</span>.
+                  We only want to work with brands that share this mindset, those ready to step into the light.
                 </p>
                 <p>
                   For brands that align with our values, we offer <span className="text-radiance-gold font-medium">full implementation 

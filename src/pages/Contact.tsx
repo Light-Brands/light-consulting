@@ -221,11 +221,11 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                   {[
                     {
                       q: 'Is this the right first step?',
-                      a: 'If you have questions, yes. If you\'re ready to book, go directly to our booking page—it\'s faster.',
+                      a: 'If you have questions, yes. If you\'re ready to book, go directly to our booking page. It\'s faster.',
                     },
                     {
                       q: 'Do you build and implement solutions?',
-                      a: 'Yes—for aligned partners. Brand Development and implementation are available after completing an AI Acceleration Blueprint and being accepted through our Stewardship Council. We partner deeply with the right brands rather than working broadly with everyone.',
+                      a: 'Yes, for aligned partners. Brand Development and implementation are available after completing an AI Acceleration Blueprint and being accepted through our Stewardship Council. We partner deeply with the right brands rather than working broadly with everyone.',
                     },
                     {
                       q: 'Will you try to sell me?',
@@ -233,7 +233,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                     },
                     {
                       q: 'What if I\'m not sure AI is right for my business?',
-                      a: 'That\'s exactly what an Illumination Session is for. But feel free to ask questions first—we\'re happy to help you figure that out.',
+                      a: 'That\'s exactly what an Illumination Session is for. But feel free to ask questions first. We\'re happy to help you figure that out.',
                     },
                   ].map((item, index) => (
                     <div key={index}>

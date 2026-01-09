@@ -63,7 +63,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-text-primary mb-8 animate-slide-up">
             We design AI intelligence systems
             <span className="text-radiance-gold block mt-2">
-              for businesses that want to survive — and lead — the next decade.
+              for businesses that want to survive and lead the next decade.
             </span>
           </h1>
 
@@ -128,7 +128,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               </div>
 
               <p className="text-text-muted italic">
-                Most founders don't realize which side they're on — until it's too late.
+                Most founders don't realize which side they're on until it's too late.
               </p>
             </div>
           </div>
@@ -147,7 +147,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </div>
 
             <p className="text-text-secondary mb-4 max-w-3xl">
-              Every business has untapped potential—opportunities hidden in plain sight. The gap between where you are and where AI can take you isn't about technology. It's about seeing clearly.
+              Every business has untapped potential, opportunities hidden in plain sight. The gap between where you are and where AI can take you isn't about technology. It's about seeing clearly.
             </p>
 
             {/* Interactive Visualization */}
@@ -156,10 +156,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <div className="border-t border-depth-border pt-8 mt-4">
               <p className="text-text-secondary text-center max-w-2xl mx-auto mb-6">
                 <span className="text-radiance-gold font-semibold">2024-2026 is the strategic moment.</span> Like 1995 for the web, like 2008 for mobile.
-                The businesses that move now—with clarity, not chaos—will define the next decade.
+                The businesses that move now, with clarity not chaos, will define the next decade.
               </p>
               <p className="text-text-muted text-center text-sm max-w-xl mx-auto">
-                The question isn't if AI will transform your industry—it's whether you'll lead that transformation or react to it.
+                The question isn't if AI will transform your industry. It's whether you'll lead that transformation or react to it.
               </p>
             </div>
           </Card>
@@ -252,7 +252,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 <span className="text-text-primary font-semibold">Most companies stall in the middle.</span>
               </p>
               <p className="text-radiance-gold mt-4 text-lg font-medium">
-                We help you move to the top — where AI becomes a structural advantage, not a novelty.
+                We help you move to the top, where AI becomes a structural advantage, not a novelty.
               </p>
             </div>
           </div>
@@ -279,7 +279,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               <Card elevation="elevated" className="p-8">
                 <h3 className="text-xl font-bold text-text-primary mb-3">AI Intelligence Diagnostics</h3>
                 <p className="text-text-secondary">
-                  A clear picture of where your business stands — and where leverage is hiding.
+                  A clear picture of where your business stands, and where leverage is hiding.
                 </p>
               </Card>
 
@@ -306,7 +306,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </div>
 
             <p className="text-center text-text-muted mt-8 italic">
-              Each system is designed to compound — not just perform.
+              Each system is designed to compound, not just perform.
             </p>
           </div>
         </div>
@@ -330,7 +330,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 {
                   step: 1,
                   title: 'Intelligence Mapping',
-                  description: 'We diagnose how your business currently operates — and where AI can create real leverage.',
+                  description: 'We diagnose how your business currently operates, and where AI can create real leverage.',
                 },
                 {
                   step: 2,
@@ -340,7 +340,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 {
                   step: 3,
                   title: 'AI Engine Build',
-                  description: 'We build and deploy systems that run alongside — and eventually ahead of — your team.',
+                  description: 'We build and deploy systems that run alongside your team, and eventually ahead of it.',
                 },
                 {
                   step: 4,
@@ -503,7 +503,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       <section className="py-12 bg-depth-elevated border-t border-depth-border">
         <div className="container-narrow text-center">
           <p className="text-text-muted">
-            <span className="text-radiance-gold">Light Brand</span> designs intelligence systems —
+            <span className="text-radiance-gold">Light Brand</span> designs intelligence systems
             so businesses don't just use AI, they're built for it.
           </p>
         </div>

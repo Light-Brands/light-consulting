@@ -126,7 +126,7 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
                   A developer costs $120,000/year. Their work is billed at $200/hour. The difference is profit.
                 </p>
                 <p>
-                  Law firms, accounting practices, marketing agencies, software development shops—the entire 
+                  Law firms, accounting practices, marketing agencies, software development shops: the entire
                   professional services industry runs on the gap between what labor costs and what it bills for.
                 </p>
               </div>
@@ -196,8 +196,8 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
               AI Breaks the Model
             </h2>
             <p className="text-text-secondary max-w-2xl mx-auto">
-              Let's do the math on what AI means for labor economics. 
-              We'll use software development as our example—but this applies across industries.
+              Let's do the math on what AI means for labor economics.
+              We'll use software development as our example, but this applies across industries.
             </p>
           </div>
 
@@ -498,7 +498,7 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
               <p className="text-text-primary font-semibold mb-1">The Limiting Factor</p>
               <p className="text-text-secondary text-sm">
                 The only constraint is having enough <span className="text-radiance-gold">quality work to feed them</span>. 
-                If you have the specifications, direction, and review capacity—you can scale agents as wide as your business demands.
+                If you have the specifications, direction, and review capacity, you can scale agents as wide as your business demands.
               </p>
             </div>
           </Card>
@@ -524,7 +524,7 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
               <span className="text-2xl font-black text-radiance-gold">99.99%</span>
             </div>
             <p className="text-text-secondary max-w-2xl mx-auto">
-              This isn't about replacing humans—it's about understanding the fundamental shift in how value is created 
+              This isn't about replacing humans. It's about understanding the fundamental shift in how value is created
               and captured. The businesses that adapt to this reality will thrive. Those that don't...
             </p>
           </Card>
@@ -546,20 +546,20 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
                   <span className="text-radiance-gold font-semibold"> Not quite.</span>
                 </p>
                 <p>
-                  The limiting factors aren't the AI's capability—they're:
+                  The limiting factors aren't the AI's capability. They're:
                 </p>
                 <ul className="space-y-3">
                   <li className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5 text-sm">1</div>
-                    <span><strong className="text-text-primary">Input quality</strong> — The AI needs clear direction, context, and specifications</span>
+                    <span><strong className="text-text-primary">Input quality:</strong> The AI needs clear direction, context, and specifications</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5 text-sm">2</div>
-                    <span><strong className="text-text-primary">Review bandwidth</strong> — Humans still need to verify, test, and integrate</span>
+                    <span><strong className="text-text-primary">Review bandwidth:</strong> Humans still need to verify, test, and integrate</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5 text-sm">3</div>
-                    <span><strong className="text-text-primary">Business context</strong> — Not everything should be built, even if it can be</span>
+                    <span><strong className="text-text-primary">Business context:</strong> Not everything should be built, even if it can be</span>
                   </li>
                 </ul>
                 <p className="pt-4">
@@ -674,7 +674,7 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
             Ready to Get Ahead of This Shift?
           </h2>
           <p className="text-text-secondary mb-4 max-w-xl mx-auto">
-            The window for early mover advantage is open now—but not forever. 
+            The window for early mover advantage is open now, but not forever.
             Let us help you see exactly how AI applies to your specific business.
           </p>
           <p className="text-text-muted text-sm mb-8 max-w-lg mx-auto">
@@ -686,7 +686,7 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
               size="lg"
               onClick={() => onNavigate('book')}
             >
-              Book Your Illumination Session — $500
+              Book Your Illumination Session - $500
             </Button>
             <Button
               variant="ghost"

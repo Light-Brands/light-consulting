@@ -111,7 +111,7 @@ export const LaborArbitrageHighlight: React.FC<LaborArbitrageHighlightProps> = (
         </h3>
 
         <p className="text-text-secondary mb-8 max-w-2xl">
-          For centuries, businesses have profited by marking up human labor. AI is fundamentally breaking this model—and the math is staggering.
+          For centuries, businesses have profited by marking up human labor. AI is fundamentally breaking this model, and the math is staggering.
         </p>
 
         {/* Main Comparison Visual */}

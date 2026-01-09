@@ -4,7 +4,7 @@
 
 ## Overview
 
-Light Consulting is a modern, single-page application built with React and Vite. It showcases AI consulting services with a sophisticated dark theme featuring the "Illumination Palette" — light emerging from depth.
+Light Consulting is a modern, single-page application built with React and Vite. It showcases AI consulting services with a sophisticated dark theme featuring the "Illumination Palette": light emerging from depth.
 
 ## Tech Stack
 
@@ -83,10 +83,10 @@ light-consulting/
 
 The app uses the **Illumination Palette**:
 
-- **Radiance Scale** (Primary) — Gold, amber warmth
-- **Clarity Scale** (Secondary) — Cream, soft light
-- **Wisdom Scale** (AI Features) — Violet intelligence
-- **Depth Scale** (Background) — Professional darkness
+- **Radiance Scale** (Primary): Gold, amber warmth
+- **Clarity Scale** (Secondary): Cream, soft light
+- **Wisdom Scale** (AI Features): Violet intelligence
+- **Depth Scale** (Background): Professional darkness
 
 ## Deployment
 
@@ -103,5 +103,5 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 
 ## License
 
-Private — All rights reserved.
+Private - All rights reserved.
 

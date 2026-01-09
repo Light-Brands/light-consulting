@@ -163,9 +163,9 @@ export const SERVICES: Record<string, Service> = {
     investment: 'Fixed-fee',
     duration: 'Fast turnaround',
     deliverables: [
-      'Your AI Readiness Level — a clear view of how prepared your business actually is',
-      'A Leverage Snapshot — where effort is leaking and where structure would compound results',
-      'Your Next Strategic Move — what matters now and what can safely be ignored',
+      'Your AI Readiness Level: a clear view of how prepared your business actually is',
+      'A Leverage Snapshot: where effort is leaking and where structure would compound results',
+      'Your Next Strategic Move: what matters now and what can safely be ignored',
       'Decision-making infrastructure for AI investments',
     ],
     process: [
@@ -193,7 +193,7 @@ export const SERVICES: Record<string, Service> = {
       },
       {
         question: 'What will I receive?',
-        answer: 'A clear picture of your AI readiness level, a leverage snapshot showing where effort is leaking, and your next strategic move — what matters now and what can be safely ignored.',
+        answer: 'A clear picture of your AI readiness level, a leverage snapshot showing where effort is leaking, and your next strategic move: what matters now and what can be safely ignored.',
       },
       {
         question: 'Is this a sales pitch?',
@@ -209,7 +209,7 @@ export const SERVICES: Record<string, Service> = {
       },
       {
         question: 'Do I need technical knowledge?',
-        answer: 'No. We translate everything into business language. The question isn\'t about AI tools — it\'s about whether your business is structured to benefit from AI.',
+        answer: 'No. We translate everything into business language. The question isn\'t about AI tools. It\'s about whether your business is structured to benefit from AI.',
       },
     ],
   },
@@ -221,11 +221,11 @@ export const SERVICES: Record<string, Service> = {
     investment: '$1,000 – $3,000',
     duration: 'Fast turnaround',
     deliverables: [
-      'AI Intelligence Map — where intelligence could live inside the business and where it should not',
-      'System Prioritization — which potential systems matter and which are noise',
-      'Leverage Assessment — what would remove founder-dependence first',
-      'Build / Ignore Decisions — clear guidance on what to pursue vs. what to avoid',
-      'Development Readiness Signal — whether the business is structurally ready for implementation',
+      'AI Intelligence Map: where intelligence could live inside the business and where it should not',
+      'System Prioritization: which potential systems matter and which are noise',
+      'Leverage Assessment: what would remove founder-dependence first',
+      'Build / Ignore Decisions: clear guidance on what to pursue vs. what to avoid',
+      'Development Readiness Signal: whether the business is structurally ready for implementation',
     ],
     process: [
       { step: 1, title: 'Translate', description: 'Convert diagnostic insight into a clear intelligence strategy' },
@@ -319,7 +319,7 @@ export const SERVICES: Record<string, Service> = {
       },
       {
         question: 'What\'s the investment?',
-        answer: 'Investment is scoped based on the strategy artifact. We don\'t quote without understanding exactly what needs to be built and why. This is where real money is made—by invitation only.',
+        answer: 'Investment is scoped based on the strategy artifact. We don\'t quote without understanding exactly what needs to be built and why. This is where real money is made, by invitation only.',
       },
       {
         question: 'How long does this take?',
@@ -335,7 +335,7 @@ export const SERVICES: Record<string, Service> = {
     id: 'ascension',
     name: 'AI Architect Partnership',
     tagline: 'Embed AI into how your business thinks, decides, and evolves',
-    description: 'This is not a service. This is a relationship. Long-term, high-touch, limited availability. For businesses ready to have AI embedded into how they think, decide, and evolve—not just how they operate.',
+    description: 'This is not a service. This is a relationship. Long-term, high-touch, limited availability. For businesses ready to have AI embedded into how they think, decide, and evolve, not just how they operate.',
     investment: 'By application only',
     duration: 'Ongoing relationship',
     deliverables: [
@@ -366,7 +366,7 @@ export const SERVICES: Record<string, Service> = {
     faq: [
       {
         question: 'What makes this different from your other offerings?',
-        answer: 'The other offerings are transactions—valuable ones, but transactions. This is a relationship. We become part of how your business thinks about AI, not just how it uses AI.',
+        answer: 'The other offerings are transactions, valuable ones, but transactions. This is a relationship. We become part of how your business thinks about AI, not just how it uses AI.',
       },
       {
         question: 'Why is availability limited?',
@@ -374,7 +374,7 @@ export const SERVICES: Record<string, Service> = {
       },
       {
         question: 'What\'s the investment?',
-        answer: 'This is high-ticket, structured based on scope and duration. We discuss specifics after determining mutual fit. If you need to ask, you may not be ready—and that\'s okay.',
+        answer: 'This is high-ticket, structured based on scope and duration. We discuss specifics after determining mutual fit. If you need to ask, you may not be ready, and that\'s okay.',
       },
       {
         question: 'How do I apply?',
@@ -386,7 +386,7 @@ export const SERVICES: Record<string, Service> = {
       },
       {
         question: 'Is this right for my business?',
-        answer: 'If you\'re asking, probably not yet—and there\'s no shame in that. Most businesses benefit more from the diagnostic, strategy, and focused engine builds. Partnership is for those who\'ve already experienced that value and want more.',
+        answer: 'If you\'re asking, probably not yet, and there\'s no shame in that. Most businesses benefit more from the diagnostic, strategy, and focused engine builds. Partnership is for those who\'ve already experienced that value and want more.',
       },
     ],
   },
@@ -399,7 +399,7 @@ export const SERVICES: Record<string, Service> = {
 export const TESTIMONIALS: Testimonial[] = [
   {
     id: '1',
-    quote: 'Light Brand Consulting helped us see possibilities we never knew existed. Their approach is unlike anything else—authentic, insightful, and transformative. The time is now to get ahead tomorrow.',
+    quote: 'Light Brand Consulting helped us see possibilities we never knew existed. Their approach is unlike anything else: authentic, insightful, and transformative. The time is now to get ahead tomorrow.',
     author: 'Joseph McVeen',
     role: 'Founder',
     company: 'Growth Mastery AI',
@@ -567,7 +567,7 @@ export const INTAKE_QUESTIONS: Record<string, IntakeQuestion[]> = {
 export const PHILOSOPHY_ITEMS = [
   {
     title: 'Structure Creates Leverage',
-    description: 'AI does not create leverage. Structure does. The competitive advantage is not using AI—it\'s building systems that AI can amplify.',
+    description: 'AI does not create leverage. Structure does. The competitive advantage is not using AI. It\'s building systems that AI can amplify.',
     accent: 'radiance-gold',
   },
   {
@@ -577,7 +577,7 @@ export const PHILOSOPHY_ITEMS = [
   },
   {
     title: 'Systems Over Effort',
-    description: 'The goal is a business that runs on systems, not founder effort. We design how your business will run on AI—permanently.',
+    description: 'The goal is a business that runs on systems, not founder effort. We design how your business will run on AI, permanently.',
     accent: 'clarity-cream',
   },
 ];
@@ -605,7 +605,7 @@ export const INDUSTRY_AI_INSIGHTS: Record<string, { headline: string; optimizati
   'Healthcare & Life Sciences': {
     headline: 'AI transforms patient care and operational efficiency',
     optimizations: [
-      'Automated patient intake & documentation—reclaim 2+ hours daily per provider',
+      'Automated patient intake and documentation to reclaim 2+ hours daily per provider',
       'Intelligent appointment scheduling that reduces no-shows by 30%',
       'Clinical decision support from vast medical literature in seconds',
       'Predictive analytics for patient readmission risk',
@@ -633,7 +633,7 @@ export const INDUSTRY_AI_INSIGHTS: Record<string, { headline: string; optimizati
     headline: 'AI multiplies expertise and client capacity',
     optimizations: [
       'Proposal generation that captures your firm\'s voice and expertise',
-      'Research synthesis—hours of analysis compressed to minutes',
+      'Research synthesis that compresses hours of analysis to minutes',
       'Client communication drafting and follow-up automation',
       'Knowledge management that makes your whole team\'s expertise searchable',
     ],
@@ -695,7 +695,7 @@ export const COMPANY_VALUES = [
   },
   {
     title: 'Client Independence',
-    description: 'The goal isn\'t recurring revenue from you—it\'s your ability to navigate AI decisions confidently without us.',
+    description: 'The goal isn\'t recurring revenue from you. It\'s your ability to navigate AI decisions confidently without us.',
   },
 ];
 
@@ -728,7 +728,7 @@ export const FOUNDER_FAMILIES: FounderFamily[] = [
       {
         name: 'Nicholas Courchesne',
         role: 'Master of Strategic Partnerships',
-        description: 'Nicholas leads strategic partnerships and relationships—the bridge between Light Brand and the world. Living the path of light and ready to share his journey with those ready to begin their own. A big guy with an even bigger heart—don\'t let his muscles fool you!',
+        description: 'Nicholas leads strategic partnerships and relationships as the bridge between Light Brand and the world. Living the path of light and ready to share his journey with those ready to begin their own. A big guy with an even bigger heart, so don\'t let his muscles fool you!',
         avatarPrompt: 'Professional headshot of a strong, muscular man in his 30s-40s with a warm, genuine smile, approachable and kind expression that shows his big heart, smart casual attire, warm natural lighting, professional background, editorial portrait style.',
       },
       {
@@ -745,7 +745,7 @@ export const FOUNDER_FAMILIES: FounderFamily[] = [
       {
         name: 'Daniel Lawless',
         role: 'Master Architect & Technologist',
-        description: 'Daniel architects both internal and external technologies—the systems that power everything. A seasoned full stack developer with over 20 years of experience building and scaling the technical foundations that transform businesses.',
+        description: 'Daniel architects both internal and external technologies, the systems that power everything. A seasoned full stack developer with over 20 years of experience building and scaling the technical foundations that transform businesses.',
         avatarPrompt: 'Professional headshot of a seasoned male technologist and architect in his 40s-50s, warm and confident expression, modern business casual attire, warm natural lighting, slightly blurred professional background in earth tones, high-quality editorial portrait style.',
       },
       {
@@ -762,13 +762,13 @@ export const FOUNDER_FAMILIES: FounderFamily[] = [
       {
         name: 'Andreas Demou',
         role: 'Master of Development & Design',
-        description: 'Andreas develops and implements everything to look beautifully amazing—front to back, inside and out. There isn\'t anyone out there better than this one. A man of few words who wields great power through body, mind, and spirit.',
+        description: 'Andreas develops and implements everything to look beautifully amazing, front to back, inside and out. There isn\'t anyone out there better than this one. A man of few words who wields great power through body, mind, and spirit.',
         avatarPrompt: 'Professional headshot of a focused, powerful male designer/developer in his 30s-40s, calm and composed expression suggesting inner strength, modern minimal attire, clean professional lighting, subtle background, editorial portrait photography style.',
       },
       {
         name: 'Mike Demou',
         role: 'Master of Expression',
-        description: 'Mike ensures every brand expresses itself to its fullest potential—the visual artistry that brings everything to life. Showcasing everyone as if they were a piece of art, inside and out.',
+        description: 'Mike ensures every brand expresses itself to its fullest potential through the visual artistry that brings everything to life. Showcasing everyone as if they were a piece of art, inside and out.',
         avatarPrompt: 'Professional headshot of a creative, expressive man in his 30s-40s, artistic yet professional demeanor, warm confident smile, stylish creative attire, warm lighting with artistic quality, professional background, editorial portrait style.',
       },
     ],
