@@ -15,11 +15,11 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img
-            src={IMAGE_CONFIG.hero}
-            alt="AI Transformation"
-            className="w-full h-full object-cover opacity-40"
+            src={IMAGE_CONFIG.heroes.home.src}
+            alt={IMAGE_CONFIG.heroes.home.alt}
+            className="w-full h-full object-cover opacity-30"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-depth-base/80 via-depth-base/60 to-depth-base"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-depth-base/90 via-depth-base/70 to-depth-base"></div>
         </div>
 
         {/* Hero Content */}
