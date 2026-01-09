@@ -254,10 +254,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           </div>
 
           <div className="mt-16 text-center max-w-2xl mx-auto relative z-10">
-            <Text variant="large" className="text-text-primary font-medium mb-4">
+            <Text variant="large" className="text-text-primary font-medium mb-4 text-center">
               Most companies stall in the middle.
             </Text>
-            <Text variant="large" className="text-radiance-gold font-light">
+            <Text variant="large" className="text-radiance-gold font-light text-center">
               We help you move to the top, where AI becomes a structural advantage, not a novelty.
             </Text>
           </div>
@@ -277,7 +277,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <Heading level="h2" className="mb-6">
               We don't sell websites. We don't install tools. We don't chase trends.
             </Heading>
-            <Text variant="large" className="text-radiance-gold font-medium">
+            <Text variant="large" className="text-radiance-gold font-medium text-center">
               We design AI intelligence systems that grow with your business.
             </Text>
           </div>

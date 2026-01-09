@@ -6,34 +6,52 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 
+// Cubic Bezier curve: M 80 410 C 200 350, 400 150, 920 60
+// Calculate points on the curve using the parametric equation
+// B(t) = (1-t)³P0 + 3(1-t)²t*P1 + 3(1-t)t²P2 + t³P3
+const getCubicBezierPoint = (t: number) => {
+  const P0 = { x: 80, y: 410 };
+  const P1 = { x: 200, y: 350 };
+  const P2 = { x: 400, y: 150 };
+  const P3 = { x: 920, y: 60 };
+  
+  const x = Math.pow(1-t, 3) * P0.x + 
+            3 * Math.pow(1-t, 2) * t * P1.x + 
+            3 * (1-t) * Math.pow(t, 2) * P2.x + 
+            Math.pow(t, 3) * P3.x;
+  
+  const y = Math.pow(1-t, 3) * P0.y + 
+            3 * Math.pow(1-t, 2) * t * P1.y + 
+            3 * (1-t) * Math.pow(t, 2) * P2.y + 
+            Math.pow(t, 3) * P3.y;
+  
+  return { x: (x / 1000) * 100, y: (y / 500) * 100 };
+};
+
 const LEVELS = [
   { 
     level: 1, 
     label: 'Experimenting with tools', 
     color: 'text-text-muted',
-    x: 8,
-    y: 82,
+    ...getCubicBezierPoint(0),
   },
   { 
     level: 2, 
     label: 'Automating tasks', 
     color: 'text-text-muted',
-    x: 32,
-    y: 64,
+    ...getCubicBezierPoint(0.33),
   },
   { 
     level: 3, 
     label: 'Systematizing workflows', 
     color: 'text-text-secondary',
-    x: 64,
-    y: 38,
+    ...getCubicBezierPoint(0.67),
   },
   { 
     level: 4, 
     label: 'Owning business intelligence', 
     color: 'text-radiance-gold',
-    x: 92,
-    y: 12,
+    ...getCubicBezierPoint(1),
   },
 ];
 
@@ -79,7 +97,7 @@ export const AIReadinessCurve: React.FC = () => {
           <svg 
             className="absolute inset-0 w-full h-full" 
             viewBox="0 0 1000 500" 
-            preserveAspectRatio="none"
+            preserveAspectRatio="xMidYMid meet"
             style={{ overflow: 'visible' }}
           >
             <defs>
@@ -90,26 +108,26 @@ export const AIReadinessCurve: React.FC = () => {
                 <stop offset="100%" stopColor="#E8B84A" stopOpacity="1" />
               </linearGradient>
               <filter id="glow">
-                <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
                 <feMerge>
                   <feMergeNode in="coloredBlur"/>
                   <feMergeNode in="SourceGraphic"/>
                 </feMerge>
               </filter>
             </defs>
-            {/* Curved path using quadratic bezier - coordinates in viewBox units */}
+            {/* Curved path using cubic bezier for more pronounced curve */}
             <path
-              d="M 80 410 Q 500 250, 920 60"
+              d="M 80 410 C 200 350, 400 150, 920 60"
               fill="none"
               stroke="url(#curveGrad)"
-              strokeWidth="3"
+              strokeWidth="4"
               strokeLinecap="round"
               filter="url(#glow)"
               className="transition-opacity duration-1000"
               style={{ 
                 opacity: isVisible ? 1 : 0,
-                strokeDasharray: '1200',
-                strokeDashoffset: 1200 - (lineProgress * 12),
+                strokeDasharray: '1400',
+                strokeDashoffset: 1400 - (lineProgress * 14),
                 transition: 'stroke-dashoffset 2s ease-out'
               }}
             />
@@ -167,13 +185,27 @@ export const AIReadinessCurve: React.FC = () => {
             );
           })}
 
-          {/* Axis Labels - Refined */}
-          <div className="absolute bottom-2 left-0 flex items-center gap-2">
+          {/* Axis Labels - Positioned at container edges aligned with curve endpoints */}
+          <div 
+            className="absolute flex items-center gap-2 bottom-0"
+            style={{
+              left: `${LEVELS[0].x}%`,
+              transform: 'translateX(-50%)',
+              paddingBottom: '0.5rem',
+            }}
+          >
             <div className="w-1 h-1 rounded-full bg-text-muted/40" />
-            <span className="text-[9px] font-mono text-text-muted uppercase tracking-[0.3em]">FOUNDATION</span>
+            <span className="text-[9px] font-mono text-text-muted uppercase tracking-[0.3em] whitespace-nowrap">FOUNDATION</span>
           </div>
-          <div className="absolute top-2 right-0 flex items-center gap-2">
-            <span className="text-[9px] font-mono text-radiance-gold uppercase tracking-[0.3em] text-right">OWNERSHIP</span>
+          <div 
+            className="absolute flex items-center gap-2 top-0"
+            style={{
+              left: `${LEVELS[3].x}%`,
+              transform: 'translateX(-50%)',
+              paddingTop: '0.5rem',
+            }}
+          >
+            <span className="text-[9px] font-mono text-radiance-gold uppercase tracking-[0.3em] whitespace-nowrap">OWNERSHIP</span>
             <div className="w-1 h-1 rounded-full bg-radiance-gold shadow-[0_0_4px_rgba(232,184,74,0.6)]" />
           </div>
         </div>
