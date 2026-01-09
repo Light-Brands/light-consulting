@@ -57,7 +57,8 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Note: scroll-behavior: smooth removed to prevent unwanted scrolling on form focus events.
+     Smooth scrolling is handled via JavaScript where needed (scrollToTop, scrollToElement). */
 }
 
 body {
