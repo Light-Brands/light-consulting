@@ -1,115 +1,40 @@
 /**
  * Interactive Capacity Gap Visualization
- * An engaging, animated infographic showing the transformation journey
+ * A technical, blueprint-inspired interactive component showing the transformation
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
-interface Stage {
-  id: string;
+interface Metric {
   label: string;
-  sublabel: string;
-  description: string;
-  color: string;
-  glowColor: string;
-  icon: React.ReactNode;
-  metrics: { label: string; before: string; after: string }[];
+  before: string;
+  after: string;
+  unit?: string;
 }
 
-const STAGES: Stage[] = [
-  {
-    id: 'current',
-    label: 'Where You Are',
-    sublabel: 'Current State',
-    description: 'Hidden inefficiencies, manual processes, decisions made on gut feel. Opportunities exist but remain invisible.',
-    color: 'text-text-muted',
-    glowColor: 'rgba(139, 134, 130, 0.3)',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
-        <circle cx="12" cy="12" r="10" strokeDasharray="4 2" />
-        <path d="M12 8v4M12 16h.01" />
-      </svg>
-    ),
-    metrics: [
-      { label: 'Manual Tasks', before: '65%', after: '15%' },
-      { label: 'Decision Speed', before: 'Days', after: 'Minutes' },
-      { label: 'Insight Depth', before: 'Surface', after: 'Deep' },
-    ],
-  },
-  {
-    id: 'bridge',
-    label: 'The Bridge',
-    sublabel: 'Light Consulting',
-    description: 'Clarity reveals the path. We illuminate opportunities hidden in plain sight and give you the confidence to act.',
-    color: 'text-radiance-gold',
-    glowColor: 'rgba(232, 184, 74, 0.5)',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
-        <path d="M12 2L12 6M12 18L12 22M4.93 4.93L7.76 7.76M16.24 16.24L19.07 19.07M2 12H6M18 12H22M4.93 19.07L7.76 16.24M16.24 7.76L19.07 4.93" />
-        <circle cx="12" cy="12" r="4" fill="currentColor" opacity="0.3" />
-      </svg>
-    ),
-    metrics: [
-      { label: 'Clarity', before: '→', after: '100%' },
-      { label: 'Confidence', before: '→', after: 'High' },
-      { label: 'Direction', before: '→', after: 'Clear' },
-    ],
-  },
-  {
-    id: 'future',
-    label: 'Fullest Capacity',
-    sublabel: 'Transformed State',
-    description: 'AI-augmented operations, data-driven decisions, competitive advantages that compound over time.',
-    color: 'text-clarity-cream',
-    glowColor: 'rgba(253, 246, 227, 0.4)',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
-        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" opacity="0.2" />
-        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-      </svg>
-    ),
-    metrics: [
-      { label: 'Efficiency', before: '', after: '+340%' },
-      { label: 'Growth', before: '', after: 'Exponential' },
-      { label: 'Advantage', before: '', after: 'Compounding' },
-    ],
-  },
+const METRICS: Metric[] = [
+  { label: 'PROCESS LATENCY', before: '72', after: '4', unit: 'hrs' },
+  { label: 'OPERATIONAL LEVERAGE', before: '1.2', after: '8.5', unit: 'x' },
+  { label: 'DATA VISIBILITY', before: '15', after: '98', unit: '%' },
+  { label: 'DECISION SPEED', before: 'Days', after: 'Secs' },
 ];
 
-// Particle component for the flowing light effect
-const Particle: React.FC<{ delay: number; duration: number; top: number }> = ({ delay, duration, top }) => (
-  <div
-    className="absolute w-2 h-2 rounded-full bg-radiance-gold/60 blur-[2px]"
-    style={{
-      top: `${top}%`,
-      left: '-8px',
-      animation: `particleFlow ${duration}s ease-in-out ${delay}s infinite`,
-    }}
-  />
-);
-
 export const CapacityGapVisual: React.FC = () => {
-  const [activeStage, setActiveStage] = useState<string | null>(null);
+  const [sliderValue, setSliderValue] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isInteracting, setIsInteracting] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [progress, setProgress] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Intersection observer for scroll-triggered animation
+  // Intersection observer for scroll-triggered entry
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          // Animate progress bar
-          let currentProgress = 0;
-          const interval = setInterval(() => {
-            currentProgress += 2;
-            setProgress(currentProgress);
-            if (currentProgress >= 100) clearInterval(interval);
-          }, 30);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.2 }
     );
 
     if (containerRef.current) {
@@ -119,256 +44,240 @@ export const CapacityGapVisual: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleStageClick = (stageId: string) => {
-    setActiveStage(activeStage === stageId ? null : stageId);
+  // Calculate interpolation
+  const interpolate = (start: number, end: number, progress: number) => {
+    return start + (end - start) * progress;
   };
 
   return (
-    <div ref={containerRef} className="relative py-8">
-      {/* CSS Animations */}
+    <div 
+      ref={containerRef}
+      className={`relative w-full py-12 px-4 select-none transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setIsInteracting(false);
+      }}
+    >
+      {/* Blueprint Grid Background */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+        style={{ 
+          backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+          backgroundSize: '24px 24px' 
+        }} 
+      />
+
+      <div className="relative max-w-4xl mx-auto">
+        {/* Header / Status Bar */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 border-b border-depth-border pb-6 gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className={`w-2 h-2 rounded-full ${sliderValue > 0 ? 'bg-radiance-gold animate-pulse' : 'bg-text-muted'}`} />
+              <span className="text-[10px] font-mono tracking-widest text-text-muted uppercase">System Diagnostics::Gap_Analysis</span>
+            </div>
+            <h3 className="text-xl md:text-2xl font-medium text-text-primary">
+              The Bridge <span className="text-radiance-gold">Efficiency</span>
+            </h3>
+          </div>
+          <div className="text-left sm:text-right">
+            <div className="text-[10px] font-mono text-text-muted mb-1">TRANSFORMATION_PHASE</div>
+            <div className="text-sm font-mono text-radiance-gold">
+              [{sliderValue === 0 ? 'STATIC' : sliderValue === 100 ? 'OPTIMIZED' : 'BRIDGING'}] {sliderValue}%
+            </div>
+          </div>
+        </div>
+
+        {/* Comparison Engine */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center mb-16">
+          {/* Left Side: The "As-Is" */}
+          <div className={`space-y-6 transition-all duration-700 ${sliderValue > 50 ? 'opacity-20 blur-[2px]' : 'opacity-100'}`}>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono text-text-muted tracking-tighter">REF::STATE_01</span>
+              <span className="px-2 py-0.5 rounded border border-depth-border text-[9px] font-mono text-text-muted uppercase tracking-wider bg-depth-elevated">Manual Legacy</span>
+            </div>
+            <div className="p-6 rounded-xl border border-depth-border bg-depth-elevated/50 backdrop-blur-sm relative overflow-hidden group/card hover:border-text-muted/30 transition-colors">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-error/5 blur-3xl" />
+              <div className="space-y-5 relative z-10">
+                {METRICS.map((metric, i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="flex justify-between text-[9px] font-mono text-text-muted uppercase tracking-wider">
+                      <span>{metric.label}</span>
+                      <span className="text-text-secondary">{metric.before}{metric.unit}</span>
+                    </div>
+                    <div className="h-1 w-full bg-depth-base rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-text-muted/30 transition-all duration-1000" 
+                        style={{ width: `${30 + (i * 10)}%` }} 
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side: The "To-Be" */}
+          <div className={`space-y-6 transition-all duration-700 ${sliderValue < 50 ? 'opacity-20 blur-[2px]' : 'opacity-100'}`}>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono text-radiance-gold tracking-tighter">REF::STATE_02</span>
+              <span className="px-2 py-0.5 rounded border border-radiance-gold/30 text-[9px] font-mono text-radiance-gold uppercase tracking-wider bg-radiance-gold/5">Augmented Intelligence</span>
+            </div>
+            <div className="p-6 rounded-xl border border-radiance-gold/20 bg-radiance-gold/5 backdrop-blur-sm relative overflow-hidden shadow-[0_0_30px_rgba(232,184,74,0.05)] group/card hover:border-radiance-gold/40 transition-colors">
+              <div className="absolute inset-0 bg-radial-gradient from-radiance-gold/10 to-transparent opacity-50" />
+              <div className="space-y-5 relative z-10">
+                {METRICS.map((metric, i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="flex justify-between text-[9px] font-mono text-radiance-gold/70 uppercase tracking-wider">
+                      <span>{metric.label}</span>
+                      <span className="text-text-primary font-bold">{metric.after}{metric.unit}</span>
+                    </div>
+                    <div className="h-1 w-full bg-depth-base rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-radiance-gold shadow-[0_0_10px_rgba(232,184,74,0.6)] transition-all duration-1000" 
+                        style={{ width: `${85 + (i * 3)}%` }} 
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Interactive Scrubber Section */}
+        <div className="relative pt-12">
+          {/* Connecting Decoration */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-12 bg-gradient-to-b from-depth-border to-transparent" />
+          
+          <div className="flex flex-col items-center gap-8">
+            <div className="text-center space-y-3">
+              <div className="text-[9px] font-mono text-text-muted tracking-[0.4em] uppercase">Manual Control / Bridge Scrubber</div>
+              <p className="text-sm text-text-secondary italic font-light tracking-wide">Slide to bridge the capacity gap</p>
+            </div>
+
+            {/* The Scrubber */}
+            <div className="relative w-full max-w-2xl h-16 flex items-center group/scrubber">
+              {/* Track */}
+              <div className="absolute inset-x-0 h-[1px] bg-depth-border" />
+              
+              {/* Active Track */}
+              <div 
+                className="absolute left-0 h-[1px] bg-radiance-gold shadow-[0_0_15px_rgba(232,184,74,0.8)] transition-all duration-100"
+                style={{ width: `${sliderValue}%` }}
+              />
+
+              {/* Slider Input */}
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={sliderValue}
+                onChange={(e) => setSliderValue(parseInt(e.target.value))}
+                onMouseDown={() => setIsInteracting(true)}
+                onMouseUp={() => setIsInteracting(false)}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30"
+              />
+
+              {/* Custom Handle */}
+              <div 
+                className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none z-20 transition-all duration-100"
+                style={{ left: `${sliderValue}%` }}
+              >
+                <div className={`
+                  w-10 h-10 rounded-full border-2 bg-depth-base flex items-center justify-center transition-all duration-500
+                  ${isInteracting ? 'scale-110 border-radiance-gold shadow-[0_0_30px_rgba(232,184,74,0.3)]' : 'border-depth-border group-hover/scrubber:border-radiance-gold/50'}
+                `}>
+                  <div className={`w-2 h-2 rounded-full transition-all duration-500 ${isInteracting ? 'bg-radiance-gold shadow-[0_0_10px_#E8B84A]' : 'bg-text-muted'}`} />
+                  
+                  {/* Handle accents */}
+                  <div className="absolute -inset-2 rounded-full border border-radiance-gold/10 animate-spin-slow opacity-0 group-hover/scrubber:opacity-100 transition-opacity" />
+                </div>
+                
+                {/* Value tooltip */}
+                <div className={`
+                  absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-md bg-depth-surface border border-radiance-gold/30 text-[11px] font-mono text-radiance-gold font-bold transition-all duration-300 backdrop-blur-md shadow-xl
+                  ${isHovered || isInteracting ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}
+                `}>
+                  {sliderValue}%_COMPLETE
+                </div>
+              </div>
+
+              {/* Tick Marks */}
+              <div className="absolute inset-x-0 -bottom-6 flex justify-between px-2">
+                {[0, 25, 50, 75, 100].map((tick) => (
+                  <div key={tick} className="flex flex-col items-center gap-2">
+                    <div className={`w-[1px] h-2 transition-colors duration-500 ${sliderValue >= tick ? 'bg-radiance-gold' : 'bg-depth-border'}`} />
+                    <span className={`text-[8px] font-mono tracking-tighter transition-colors duration-500 ${sliderValue >= tick ? 'text-radiance-gold' : 'text-text-muted'}`}>
+                      {tick === 0 ? 'START' : tick === 100 ? 'PEAK' : `${tick}%`}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Transformation Insights (Dynamic based on slider) */}
+        <div className="mt-24 grid grid-cols-1 sm:grid-cols-3 gap-6">
+          {[
+            { 
+              label: 'Efficiency Gain', 
+              value: `${Math.round(interpolate(1, 340, sliderValue / 100))}%`, 
+              sub: `+${(sliderValue * 3.4).toFixed(1)}% compounding`,
+              tag: 'EFF_LEVERAGE'
+            },
+            { 
+              label: 'Decision Latency', 
+              value: sliderValue < 85 ? 'DAYS' : 'SECS', 
+              sub: `-${sliderValue}% friction`,
+              tag: 'PROC_VELOCITY'
+            },
+            { 
+              label: 'Competitive Moat', 
+              value: sliderValue < 30 ? 'LOW' : sliderValue < 70 ? 'MEDIUM' : 'STRUCTURAL', 
+              sub: `Scale phase ${Math.floor(sliderValue / 25) + 1}`,
+              tag: 'MKT_DOMINANCE'
+            }
+          ].map((item, i) => (
+            <div key={i} className="p-5 rounded-xl border border-depth-border bg-depth-elevated/30 flex flex-col items-center text-center group/insight transition-all hover:border-radiance-gold/30 hover:bg-depth-elevated/50">
+              <div className="text-[8px] font-mono text-text-muted mb-3 uppercase tracking-[0.2em]">{item.label}</div>
+              <div className="text-2xl font-medium text-text-primary mb-1 tracking-tight group-hover/insight:text-radiance-gold transition-colors">
+                {item.value}
+              </div>
+              <div className="text-[9px] text-radiance-gold/50 font-mono tracking-wide uppercase mb-3">
+                {item.sub}
+              </div>
+              <div className="mt-auto px-2 py-0.5 rounded bg-depth-base border border-depth-border text-[7px] font-mono text-text-muted">
+                {item.tag}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom Status Text */}
+        <div className="mt-16 pt-8 border-t border-depth-border/50 text-center">
+          <p className="text-[10px] font-mono text-text-muted uppercase tracking-[0.4em] flex items-center justify-center gap-3">
+            <span className="opacity-40">//</span>
+            <span>INTEGRATION STATUS:</span>
+            <span className={`transition-colors duration-500 ${sliderValue > 90 ? 'text-success font-bold' : 'text-radiance-gold'}`}>
+              {sliderValue > 90 ? 'SYSTEM_OPTIMIZED' : sliderValue > 0 ? 'DEPLOYMENT_IN_PROGRESS' : 'IDLE_WAITING_FOR_INPUT'}
+            </span>
+            <span className="opacity-40">//</span>
+          </p>
+        </div>
+      </div>
+
       <style>{`
-        @keyframes particleFlow {
-          0% { transform: translateX(0) scale(0); opacity: 0; }
-          10% { transform: translateX(10%) scale(1); opacity: 1; }
-          90% { transform: translateX(calc(100vw - 100px)) scale(1); opacity: 0.8; }
-          100% { transform: translateX(calc(100vw - 50px)) scale(0); opacity: 0; }
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
-        @keyframes pulse-glow {
-          0%, 100% { box-shadow: 0 0 20px var(--glow-color), 0 0 40px var(--glow-color); }
-          50% { box-shadow: 0 0 30px var(--glow-color), 0 0 60px var(--glow-color); }
-        }
-        @keyframes float-subtle {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
-        }
-        @keyframes draw-line {
-          from { stroke-dashoffset: 1000; }
-          to { stroke-dashoffset: 0; }
-        }
-        .stage-node {
-          transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .stage-node:hover {
-          transform: scale(1.1);
-        }
-        .stage-node.active {
-          transform: scale(1.15);
-        }
-        .detail-panel {
-          animation: slideUp 0.4s ease-out;
-        }
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+        .animate-spin-slow {
+          animation: spin-slow 8s linear infinite;
         }
       `}</style>
-
-      {/* Particle layer */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {isVisible && Array.from({ length: 8 }).map((_, i) => (
-          <Particle 
-            key={i} 
-            delay={i * 0.8} 
-            duration={4 + Math.random() * 2}
-            top={35 + Math.random() * 30}
-          />
-        ))}
-      </div>
-
-      {/* Main visualization */}
-      <div className="relative">
-        {/* Progress track background */}
-        <div className="absolute top-1/2 left-[10%] right-[10%] h-1 bg-depth-border rounded-full -translate-y-1/2" />
-        
-        {/* Animated progress fill */}
-        <div 
-          className="absolute top-1/2 left-[10%] h-1 rounded-full -translate-y-1/2 transition-all duration-100"
-          style={{
-            width: `${progress * 0.8}%`,
-            background: 'linear-gradient(90deg, rgba(139,134,130,0.5) 0%, #E8B84A 50%, #FDF6E3 100%)',
-            boxShadow: '0 0 20px rgba(232, 184, 74, 0.5)',
-          }}
-        />
-
-        {/* Connection lines with glow */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
-          <defs>
-            <linearGradient id="lineGradient1" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgba(139, 134, 130, 0.3)" />
-              <stop offset="100%" stopColor="rgba(232, 184, 74, 0.6)" />
-            </linearGradient>
-            <linearGradient id="lineGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgba(232, 184, 74, 0.6)" />
-              <stop offset="100%" stopColor="rgba(253, 246, 227, 0.5)" />
-            </linearGradient>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-          </defs>
-        </svg>
-
-        {/* Stage nodes */}
-        <div className="relative flex justify-between items-center px-[5%] md:px-[10%] py-12 z-10">
-          {STAGES.map((stage, index) => {
-            const isActive = activeStage === stage.id;
-            const stageProgress = progress > (index * 50) ? Math.min(100, (progress - index * 50) * 2) : 0;
-            
-            return (
-              <div 
-                key={stage.id} 
-                className="relative flex flex-col items-center"
-                style={{ 
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-                  transition: `all 0.6s ease-out ${index * 0.2}s`,
-                }}
-              >
-                {/* Node circle */}
-                <button
-                  onClick={() => handleStageClick(stage.id)}
-                  className={`stage-node relative w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center cursor-pointer border-2 ${isActive ? 'active' : ''}`}
-                  style={{
-                    background: index === 0 
-                      ? 'linear-gradient(135deg, rgba(30,28,26,1) 0%, rgba(45,42,39,1) 100%)'
-                      : index === 1
-                      ? 'linear-gradient(135deg, rgba(232, 184, 74, 0.2) 0%, rgba(212, 148, 76, 0.3) 100%)'
-                      : 'linear-gradient(135deg, rgba(253, 246, 227, 0.1) 0%, rgba(253, 246, 227, 0.2) 100%)',
-                    borderColor: index === 0 
-                      ? 'rgba(139, 134, 130, 0.5)' 
-                      : index === 1 
-                      ? 'rgba(232, 184, 74, 0.8)' 
-                      : 'rgba(253, 246, 227, 0.6)',
-                    boxShadow: isActive ? `0 0 30px ${stage.glowColor}, 0 0 60px ${stage.glowColor}` : `0 0 15px ${stage.glowColor}`,
-                    animation: index === 1 && isVisible ? 'float-subtle 3s ease-in-out infinite' : 'none',
-                  }}
-                >
-                  {/* Progress ring */}
-                  <svg className="absolute inset-0 w-full h-full -rotate-90">
-                    <circle
-                      cx="50%"
-                      cy="50%"
-                      r="45%"
-                      fill="none"
-                      stroke={index === 1 ? '#E8B84A' : index === 2 ? '#FDF6E3' : '#8B8682'}
-                      strokeWidth="2"
-                      strokeDasharray={`${stageProgress * 2.83} 283`}
-                      opacity="0.6"
-                    />
-                  </svg>
-                  
-                  {/* Icon */}
-                  <div className={`${stage.color} z-10`}>
-                    {stage.icon}
-                  </div>
-
-                  {/* Pulse effect for middle node */}
-                  {index === 1 && isVisible && (
-                    <div 
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        background: 'radial-gradient(circle, rgba(232, 184, 74, 0.3) 0%, transparent 70%)',
-                        animation: 'pulse-glow 2s ease-in-out infinite',
-                        '--glow-color': 'rgba(232, 184, 74, 0.3)',
-                      } as React.CSSProperties}
-                    />
-                  )}
-                </button>
-
-                {/* Labels */}
-                <div className="mt-4 text-center">
-                  <p className={`font-semibold text-sm md:text-base ${stage.color}`}>
-                    {stage.label}
-                  </p>
-                  <p className="text-text-muted text-xs mt-1">
-                    {stage.sublabel}
-                  </p>
-                </div>
-
-                {/* Expanded detail panel */}
-                {isActive && (
-                  <div 
-                    className="detail-panel absolute top-full mt-6 w-64 md:w-80 p-5 rounded-xl shadow-2xl z-50 border border-radiance-gold/30" 
-                    style={{ 
-                      backgroundColor: '#0F0E0D',
-                      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 30px rgba(232, 184, 74, 0.15), inset 0 1px 0 rgba(255,255,255,0.05)',
-                      isolation: 'isolate',
-                    }}
-                  >
-                    <p className="text-text-secondary text-sm mb-4 leading-relaxed">
-                      {stage.description}
-                    </p>
-                    
-                    {/* Metrics */}
-                    <div className="space-y-2">
-                      {stage.metrics.map((metric, i) => (
-                        <div 
-                          key={i}
-                          className="flex items-center justify-between p-2 rounded-lg"
-                          style={{ backgroundColor: '#0A0908' }}
-                        >
-                          <span className="text-text-muted text-xs">{metric.label}</span>
-                          <div className="flex items-center gap-2">
-                            {metric.before && (
-                              <>
-                                <span className="text-text-muted text-xs line-through opacity-60">{metric.before}</span>
-                                <svg className="w-3 h-3 text-radiance-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                </svg>
-                              </>
-                            )}
-                            <span className={`text-sm font-bold ${stage.color}`}>{metric.after}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Arrow pointer */}
-                    <div 
-                      className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 border-l border-t border-radiance-gold/30 rotate-45" 
-                      style={{ backgroundColor: '#0F0E0D' }}
-                    />
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Interactive hint */}
-        <p className="text-center text-text-muted text-xs mt-4 animate-pulse">
-          ✨ Click each stage to explore the transformation
-        </p>
-      </div>
-
-      {/* Bottom stats bar */}
-      <div 
-        className={`mt-8 grid grid-cols-3 gap-4 p-4 bg-depth-base/50 rounded-xl border border-depth-border relative z-0 ${activeStage ? 'pointer-events-none' : ''}`}
-        style={{
-          opacity: isVisible ? 1 : 0,
-          transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-          transition: 'all 0.6s ease-out 0.8s',
-        }}
-      >
-        <div className="text-center">
-          <div className="text-2xl md:text-3xl font-black text-radiance-gold">90</div>
-          <div className="text-text-muted text-xs">Minutes to Clarity</div>
-        </div>
-        <div className="text-center border-x border-depth-border">
-          <div className="text-2xl md:text-3xl font-black text-radiance-amber">3-5</div>
-          <div className="text-text-muted text-xs">AI Opportunities</div>
-        </div>
-        <div className="text-center">
-          <div className="text-2xl md:text-3xl font-black text-clarity-cream">∞</div>
-          <div className="text-text-muted text-xs">Compounding Value</div>
-        </div>
-      </div>
     </div>
   );
 };
 
 export default CapacityGapVisual;
-

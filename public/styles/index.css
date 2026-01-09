@@ -281,6 +281,20 @@ p {
   padding-right: 1.5rem;
 }
 
+@media (min-width: 768px) {
+  .container-wide {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-wide {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
 /* Section spacing */
 .section-spacing {
   padding-top: 6rem;

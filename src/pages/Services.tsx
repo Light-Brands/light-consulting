@@ -14,7 +14,12 @@ import {
   Card,
   Tag,
   CheckIcon,
+  ServicesFlowVisual,
+  ApproachComparisonVisual,
+  FAQVisual,
+  CTAVisual,
 } from '../components';
+import { Container, Section, Badge, Heading, Text } from '../components/ui';
 import { SERVICES, IMAGE_CONFIG } from '../lib/constants';
 import { PageKey } from '../types';
 
@@ -59,7 +64,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
           }}
         />
 
-        <div className="container-wide relative z-10">
+        <Container size="wide" className="relative z-10">
           <div className="text-center max-w-3xl mx-auto">
             <Tag variant="premium" className="mb-4">
               How We Work
@@ -75,267 +80,190 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
               If there isn't, we'll tell you that too.
             </p>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* The Flow */}
-      <section className="section-spacing bg-depth-elevated">
-        <div className="container-wide">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-text-primary mb-4">
+      <Section spacing="lg" background="elevated" className="relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+
+        <Container size="wide">
+          <div className="text-center mb-12 relative z-10">
+            <Badge variant="default" size="md" className="mb-4">
               The Path to Clarity
-            </h2>
-            <p className="text-text-secondary max-w-2xl mx-auto">
-              Every engagement starts with understanding. Trust precedes selling.
-              Clarity precedes commitment. Depth precedes price.
-            </p>
+            </Badge>
+            <Heading level="h2" className="mb-4">
+              Every engagement starts with understanding
+            </Heading>
+            <Text variant="large" className="max-w-2xl mx-auto text-text-secondary">
+              Trust precedes selling. Clarity precedes commitment. Depth precedes price.
+            </Text>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Step 1: Diagnostic */}
-            <Card elevation="elevated" className="p-8 border border-radiance-gold/30">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center">
-                  <DiagnosticIcon size={24} />
-                </div>
-                <div>
-                  <p className="text-radiance-gold text-sm font-medium">Step 1</p>
-                  <h3 className="text-xl font-bold text-text-primary">{diagnostic.name}</h3>
-                </div>
-              </div>
-
-              <p className="text-text-secondary mb-6">{diagnostic.description}</p>
-
-              <div className="space-y-3 mb-6">
-                <p className="text-text-muted text-sm font-medium">You'll receive:</p>
-                {diagnostic.deliverables.slice(0, 3).map((item, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <CheckIcon size={14} className="text-radiance-gold mt-1 flex-shrink-0" />
-                    <span className="text-text-secondary text-sm">{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="pt-4 border-t border-depth-border">
-                <p className="text-text-muted text-sm mb-4">{diagnostic.investment} · {diagnostic.duration}</p>
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() => onNavigate('funnel')}
-                  className="w-full"
-                >
-                  Discover Your AI Readiness
-                </Button>
-              </div>
-            </Card>
-
-            {/* Step 2: Strategy */}
-            <Card elevation="elevated" className="p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-radiance-amber/20 text-radiance-amber flex items-center justify-center">
-                  <StrategyIcon size={24} />
-                </div>
-                <div>
-                  <p className="text-radiance-amber text-sm font-medium">Step 2</p>
-                  <h3 className="text-xl font-bold text-text-primary">{strategy.name}</h3>
-                </div>
-              </div>
-
-              <p className="text-text-secondary mb-6">{strategy.description}</p>
-
-              <div className="space-y-3 mb-6">
-                <p className="text-text-muted text-sm font-medium">You'll receive:</p>
-                {strategy.deliverables.slice(0, 3).map((item, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <CheckIcon size={14} className="text-radiance-amber mt-1 flex-shrink-0" />
-                    <span className="text-text-secondary text-sm">{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="pt-4 border-t border-depth-border">
-                <p className="text-text-muted text-sm mb-4">{strategy.investment} · {strategy.duration}</p>
-                <p className="text-text-muted text-xs italic">
-                  Available after completing the Diagnostic
-                </p>
-              </div>
-            </Card>
-
-            {/* Step 3: Beyond */}
-            <Card elevation="subtle" className="p-8 border border-depth-border">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-depth-surface text-text-muted flex items-center justify-center">
-                  <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-text-muted text-sm font-medium">Step 3</p>
-                  <h3 className="text-xl font-bold text-text-primary">If Opportunity Exists</h3>
-                </div>
-              </div>
-
-              <p className="text-text-secondary mb-6">
-                Only after the Strategy artifact confirms development readiness do we discuss building.
-                AI Intelligence Engines and deeper partnership work are by invitation only.
-              </p>
-
-              <div className="space-y-3 mb-6">
-                <p className="text-text-muted text-sm font-medium">Possible outcomes:</p>
-                <div className="flex items-start gap-2">
-                  <span className="text-text-muted">❌</span>
-                  <span className="text-text-secondary text-sm">No build recommended</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-radiance-amber">🟡</span>
-                  <span className="text-text-secondary text-sm">Build possible, but not ready yet</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-success">✅</span>
-                  <span className="text-text-secondary text-sm">Qualifies for development</span>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-depth-border">
-                <p className="text-text-muted text-xs italic">
-                  Only outcome #3 leads to system builds.
-                  We'll be direct about which applies to you.
-                </p>
-              </div>
-            </Card>
+          <div className="relative">
+            <div className="relative z-10 bg-depth-elevated/20 border border-depth-border rounded-3xl overflow-hidden backdrop-blur-sm">
+              <ServicesFlowVisual
+                steps={[
+                  {
+                    step: 1,
+                    title: diagnostic.name,
+                    description: diagnostic.description,
+                    deliverables: diagnostic.deliverables,
+                    investment: diagnostic.investment,
+                    duration: diagnostic.duration,
+                    color: 'gold',
+                    icon: <DiagnosticIcon size={24} />,
+                    available: true,
+                    onAction: () => onNavigate('funnel'),
+                  },
+                  {
+                    step: 2,
+                    title: strategy.name,
+                    description: strategy.description,
+                    deliverables: strategy.deliverables,
+                    investment: strategy.investment,
+                    duration: strategy.duration,
+                    color: 'amber',
+                    icon: <StrategyIcon size={24} />,
+                    available: false,
+                  },
+                  {
+                    step: 3,
+                    title: 'If Opportunity Exists',
+                    description:
+                      'Only after the Strategy artifact confirms development readiness do we discuss building. AI Intelligence Engines and deeper partnership work are by invitation only.',
+                    deliverables: [
+                      'No build recommended',
+                      'Build possible, but not ready yet',
+                      'Qualifies for development',
+                    ],
+                    investment: 'By invitation only',
+                    duration: 'After Strategy',
+                    color: 'muted',
+                    icon: (
+                      <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
+                      </svg>
+                    ),
+                    available: false,
+                  },
+                ]}
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* Why This Approach */}
-      <section className="section-spacing">
-        <div className="container-wide">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <Tag variant="outline" className="mb-4">
-                Why This Approach
-              </Tag>
-              <h2 className="text-3xl font-bold text-text-primary mb-4">
-                Most agencies skip the clarity step.
-                <span className="block text-radiance-gold mt-2">That's why they build the wrong things.</span>
-              </h2>
-            </div>
+      <Section spacing="lg" className="relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
-            <div className="grid md:grid-cols-2 gap-8">
-              <Card elevation="subtle" className="p-6 border-l-4 border-error">
-                <h3 className="text-lg font-bold text-text-primary mb-3">What Others Do</h3>
-                <ul className="space-y-3 text-text-muted">
-                  <li className="flex items-start gap-2">
-                    <span className="text-error">×</span>
-                    <span>Pitch transformation before understanding</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-error">×</span>
-                    <span>Sell packages without diagnosing fit</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-error">×</span>
-                    <span>Build systems that don't address real bottlenecks</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-error">×</span>
-                    <span>Create motion without leverage</span>
-                  </li>
-                </ul>
-              </Card>
+        <Container size="wide">
+          <div className="text-center mb-12 relative z-10">
+            <Badge variant="default" size="md" className="mb-4">
+              Why This Approach
+            </Badge>
+            <Heading level="h2" className="mb-4">
+              Most agencies skip the clarity step.
+            </Heading>
+            <Text variant="large" className="text-radiance-gold font-medium text-center block">
+              That's why they build the wrong things.
+            </Text>
+          </div>
 
-              <Card elevation="elevated" className="p-6 border-l-4 border-radiance-gold">
-                <h3 className="text-lg font-bold text-text-primary mb-3">What We Do</h3>
-                <ul className="space-y-3 text-text-secondary">
-                  <li className="flex items-start gap-2">
-                    <CheckIcon size={14} className="text-radiance-gold mt-1 flex-shrink-0" />
-                    <span>Start with clarity, not sales</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckIcon size={14} className="text-radiance-gold mt-1 flex-shrink-0" />
-                    <span>Tell you when AI isn't the answer</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckIcon size={14} className="text-radiance-gold mt-1 flex-shrink-0" />
-                    <span>Build only what the strategy justifies</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckIcon size={14} className="text-radiance-gold mt-1 flex-shrink-0" />
-                    <span>Design systems that compound</span>
-                  </li>
-                </ul>
-              </Card>
+          <div className="relative">
+            <div className="relative z-10 bg-depth-elevated/20 border border-depth-border rounded-3xl overflow-hidden backdrop-blur-sm">
+              <ApproachComparisonVisual
+                others={{
+                  label: 'What Others Do',
+                  items: [
+                    'Pitch transformation before understanding',
+                    'Sell packages without diagnosing fit',
+                    "Build systems that don't address real bottlenecks",
+                    'Create motion without leverage',
+                  ],
+                  color: 'error',
+                }}
+                ours={{
+                  label: 'What We Do',
+                  items: [
+                    'Start with clarity, not sales',
+                    "Tell you when AI isn't the answer",
+                    'Build only what the strategy justifies',
+                    'Design systems that compound',
+                  ],
+                  color: 'gold',
+                }}
+              />
             </div>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* FAQ */}
-      <section className="section-spacing bg-depth-elevated">
-        <div className="container-wide">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-text-primary mb-4">
+      <Section spacing="lg" background="elevated" className="relative overflow-hidden">
+        <Container size="wide">
+          <div className="text-center mb-12 relative z-10">
+            <Badge variant="default" size="md" className="mb-4">
               Common Questions
-            </h2>
+            </Badge>
+            <Heading level="h2">Common Questions</Heading>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {[
-              {
-                q: 'What if the diagnostic shows no opportunity?',
-                a: 'Then you leave with clarity, which is valuable in itself. We\'ll tell you honestly if AI systems aren\'t the right move for your business right now. Zero reputational cost, trust built.',
-              },
-              {
-                q: 'Can I skip the diagnostic and go straight to building?',
-                a: 'No. The diagnostic and strategy process ensures we\'re building the right things. Skipping it often leads to wasted investment on systems that don\'t address real bottlenecks.',
-              },
-              {
-                q: 'How much does the deeper work cost?',
-                a: 'Investment for intelligence engines and partnership work is scoped based on the strategy artifact. We don\'t quote without understanding exactly what needs to be built and why.',
-              },
-              {
-                q: 'Why isn\'t everything listed with prices?',
-                a: 'Because premature selling collapses leverage. Trust must precede depth. The front-end offerings (diagnostic and strategy) provide the clarity needed before discussing backend work.',
-              },
-            ].map((item, index) => (
-              <Card key={index} elevation="subtle" className="p-6">
-                <h4 className="text-text-primary font-semibold mb-2">{item.q}</h4>
-                <p className="text-text-secondary text-sm">{item.a}</p>
-              </Card>
-            ))}
+          <div className="relative">
+            <div className="relative z-10 bg-depth-base/20 border border-depth-border rounded-3xl overflow-hidden backdrop-blur-sm">
+              <FAQVisual
+                items={[
+                  {
+                    question: 'What if the diagnostic shows no opportunity?',
+                    answer:
+                      "Then you leave with clarity, which is valuable in itself. We'll tell you honestly if AI systems aren't the right move for your business right now. Zero reputational cost, trust built.",
+                  },
+                  {
+                    question: 'Can I skip the diagnostic and go straight to building?',
+                    answer:
+                      "No. The diagnostic and strategy process ensures we're building the right things. Skipping it often leads to wasted investment on systems that don't address real bottlenecks.",
+                  },
+                  {
+                    question: 'How much does the deeper work cost?',
+                    answer:
+                      'Investment for intelligence engines and partnership work is scoped based on the strategy artifact. We don\'t quote without understanding exactly what needs to be built and why.',
+                  },
+                  {
+                    question: "Why isn't everything listed with prices?",
+                    answer:
+                      'Because premature selling collapses leverage. Trust must precede depth. The front-end offerings (diagnostic and strategy) provide the clarity needed before discussing backend work.',
+                  },
+                ]}
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* CTA */}
-      <section className="section-spacing">
-        <div className="container-narrow text-center">
-          <h2 className="text-3xl font-bold text-text-primary mb-4">
-            Not sure where you stand?
-          </h2>
-          <p className="text-text-secondary mb-8 max-w-xl mx-auto">
-            Most founders think they're further along than they are.
-            Start with the diagnostic to see where you actually are.
-          </p>
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={() => onNavigate('funnel')}
-          >
-            Discover Your AI Readiness
-          </Button>
-        </div>
-      </section>
+      <Section spacing="lg" className="relative overflow-hidden bg-gradient-to-b from-depth-base to-depth-elevated">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+
+        <Container size="wide">
+          <div className="relative z-10 bg-depth-elevated/20 border border-depth-border rounded-3xl overflow-hidden backdrop-blur-sm">
+            <CTAVisual onNavigate={() => onNavigate('funnel')} />
+          </div>
+        </Container>
+      </Section>
 
       {/* Footer Line */}
       <section className="py-12 bg-depth-elevated border-t border-depth-border">
-        <div className="container-narrow text-center">
+        <Container size="narrow" className="text-center">
           <p className="text-text-muted">
             <span className="text-radiance-gold">Light Brand</span> designs intelligence systems
             so businesses don't just use AI, they're built for it.
           </p>
-        </div>
+        </Container>
       </section>
     </div>
   );

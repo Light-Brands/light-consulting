@@ -11,6 +11,7 @@
 
 import React from 'react';
 import { Button, Card, Tag } from '../components';
+import { Container } from '../components/ui';
 import { PageKey } from '../types';
 import { TESTIMONIALS, IMAGE_CONFIG, FIT_CRITERIA } from '../lib/constants';
 
@@ -34,7 +35,7 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
         </div>
 
         {/* Hero Content */}
-        <div className="relative z-10 container-wide py-20 md:py-32">
+        <Container size="wide" className="relative z-10 py-20 md:py-32">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <Tag variant="outline" className="mx-auto">
               AI Readiness Diagnostic
@@ -83,7 +84,7 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
               5–10 minutes · No fluff · No sales pitch
             </p>
           </div>
-        </div>
+        </Container>
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
@@ -97,7 +98,7 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
 
       {/* Why This Exists Section */}
       <section className="section-spacing bg-gradient-to-b from-depth-base to-depth-elevated">
-        <div className="container-narrow">
+        <Container size="narrow">
           <div className="text-center mb-16">
             <Tag variant="outline" className="mx-auto mb-6">
               Why This Exists
@@ -153,12 +154,12 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
               </p>
             </Card>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* What This Is / What This Isn't Section */}
       <section className="section-spacing bg-depth-elevated">
-        <div className="container-narrow">
+        <Container size="narrow">
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <Card elevation="elevated" className="p-8 border border-radiance-gold/30">
               <h3 className="text-xl font-bold text-radiance-gold mb-6">What this is:</h3>
@@ -237,12 +238,12 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
               If there isn't, we'll tell you that too.
             </p>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* The Frame Section */}
       <section className="section-spacing">
-        <div className="container-narrow">
+        <Container size="narrow">
           <div className="text-center mb-12">
             <Tag variant="primary" className="mx-auto mb-6">
               The Frame
@@ -282,12 +283,12 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
               </p>
             </div>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* What You'll Walk Away With Section */}
       <section className="section-spacing bg-depth-elevated">
-        <div className="container-narrow">
+        <Container size="narrow">
           <div className="text-center mb-12">
             <Tag variant="outline" className="mx-auto mb-6">
               What You'll Walk Away With
@@ -338,12 +339,12 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
           <p className="text-center text-text-muted mt-8">
             If it makes sense, we'll also let you know whether deeper system work is worth exploring.
           </p>
-        </div>
+        </Container>
       </section>
 
       {/* Who This Is For Section */}
       <section className="section-spacing">
-        <div className="container-narrow">
+        <Container size="narrow">
           <div className="text-center mb-12">
             <Tag variant="primary" className="mx-auto mb-6">
               Who This Is For
@@ -383,12 +384,12 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
               </ul>
             </Card>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* How It Works Section */}
       <section className="section-spacing bg-depth-elevated">
-        <div className="container-narrow">
+        <Container size="narrow">
           <div className="text-center mb-12">
             <Tag variant="outline" className="mx-auto mb-6">
               How It Works
@@ -427,13 +428,13 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
           <div className="text-center mt-12">
             <p className="text-text-muted">No obligation. No pressure. Just clarity.</p>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* Social Proof Section */}
       {TESTIMONIALS[0] && (
         <section className="section-spacing">
-          <div className="container-narrow">
+          <Container size="narrow">
             <div className="max-w-3xl mx-auto">
               <Card elevation="elevated" className="p-10 md:p-12 bg-gradient-to-br from-depth-elevated to-depth-surface border border-radiance-gold/30">
                 <div className="space-y-8">
@@ -468,13 +469,13 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
                 </div>
               </Card>
             </div>
-          </div>
+          </Container>
         </section>
       )}
 
       {/* Final CTA Section */}
       <section className="section-spacing bg-depth-elevated">
-        <div className="container-narrow">
+        <Container size="narrow">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary">
               Ready to see where you actually stand?
@@ -495,17 +496,17 @@ export const FunnelPage: React.FC<FunnelPageProps> = ({ onNavigate }) => {
               </Button>
             </div>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* Closing Line */}
       <section className="py-12 bg-depth-base border-t border-depth-border">
-        <div className="container-narrow text-center">
+        <Container size="narrow" className="text-center">
           <p className="text-text-muted">
             <span className="text-radiance-gold">Light Brand</span> designs intelligence systems
             so businesses don't just use AI, they're built for it.
           </p>
-        </div>
+        </Container>
       </section>
     </div>
   );

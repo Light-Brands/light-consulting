@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Card, Tag } from '../components';
+import { Container } from '../components/ui';
 import { PageKey } from '../types';
 
 interface LaborArbitragePageProps {
@@ -71,7 +72,7 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-red-500/10 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-radiance-gold/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
 
-        <div className="container-wide relative z-10 py-16">
+        <Container size="wide" className="relative z-10 py-16">
           <div className="flex items-center gap-2 mb-6">
             <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
             <Tag variant="default" className="bg-red-500/10 text-red-400 border-red-500/30">
@@ -99,12 +100,12 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
               Our Services
             </Button>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* What is Labor Arbitrage */}
       <section className="section-spacing">
-        <div className="container-wide">
+        <Container size="wide">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <Tag variant="default" className="mb-4">Understanding the Model</Tag>
@@ -184,12 +185,12 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
               </div>
             </Card>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* The Disruption */}
       <section className="section-spacing bg-depth-elevated">
-        <div className="container-wide">
+        <Container size="wide">
           <div className="text-center mb-12">
             <Tag variant="premium" className="mb-4">The Disruption</Tag>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
@@ -315,12 +316,12 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
               </div>
             </Card>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* The Comparison */}
       <section className="section-spacing">
-        <div className="container-wide">
+        <Container size="wide">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
               The Side-by-Side Reality
@@ -528,12 +529,12 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
               and captured. The businesses that adapt to this reality will thrive. Those that don't...
             </p>
           </Card>
-        </div>
+        </Container>
       </section>
 
       {/* Reality Check */}
       <section className="section-spacing bg-depth-elevated">
-        <div className="container-wide">
+        <Container size="wide">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <Tag variant="default" className="mb-4">Reality Check</Tag>
@@ -595,12 +596,12 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
               </p>
             </Card>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* What This Means */}
       <section className="section-spacing">
-        <div className="container-wide">
+        <Container size="wide">
           <div className="text-center mb-12">
             <Tag variant="premium" className="mb-4">Strategic Implications</Tag>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
@@ -664,12 +665,12 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
               </Card>
             ))}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* CTA */}
       <section className="section-spacing bg-gradient-to-b from-depth-elevated to-depth-base">
-        <div className="container-narrow text-center">
+        <Container size="narrow" className="text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6">
             Ready to Get Ahead of This Shift?
           </h2>
@@ -696,7 +697,7 @@ export const LaborArbitragePage: React.FC<LaborArbitragePageProps> = ({ onNaviga
               Have Questions? Contact Us
             </Button>
           </div>
-        </div>
+        </Container>
       </section>
     </div>
   );

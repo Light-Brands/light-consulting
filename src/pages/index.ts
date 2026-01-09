@@ -12,3 +12,4 @@ export { default as BookPage } from './Book';
 export { default as ContactPage } from './Contact';
 export { default as InsightsPage } from './Insights';
 export { default as LaborArbitragePage } from './LaborArbitrage';
+export { default as DesignSystemPage } from './DesignSystem';

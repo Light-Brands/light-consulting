@@ -5,16 +5,15 @@
 
 import React, { useState } from 'react';
 import {
-  Button,
-  Card,
-  Input,
-  Textarea,
-  Tag,
-  CheckIcon,
-  MailIcon,
-  ClockIcon,
-  IconPlaceholder,
+  ContactHeroVisual,
+  ContactFormVisual,
+  ContactInfoVisual,
+  ContactFAQVisual,
+  ContactWaysVisual,
+  ContactSuccessVisual,
+  ContactNextVisual,
 } from '../components';
+import { Container, Section } from '../components/ui';
 import { IMAGE_CONFIG } from '../lib/constants';
 import { ContactFormData, PageKey } from '../types';
 import { isValidEmail } from '../lib/utils';
@@ -81,40 +80,88 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
   if (isSuccess) {
     return (
       <div className="min-h-screen pt-24 md:pt-32">
-        <div className="container-narrow py-16">
-          <Card elevation="elevated" className="p-8 md:p-12 text-center">
-            <div className="w-16 h-16 rounded-full bg-success/20 text-success mx-auto mb-6 flex items-center justify-center">
-              <CheckIcon size={32} />
+        <Section spacing="lg" className="relative overflow-hidden">
+          {/* Background atmosphere */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+
+          <Container size="narrow">
+            <div className="relative z-10">
+              <ContactSuccessVisual
+                onHomeClick={() => onNavigate('home')}
+                onInsightsClick={() => onNavigate('insights')}
+              />
             </div>
-            <h1 className="text-3xl font-bold text-text-primary mb-4">
-              Message Sent!
-            </h1>
-            <p className="text-text-secondary mb-4">
-              Thank you for reaching out. We read every message personally.
-            </p>
-            <p className="text-text-muted text-sm mb-8">
-              Expect a response within 24 hours during business days. If your inquiry is about booking,
-              we'll include next steps and availability.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="primary" onClick={() => onNavigate('home')}>
-                Back to Home
-              </Button>
-              <Button variant="ghost" onClick={() => onNavigate('insights')}>
-                Read Our Insights
-              </Button>
-            </div>
-          </Card>
-        </div>
+          </Container>
+        </Section>
       </div>
     );
   }
 
+  const faqs = [
+    {
+      q: 'Is this the right first step?',
+      a: 'If you have questions, yes. If you\'re ready to book, go directly to our booking page. It\'s faster.',
+    },
+    {
+      q: 'Do you build and implement solutions?',
+      a: 'Yes, for aligned partners. Brand Development and implementation are available after completing an AI Acceleration Blueprint and being accepted through our Stewardship Council. We partner deeply with the right brands rather than working broadly with everyone.',
+    },
+    {
+      q: 'Will you try to sell me?',
+      a: 'No. We\'ll answer your questions honestly. If we\'re not the right fit, we\'ll tell you that too. We believe those meant to work with us will come forward naturally.',
+    },
+    {
+      q: 'What if I\'m not sure AI is right for my business?',
+      a: 'That\'s exactly what an Illumination Session is for. But feel free to ask questions first. We\'re happy to help you figure that out.',
+    },
+  ];
+
+  const nextSteps = [
+    'We read your message and consider how we can best help',
+    'Within 24 hours, you\'ll get a personal response',
+    'If booking makes sense, we\'ll share available times',
+    'If we\'re not the right fit, we\'ll tell you honestly',
+  ];
+
+  const contactWays = [
+    {
+      title: 'Speaking & Workshops',
+      description: 'Looking for an AI speaker for your conference, leadership team, or board meeting?',
+      note: 'Mention "speaking inquiry" in your message',
+      icon: (
+        <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+        </svg>
+      ),
+    },
+    {
+      title: 'Media & Press',
+      description: 'Journalists and podcasters: we\'re happy to share insights on AI strategy for business.',
+      note: 'Mention "media inquiry" in your message',
+      icon: (
+        <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v4.5H6v-4.5z" />
+        </svg>
+      ),
+    },
+    {
+      title: 'Partnerships',
+      description: 'Are you an implementation partner, agency, or complementary service? Let\'s explore working together.',
+      note: 'Mention "partnership inquiry" in your message',
+      icon: (
+        <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.645-5.963-1.75A9.06 9.06 0 016 18.72m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+        </svg>
+      ),
+    },
+  ];
+
   return (
     <div className="min-h-screen pt-24 md:pt-32">
       {/* Hero with Background */}
-      <section 
-        className="section-spacing relative"
+      <Section
+        spacing="lg"
+        className="relative overflow-hidden"
         style={{
           backgroundImage: `url(${IMAGE_CONFIG.heroes.contact.src})`,
           backgroundSize: 'cover',
@@ -123,288 +170,62 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-depth-base/85" />
-        
-        {/* Bottom fade gradient - dissolves into next section */}
-        <div 
+
+        {/* Bottom fade gradient */}
+        <div
           className="absolute bottom-0 left-0 right-0 h-[20%] pointer-events-none z-[1]"
           style={{
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(15, 14, 13, 0.5) 50%, rgba(15, 14, 13, 1) 100%)',
+            background:
+              'linear-gradient(to bottom, transparent 0%, rgba(15, 14, 13, 0.5) 50%, rgba(15, 14, 13, 1) 100%)',
           }}
         />
 
-        <div className="container-wide relative z-10">
+        <Container size="wide" className="relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
             {/* Left Column - Info */}
             <div>
-              <Tag variant="premium" className="mb-4">
-                Contact
-              </Tag>
-              <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-6">
-                Let's Start a{' '}
-                <span className="text-radiance-gold">Conversation</span>
-              </h1>
-              <p className="text-text-secondary text-lg mb-4">
-                Have questions about our services? Want to explore how AI can
-                transform your business? We'd love to hear from you.
-              </p>
-              <p className="text-text-muted mb-8">
-                We read every message personally. No auto-responders, no sales bots.
-                Just honest conversation about whether and how we can help.
-              </p>
+              <ContactHeroVisual
+                title="Let's Start a"
+                titleHighlight="Conversation"
+                subtitle="Contact"
+                description="Have questions about our services? Want to explore how AI can transform your business? We'd love to hear from you."
+                subDescription="We read every message personally. No auto-responders, no sales bots. Just honest conversation about whether and how we can help."
+              />
 
-              <div className="space-y-6">
-                <Card elevation="subtle" className="p-4">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-radiance-gold/10 text-radiance-gold flex items-center justify-center flex-shrink-0">
-                      <MailIcon size={20} />
-                    </div>
-                    <div>
-                      <h3 className="text-text-primary font-semibold mb-1">
-                        Email Us Directly
-                      </h3>
-                      <a
-                        href="mailto:hello@lightbrandconsulting.com"
-                        className="text-radiance-gold hover:text-radiance-amber transition-colors"
-                      >
-                        hello@lightbrandconsulting.com
-                      </a>
-                      <p className="text-text-muted text-xs mt-1">
-                        Prefer email? Skip the form and write directly.
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-
-                <Card elevation="subtle" className="p-4">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-radiance-amber/10 text-radiance-amber flex items-center justify-center flex-shrink-0">
-                      <ClockIcon size={20} />
-                    </div>
-                    <div>
-                      <h3 className="text-text-primary font-semibold mb-1">
-                        Response Time
-                      </h3>
-                      <p className="text-text-secondary text-sm">
-                        We respond within 24 hours during business days.
-                      </p>
-                      <p className="text-text-muted text-xs mt-1">
-                        Urgent? Mention it in your message and we'll prioritize.
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-
-                <div className="p-6 bg-depth-elevated rounded-brand-card border border-depth-border">
-                  <h3 className="text-text-primary font-semibold mb-3">
-                    Ready to Book?
-                  </h3>
-                  <p className="text-text-secondary text-sm mb-4">
-                    If you already know you want to work with us, skip the contact form and book directly.
-                    You'll get instant access to our calendar.
-                  </p>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => onNavigate('book')}
-                  >
-                    Book a Session
-                  </Button>
-                </div>
+              <div className="mt-8">
+                <ContactInfoVisual onBookClick={() => onNavigate('book')} />
               </div>
 
-              {/* FAQ Section */}
-              <div className="mt-12">
-                <h3 className="text-lg font-bold text-text-primary mb-6">
-                  Common Questions Before Reaching Out
-                </h3>
-                <div className="space-y-4">
-                  {[
-                    {
-                      q: 'Is this the right first step?',
-                      a: 'If you have questions, yes. If you\'re ready to book, go directly to our booking page. It\'s faster.',
-                    },
-                    {
-                      q: 'Do you build and implement solutions?',
-                      a: 'Yes, for aligned partners. Brand Development and implementation are available after completing an AI Acceleration Blueprint and being accepted through our Stewardship Council. We partner deeply with the right brands rather than working broadly with everyone.',
-                    },
-                    {
-                      q: 'Will you try to sell me?',
-                      a: 'No. We\'ll answer your questions honestly. If we\'re not the right fit, we\'ll tell you that too. We believe those meant to work with us will come forward naturally.',
-                    },
-                    {
-                      q: 'What if I\'m not sure AI is right for my business?',
-                      a: 'That\'s exactly what an Illumination Session is for. But feel free to ask questions first. We\'re happy to help you figure that out.',
-                    },
-                  ].map((item, index) => (
-                    <div key={index}>
-                      <h4 className="text-text-primary font-medium text-sm mb-1">{item.q}</h4>
-                      <p className="text-text-muted text-sm">{item.a}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <ContactFAQVisual faqs={faqs} />
             </div>
 
             {/* Right Column - Form */}
-            <div>
-              <Card elevation="elevated" className="p-6 md:p-8">
-                <h2 className="text-xl font-bold text-text-primary mb-2">
-                  Send a Message
-                </h2>
-                <p className="text-text-muted text-sm mb-6">
-                  Fill out the form below and we'll get back to you within 24 hours.
-                </p>
+            <div className="space-y-6">
+              <ContactFormVisual
+                formData={formData}
+                errors={errors}
+                isSubmitting={isSubmitting}
+                onFieldChange={updateField}
+                onSubmit={handleSubmit}
+              />
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <Input
-                    label="Your Name"
-                    placeholder="John Smith"
-                    value={formData.name}
-                    onChange={(e) => updateField('name', e.target.value)}
-                    error={errors.name}
-                    required
-                  />
-
-                  <Input
-                    label="Email Address"
-                    type="email"
-                    placeholder="john@company.com"
-                    value={formData.email}
-                    onChange={(e) => updateField('email', e.target.value)}
-                    error={errors.email}
-                    required
-                  />
-
-                  <Input
-                    label="Company (Optional)"
-                    placeholder="Acme Inc"
-                    value={formData.company}
-                    onChange={(e) => updateField('company', e.target.value)}
-                  />
-
-                  <Textarea
-                    label="Your Message"
-                    placeholder="Tell us about your business, what you're hoping AI might help with, and any questions you have..."
-                    value={formData.message}
-                    onChange={(e) => updateField('message', e.target.value)}
-                    error={errors.message}
-                    rows={6}
-                    required
-                  />
-
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    fullWidth
-                    isLoading={isSubmitting}
-                  >
-                    Send Message
-                  </Button>
-
-                  <p className="text-text-muted text-xs text-center">
-                    We read every message personally. Your information stays private.
-                  </p>
-                </form>
-              </Card>
-
-              {/* What Happens Next */}
-              <Card elevation="subtle" className="mt-6 p-6">
-                <h3 className="text-text-primary font-semibold mb-4">
-                  What Happens After You Send
-                </h3>
-                <ol className="space-y-3">
-                  {[
-                    'We read your message and consider how we can best help',
-                    'Within 24 hours, you\'ll get a personal response',
-                    'If booking makes sense, we\'ll share available times',
-                    'If we\'re not the right fit, we\'ll tell you honestly',
-                  ].map((step, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <span className="w-6 h-6 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 text-xs font-bold">
-                        {index + 1}
-                      </span>
-                      <span className="text-text-secondary text-sm">{step}</span>
-                    </li>
-                  ))}
-                </ol>
-              </Card>
+              <ContactNextVisual steps={nextSteps} />
             </div>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* Additional Context Section */}
-      <section className="section-spacing bg-depth-elevated">
-        <div className="container-wide">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold text-text-primary mb-4">
-              Other Ways We Can Help
-            </h2>
+      <Section spacing="lg" background="elevated" className="relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+
+        <Container size="wide">
+          <div className="relative z-10">
+            <ContactWaysVisual ways={contactWays} />
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card elevation="subtle" className="p-6 text-center">
-              <div className="mb-4 flex justify-center">
-                <IconPlaceholder
-                  src={IMAGE_CONFIG.contact.speaking.src}
-                  alt={IMAGE_CONFIG.contact.speaking.alt}
-                  size={80}
-                  color="gold"
-                />
-              </div>
-              <h3 className="text-text-primary font-semibold mb-2">
-                Speaking & Workshops
-              </h3>
-              <p className="text-text-secondary text-sm mb-4">
-                Looking for an AI speaker for your conference, leadership team, or board meeting?
-              </p>
-              <p className="text-text-muted text-xs">
-                Mention "speaking inquiry" in your message
-              </p>
-            </Card>
-
-            <Card elevation="subtle" className="p-6 text-center">
-              <div className="mb-4 flex justify-center">
-                <IconPlaceholder
-                  src={IMAGE_CONFIG.contact.media.src}
-                  alt={IMAGE_CONFIG.contact.media.alt}
-                  size={80}
-                  color="amber"
-                />
-              </div>
-              <h3 className="text-text-primary font-semibold mb-2">
-                Media & Press
-              </h3>
-              <p className="text-text-secondary text-sm mb-4">
-                Journalists and podcasters: we're happy to share insights on AI strategy for business.
-              </p>
-              <p className="text-text-muted text-xs">
-                Mention "media inquiry" in your message
-              </p>
-            </Card>
-
-            <Card elevation="subtle" className="p-6 text-center">
-              <div className="mb-4 flex justify-center">
-                <IconPlaceholder
-                  src={IMAGE_CONFIG.contact.partnerships.src}
-                  alt={IMAGE_CONFIG.contact.partnerships.alt}
-                  size={80}
-                  color="cream"
-                />
-              </div>
-              <h3 className="text-text-primary font-semibold mb-2">
-                Partnerships
-              </h3>
-              <p className="text-text-secondary text-sm mb-4">
-                Are you an implementation partner, agency, or complementary service? Let's explore working together.
-              </p>
-              <p className="text-text-muted text-xs">
-                Mention "partnership inquiry" in your message
-              </p>
-            </Card>
-          </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
     </div>
   );
 };

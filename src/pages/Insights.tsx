@@ -5,13 +5,20 @@
 
 import React, { useState } from 'react';
 import {
-  Button,
-  Card,
-  Tag,
-  NewsletterCapture,
-  ArrowRightIcon,
-  ImagePlaceholder,
+  NewsletterVisual,
+  InsightsHeroVisual,
+  FeaturedPostVisual,
+  BlogPostCardVisual,
+  TopicsVisual,
+  BlogPostHeroVisual,
+  BlogPostHeaderVisual,
+  BlogPostContentVisual,
+  BlogPostTakeawaysVisual,
+  BlogPostCTAVisual,
+  BlogPostRelatedVisual,
+  BackButtonVisual,
 } from '../components';
+import { Container, Section } from '../components/ui';
 import { IMAGE_CONFIG } from '../lib/constants';
 import { PageKey } from '../types';
 
@@ -504,250 +511,181 @@ export const InsightsPage: React.FC<InsightsPageProps> = ({ onNavigate }) => {
   if (selectedPost) {
     const postImageKey = selectedPost.id as keyof typeof IMAGE_CONFIG.blog;
     const postImage = IMAGE_CONFIG.blog[postImageKey];
-    
+    const relatedPosts = BLOG_POSTS.filter(p => p.id !== selectedPost.id)
+      .slice(0, 2)
+      .map((post) => {
+        const blogImageKey = post.id as keyof typeof IMAGE_CONFIG.blog;
+        const blogImage = IMAGE_CONFIG.blog[blogImageKey];
+        return {
+          id: post.id,
+          title: post.title,
+          excerpt: post.excerpt,
+          category: post.category,
+          date: post.date,
+          readTime: post.readTime,
+          imageSrc: blogImage?.src,
+          imageAlt: blogImage?.alt,
+        };
+      });
+
     return (
       <div className="min-h-screen pt-24 md:pt-32">
         {/* Hero Banner Image */}
-        {postImage && (
-          <div 
-            className="relative w-full h-[300px] md:h-[400px] mb-8"
-            style={{
-              backgroundImage: `url(${postImage.src})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          >
-            {/* Gradient overlay for readability */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-depth-base" />
-            
-            {/* Bottom fade */}
-            <div 
-              className="absolute bottom-0 left-0 right-0 h-[30%]"
-              style={{
-                background: 'linear-gradient(to bottom, transparent 0%, rgba(15, 14, 13, 0.7) 50%, rgba(15, 14, 13, 1) 100%)',
-              }}
-            />
-          </div>
-        )}
-        
-        <article className="section-spacing -mt-16 relative z-10">
-          <div className="container-narrow">
-            <button
-              onClick={() => setSelectedPost(null)}
-              className="text-text-muted hover:text-text-secondary text-sm mb-8 flex items-center gap-2 transition-colors"
-            >
-              ← Back to Insights
-            </button>
+        <BlogPostHeroVisual
+          imageSrc={postImage?.src}
+          imageAlt={postImage?.alt}
+        />
 
-            <Tag variant="default" className="mb-4">
-              {selectedPost.category}
-            </Tag>
+        {/* Article Content */}
+        <Section spacing="lg" className="relative overflow-hidden -mt-16">
+          {/* Background atmosphere */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
-            <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-              {selectedPost.title}
-            </h1>
+          <Container size="wide" className="relative z-10">
+            {/* Content wrapper - constrained width for readability */}
+            <div className="max-w-4xl mx-auto">
+              {/* Back Button */}
+              <BackButtonVisual
+                label="Back to Insights"
+                onClick={() => setSelectedPost(null)}
+              />
 
-            <div className="flex items-center gap-4 text-text-muted text-sm mb-8">
-              <span>{selectedPost.date}</span>
-              <span>•</span>
-              <span>{selectedPost.readTime}</span>
-            </div>
+              {/* Header */}
+              <div className="mb-8">
+                <BlogPostHeaderVisual
+                  category={selectedPost.category}
+                  title={selectedPost.title}
+                  date={selectedPost.date}
+                  readTime={selectedPost.readTime}
+                />
+              </div>
 
-            <div className="prose prose-invert max-w-none">
-              {selectedPost.content.map((paragraph, index) => (
-                <p key={index} className="text-text-secondary mb-6 leading-relaxed">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
+              {/* Content */}
+              <div className="mb-12">
+                <BlogPostContentVisual paragraphs={selectedPost.content} />
+              </div>
 
-            {/* Key Takeaways */}
-            <Card elevation="elevated" className="mt-12 p-6 md:p-8">
-              <h3 className="text-lg font-bold text-text-primary mb-4">
-                Key Takeaways
-              </h3>
-              <ul className="space-y-3">
-                {selectedPost.keyTakeaways.map((takeaway, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 text-xs font-bold">
-                      {index + 1}
-                    </span>
-                    <span className="text-text-secondary text-sm">{takeaway}</span>
-                  </li>
-                ))}
-              </ul>
-            </Card>
+              {/* Key Takeaways */}
+              <div className="mb-8">
+                <BlogPostTakeawaysVisual takeaways={selectedPost.keyTakeaways} />
+              </div>
 
-            {/* CTA */}
-            <Card elevation="subtle" className="mt-8 p-6 md:p-8 text-center">
-              <h3 className="text-lg font-bold text-text-primary mb-2">
-                Ready to Apply These Insights?
-              </h3>
-              <p className="text-text-secondary text-sm mb-4">
-                Book an Illumination Session to see how these principles apply to your specific business.
-              </p>
-              <Button
-                variant="primary"
-                onClick={() => onNavigate('book')}
-              >
-                Book Your Session
-              </Button>
-            </Card>
-
-            {/* More Posts */}
-            <div className="mt-16">
-              <h3 className="text-xl font-bold text-text-primary mb-6">
-                More Insights
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {BLOG_POSTS.filter(p => p.id !== selectedPost.id).slice(0, 2).map((post) => (
-                  <Card
-                    key={post.id}
-                    elevation="subtle"
-                    className="cursor-pointer hover:border-radiance-gold/30 transition-colors"
-                    onClick={() => {
-                      setSelectedPost(post);
-                      window.scrollTo(0, 0);
-                    }}
-                  >
-                    <Tag variant="default" size="sm" className="mb-3">
-                      {post.category}
-                    </Tag>
-                    <h4 className="text-lg font-semibold text-text-primary mb-2">
-                      {post.title}
-                    </h4>
-                    <p className="text-text-secondary text-sm">{post.excerpt}</p>
-                  </Card>
-                ))}
+              {/* CTA */}
+              <div className="mb-16">
+                <BlogPostCTAVisual
+                  onBookClick={() => onNavigate('book')}
+                />
               </div>
             </div>
-          </div>
-        </article>
+
+            {/* More Posts - matches container width */}
+            <BlogPostRelatedVisual
+              posts={relatedPosts}
+              onPostClick={(postId) => {
+                const post = BLOG_POSTS.find(p => p.id === postId);
+                if (post) {
+                  setSelectedPost(post);
+                  window.scrollTo(0, 0);
+                }
+              }}
+            />
+          </Container>
+        </Section>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen pt-24 md:pt-32">
-      <section className="section-spacing">
-        <div className="container-wide">
-          <div className="text-center mb-16">
-            <Tag variant="premium" className="mb-4">
-              Insights
-            </Tag>
-            <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-6">
-              AI Insights for{' '}
-              <span className="text-radiance-gold">Business Leaders</span>
-            </h1>
-            <p className="text-text-secondary text-lg max-w-2xl mx-auto">
-              Practical perspectives on AI transformation. No jargon, just clarity.
-              Written for leaders who need to make decisions, not impress technologists.
-            </p>
+      {/* Hero Section */}
+      <Section spacing="lg" className="relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+
+        <Container size="wide">
+          <div className="relative z-10">
+            <InsightsHeroVisual
+              title="AI Insights for Business Leaders"
+              subtitle="Insights"
+              description="Practical perspectives on AI transformation. No jargon, just clarity. Written for leaders who need to make decisions, not impress technologists."
+            />
           </div>
+        </Container>
+      </Section>
 
-          {/* Featured Post */}
-          <Card
-            elevation="elevated"
-            className="p-8 md:p-12 mb-12 cursor-pointer hover:border-radiance-gold/30 transition-colors"
-            onClick={() => {
-              setSelectedPost(BLOG_POSTS[0]);
-              window.scrollTo(0, 0);
-            }}
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div>
-                <Tag variant="premium" className="mb-4">
-                  Featured
-                </Tag>
-                <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-4">
-                  {BLOG_POSTS[0].title}
-                </h2>
-                <p className="text-text-secondary mb-4">
-                  {BLOG_POSTS[0].excerpt}
-                </p>
-                <div className="flex items-center gap-4 text-text-muted text-sm mb-6">
-                  <span>{BLOG_POSTS[0].date}</span>
-                  <span>•</span>
-                  <span>{BLOG_POSTS[0].readTime}</span>
-                </div>
-                <Button variant="primary" icon={<ArrowRightIcon size={16} />}>
-                  Read Article
-                </Button>
-              </div>
-              <div className="hidden lg:block">
-                <ImagePlaceholder
-                  src={IMAGE_CONFIG.blog['strategic-moment'].src}
-                  alt={IMAGE_CONFIG.blog['strategic-moment'].alt}
-                  aspectRatio="video"
-                />
-              </div>
-            </div>
-          </Card>
+      {/* Featured Post */}
+      <Section spacing="lg" className="relative overflow-hidden">
+        <Container size="wide">
+          <div className="relative">
+            <FeaturedPostVisual
+              title={BLOG_POSTS[0].title}
+              excerpt={BLOG_POSTS[0].excerpt}
+              category={BLOG_POSTS[0].category}
+              date={BLOG_POSTS[0].date}
+              readTime={BLOG_POSTS[0].readTime}
+              imageSrc={IMAGE_CONFIG.blog['strategic-moment']?.src}
+              imageAlt={IMAGE_CONFIG.blog['strategic-moment']?.alt}
+              onClick={() => {
+                setSelectedPost(BLOG_POSTS[0]);
+                window.scrollTo(0, 0);
+              }}
+            />
+          </div>
+        </Container>
+      </Section>
 
-          {/* All Posts Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+      {/* All Posts Grid */}
+      <Section spacing="lg" background="elevated" className="relative overflow-hidden">
+        <Container size="wide">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {BLOG_POSTS.slice(1).map((post) => {
               const blogImageKey = post.id as keyof typeof IMAGE_CONFIG.blog;
               const blogImage = IMAGE_CONFIG.blog[blogImageKey];
               return (
-                <Card
+                <BlogPostCardVisual
                   key={post.id}
-                  elevation="subtle"
-                  className="cursor-pointer hover:border-radiance-gold/30 transition-colors group overflow-hidden"
+                  title={post.title}
+                  excerpt={post.excerpt}
+                  category={post.category}
+                  date={post.date}
+                  readTime={post.readTime}
+                  imageSrc={blogImage?.src}
+                  imageAlt={blogImage?.alt}
                   onClick={() => {
                     setSelectedPost(post);
                     window.scrollTo(0, 0);
                   }}
-                >
-                  {blogImage && (
-                    <div className="-mx-6 -mt-6 mb-4">
-                      <ImagePlaceholder
-                        src={blogImage.src}
-                        alt={blogImage.alt}
-                        aspectRatio="video"
-                        className="rounded-t-brand-card rounded-b-none"
-                      />
-                    </div>
-                  )}
-                  <Tag variant="default" size="sm" className="mb-3">
-                    {post.category}
-                  </Tag>
-                  <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-radiance-gold transition-colors">
-                    {post.title}
-                  </h3>
-                  <p className="text-text-secondary text-sm mb-4">{post.excerpt}</p>
-                  <div className="flex items-center justify-between text-text-muted text-xs">
-                    <span>{post.date}</span>
-                    <span>{post.readTime}</span>
-                  </div>
-                </Card>
+                />
               );
             })}
           </div>
+        </Container>
+      </Section>
 
-          {/* Newsletter Capture */}
-          <div className="max-w-2xl mx-auto">
-            <NewsletterCapture />
-          </div>
+      {/* Newsletter */}
+      <Section spacing="lg" className="relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
-          {/* Topics */}
-          <div className="mt-16 text-center">
-            <h3 className="text-xl font-bold text-text-primary mb-6">
-              Topics We Cover
-            </h3>
-            <div className="flex flex-wrap justify-center gap-3">
-              {['AI Strategy', 'Implementation', 'Methodology', 'Leadership', 'Case Studies', 'Industry Trends'].map((topic) => (
-                <span
-                  key={topic}
-                  className="px-4 py-2 rounded-full bg-depth-elevated border border-depth-border text-text-secondary text-sm"
-                >
-                  {topic}
-                </span>
-              ))}
+        <Container size="wide">
+          <div className="relative z-10 max-w-2xl mx-auto">
+            <div className="relative">
+              <div className="relative z-10 bg-depth-elevated/20 border border-depth-border rounded-3xl overflow-hidden backdrop-blur-sm">
+                <NewsletterVisual />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
+
+      {/* Topics */}
+      <Section spacing="lg" className="relative overflow-hidden">
+        <Container size="wide">
+          <TopicsVisual
+            topics={['AI Strategy', 'Implementation', 'Methodology', 'Leadership', 'Case Studies', 'Industry Trends']}
+          />
+        </Container>
+      </Section>
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { NAV_ITEMS } from '../lib/constants';
 import { PageKey } from '../types';
 import Button from './Button';
 import { MenuIcon, XIcon } from './Icons';
+import { Container } from './ui';
 
 interface NavigationProps {
   activePage: PageKey;
@@ -25,7 +26,8 @@ export const Navigation: React.FC<NavigationProps> = ({ activePage, onNavigate }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-depth-base/80 backdrop-blur-xl border-b border-depth-border">
-      <nav className="container-wide">
+      <nav>
+        <Container size="wide">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <button
@@ -109,6 +111,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activePage, onNavigate }
             </div>
           </div>
         )}
+        </Container>
       </nav>
     </header>
   );

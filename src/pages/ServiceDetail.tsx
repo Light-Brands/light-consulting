@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { Container } from '../components/ui';
 import {
   Button,
   Card,
@@ -48,7 +49,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({
     <div className="min-h-screen pt-24 md:pt-32">
       {/* Hero */}
       <section className="section-spacing">
-        <div className="container-wide">
+        <Container size="wide">
           <div className="max-w-3xl">
             <button
               onClick={() => onNavigate('services')}
@@ -94,12 +95,12 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({
               Book {service.name}
             </Button>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* What You Get */}
       <section className="section-spacing bg-depth-elevated">
-        <div className="container-wide">
+        <Container size="wide">
           <h2 className="text-3xl font-bold text-text-primary mb-8">
             What You Get
           </h2>
@@ -116,12 +117,12 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({
               </Card>
             ))}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* The Process */}
       <section className="section-spacing">
-        <div className="container-wide">
+        <Container size="wide">
           <h2 className="text-3xl font-bold text-text-primary mb-8">
             The Process
           </h2>
@@ -148,12 +149,12 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({
               </div>
             ))}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* Is This For You? */}
       <section className="section-spacing bg-depth-elevated">
-        <div className="container-wide">
+        <Container size="wide">
           <h2 className="text-3xl font-bold text-text-primary mb-8">
             Is This For You?
           </h2>
@@ -200,12 +201,12 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({
               </ul>
             </Card>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* FAQ */}
       <section className="section-spacing">
-        <div className="container-narrow">
+        <Container size="narrow">
           <h2 className="text-3xl font-bold text-text-primary mb-8 text-center">
             Frequently Asked Questions
           </h2>
@@ -216,12 +217,12 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({
               content: item.answer,
             }))}
           />
-        </div>
+        </Container>
       </section>
 
       {/* CTA */}
       <section className="section-spacing bg-depth-elevated">
-        <div className="container-narrow text-center">
+        <Container size="narrow" className="text-center">
           <h2 className="text-3xl font-bold text-text-primary mb-4">
             Ready to Get Started?
           </h2>
@@ -246,7 +247,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({
               Questions? Contact Us
             </Button>
           </div>
-        </div>
+        </Container>
       </section>
     </div>
   );
