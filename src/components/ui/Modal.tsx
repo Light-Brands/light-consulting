@@ -43,7 +43,7 @@ export interface ModalProps {
 
 /**
  * Modal dialog component with accessibility features
- * 
+ *
  * @example
  * <Modal
  *   isOpen={isOpen}
@@ -54,7 +54,7 @@ export interface ModalProps {
  *   <p>Are you sure you want to continue?</p>
  * </Modal>
  */
-export const Modal: React.FC<ModalProps> = ({
+const ModalComponent: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   title,
@@ -207,7 +207,7 @@ export const Modal: React.FC<ModalProps> = ({
   );
 };
 
-Modal.displayName = 'Modal';
+ModalComponent.displayName = 'Modal';
 
 // ============================================================================
 // Modal Header Component
@@ -286,9 +286,16 @@ export const ModalFooter: React.FC<ModalFooterProps> = ({
 ModalFooter.displayName = 'Modal.Footer';
 
 // ============================================================================
-// Attach sub-components
+// Attach sub-components and create compound component
 // ============================================================================
 
+interface ModalCompoundComponent extends React.FC<ModalProps> {
+  Header: typeof ModalHeader;
+  Body: typeof ModalBody;
+  Footer: typeof ModalFooter;
+}
+
+export const Modal = ModalComponent as ModalCompoundComponent;
 Modal.Header = ModalHeader;
 Modal.Body = ModalBody;
 Modal.Footer = ModalFooter;
@@ -386,4 +393,3 @@ ConfirmDialog.displayName = 'ConfirmDialog';
 
 // Export components
 export default Modal;
-export type { ModalHeaderProps, ModalBodyProps, ModalFooterProps, ConfirmDialogProps };

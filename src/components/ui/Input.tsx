@@ -423,4 +423,3 @@ Select.displayName = 'Select';
 
 // Export all components
 export { Input as default };
-export type { InputProps, TextareaProps, SelectProps };

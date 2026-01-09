@@ -231,7 +231,7 @@ export const Flex: React.FC<FlexProps> = ({
     evenly: 'justify-evenly',
   };
 
-  const gapStyles = {
+  const gapStyles: Record<number, string> = {
     0: '',
     2: 'gap-2',
     3: 'gap-3',

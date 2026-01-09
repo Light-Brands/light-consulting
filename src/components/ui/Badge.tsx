@@ -209,4 +209,3 @@ NumberBadge.displayName = 'NumberBadge';
 
 // Export components
 export default Badge;
-export type { DotBadgeProps, NumberBadgeProps };

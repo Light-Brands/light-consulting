@@ -225,12 +225,14 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       xl: 'p-4 h-14 w-14',
     };
 
+    const buttonSize = size || 'md';
+
     return (
       <button
         ref={ref}
         className={cn(
-          buttonVariants({ ...props, size }),
-          sizeStyles[size],
+          buttonVariants({ ...props, size: buttonSize }),
+          sizeStyles[buttonSize],
           'rounded-lg',
           className
         )}

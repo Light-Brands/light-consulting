@@ -294,4 +294,3 @@ Toast.displayName = 'Toast';
 
 // Export components
 export default Alert;
-export type { ToastProps };
