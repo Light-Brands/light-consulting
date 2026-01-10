@@ -108,11 +108,38 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
   const handleSubmit = async () => {
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          service: formData.service,
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          phone: formData.phone,
+          intake_data: formData.intake,
+        }),
+      });
 
-    setIsSubmitting(false);
-    setIsComplete(true);
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error('Error submitting lead:', result.error);
+        setErrors({ submit: result.error || 'Failed to submit. Please try again.' });
+        setIsSubmitting(false);
+        return;
+      }
+
+      setIsSubmitting(false);
+      setIsComplete(true);
+    } catch (error) {
+      console.error('Error submitting lead:', error);
+      setErrors({ submit: 'Failed to submit. Please try again.' });
+      setIsSubmitting(false);
+    }
   };
 
   const updateFormData = (updates: Partial<BookingFormData>) => {

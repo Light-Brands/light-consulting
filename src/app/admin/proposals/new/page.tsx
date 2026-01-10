@@ -1,0 +1,744 @@
+/**
+ * Admin New Proposal Page
+ * Light Brand Consulting
+ */
+
+'use client';
+
+import React, { useState, useEffect, Suspense } from 'react';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { AdminHeader } from '@/components/admin';
+import { Container, Button, Input, Textarea } from '@/components/ui';
+import type { LeadSubmission, ProposalPhaseInsert, MilestoneInsert, Deliverable } from '@/types/proposals';
+
+interface PhaseFormData {
+  phase_name: string;
+  description: string;
+  timeline: string;
+  amount: string;
+  deliverables: Deliverable[];
+  objectives: string[];
+  goals: string[];
+}
+
+interface MilestoneFormData {
+  milestone_name: string;
+  description: string;
+  amount: string;
+  due_date: string;
+  phase_index: number;
+}
+
+const DEFAULT_AGREEMENT_TEXT = `# Consulting Services Agreement
+
+This Consulting Services Agreement ("Agreement") is entered into by and between Light Brand Consulting ("Consultant") and the Client identified in the associated proposal.
+
+## 1. Services
+
+Consultant agrees to provide the services described in the proposal attached hereto. The services will be performed in a professional and workmanlike manner.
+
+## 2. Compensation
+
+Client agrees to pay Consultant the fees set forth in the proposal according to the milestone schedule provided.
+
+## 3. Term
+
+This Agreement shall commence on the start date indicated in the proposal and continue until all services are completed, unless earlier terminated.
+
+## 4. Confidentiality
+
+Both parties agree to maintain the confidentiality of proprietary information shared during the engagement.
+
+## 5. Intellectual Property
+
+Upon full payment, all deliverables created specifically for Client shall become Client's property. Consultant retains rights to general methodologies and pre-existing materials.
+
+## 6. Limitation of Liability
+
+Consultant's liability shall be limited to the total fees paid under this Agreement.
+
+## 7. Termination
+
+Either party may terminate this Agreement with 30 days written notice. Client shall pay for all services rendered through the termination date.
+
+## 8. General Provisions
+
+This Agreement constitutes the entire agreement between the parties and supersedes all prior discussions and agreements.
+
+By signing below, both parties agree to the terms and conditions set forth in this Agreement.`;
+
+function NewProposalContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const leadId = searchParams.get('lead');
+
+  const [lead, setLead] = useState<LeadSubmission | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState<'details' | 'phases' | 'milestones' | 'agreement'>('details');
+
+  // Form state
+  const [formData, setFormData] = useState({
+    client_name: '',
+    client_email: '',
+    client_company: '',
+    client_phone: '',
+    project_name: '',
+    project_overview: '',
+    project_scope: '',
+    total_timeline: '',
+    start_date: '',
+    estimated_completion_date: '',
+    discount_percentage: '0',
+  });
+
+  const [phases, setPhases] = useState<PhaseFormData[]>([
+    {
+      phase_name: '',
+      description: '',
+      timeline: '',
+      amount: '',
+      deliverables: [],
+      objectives: [],
+      goals: [],
+    },
+  ]);
+
+  const [milestones, setMilestones] = useState<MilestoneFormData[]>([
+    {
+      milestone_name: '',
+      description: '',
+      amount: '',
+      due_date: '',
+      phase_index: 0,
+    },
+  ]);
+
+  const [agreementText, setAgreementText] = useState(DEFAULT_AGREEMENT_TEXT);
+
+  // Fetch lead data if lead ID provided
+  useEffect(() => {
+    if (leadId) {
+      fetchLead(leadId);
+    }
+  }, [leadId]);
+
+  const fetchLead = async (id: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/leads/${id}`);
+      const data = await response.json();
+
+      if (data.data) {
+        const leadData = data.data as LeadSubmission;
+        setLead(leadData);
+        setFormData((prev) => ({
+          ...prev,
+          client_name: leadData.name,
+          client_email: leadData.email,
+          client_company: leadData.company || '',
+          client_phone: leadData.phone || '',
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching lead:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const calculateTotalAmount = () => {
+    return phases.reduce((sum, phase) => sum + (parseFloat(phase.amount) || 0), 0);
+  };
+
+  const calculateFinalAmount = () => {
+    const total = calculateTotalAmount();
+    const discount = parseFloat(formData.discount_percentage) || 0;
+    return total - (total * discount / 100);
+  };
+
+  const updatePhase = (index: number, field: keyof PhaseFormData, value: PhaseFormData[keyof PhaseFormData]) => {
+    const newPhases = [...phases];
+    newPhases[index] = { ...newPhases[index], [field]: value };
+    setPhases(newPhases);
+  };
+
+  const addPhase = () => {
+    setPhases([
+      ...phases,
+      {
+        phase_name: '',
+        description: '',
+        timeline: '',
+        amount: '',
+        deliverables: [],
+        objectives: [],
+        goals: [],
+      },
+    ]);
+  };
+
+  const removePhase = (index: number) => {
+    if (phases.length > 1) {
+      setPhases(phases.filter((_, i) => i !== index));
+      // Update milestone phase references
+      setMilestones(milestones.map((m) => ({
+        ...m,
+        phase_index: m.phase_index === index ? 0 : m.phase_index > index ? m.phase_index - 1 : m.phase_index,
+      })));
+    }
+  };
+
+  const updateMilestone = (index: number, field: keyof MilestoneFormData, value: string | number) => {
+    const newMilestones = [...milestones];
+    newMilestones[index] = { ...newMilestones[index], [field]: value };
+    setMilestones(newMilestones);
+  };
+
+  const addMilestone = () => {
+    setMilestones([
+      ...milestones,
+      {
+        milestone_name: '',
+        description: '',
+        amount: '',
+        due_date: '',
+        phase_index: 0,
+      },
+    ]);
+  };
+
+  const removeMilestone = (index: number) => {
+    if (milestones.length > 1) {
+      setMilestones(milestones.filter((_, i) => i !== index));
+    }
+  };
+
+  const addDeliverable = (phaseIndex: number) => {
+    const newPhases = [...phases];
+    newPhases[phaseIndex].deliverables.push({
+      id: crypto.randomUUID(),
+      name: '',
+      description: '',
+    });
+    setPhases(newPhases);
+  };
+
+  const updateDeliverable = (phaseIndex: number, deliverableIndex: number, value: string) => {
+    const newPhases = [...phases];
+    newPhases[phaseIndex].deliverables[deliverableIndex].name = value;
+    setPhases(newPhases);
+  };
+
+  const removeDeliverable = (phaseIndex: number, deliverableIndex: number) => {
+    const newPhases = [...phases];
+    newPhases[phaseIndex].deliverables = newPhases[phaseIndex].deliverables.filter((_, i) => i !== deliverableIndex);
+    setPhases(newPhases);
+  };
+
+  const addListItem = (phaseIndex: number, field: 'objectives' | 'goals') => {
+    const newPhases = [...phases];
+    newPhases[phaseIndex][field].push('');
+    setPhases(newPhases);
+  };
+
+  const updateListItem = (phaseIndex: number, field: 'objectives' | 'goals', itemIndex: number, value: string) => {
+    const newPhases = [...phases];
+    newPhases[phaseIndex][field][itemIndex] = value;
+    setPhases(newPhases);
+  };
+
+  const removeListItem = (phaseIndex: number, field: 'objectives' | 'goals', itemIndex: number) => {
+    const newPhases = [...phases];
+    newPhases[phaseIndex][field] = newPhases[phaseIndex][field].filter((_, i) => i !== itemIndex);
+    setPhases(newPhases);
+  };
+
+  const handleSave = async (status: 'draft' | 'sent') => {
+    setIsSaving(true);
+
+    try {
+      const proposalData = {
+        lead_submission_id: leadId || null,
+        client_name: formData.client_name,
+        client_email: formData.client_email,
+        client_company: formData.client_company || null,
+        client_phone: formData.client_phone || null,
+        project_name: formData.project_name,
+        project_overview: formData.project_overview || null,
+        project_scope: formData.project_scope || null,
+        total_timeline: formData.total_timeline || null,
+        start_date: formData.start_date || null,
+        estimated_completion_date: formData.estimated_completion_date || null,
+        total_amount: calculateTotalAmount(),
+        discount_percentage: parseFloat(formData.discount_percentage) || 0,
+        final_amount: calculateFinalAmount(),
+        status,
+        phases: phases
+          .filter((p) => p.phase_name)
+          .map((p, i) => ({
+            phase_number: i + 1,
+            phase_name: p.phase_name,
+            description: p.description || null,
+            timeline: p.timeline || null,
+            deliverables: p.deliverables.filter((d) => d.name),
+            objectives: p.objectives.filter(Boolean),
+            goals: p.goals.filter(Boolean),
+            amount: parseFloat(p.amount) || 0,
+          })),
+        milestones: milestones
+          .filter((m) => m.milestone_name)
+          .map((m) => ({
+            milestone_name: m.milestone_name,
+            description: m.description || null,
+            amount: parseFloat(m.amount) || 0,
+            due_date: m.due_date || null,
+          })),
+        agreement_text: agreementText,
+      };
+
+      const response = await fetch('/api/proposals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(proposalData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.data) {
+        router.push(`/admin/proposals/${result.data.id}`);
+      } else {
+        console.error('Error creating proposal:', result.error);
+      }
+    } catch (error) {
+      console.error('Error saving proposal:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  return (
+    <div className="min-h-screen">
+      <AdminHeader
+        title="New Proposal"
+        subtitle={lead ? `For ${lead.name}` : 'Create a new client proposal'}
+      />
+
+      <div className="py-8 md:py-12 relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+
+        <Container size="wide" className="relative z-10">
+          {/* Back Link */}
+          <Link
+            href="/admin/proposals"
+            className="inline-flex items-center gap-2 text-text-muted hover:text-text-primary mb-6 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Proposals
+          </Link>
+
+          {/* Pricing Summary */}
+          <div className="mb-8 p-4 bg-depth-surface border border-depth-border rounded-xl flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap gap-6">
+              <div>
+                <span className="text-text-muted text-sm">Total Amount</span>
+                <p className="text-text-primary font-bold text-xl">{formatCurrency(calculateTotalAmount())}</p>
+              </div>
+              {parseFloat(formData.discount_percentage) > 0 && (
+                <div>
+                  <span className="text-text-muted text-sm">Discount ({formData.discount_percentage}%)</span>
+                  <p className="text-red-400 font-bold text-xl">
+                    -{formatCurrency(calculateTotalAmount() * parseFloat(formData.discount_percentage) / 100)}
+                  </p>
+                </div>
+              )}
+              <div>
+                <span className="text-text-muted text-sm">Final Amount</span>
+                <p className="text-radiance-gold font-bold text-xl">{formatCurrency(calculateFinalAmount())}</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Button variant="ghost" onClick={() => handleSave('draft')} isLoading={isSaving}>
+                Save Draft
+              </Button>
+              <Button variant="primary" onClick={() => handleSave('sent')} isLoading={isSaving}>
+                Send Proposal
+              </Button>
+            </div>
+          </div>
+
+          {/* Tabs */}
+          <div className="flex border-b border-depth-border mb-6">
+            {[
+              { key: 'details', label: 'Details' },
+              { key: 'phases', label: 'Phases' },
+              { key: 'milestones', label: 'Milestones' },
+              { key: 'agreement', label: 'Agreement' },
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key as typeof activeTab)}
+                className={`px-6 py-3 text-sm font-medium border-b-2 -mb-px transition-colors ${
+                  activeTab === tab.key
+                    ? 'text-radiance-gold border-radiance-gold'
+                    : 'text-text-muted border-transparent hover:text-text-primary'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab Content */}
+          <div className="relative bg-depth-surface border border-depth-border rounded-2xl p-6 overflow-hidden">
+            <div
+              className="absolute inset-0 opacity-[0.015] pointer-events-none"
+              style={{
+                backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                backgroundSize: '32px 32px',
+              }}
+            />
+
+            <div className="relative z-10">
+              {/* Details Tab */}
+              {activeTab === 'details' && (
+                <div className="space-y-8">
+                  {/* Client Information */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-text-primary mb-4">Client Information</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Input
+                        label="Client Name"
+                        required
+                        value={formData.client_name}
+                        onChange={(e) => setFormData({ ...formData, client_name: e.target.value })}
+                      />
+                      <Input
+                        label="Client Email"
+                        type="email"
+                        required
+                        value={formData.client_email}
+                        onChange={(e) => setFormData({ ...formData, client_email: e.target.value })}
+                      />
+                      <Input
+                        label="Company"
+                        value={formData.client_company}
+                        onChange={(e) => setFormData({ ...formData, client_company: e.target.value })}
+                      />
+                      <Input
+                        label="Phone"
+                        type="tel"
+                        value={formData.client_phone}
+                        onChange={(e) => setFormData({ ...formData, client_phone: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Project Information */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-text-primary mb-4">Project Information</h3>
+                    <div className="space-y-4">
+                      <Input
+                        label="Project Name"
+                        required
+                        value={formData.project_name}
+                        onChange={(e) => setFormData({ ...formData, project_name: e.target.value })}
+                      />
+                      <Textarea
+                        label="Project Overview"
+                        rows={4}
+                        value={formData.project_overview}
+                        onChange={(e) => setFormData({ ...formData, project_overview: e.target.value })}
+                        hint="Supports markdown formatting"
+                      />
+                      <Textarea
+                        label="Project Scope"
+                        rows={4}
+                        value={formData.project_scope}
+                        onChange={(e) => setFormData({ ...formData, project_scope: e.target.value })}
+                        hint="Supports markdown formatting"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Timeline & Pricing */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-text-primary mb-4">Timeline & Pricing</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <Input
+                        label="Total Timeline"
+                        placeholder="e.g., 6-9 months"
+                        value={formData.total_timeline}
+                        onChange={(e) => setFormData({ ...formData, total_timeline: e.target.value })}
+                      />
+                      <Input
+                        label="Start Date"
+                        type="date"
+                        value={formData.start_date}
+                        onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                      />
+                      <Input
+                        label="Estimated Completion"
+                        type="date"
+                        value={formData.estimated_completion_date}
+                        onChange={(e) => setFormData({ ...formData, estimated_completion_date: e.target.value })}
+                      />
+                      <Input
+                        label="Discount (%)"
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={formData.discount_percentage}
+                        onChange={(e) => setFormData({ ...formData, discount_percentage: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Phases Tab */}
+              {activeTab === 'phases' && (
+                <div className="space-y-6">
+                  {phases.map((phase, phaseIndex) => (
+                    <div
+                      key={phaseIndex}
+                      className="p-6 bg-depth-elevated border border-depth-border rounded-xl"
+                    >
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-lg font-semibold text-text-primary">
+                          Phase {phaseIndex + 1}
+                        </h4>
+                        {phases.length > 1 && (
+                          <button
+                            onClick={() => removePhase(phaseIndex)}
+                            className="text-red-400 hover:text-red-300 text-sm"
+                          >
+                            Remove Phase
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <Input
+                            label="Phase Name"
+                            required
+                            value={phase.phase_name}
+                            onChange={(e) => updatePhase(phaseIndex, 'phase_name', e.target.value)}
+                          />
+                          <Input
+                            label="Timeline"
+                            placeholder="e.g., 4-6 weeks"
+                            value={phase.timeline}
+                            onChange={(e) => updatePhase(phaseIndex, 'timeline', e.target.value)}
+                          />
+                          <Input
+                            label="Amount"
+                            type="number"
+                            min="0"
+                            value={phase.amount}
+                            onChange={(e) => updatePhase(phaseIndex, 'amount', e.target.value)}
+                          />
+                        </div>
+
+                        <Textarea
+                          label="Description"
+                          rows={3}
+                          value={phase.description}
+                          onChange={(e) => updatePhase(phaseIndex, 'description', e.target.value)}
+                        />
+
+                        {/* Deliverables */}
+                        <div>
+                          <label className="block text-text-primary text-sm font-medium mb-2">
+                            Deliverables
+                          </label>
+                          <div className="space-y-2">
+                            {phase.deliverables.map((deliverable, dIndex) => (
+                              <div key={deliverable.id} className="flex gap-2">
+                                <Input
+                                  value={deliverable.name}
+                                  onChange={(e) => updateDeliverable(phaseIndex, dIndex, e.target.value)}
+                                  placeholder="Deliverable name"
+                                />
+                                <button
+                                  onClick={() => removeDeliverable(phaseIndex, dIndex)}
+                                  className="px-3 text-red-400 hover:text-red-300"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            ))}
+                            <button
+                              onClick={() => addDeliverable(phaseIndex)}
+                              className="text-radiance-gold hover:text-radiance-amber text-sm"
+                            >
+                              + Add Deliverable
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Objectives */}
+                        <div>
+                          <label className="block text-text-primary text-sm font-medium mb-2">
+                            Objectives
+                          </label>
+                          <div className="space-y-2">
+                            {phase.objectives.map((objective, oIndex) => (
+                              <div key={oIndex} className="flex gap-2">
+                                <Input
+                                  value={objective}
+                                  onChange={(e) => updateListItem(phaseIndex, 'objectives', oIndex, e.target.value)}
+                                  placeholder="Objective"
+                                />
+                                <button
+                                  onClick={() => removeListItem(phaseIndex, 'objectives', oIndex)}
+                                  className="px-3 text-red-400 hover:text-red-300"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            ))}
+                            <button
+                              onClick={() => addListItem(phaseIndex, 'objectives')}
+                              className="text-radiance-gold hover:text-radiance-amber text-sm"
+                            >
+                              + Add Objective
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  <Button variant="outline" onClick={addPhase}>
+                    + Add Phase
+                  </Button>
+                </div>
+              )}
+
+              {/* Milestones Tab */}
+              {activeTab === 'milestones' && (
+                <div className="space-y-6">
+                  {milestones.map((milestone, index) => (
+                    <div
+                      key={index}
+                      className="p-6 bg-depth-elevated border border-depth-border rounded-xl"
+                    >
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-lg font-semibold text-text-primary">
+                          Milestone {index + 1}
+                        </h4>
+                        {milestones.length > 1 && (
+                          <button
+                            onClick={() => removeMilestone(index)}
+                            className="text-red-400 hover:text-red-300 text-sm"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Input
+                          label="Milestone Name"
+                          required
+                          value={milestone.milestone_name}
+                          onChange={(e) => updateMilestone(index, 'milestone_name', e.target.value)}
+                        />
+                        <Input
+                          label="Amount"
+                          type="number"
+                          min="0"
+                          value={milestone.amount}
+                          onChange={(e) => updateMilestone(index, 'amount', e.target.value)}
+                        />
+                        <Input
+                          label="Due Date"
+                          type="date"
+                          value={milestone.due_date}
+                          onChange={(e) => updateMilestone(index, 'due_date', e.target.value)}
+                        />
+                        <div>
+                          <label className="block text-text-primary text-sm font-medium mb-2">
+                            Related Phase
+                          </label>
+                          <select
+                            value={milestone.phase_index}
+                            onChange={(e) => updateMilestone(index, 'phase_index', parseInt(e.target.value))}
+                            className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary focus:border-radiance-gold focus:outline-none"
+                          >
+                            {phases.map((phase, pIndex) => (
+                              <option key={pIndex} value={pIndex}>
+                                {phase.phase_name || `Phase ${pIndex + 1}`}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="md:col-span-2">
+                          <Textarea
+                            label="Description"
+                            rows={2}
+                            value={milestone.description}
+                            onChange={(e) => updateMilestone(index, 'description', e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  <Button variant="outline" onClick={addMilestone}>
+                    + Add Milestone
+                  </Button>
+                </div>
+              )}
+
+              {/* Agreement Tab */}
+              {activeTab === 'agreement' && (
+                <div>
+                  <h3 className="text-lg font-semibold text-text-primary mb-4">Agreement Terms</h3>
+                  <p className="text-text-muted text-sm mb-4">
+                    This agreement will be presented to the client for signing. Supports markdown formatting.
+                  </p>
+                  <Textarea
+                    rows={20}
+                    value={agreementText}
+                    onChange={(e) => setAgreementText(e.target.value)}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </Container>
+      </div>
+    </div>
+  );
+}
+
+export default function AdminNewProposalPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen">
+        <AdminHeader title="New Proposal" subtitle="Loading..." />
+        <Container size="wide" className="py-12">
+          <div className="text-center text-text-muted">Loading...</div>
+        </Container>
+      </div>
+    }>
+      <NewProposalContent />
+    </Suspense>
+  );
+}
