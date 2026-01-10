@@ -3,11 +3,11 @@
  * Light Brand Consulting
  *
  * Protected layout for admin pages with sidebar navigation
+ * 
+ * TEMPORARY: Authentication is completely bypassed
+ * TODO: Re-enable when Supabase auth is configured
  */
 
-import { redirect } from 'next/navigation';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import AdminLayoutClient from './AdminLayoutClient';
 
 export default async function AdminLayout({
@@ -18,16 +18,7 @@ export default async function AdminLayout({
   // TEMPORARILY BYPASS ALL AUTHENTICATION
   // TODO: Remove this bypass when Supabase auth is configured
   // Authentication is completely bypassed until proper Supabase auth is implemented
-  const bypassAuth = true;
+  // No session checking, no redirects - just render the admin layout
   
-  if (!bypassAuth) {
-    const session = await getServerSession(authOptions);
-
-    // Redirect to login if not authenticated
-    if (!session) {
-      redirect('/admin/login');
-    }
-  }
-
   return <AdminLayoutClient>{children}</AdminLayoutClient>;
 }
