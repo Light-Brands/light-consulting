@@ -11,6 +11,7 @@ import { Service, Testimonial, NavItem, IntakeQuestion } from '../types';
 export const NAV_ITEMS: NavItem[] = [
   { key: 'home', label: 'Home', href: '/' },
   { key: 'services', label: 'Services', href: '/services' },
+  { key: 'portfolio', label: 'Portfolio', href: '/portfolio' },
   { key: 'about', label: 'About', href: '/about' },
   { key: 'insights', label: 'Insights', href: '/insights' },
   { key: 'contact', label: 'Contact', href: '/contact' },

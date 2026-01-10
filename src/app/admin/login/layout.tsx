@@ -1,0 +1,18 @@
+/**
+ * Admin Login Layout
+ * Light Brand Consulting
+ *
+ * Separate layout for login page (no sidebar)
+ */
+
+'use client';
+
+import { SessionProvider } from 'next-auth/react';
+
+export default function AdminLoginLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <SessionProvider>{children}</SessionProvider>;
+}

@@ -35,6 +35,7 @@ export type PageKey =
   | 'services/strategy'
   | 'services/heroes'
   | 'about'
+  | 'portfolio'
   | 'book'
   | 'insights'
   | 'insights/labor-arbitrage'
