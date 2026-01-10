@@ -8,6 +8,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/admin';
+import { Container } from '@/components/ui';
 import type { Project } from '@/types/database';
 
 interface Stats {
@@ -103,33 +104,72 @@ export default function AdminDashboard() {
         subtitle="Welcome to Light Brand Consulting Admin"
       />
 
-      <div className="p-8">
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="py-8 md:py-12 relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+        
+        <Container size="wide" className="relative z-10">
+          {/* Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {statCards.map((stat) => (
             <div
               key={stat.label}
-              className="bg-depth-surface border border-depth-border rounded-xl p-6"
+              className="relative bg-depth-surface border border-depth-border rounded-2xl p-6 overflow-hidden group hover:border-radiance-gold/30 transition-all duration-500"
             >
-              <div className="flex items-center justify-between mb-4">
-                <div className={`p-3 rounded-lg bg-${stat.color}/10 text-${stat.color}`}>
-                  {stat.icon}
+              {/* Subtle glow on hover */}
+              <div className="absolute inset-0 bg-radial-gradient from-radiance-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              
+              {/* Subtle pattern */}
+              <div
+                className="absolute inset-0 opacity-[0.02] pointer-events-none"
+                style={{
+                  backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                  backgroundSize: '24px 24px',
+                }}
+              />
+              
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`p-3 rounded-lg bg-${stat.color}/10 text-${stat.color} group-hover:scale-110 transition-transform duration-300`}>
+                    {stat.icon}
+                  </div>
+                  <div className="text-[8px] font-mono text-text-muted uppercase tracking-wider">
+                    {stat.label.toUpperCase().replace(' ', '_')}
+                  </div>
                 </div>
+                <p className="text-3xl font-bold text-text-primary mb-1 group-hover:text-radiance-gold transition-colors">
+                  {isLoading ? '-' : stat.value}
+                </p>
+                <p className="text-text-muted text-sm">{stat.label}</p>
               </div>
-              <p className="text-3xl font-bold text-text-primary mb-1">
-                {isLoading ? '-' : stat.value}
-              </p>
-              <p className="text-text-muted text-sm">{stat.label}</p>
             </div>
           ))}
-        </div>
+          </div>
 
-        {/* Recent Projects */}
-        <div className="bg-depth-surface border border-depth-border rounded-xl">
-          <div className="p-6 border-b border-depth-border flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-text-primary">
-              Recent Projects
-            </h2>
+          {/* Recent Projects */}
+          <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+            {/* Subtle pattern */}
+            <div
+              className="absolute inset-0 opacity-[0.015] pointer-events-none"
+              style={{
+                backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                backgroundSize: '32px 32px',
+              }}
+            />
+            
+            <div className="relative z-10">
+              <div className="p-6 border-b border-depth-border flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
+                    <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
+                      Portfolio::Recent_Projects
+                    </span>
+                  </div>
+                  <h2 className="text-lg font-semibold text-text-primary">
+                    Recent Projects
+                  </h2>
+                </div>
             <Link
               href="/admin/projects"
               className="text-radiance-gold text-sm hover:text-radiance-amber transition-colors"
@@ -222,44 +262,76 @@ export default function AdminDashboard() {
               ))
             )}
           </div>
-        </div>
+            </div>
+          </div>
 
-        {/* Quick Actions */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Link
-            href="/admin/projects/new"
-            className="p-6 bg-depth-surface border border-depth-border rounded-xl hover:border-radiance-gold/30 transition-all group"
-          >
-            <div className="flex items-center gap-4">
-              <div className="p-4 rounded-xl bg-radiance-gold/10 text-radiance-gold group-hover:bg-radiance-gold group-hover:text-depth-base transition-all">
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
-                </svg>
+          {/* Quick Actions */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Link
+              href="/admin/projects/new"
+              className="relative p-6 bg-depth-surface border border-depth-border rounded-2xl hover:border-radiance-gold/30 transition-all group overflow-hidden"
+            >
+              {/* Hover glow */}
+              <div className="absolute inset-0 bg-radial-gradient from-radiance-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              
+              {/* Subtle pattern */}
+              <div
+                className="absolute inset-0 opacity-[0.02] pointer-events-none"
+                style={{
+                  backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                  backgroundSize: '24px 24px',
+                }}
+              />
+              
+              <div className="relative z-10 flex items-center gap-4">
+                <div className="p-4 rounded-xl bg-radiance-gold/10 text-radiance-gold group-hover:bg-radiance-gold group-hover:text-depth-base transition-all group-hover:scale-110 group-hover:shadow-illumination">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                  </svg>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[8px] font-mono text-text-muted uppercase tracking-wider">ACTION</span>
+                  </div>
+                  <p className="font-semibold text-text-primary group-hover:text-radiance-gold transition-colors">Add New Project</p>
+                  <p className="text-sm text-text-muted">Create a new portfolio project</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-text-primary">Add New Project</p>
-                <p className="text-sm text-text-muted">Create a new portfolio project</p>
+            </Link>
+            <Link
+              href="/portfolio"
+              target="_blank"
+              className="relative p-6 bg-depth-surface border border-depth-border rounded-2xl hover:border-radiance-gold/30 transition-all group overflow-hidden"
+            >
+              {/* Hover glow */}
+              <div className="absolute inset-0 bg-radial-gradient from-wisdom-violet/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              
+              {/* Subtle pattern */}
+              <div
+                className="absolute inset-0 opacity-[0.02] pointer-events-none"
+                style={{
+                  backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                  backgroundSize: '24px 24px',
+                }}
+              />
+              
+              <div className="relative z-10 flex items-center gap-4">
+                <div className="p-4 rounded-xl bg-wisdom-violet/10 text-wisdom-violet group-hover:bg-wisdom-violet group-hover:text-white transition-all group-hover:scale-110 group-hover:shadow-illumination">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[8px] font-mono text-text-muted uppercase tracking-wider">EXTERNAL</span>
+                  </div>
+                  <p className="font-semibold text-text-primary group-hover:text-wisdom-violet transition-colors">View Portfolio</p>
+                  <p className="text-sm text-text-muted">Open the public portfolio page</p>
+                </div>
               </div>
-            </div>
-          </Link>
-          <Link
-            href="/portfolio"
-            target="_blank"
-            className="p-6 bg-depth-surface border border-depth-border rounded-xl hover:border-radiance-gold/30 transition-all group"
-          >
-            <div className="flex items-center gap-4">
-              <div className="p-4 rounded-xl bg-wisdom-violet/10 text-wisdom-violet group-hover:bg-wisdom-violet group-hover:text-white transition-all">
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </div>
-              <div>
-                <p className="font-semibold text-text-primary">View Portfolio</p>
-                <p className="text-sm text-text-muted">Open the public portfolio page</p>
-              </div>
-            </div>
-          </Link>
-        </div>
+            </Link>
+          </div>
+        </Container>
       </div>
     </div>
   );

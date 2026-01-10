@@ -25,6 +25,10 @@ export const NavigationWrapper: React.FC = () => {
       const subpage = pathname.split('/')[2];
       return `insights/${subpage}` as PageKey;
     }
+    if (pathname.startsWith('/portfolio/')) {
+      // Portfolio project detail pages should highlight portfolio nav
+      return 'portfolio' as PageKey;
+    }
     // Remove leading slash and return as PageKey
     return pathname.slice(1) as PageKey;
   };

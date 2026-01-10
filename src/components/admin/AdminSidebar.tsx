@@ -42,23 +42,38 @@ export const AdminSidebar: React.FC = () => {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 min-h-screen bg-depth-surface border-r border-depth-border">
+    <aside className="relative w-64 min-h-screen bg-depth-surface border-r border-depth-border flex flex-col overflow-hidden">
+      {/* Subtle background pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.015] pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
+        }}
+      />
+      
       {/* Logo */}
-      <div className="p-6 border-b border-depth-border">
-        <Link href="/admin" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center shadow-illumination">
+      <div className="relative z-10 p-6 border-b border-depth-border">
+        <Link href="/admin" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center shadow-illumination group-hover:shadow-illumination-intense transition-all group-hover:scale-105">
             <span className="text-depth-base font-bold text-sm">LB</span>
           </div>
           <div>
             <span className="text-text-primary font-semibold block">Light Brand</span>
-            <span className="text-text-muted text-xs">Admin Panel</span>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <div className="w-1 h-1 rounded-full bg-radiance-gold/50 animate-pulse" />
+              <span className="text-text-muted text-xs font-mono">ADMIN</span>
+            </div>
           </div>
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="p-4">
-        <ul className="space-y-1">
+      <nav className="relative z-10 flex-1 p-4">
+        <div className="mb-4 px-4">
+          <span className="text-[8px] font-mono text-text-muted uppercase tracking-wider">Navigation</span>
+        </div>
+        <ul className="space-y-2">
           {navItems.map((item) => {
             const isActive = pathname === item.href ||
               (item.href !== '/admin' && pathname.startsWith(item.href));
@@ -68,14 +83,26 @@ export const AdminSidebar: React.FC = () => {
                 <Link
                   href={item.href}
                   className={cn(
-                    'flex items-center gap-3 px-4 py-3 rounded-lg transition-all',
+                    'relative flex items-center gap-3 px-4 py-3 rounded-lg transition-all group/nav overflow-hidden',
                     isActive
                       ? 'bg-radiance-gold/10 text-radiance-gold border border-radiance-gold/20'
                       : 'text-text-secondary hover:text-text-primary hover:bg-depth-elevated'
                   )}
                 >
-                  {item.icon}
-                  <span className="font-medium">{item.label}</span>
+                  {/* Hover glow effect */}
+                  <div className={cn(
+                    'absolute inset-0 bg-radial-gradient from-radiance-gold/5 to-transparent opacity-0 group-hover/nav:opacity-100 transition-opacity duration-500 pointer-events-none',
+                    isActive && 'opacity-100'
+                  )} />
+                  
+                  <div className="relative z-10 flex items-center gap-3">
+                    {item.icon}
+                    <span className="font-medium text-sm">{item.label}</span>
+                  </div>
+                  
+                  {isActive && (
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-radiance-gold animate-pulse" />
+                  )}
                 </Link>
               </li>
             );
@@ -84,7 +111,7 @@ export const AdminSidebar: React.FC = () => {
       </nav>
 
       {/* Footer */}
-      <div className="absolute bottom-0 left-0 w-64 p-4 border-t border-depth-border">
+      <div className="p-4 border-t border-depth-border">
         <button
           onClick={() => signOut({ callbackUrl: '/admin/login' })}
           className="flex items-center gap-3 w-full px-4 py-3 text-text-secondary hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
@@ -92,7 +119,7 @@ export const AdminSidebar: React.FC = () => {
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
-          <span className="font-medium">Logout</span>
+          <span className="font-medium text-sm">Logout</span>
         </button>
       </div>
     </aside>

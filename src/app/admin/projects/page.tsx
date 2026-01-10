@@ -8,6 +8,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/admin';
+import { Container } from '@/components/ui';
 import Button from '@/components/Button';
 import type { Project } from '@/types/database';
 
@@ -83,16 +84,37 @@ export default function AdminProjectsPage() {
         }
       />
 
-      <div className="p-8">
-        {/* Projects Table */}
-        <div className="bg-depth-surface border border-depth-border rounded-xl overflow-hidden">
+      <div className="py-8 md:py-12 relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+        
+        <Container size="wide" className="relative z-10">
+          {/* Projects Table */}
+          <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+            {/* Subtle pattern */}
+            <div
+              className="absolute inset-0 opacity-[0.015] pointer-events-none"
+              style={{
+                backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                backgroundSize: '32px 32px',
+              }}
+            />
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-depth-elevated">
-                <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
-                    ID
-                  </th>
+            <div className="relative z-10">
+              <div className="p-6 border-b border-depth-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
+                  <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
+                    Database::Projects_Table
+                  </span>
+                </div>
+              </div>
+              <table className="w-full">
+                <thead className="bg-depth-elevated">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
+                      ID
+                    </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
                     Title
                   </th>
@@ -231,13 +253,14 @@ export default function AdminProjectsPage() {
                 )}
               </tbody>
             </table>
+            </div>
           </div>
-        </div>
+          </div>
 
-        {/* Delete Modal */}
-        {deleteModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-depth-base/80 backdrop-blur-sm">
-            <div className="bg-depth-surface border border-depth-border rounded-2xl p-6 max-w-md w-full">
+            {/* Delete Modal */}
+          {deleteModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-depth-base/80 backdrop-blur-sm">
+              <div className="bg-depth-surface border border-depth-border rounded-2xl p-6 max-w-md w-full">
               <h3 className="text-lg font-semibold text-text-primary mb-2">
                 Delete Project
               </h3>
@@ -266,6 +289,7 @@ export default function AdminProjectsPage() {
             </div>
           </div>
         )}
+        </Container>
       </div>
     </div>
   );

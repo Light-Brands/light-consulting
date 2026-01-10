@@ -82,7 +82,7 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ onNavigate }) => {
     <>
       {/* Hero Section */}
       <Section className="pt-32 pb-16 md:pt-40 md:pb-20">
-        <Container>
+        <Container size="wide">
           {/* Breadcrumbs */}
           <Breadcrumbs
             items={[
@@ -141,7 +141,7 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ onNavigate }) => {
 
       {/* Projects Grid Section */}
       <Section className="pb-20 md:pb-32">
-        <Container>
+        <Container size="wide">
           {error ? (
             <motion.div
               initial={{ opacity: 0 }}
@@ -187,7 +187,7 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ onNavigate }) => {
 
       {/* CTA Section */}
       <Section className="py-20 md:py-32 bg-depth-elevated border-y border-depth-border">
-        <Container>
+        <Container size="wide">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

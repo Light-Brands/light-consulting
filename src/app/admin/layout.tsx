@@ -15,11 +15,18 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+  // Bypass authentication in development mode
+  // TODO: Remove this bypass when Supabase auth is configured
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const bypassAuth = process.env.DISABLE_ADMIN_AUTH === 'true' || isDevelopment;
+  
+  if (!bypassAuth) {
+    const session = await getServerSession(authOptions);
 
-  // Redirect to login if not authenticated
-  if (!session) {
-    redirect('/admin/login');
+    // Redirect to login if not authenticated
+    if (!session) {
+      redirect('/admin/login');
+    }
   }
 
   return <AdminLayoutClient>{children}</AdminLayoutClient>;

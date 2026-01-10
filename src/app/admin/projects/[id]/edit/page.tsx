@@ -9,6 +9,7 @@ import React, { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { AdminHeader } from '@/components/admin';
+import { Container } from '@/components/ui';
 import Button from '@/components/Button';
 import type { Project, ProjectUpdate } from '@/types/database';
 
@@ -149,9 +150,11 @@ export default function EditProjectPage({ params }: PageProps) {
     return (
       <div className="min-h-screen">
         <AdminHeader title="Edit Project" subtitle="Loading..." />
-        <div className="p-8 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-radiance-gold border-t-transparent" />
-        </div>
+        <Container size="wide">
+          <div className="py-8 md:py-12 flex items-center justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-radiance-gold border-t-transparent" />
+          </div>
+        </Container>
       </div>
     );
   }
@@ -160,14 +163,16 @@ export default function EditProjectPage({ params }: PageProps) {
     return (
       <div className="min-h-screen">
         <AdminHeader title="Edit Project" subtitle="Project not found" />
-        <div className="p-8">
-          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-6 text-center">
-            <p className="text-red-400 mb-4">Project not found or could not be loaded.</p>
-            <Button variant="primary" onClick={() => router.push('/admin/projects')}>
-              Back to Projects
-            </Button>
+        <Container size="wide">
+          <div className="py-8 md:py-12">
+            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-6 text-center">
+              <p className="text-red-400 mb-4">Project not found or could not be loaded.</p>
+              <Button variant="primary" onClick={() => router.push('/admin/projects')}>
+                Back to Projects
+              </Button>
+            </div>
           </div>
-        </div>
+        </Container>
       </div>
     );
   }
@@ -179,16 +184,18 @@ export default function EditProjectPage({ params }: PageProps) {
         subtitle={project?.title}
       />
 
-      <div className="p-8 max-w-4xl">
-        {error && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-            <p className="text-red-400">{error}</p>
-          </div>
-        )}
+      <div className="py-8 md:py-12">
+        <Container size="wide">
+          <div className="max-w-4xl mx-auto">
+            {error && (
+              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+                <p className="text-red-400">{error}</p>
+              </div>
+            )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-          {/* Basic Information */}
-          <div className="bg-depth-surface border border-depth-border rounded-xl p-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+              {/* Basic Information */}
+              <div className="bg-depth-surface border border-depth-border rounded-2xl p-6">
             <h2 className="text-lg font-semibold text-text-primary mb-6">
               Basic Information
             </h2>
@@ -259,10 +266,10 @@ export default function EditProjectPage({ params }: PageProps) {
           </div>
 
           {/* Client & Industry */}
-          <div className="bg-depth-surface border border-depth-border rounded-xl p-6">
-            <h2 className="text-lg font-semibold text-text-primary mb-6">
-              Client & Industry
-            </h2>
+              <div className="bg-depth-surface border border-depth-border rounded-2xl p-6">
+                <h2 className="text-lg font-semibold text-text-primary mb-6">
+                  Client & Industry
+                </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Client Name */}
@@ -301,8 +308,8 @@ export default function EditProjectPage({ params }: PageProps) {
           </div>
 
           {/* Tags */}
-          <div className="bg-depth-surface border border-depth-border rounded-xl p-6">
-            <h2 className="text-lg font-semibold text-text-primary mb-2">Tags</h2>
+              <div className="bg-depth-surface border border-depth-border rounded-2xl p-6">
+                <h2 className="text-lg font-semibold text-text-primary mb-2">Tags</h2>
             <p className="text-text-muted text-sm mb-4">
               Select relevant tags for this project
             </p>
@@ -332,10 +339,10 @@ export default function EditProjectPage({ params }: PageProps) {
           </div>
 
           {/* Status & Options */}
-          <div className="bg-depth-surface border border-depth-border rounded-xl p-6">
-            <h2 className="text-lg font-semibold text-text-primary mb-6">
-              Status & Options
-            </h2>
+              <div className="bg-depth-surface border border-depth-border rounded-2xl p-6">
+                <h2 className="text-lg font-semibold text-text-primary mb-6">
+                  Status & Options
+                </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Status */}
@@ -384,20 +391,22 @@ export default function EditProjectPage({ params }: PageProps) {
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex gap-4 justify-end">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => router.push('/admin/projects')}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" variant="primary" isLoading={isSubmitting}>
-              Save Changes
-            </Button>
+              {/* Actions */}
+              <div className="flex gap-4 justify-end">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => router.push('/admin/projects')}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" variant="primary" isLoading={isSubmitting}>
+                  Save Changes
+                </Button>
+              </div>
+            </form>
           </div>
-        </form>
+        </Container>
       </div>
     </div>
   );

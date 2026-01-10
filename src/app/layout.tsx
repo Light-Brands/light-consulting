@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
-import { NavigationWrapper } from "@/components/NavigationWrapper";
-import { FooterWrapper } from "@/components/FooterWrapper";
+import { ConditionalLayout } from "@/components/ConditionalLayout";
 
 export const metadata: Metadata = {
   title: "Light Brand Consulting | AI Business Transformation",
@@ -26,20 +25,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans bg-depth-base text-text-primary antialiased selection:bg-radiance-gold selection:text-depth-base">
-        <div className="flex flex-col min-h-screen">
-          {/* Navigation */}
-          <NavigationWrapper />
-
-          {/* Main Content */}
-          <main className="flex-1">{children}</main>
-
-          {/* Footer */}
-          <FooterWrapper />
-
-          {/* Global Ambient Glow Effects */}
-          <div className="fixed top-0 right-0 -z-10 w-[500px] h-[500px] bg-radiance-gold/5 blur-[150px] rounded-full pointer-events-none" />
-          <div className="fixed bottom-0 left-0 -z-10 w-[400px] h-[400px] bg-wisdom-violet/5 blur-[120px] rounded-full pointer-events-none" />
-        </div>
+        <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>
   );
