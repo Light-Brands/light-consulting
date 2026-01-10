@@ -194,10 +194,16 @@ export default function ProposalPortalPage({ params }: PageProps) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-depth-base flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-2 border-radiance-gold/20 border-t-radiance-gold rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-text-muted">Loading your proposal...</p>
+      <div className="min-h-screen bg-depth-base flex items-center justify-center relative">
+        {/* Ambient Background Effects */}
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-7xl bg-radial-gradient from-radiance-gold/5 to-transparent blur-[120px] pointer-events-none" />
+        
+        <div className="text-center relative z-10">
+          <div className="relative inline-block mb-8">
+            <div className="absolute -inset-4 bg-radiance-gold/20 blur-2xl rounded-full opacity-50 animate-pulse" />
+            <div className="relative w-16 h-16 border-2 border-radiance-gold/20 border-t-radiance-gold rounded-full animate-spin" />
+          </div>
+          <p className="text-text-secondary text-lg font-mono tracking-wider">Loading your proposal...</p>
         </div>
       </div>
     );
@@ -205,19 +211,25 @@ export default function ProposalPortalPage({ params }: PageProps) {
 
   if (error || !proposal) {
     return (
-      <div className="min-h-screen bg-depth-base flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto px-4">
-          <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-6">
-            <svg className="w-8 h-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
+      <div className="min-h-screen bg-depth-base flex items-center justify-center relative">
+        {/* Ambient Background Effects */}
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-7xl bg-radial-gradient from-red-500/5 to-transparent blur-[120px] pointer-events-none" />
+        
+        <div className="text-center max-w-xl mx-auto px-4 relative z-10">
+          <div className="relative inline-block mb-8">
+            <div className="absolute -inset-6 bg-red-500/10 blur-3xl rounded-full" />
+            <div className="relative w-20 h-20 rounded-full bg-red-500/10 border-2 border-red-500/30 flex items-center justify-center">
+              <svg className="w-10 h-10 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
           </div>
-          <h1 className="text-2xl font-bold text-text-primary mb-2">Proposal Not Found</h1>
-          <p className="text-text-muted mb-6">
+          <h1 className="text-4xl font-bold text-text-primary mb-4">Proposal Not Found</h1>
+          <p className="text-text-secondary mb-10 text-lg leading-relaxed">
             This proposal link may be invalid or expired. Please contact us if you believe this is an error.
           </p>
           <Link href="/">
-            <Button variant="primary">Return Home</Button>
+            <Button variant="primary" size="lg">Return Home</Button>
           </Link>
         </div>
       </div>
@@ -233,18 +245,30 @@ export default function ProposalPortalPage({ params }: PageProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-depth-base">
+    <div className="min-h-screen bg-depth-base relative">
+      {/* Ambient Background Effects */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl bg-radial-gradient from-radiance-gold/5 to-transparent blur-[120px] pointer-events-none" />
+      <div className="fixed bottom-0 right-0 w-96 h-96 bg-radiance-gold/3 blur-[100px] rounded-full pointer-events-none" />
+      
       {/* Header */}
-      <header className="border-b border-depth-border bg-depth-surface/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-depth-border/50 bg-depth-base/80 backdrop-blur-xl sticky top-0 z-50 relative">
+        {/* Subtle background pattern */}
+        <div 
+          className="absolute inset-0 opacity-[0.02] pointer-events-none" 
+          style={{ 
+            backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+            backgroundSize: '32px 32px' 
+          }} 
+        />
         <Container size="wide">
-          <div className="flex items-center justify-between py-4">
+          <div className="flex items-center justify-between py-5 relative z-10">
             <Link href="/" className="flex items-center gap-3 group">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center shadow-illumination group-hover:shadow-illumination-intense transition-all group-hover:scale-105">
                 <span className="text-depth-base font-bold text-sm">LB</span>
               </div>
               <div>
                 <span className="text-text-primary font-semibold block">Light Brand Consulting</span>
-                <span className="text-text-muted text-xs">Client Portal</span>
+                <span className="text-radiance-gold/80 text-xs font-mono tracking-wider">CLIENT PORTAL</span>
               </div>
             </Link>
             <div className="text-right hidden md:block">
@@ -256,30 +280,38 @@ export default function ProposalPortalPage({ params }: PageProps) {
       </header>
 
       {/* Progress Steps */}
-      <div className="border-b border-depth-border bg-depth-surface/50">
+      <div className="border-b border-depth-border/30 bg-depth-elevated/20 backdrop-blur-sm relative overflow-hidden">
+        {/* Subtle background pattern */}
+        <div 
+          className="absolute inset-0 opacity-[0.015] pointer-events-none" 
+          style={{ 
+            backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+            backgroundSize: '24px 24px' 
+          }} 
+        />
         <Container size="wide">
-          <nav className="flex overflow-x-auto">
+          <nav className="flex overflow-x-auto overflow-y-hidden relative z-10 no-scrollbar">
             {steps.map((step, index) => {
               const status = getStepStatus(step.key as PortalStep);
               return (
                 <button
                   key={step.key}
                   onClick={() => setActiveStep(step.key as PortalStep)}
-                  className={`flex items-center gap-3 px-6 py-4 border-b-2 -mb-px whitespace-nowrap transition-colors ${
+                  className={`flex items-center gap-3 px-6 py-4 border-b-2 -mb-px whitespace-nowrap transition-all ${
                     status === 'current'
                       ? 'border-radiance-gold text-radiance-gold'
                       : status === 'complete'
-                      ? 'border-transparent text-green-400 hover:text-green-300'
-                      : 'border-transparent text-text-muted hover:text-text-secondary'
+                      ? 'border-transparent text-green-400 hover:text-green-300 hover:border-green-400/30'
+                      : 'border-transparent text-text-muted hover:text-text-secondary hover:border-text-muted/20'
                   }`}
                 >
                   <span
-                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                       status === 'current'
-                        ? 'bg-radiance-gold text-depth-base'
+                        ? 'bg-radiance-gold text-depth-base shadow-md shadow-radiance-gold/20'
                         : status === 'complete'
-                        ? 'bg-green-500/20 text-green-400'
-                        : 'bg-depth-elevated text-text-muted'
+                        ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                        : 'bg-depth-elevated text-text-muted border border-depth-border'
                     }`}
                   >
                     {status === 'complete' ? (
@@ -290,7 +322,7 @@ export default function ProposalPortalPage({ params }: PageProps) {
                       index + 1
                     )}
                   </span>
-                  <span className="font-medium">{step.label}</span>
+                  <span className="font-medium text-sm">{step.label}</span>
                 </button>
               );
             })}
@@ -299,38 +331,59 @@ export default function ProposalPortalPage({ params }: PageProps) {
       </div>
 
       {/* Main Content */}
-      <main className="py-12 relative overflow-hidden">
-        {/* Background atmosphere */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
-
+      <main className="py-16 relative overflow-hidden min-h-[calc(100vh-200px)]">
         <Container size="wide" className="relative z-10">
           {/* Proposal View */}
           {activeStep === 'proposal' && (
-            <div className="max-w-4xl mx-auto space-y-8">
+            <div className="max-w-5xl mx-auto space-y-12">
               {/* Hero */}
-              <div className="text-center mb-12">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-radiance-gold/10 rounded-full text-radiance-gold text-sm font-medium mb-6">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Proposal
+              <div className="text-center mb-16 relative">
+                {/* Decorative glow */}
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-96 h-96 bg-radiance-gold/5 blur-[100px] pointer-events-none rounded-full" />
+                
+                <div className="relative z-10">
+                  <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-radiance-gold/10 border border-radiance-gold/20 rounded-full text-radiance-gold text-sm font-medium mb-8 backdrop-blur-sm">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span className="font-mono tracking-wider uppercase text-xs">Proposal</span>
+                  </div>
+                  <h1 className="text-5xl md:text-6xl font-bold text-text-primary mb-6 tracking-tight leading-tight">
+                    {proposal.project_name}
+                  </h1>
+                  <p className="text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
+                    Prepared exclusively for <span className="text-radiance-gold font-medium">{proposal.client_name}</span>
+                    {proposal.client_company && <span className="text-text-muted"> at {proposal.client_company}</span>}
+                  </p>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-                  {proposal.project_name}
-                </h1>
-                <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-                  Prepared exclusively for {proposal.client_name}
-                  {proposal.client_company && ` at ${proposal.client_company}`}
-                </p>
               </div>
 
               {/* Overview */}
               {proposal.project_overview && (
-                <div className="bg-depth-surface border border-depth-border rounded-2xl p-8">
-                  <h2 className="text-2xl font-bold text-text-primary mb-6">Project Overview</h2>
-                  <div className="prose prose-invert max-w-none">
-                    <div className="whitespace-pre-wrap text-text-secondary leading-relaxed">
-                      {proposal.project_overview}
+                <div className="relative group">
+                  {/* Decorative glow on hover */}
+                  <div className="absolute -inset-4 bg-gradient-to-b from-radiance-gold/5 to-transparent blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  
+                  <div className="relative bg-depth-elevated/30 border border-depth-border rounded-3xl p-10 backdrop-blur-sm overflow-hidden">
+                    {/* Blueprint pattern */}
+                    <div 
+                      className="absolute inset-0 opacity-[0.02] pointer-events-none" 
+                      style={{ 
+                        backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+                        backgroundSize: '24px 24px' 
+                      }} 
+                    />
+                    
+                    <div className="relative z-10">
+                      <h2 className="text-3xl font-bold text-text-primary mb-8 flex items-center gap-3">
+                        <span className="w-1.5 h-8 bg-radiance-gold rounded-full" />
+                        Project Overview
+                      </h2>
+                      <div className="prose prose-invert max-w-none">
+                        <div className="whitespace-pre-wrap text-text-secondary leading-relaxed text-lg">
+                          {proposal.project_overview}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -338,57 +391,73 @@ export default function ProposalPortalPage({ params }: PageProps) {
 
               {/* Phases */}
               {proposal.phases.length > 0 && (
-                <div className="space-y-6">
-                  <h2 className="text-2xl font-bold text-text-primary">Project Phases</h2>
-                  {proposal.phases.map((phase) => (
+                <div className="space-y-8">
+                  <h2 className="text-3xl font-bold text-text-primary flex items-center gap-3">
+                    <span className="w-1.5 h-8 bg-radiance-gold rounded-full" />
+                    Project Phases
+                  </h2>
+                  {proposal.phases.map((phase, phaseIndex) => (
                     <div
                       key={phase.id}
-                      className="bg-depth-surface border border-depth-border rounded-2xl p-8 relative overflow-hidden"
+                      className="relative group"
                     >
-                      <div
-                        className="absolute inset-0 opacity-[0.02] pointer-events-none"
-                        style={{
-                          backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
-                          backgroundSize: '32px 32px',
-                        }}
-                      />
-                      <div className="relative z-10">
-                        <div className="flex items-start justify-between mb-4">
+                      {/* Decorative glow on hover */}
+                      <div className="absolute -inset-4 bg-gradient-to-b from-radiance-gold/5 to-transparent blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                      
+                      <div className="relative bg-depth-elevated/30 border border-depth-border rounded-3xl p-10 backdrop-blur-sm overflow-hidden hover:border-depth-border/60 transition-all duration-500">
+                        {/* Blueprint pattern */}
+                        <div
+                          className="absolute inset-0 opacity-[0.02] pointer-events-none"
+                          style={{
+                            backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                            backgroundSize: '24px 24px',
+                          }}
+                        />
+                        <div className="relative z-10">
+                        <div className="flex items-start justify-between mb-6">
                           <div>
-                            <span className="text-radiance-gold text-sm font-mono uppercase tracking-wider">
-                              Phase {phase.phase_number}
-                            </span>
-                            <h3 className="text-xl font-bold text-text-primary mt-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <span className="w-8 h-8 rounded-full bg-radiance-gold/20 border border-radiance-gold/40 flex items-center justify-center text-radiance-gold text-sm font-bold">
+                                {phase.phase_number}
+                              </span>
+                              <span className="text-radiance-gold text-xs font-mono uppercase tracking-widest">
+                                Phase {phase.phase_number}
+                              </span>
+                            </div>
+                            <h3 className="text-2xl font-bold text-text-primary mt-2">
                               {phase.phase_name}
                             </h3>
                             {phase.timeline && (
-                              <p className="text-text-muted text-sm mt-1">{phase.timeline}</p>
+                              <p className="text-text-muted text-sm mt-2 font-mono">{phase.timeline}</p>
                             )}
                           </div>
                           <div className="text-right">
-                            <p className="text-2xl font-bold text-radiance-gold">
+                            <div className="text-xs text-text-muted font-mono mb-1">INVESTMENT</div>
+                            <p className="text-3xl font-bold text-radiance-gold">
                               {formatCurrency(phase.amount)}
                             </p>
                           </div>
                         </div>
 
                         {phase.description && (
-                          <p className="text-text-secondary mb-6">{phase.description}</p>
+                          <p className="text-text-secondary mb-8 text-lg leading-relaxed border-l-2 border-radiance-gold/20 pl-6 py-2">
+                            {phase.description}
+                          </p>
                         )}
 
                         {phase.deliverables && phase.deliverables.length > 0 && (
-                          <div className="mb-6">
-                            <h4 className="text-text-primary font-semibold mb-3">Deliverables</h4>
-                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          <div className="mb-8 bg-depth-base/30 rounded-2xl p-6 border border-depth-border/50">
+                            <h4 className="text-text-primary font-semibold mb-4 text-sm uppercase tracking-wider text-radiance-gold/80">Deliverables</h4>
+                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                               {phase.deliverables.map((d) => (
                                 <li
                                   key={d.id}
-                                  className="flex items-center gap-2 text-text-secondary"
+                                  className="flex items-center gap-3 text-text-secondary"
                                 >
                                   <svg className="w-5 h-5 text-radiance-gold flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                   </svg>
-                                  {d.name}
+                                  <span className="text-base">{d.name}</span>
                                 </li>
                               ))}
                             </ul>
@@ -396,18 +465,19 @@ export default function ProposalPortalPage({ params }: PageProps) {
                         )}
 
                         {phase.objectives && phase.objectives.length > 0 && (
-                          <div>
-                            <h4 className="text-text-primary font-semibold mb-3">Objectives</h4>
-                            <ul className="space-y-2">
+                          <div className="bg-depth-base/30 rounded-2xl p-6 border border-depth-border/50">
+                            <h4 className="text-text-primary font-semibold mb-4 text-sm uppercase tracking-wider text-radiance-gold/80">Objectives</h4>
+                            <ul className="space-y-3">
                               {phase.objectives.map((obj, i) => (
-                                <li key={i} className="flex items-start gap-2 text-text-secondary">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-radiance-gold mt-2 flex-shrink-0" />
-                                  {obj}
+                                <li key={i} className="flex items-start gap-3 text-text-secondary">
+                                  <span className="w-2 h-2 rounded-full bg-radiance-gold mt-2 flex-shrink-0" />
+                                  <span className="text-base leading-relaxed">{obj}</span>
                                 </li>
                               ))}
                             </ul>
                           </div>
                         )}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -415,125 +485,193 @@ export default function ProposalPortalPage({ params }: PageProps) {
               )}
 
               {/* Pricing Summary */}
-              <div className="bg-gradient-to-br from-radiance-gold/10 to-radiance-amber/5 border border-radiance-gold/20 rounded-2xl p-8">
-                <h2 className="text-2xl font-bold text-text-primary mb-6">Investment Summary</h2>
-                <div className="space-y-4">
-                  <div className="flex justify-between text-lg">
-                    <span className="text-text-secondary">Total Investment</span>
-                    <span className="text-text-primary">{formatCurrency(proposal.total_amount)}</span>
-                  </div>
-                  {proposal.discount_percentage > 0 && (
-                    <div className="flex justify-between text-lg">
-                      <span className="text-text-secondary">Discount ({proposal.discount_percentage}%)</span>
-                      <span className="text-red-400">
-                        -{formatCurrency(proposal.total_amount * proposal.discount_percentage / 100)}
-                      </span>
+              <div className="relative group">
+                {/* Decorative glow */}
+                <div className="absolute -inset-6 bg-gradient-to-b from-radiance-gold/10 to-transparent blur-3xl rounded-3xl opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
+                
+                <div className="relative bg-gradient-to-br from-radiance-gold/15 to-radiance-amber/5 border border-radiance-gold/30 rounded-3xl p-10 backdrop-blur-md overflow-hidden">
+                  {/* Blueprint pattern */}
+                  <div 
+                    className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+                    style={{ 
+                      backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+                      backgroundSize: '32px 32px' 
+                    }} 
+                  />
+                  
+                  <div className="relative z-10">
+                    <h2 className="text-3xl font-bold text-text-primary mb-8 flex items-center gap-3">
+                      <span className="w-1.5 h-10 bg-radiance-gold rounded-full" />
+                      Investment Summary
+                    </h2>
+                    <div className="space-y-6">
+                      <div className="flex justify-between text-lg items-center">
+                        <span className="text-text-secondary font-medium">Total Investment</span>
+                        <span className="text-text-primary font-semibold text-xl">{formatCurrency(proposal.total_amount)}</span>
+                      </div>
+                      {proposal.discount_percentage > 0 && (
+                        <div className="flex justify-between text-lg items-center">
+                          <span className="text-text-secondary font-medium">Discount ({proposal.discount_percentage}%)</span>
+                          <span className="text-green-400 font-semibold text-xl">
+                            -{formatCurrency(proposal.total_amount * proposal.discount_percentage / 100)}
+                          </span>
+                        </div>
+                      )}
+                      <div className="pt-6 border-t border-radiance-gold/30">
+                        <div className="flex justify-between items-end">
+                          <div>
+                            <span className="text-xs font-mono text-radiance-gold/80 uppercase tracking-wider block mb-2">Final Investment</span>
+                            <span className="text-2xl font-bold text-text-primary">Total Project Value</span>
+                          </div>
+                          <span className="text-5xl font-bold text-radiance-gold">
+                            {formatCurrency(proposal.final_amount)}
+                          </span>
+                        </div>
+                        {proposal.total_timeline && (
+                          <p className="text-text-muted mt-4 font-mono text-sm">Timeline: {proposal.total_timeline}</p>
+                        )}
+                      </div>
                     </div>
-                  )}
-                  <div className="pt-4 border-t border-radiance-gold/20">
-                    <div className="flex justify-between">
-                      <span className="text-xl font-bold text-text-primary">Final Investment</span>
-                      <span className="text-3xl font-bold text-radiance-gold">
-                        {formatCurrency(proposal.final_amount)}
-                      </span>
-                    </div>
-                    {proposal.total_timeline && (
-                      <p className="text-text-muted mt-2">Timeline: {proposal.total_timeline}</p>
-                    )}
                   </div>
                 </div>
               </div>
 
               {/* Accept Button */}
-              <div className="text-center">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  onClick={() => setActiveStep('agreement')}
-                >
-                  Accept Proposal & Sign Agreement
-                </Button>
+              <div className="text-center pt-8">
+                <div className="relative inline-block group">
+                  <div className="absolute -inset-2 bg-radiance-gold/20 blur-xl rounded-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={() => setActiveStep('agreement')}
+                    className="relative"
+                  >
+                    Accept Proposal & Sign Agreement
+                  </Button>
+                </div>
               </div>
             </div>
           )}
 
           {/* Agreement */}
           {activeStep === 'agreement' && (
-            <div className="max-w-3xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               {proposal.agreement?.status === 'signed' ? (
-                <div className="bg-depth-surface border border-depth-border rounded-2xl p-8 text-center">
-                  <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-6">
-                    <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                <div className="space-y-8">
+                  <div className="text-center mb-12">
+                    <h2 className="text-4xl font-bold text-text-primary mb-4">Consulting Agreement</h2>
+                    <p className="text-text-secondary text-lg">
+                      Agreement Status
+                    </p>
                   </div>
-                  <h2 className="text-2xl font-bold text-text-primary mb-2">Agreement Signed</h2>
-                  <p className="text-text-muted mb-4">
-                    Signed by {proposal.agreement.signed_by_name} on{' '}
-                    {formatDate(proposal.agreement.signed_at)}
-                  </p>
-                  <Button variant="outline" onClick={() => setActiveStep('billing')}>
-                    Continue to Billing
-                  </Button>
+
+                  <div className="relative group">
+                    <div className="absolute -inset-4 bg-green-500/10 blur-3xl rounded-3xl opacity-60" />
+                    <div className="relative bg-depth-elevated/30 border border-green-500/30 rounded-3xl p-12 text-center backdrop-blur-sm">
+                      <div className="w-20 h-20 rounded-full bg-green-500/10 border-2 border-green-500/30 flex items-center justify-center mx-auto mb-8">
+                        <svg className="w-10 h-10 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <h3 className="text-3xl font-bold text-text-primary mb-3">Agreement Signed</h3>
+                      <p className="text-text-secondary mb-8 text-lg">
+                        Signed by <span className="text-green-400 font-medium">{proposal.agreement.signed_by_name}</span> on{' '}
+                        {formatDate(proposal.agreement.signed_at)}
+                      </p>
+                      <Button variant="outline" onClick={() => setActiveStep('billing')} size="lg">
+                        Continue to Billing →
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               ) : (
-                <div className="space-y-6">
-                  <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold text-text-primary mb-2">Consulting Agreement</h2>
-                    <p className="text-text-muted">
+                <div className="space-y-8">
+                  <div className="text-center mb-12">
+                    <h2 className="text-4xl font-bold text-text-primary mb-4">Consulting Agreement</h2>
+                    <p className="text-text-secondary text-lg">
                       Please review and sign the agreement below to proceed
                     </p>
                   </div>
 
                   {/* Agreement Text */}
-                  <div className="bg-depth-surface border border-depth-border rounded-2xl p-8 max-h-96 overflow-y-auto">
-                    <div className="prose prose-invert max-w-none">
-                      <div className="whitespace-pre-wrap text-text-secondary text-sm">
-                        {proposal.agreement?.agreement_text}
+                  <div className="relative group">
+                    <div className="absolute -inset-4 bg-radiance-gold/5 blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    <div className="relative bg-depth-elevated/30 border border-depth-border rounded-3xl p-10 max-h-[32rem] overflow-y-auto backdrop-blur-sm">
+                      {/* Blueprint pattern */}
+                      <div 
+                        className="absolute inset-0 opacity-[0.015] pointer-events-none" 
+                        style={{ 
+                          backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+                          backgroundSize: '24px 24px' 
+                        }} 
+                      />
+                      <div className="prose prose-invert max-w-none relative z-10">
+                        <div className="whitespace-pre-wrap text-text-secondary leading-relaxed">
+                          {proposal.agreement?.agreement_text}
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Signature Form */}
-                  <div className="bg-depth-surface border border-depth-border rounded-2xl p-8">
-                    <h3 className="text-lg font-bold text-text-primary mb-6">Electronic Signature</h3>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-text-primary text-sm font-medium mb-2">
-                          Full Name <span className="text-red-400">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          value={signatureName}
-                          onChange={(e) => setSignatureName(e.target.value)}
-                          placeholder="Type your full legal name"
-                          className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none"
-                        />
+                  <div className="relative group">
+                    <div className="absolute -inset-4 bg-radiance-gold/5 blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    <div className="relative bg-depth-elevated/30 border border-depth-border rounded-3xl p-10 backdrop-blur-sm overflow-hidden">
+                      {/* Blueprint pattern */}
+                      <div 
+                        className="absolute inset-0 opacity-[0.02] pointer-events-none" 
+                        style={{ 
+                          backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+                          backgroundSize: '24px 24px' 
+                        }} 
+                      />
+                      <div className="relative z-10">
+                        <h3 className="text-2xl font-bold text-text-primary mb-8 flex items-center gap-3">
+                          <span className="w-1.5 h-7 bg-radiance-gold rounded-full" />
+                          Electronic Signature
+                        </h3>
+                        <div className="space-y-6">
+                          <div>
+                            <label className="block text-text-primary font-medium mb-3">
+                              Full Name <span className="text-red-400">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              value={signatureName}
+                              onChange={(e) => setSignatureName(e.target.value)}
+                              placeholder="Type your full legal name"
+                              className="w-full bg-depth-base border border-depth-border rounded-xl px-5 py-4 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none transition-colors text-lg"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-text-primary font-medium mb-3">
+                              Email <span className="text-red-400">*</span>
+                            </label>
+                            <input
+                              type="email"
+                              value={signatureEmail}
+                              onChange={(e) => setSignatureEmail(e.target.value)}
+                              placeholder="Your email address"
+                              className="w-full bg-depth-base border border-depth-border rounded-xl px-5 py-4 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none transition-colors text-lg"
+                            />
+                          </div>
+                          <div className="bg-radiance-gold/5 border border-radiance-gold/20 rounded-xl p-5">
+                            <p className="text-text-secondary text-sm leading-relaxed">
+                              By clicking &quot;Sign Agreement&quot;, you agree to the terms and conditions outlined in this consulting agreement.
+                            </p>
+                          </div>
+                          <Button
+                            variant="primary"
+                            fullWidth
+                            onClick={handleSignAgreement}
+                            isLoading={isSigning}
+                            disabled={!signatureName || !signatureEmail}
+                            size="lg"
+                          >
+                            Sign Agreement
+                          </Button>
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-text-primary text-sm font-medium mb-2">
-                          Email <span className="text-red-400">*</span>
-                        </label>
-                        <input
-                          type="email"
-                          value={signatureEmail}
-                          onChange={(e) => setSignatureEmail(e.target.value)}
-                          placeholder="Your email address"
-                          className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none"
-                        />
-                      </div>
-                      <p className="text-text-muted text-sm">
-                        By clicking &quot;Sign Agreement&quot;, you agree to the terms and conditions outlined in this consulting agreement.
-                      </p>
-                      <Button
-                        variant="primary"
-                        fullWidth
-                        onClick={handleSignAgreement}
-                        isLoading={isSigning}
-                        disabled={!signatureName || !signatureEmail}
-                      >
-                        Sign Agreement
-                      </Button>
                     </div>
                   </div>
                 </div>
@@ -543,73 +681,89 @@ export default function ProposalPortalPage({ params }: PageProps) {
 
           {/* Billing */}
           {activeStep === 'billing' && (
-            <div className="max-w-3xl mx-auto space-y-6">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-text-primary mb-2">Billing & Payments</h2>
-                <p className="text-text-muted">
+            <div className="max-w-5xl mx-auto space-y-10">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-bold text-text-primary mb-4">Billing & Payments</h2>
+                <p className="text-text-secondary text-lg">
                   View your payment milestones and schedule
                 </p>
               </div>
 
               {/* Milestones */}
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {proposal.milestones.map((milestone, index) => (
                   <div
                     key={milestone.id}
-                    className={`bg-depth-surface border rounded-2xl p-6 ${
+                    className="relative group"
+                  >
+                    <div className={`absolute -inset-4 blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 ${
+                      milestone.payment_status === 'paid' ? 'bg-green-500/10' : 'bg-radiance-gold/5'
+                    }`} />
+                    <div className={`relative bg-depth-elevated/30 border rounded-3xl p-8 backdrop-blur-sm overflow-hidden ${
                       milestone.payment_status === 'paid'
                         ? 'border-green-500/30'
                         : 'border-depth-border'
                     }`}
                   >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start gap-4">
-                        <div
-                          className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
-                            milestone.payment_status === 'paid'
-                              ? 'bg-green-500/10 text-green-400'
-                              : 'bg-depth-elevated text-text-muted'
-                          }`}
-                        >
-                          {milestone.payment_status === 'paid' ? (
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
-                          ) : (
-                            index + 1
-                          )}
+                      {/* Blueprint pattern */}
+                      <div 
+                        className="absolute inset-0 opacity-[0.02] pointer-events-none" 
+                        style={{ 
+                          backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+                          backgroundSize: '24px 24px' 
+                        }} 
+                      />
+                      
+                      <div className="flex items-start justify-between relative z-10">
+                        <div className="flex items-start gap-5">
+                          <div
+                            className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold border-2 ${
+                              milestone.payment_status === 'paid'
+                                ? 'bg-green-500/10 text-green-400 border-green-500/30'
+                                : 'bg-depth-base text-text-muted border-depth-border'
+                            }`}
+                          >
+                            {milestone.payment_status === 'paid' ? (
+                              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                            ) : (
+                              index + 1
+                            )}
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-text-primary text-lg mb-2">{milestone.milestone_name}</h3>
+                            {milestone.description && (
+                              <p className="text-text-secondary mb-2 leading-relaxed">{milestone.description}</p>
+                            )}
+                            {milestone.due_date && (
+                              <p className="text-text-muted text-sm font-mono">
+                                Due: {formatDate(milestone.due_date)}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="font-semibold text-text-primary">{milestone.milestone_name}</h3>
-                          {milestone.description && (
-                            <p className="text-text-muted text-sm mt-1">{milestone.description}</p>
-                          )}
-                          {milestone.due_date && (
-                            <p className="text-text-muted text-sm mt-1">
-                              Due: {formatDate(milestone.due_date)}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-xl font-bold text-text-primary">
-                          {formatCurrency(milestone.amount)}
-                        </p>
-                        <span
-                          className={`inline-block mt-2 px-3 py-1 text-xs rounded-full font-medium ${
-                            milestone.payment_status === 'paid'
-                              ? 'bg-green-500/10 text-green-400'
+                        <div className="text-right">
+                          <div className="text-xs text-text-muted font-mono mb-1">AMOUNT</div>
+                          <p className="text-2xl font-bold text-text-primary mb-3">
+                            {formatCurrency(milestone.amount)}
+                          </p>
+                          <span
+                            className={`inline-block px-4 py-2 text-xs rounded-full font-medium uppercase tracking-wider ${
+                              milestone.payment_status === 'paid'
+                                ? 'bg-green-500/10 text-green-400 border border-green-500/30'
+                                : milestone.payment_status === 'overdue'
+                                ? 'bg-red-500/10 text-red-400 border border-red-500/30'
+                                : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+                            }`}
+                          >
+                            {milestone.payment_status === 'paid'
+                              ? 'Paid'
                               : milestone.payment_status === 'overdue'
-                              ? 'bg-red-500/10 text-red-400'
-                              : 'bg-amber-500/10 text-amber-400'
-                          }`}
-                        >
-                          {milestone.payment_status === 'paid'
-                            ? 'Paid'
-                            : milestone.payment_status === 'overdue'
-                            ? 'Overdue'
-                            : 'Pending'}
-                        </span>
+                              ? 'Overdue'
+                              : 'Pending'}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -617,38 +771,55 @@ export default function ProposalPortalPage({ params }: PageProps) {
               </div>
 
               {/* Total */}
-              <div className="bg-gradient-to-br from-radiance-gold/10 to-radiance-amber/5 border border-radiance-gold/20 rounded-2xl p-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-semibold text-text-primary">Total Project Value</span>
-                  <span className="text-2xl font-bold text-radiance-gold">
-                    {formatCurrency(proposal.final_amount)}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center mt-2">
-                  <span className="text-text-muted">Paid</span>
-                  <span className="text-green-400">
-                    {formatCurrency(
-                      proposal.milestones
-                        .filter((m) => m.payment_status === 'paid')
-                        .reduce((sum, m) => sum + m.amount, 0)
-                    )}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center mt-1">
-                  <span className="text-text-muted">Remaining</span>
-                  <span className="text-text-primary">
-                    {formatCurrency(
-                      proposal.milestones
-                        .filter((m) => m.payment_status !== 'paid')
-                        .reduce((sum, m) => sum + m.amount, 0)
-                    )}
-                  </span>
+              <div className="relative group">
+                <div className="absolute -inset-6 bg-gradient-to-b from-radiance-gold/10 to-transparent blur-3xl rounded-3xl opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
+                
+                <div className="relative bg-gradient-to-br from-radiance-gold/15 to-radiance-amber/5 border border-radiance-gold/30 rounded-3xl p-10 backdrop-blur-md overflow-hidden">
+                  {/* Blueprint pattern */}
+                  <div 
+                    className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+                    style={{ 
+                      backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+                      backgroundSize: '32px 32px' 
+                    }} 
+                  />
+                  
+                  <div className="relative z-10">
+                    <div className="flex justify-between items-center mb-6 pb-6 border-b border-radiance-gold/20">
+                      <span className="text-xl font-semibold text-text-primary">Total Project Value</span>
+                      <span className="text-4xl font-bold text-radiance-gold">
+                        {formatCurrency(proposal.final_amount)}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="bg-green-500/5 border border-green-500/20 rounded-xl p-4">
+                        <span className="text-text-muted text-sm font-mono block mb-2">Paid</span>
+                        <span className="text-green-400 text-2xl font-bold">
+                          {formatCurrency(
+                            proposal.milestones
+                              .filter((m) => m.payment_status === 'paid')
+                              .reduce((sum, m) => sum + m.amount, 0)
+                          )}
+                        </span>
+                      </div>
+                      <div className="bg-depth-base/50 border border-depth-border rounded-xl p-4">
+                        <span className="text-text-muted text-sm font-mono block mb-2">Remaining</span>
+                        <span className="text-text-primary text-2xl font-bold">
+                          {formatCurrency(
+                            proposal.milestones
+                              .filter((m) => m.payment_status !== 'paid')
+                              .reduce((sum, m) => sum + m.amount, 0)
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="text-center">
-                <Button variant="primary" onClick={() => setActiveStep('onboarding')}>
-                  Continue to Onboarding
+              <div className="text-center pt-4">
+                <Button variant="primary" onClick={() => setActiveStep('onboarding')} size="lg">
+                  Continue to Onboarding →
                 </Button>
               </div>
             </div>
@@ -656,88 +827,115 @@ export default function ProposalPortalPage({ params }: PageProps) {
 
           {/* Onboarding */}
           {activeStep === 'onboarding' && (
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               {proposal.onboarding_form?.status === 'submitted' ? (
-                <div className="bg-depth-surface border border-depth-border rounded-2xl p-8 text-center">
-                  <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-6">
-                    <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                <div className="space-y-8">
+                  <div className="text-center mb-12">
+                    <h2 className="text-4xl font-bold text-text-primary mb-4">Onboarding</h2>
+                    <p className="text-text-secondary text-lg">
+                      Onboarding Status
+                    </p>
                   </div>
-                  <h2 className="text-2xl font-bold text-text-primary mb-2">Onboarding Complete</h2>
-                  <p className="text-text-muted mb-4">
-                    Thank you for completing the onboarding form. Our team will review your information.
-                  </p>
-                  <Button variant="outline" onClick={() => setActiveStep('dashboard')}>
-                    Go to Dashboard
-                  </Button>
+
+                  <div className="relative group">
+                    <div className="absolute -inset-4 bg-green-500/10 blur-3xl rounded-3xl opacity-60" />
+                    <div className="relative bg-depth-elevated/30 border border-green-500/30 rounded-3xl p-12 text-center backdrop-blur-sm">
+                      <div className="w-20 h-20 rounded-full bg-green-500/10 border-2 border-green-500/30 flex items-center justify-center mx-auto mb-8">
+                        <svg className="w-10 h-10 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <h3 className="text-3xl font-bold text-text-primary mb-3">Onboarding Complete</h3>
+                      <p className="text-text-secondary mb-8 text-lg">
+                        Thank you for completing the onboarding form. Our team will review your information.
+                      </p>
+                      <Button variant="outline" onClick={() => setActiveStep('dashboard')} size="lg">
+                        Go to Dashboard →
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               ) : (
-                <div className="space-y-6">
-                  <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold text-text-primary mb-2">Onboarding</h2>
-                    <p className="text-text-muted">
+                <div className="space-y-8">
+                  <div className="text-center mb-12">
+                    <h2 className="text-4xl font-bold text-text-primary mb-4">Onboarding</h2>
+                    <p className="text-text-secondary text-lg">
                       Help us get started by providing some additional information
                     </p>
                   </div>
 
-                  <div className="bg-depth-surface border border-depth-border rounded-2xl p-8">
-                    <div className="space-y-6">
-                      {proposal.onboarding_form?.form_config?.map((field: OnboardingFormField) => (
-                        <div key={field.id}>
-                          <label className="block text-text-primary text-sm font-medium mb-2">
-                            {field.label}
-                            {field.required && <span className="text-red-400"> *</span>}
-                          </label>
-                          {field.type === 'textarea' ? (
-                            <textarea
-                              rows={4}
-                              value={onboardingData[field.id] || ''}
-                              onChange={(e) =>
-                                setOnboardingData({ ...onboardingData, [field.id]: e.target.value })
-                              }
-                              placeholder={field.placeholder}
-                              className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none resize-none"
-                            />
-                          ) : field.type === 'select' ? (
-                            <select
-                              value={onboardingData[field.id] || ''}
-                              onChange={(e) =>
-                                setOnboardingData({ ...onboardingData, [field.id]: e.target.value })
-                              }
-                              className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary focus:border-radiance-gold focus:outline-none"
-                            >
-                              <option value="">Select an option</option>
-                              {field.options?.map((opt) => (
-                                <option key={opt} value={opt}>
-                                  {opt}
-                                </option>
-                              ))}
-                            </select>
-                          ) : (
-                            <input
-                              type={field.type}
-                              value={onboardingData[field.id] || ''}
-                              onChange={(e) =>
-                                setOnboardingData({ ...onboardingData, [field.id]: e.target.value })
-                              }
-                              placeholder={field.placeholder}
-                              className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none"
-                            />
-                          )}
+                  <div className="relative group">
+                    <div className="absolute -inset-4 bg-radiance-gold/5 blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    <div className="relative bg-depth-elevated/30 border border-depth-border rounded-3xl p-10 backdrop-blur-sm overflow-hidden">
+                      {/* Blueprint pattern */}
+                      <div 
+                        className="absolute inset-0 opacity-[0.02] pointer-events-none" 
+                        style={{ 
+                          backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+                          backgroundSize: '24px 24px' 
+                        }} 
+                      />
+                      
+                      <div className="relative z-10">
+                        <div className="space-y-8">
+                          {proposal.onboarding_form?.form_config?.map((field: OnboardingFormField) => (
+                            <div key={field.id}>
+                              <label className="block text-text-primary font-medium mb-3 text-base">
+                                {field.label}
+                                {field.required && <span className="text-red-400"> *</span>}
+                              </label>
+                              {field.type === 'textarea' ? (
+                                <textarea
+                                  rows={4}
+                                  value={onboardingData[field.id] || ''}
+                                  onChange={(e) =>
+                                    setOnboardingData({ ...onboardingData, [field.id]: e.target.value })
+                                  }
+                                  placeholder={field.placeholder}
+                                  className="w-full bg-depth-base border border-depth-border rounded-xl px-5 py-4 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none resize-none transition-colors"
+                                />
+                              ) : field.type === 'select' ? (
+                                <select
+                                  value={onboardingData[field.id] || ''}
+                                  onChange={(e) =>
+                                    setOnboardingData({ ...onboardingData, [field.id]: e.target.value })
+                                  }
+                                  className="w-full bg-depth-base border border-depth-border rounded-xl px-5 py-4 text-text-primary focus:border-radiance-gold focus:outline-none transition-colors"
+                                >
+                                  <option value="">Select an option</option>
+                                  {field.options?.map((opt) => (
+                                    <option key={opt} value={opt}>
+                                      {opt}
+                                    </option>
+                                  ))}
+                                </select>
+                              ) : (
+                                <input
+                                  type={field.type}
+                                  value={onboardingData[field.id] || ''}
+                                  onChange={(e) =>
+                                    setOnboardingData({ ...onboardingData, [field.id]: e.target.value })
+                                  }
+                                  placeholder={field.placeholder}
+                                  className="w-full bg-depth-base border border-depth-border rounded-xl px-5 py-4 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none transition-colors"
+                                />
+                              )}
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
 
-                    <div className="mt-8">
-                      <Button
-                        variant="primary"
-                        fullWidth
-                        onClick={handleSubmitOnboarding}
-                        isLoading={isSubmittingOnboarding}
-                      >
-                        Submit Onboarding Information
-                      </Button>
+                        <div className="mt-10">
+                          <Button
+                            variant="primary"
+                            fullWidth
+                            onClick={handleSubmitOnboarding}
+                            isLoading={isSubmittingOnboarding}
+                            size="lg"
+                          >
+                            Submit Onboarding Information
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -747,181 +945,258 @@ export default function ProposalPortalPage({ params }: PageProps) {
 
           {/* Dashboard */}
           {activeStep === 'dashboard' && (
-            <div className="max-w-4xl mx-auto space-y-8">
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-text-primary mb-2">Project Dashboard</h2>
-                <p className="text-text-muted">
+            <div className="max-w-5xl mx-auto space-y-10">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-bold text-text-primary mb-4">Project Dashboard</h2>
+                <p className="text-text-secondary text-lg">
                   Track your project progress and communicate with our team
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 {/* Main Content */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="lg:col-span-2 space-y-10">
                   {/* Progress Overview */}
-                  <div className="bg-depth-surface border border-depth-border rounded-2xl p-6">
-                    <h3 className="text-lg font-semibold text-text-primary mb-4">Milestone Progress</h3>
-                    <div className="space-y-4">
-                      {proposal.milestones.map((milestone) => (
-                        <div key={milestone.id} className="flex items-center gap-4">
-                          <div
-                            className={`w-3 h-3 rounded-full ${
-                              milestone.milestone_status === 'completed'
-                                ? 'bg-green-400'
-                                : milestone.milestone_status === 'in_progress'
-                                ? 'bg-amber-400'
-                                : 'bg-depth-elevated'
-                            }`}
-                          />
-                          <div className="flex-1">
-                            <p className="text-text-primary text-sm">{milestone.milestone_name}</p>
-                          </div>
-                          <span
-                            className={`text-xs px-2 py-1 rounded-full ${
-                              milestone.milestone_status === 'completed'
-                                ? 'bg-green-500/10 text-green-400'
-                                : milestone.milestone_status === 'in_progress'
-                                ? 'bg-amber-500/10 text-amber-400'
-                                : 'bg-depth-elevated text-text-muted'
-                            }`}
-                          >
-                            {milestone.milestone_status.replace('_', ' ')}
-                          </span>
+                  <div className="relative group">
+                    <div className="absolute -inset-4 bg-radiance-gold/5 blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    <div className="relative bg-depth-elevated/30 border border-depth-border rounded-3xl p-10 backdrop-blur-sm overflow-hidden">
+                      {/* Blueprint pattern */}
+                      <div 
+                        className="absolute inset-0 opacity-[0.02] pointer-events-none" 
+                        style={{ 
+                          backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+                          backgroundSize: '24px 24px' 
+                        }} 
+                      />
+                      <div className="relative z-10">
+                        <h3 className="text-2xl font-bold text-text-primary mb-8 flex items-center gap-3">
+                          <span className="w-1.5 h-7 bg-radiance-gold rounded-full" />
+                          Milestone Progress
+                        </h3>
+                        <div className="space-y-5">
+                          {proposal.milestones.map((milestone) => (
+                            <div key={milestone.id} className="flex items-center gap-5 p-4 bg-depth-base/30 rounded-xl border border-depth-border/50">
+                              <div
+                                className={`w-4 h-4 rounded-full border-2 ${
+                                  milestone.milestone_status === 'completed'
+                                    ? 'bg-green-400 border-green-400'
+                                    : milestone.milestone_status === 'in_progress'
+                                    ? 'bg-amber-400 border-amber-400'
+                                    : 'bg-transparent border-text-muted'
+                                }`}
+                              />
+                              <div className="flex-1">
+                                <p className="text-text-primary font-medium">{milestone.milestone_name}</p>
+                              </div>
+                              <span
+                                className={`text-xs px-3 py-1.5 rounded-full font-medium uppercase tracking-wider ${
+                                  milestone.milestone_status === 'completed'
+                                    ? 'bg-green-500/10 text-green-400 border border-green-500/30'
+                                    : milestone.milestone_status === 'in_progress'
+                                    ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+                                    : 'bg-depth-elevated text-text-muted border border-depth-border'
+                                }`}
+                              >
+                                {milestone.milestone_status.replace('_', ' ')}
+                              </span>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      </div>
                     </div>
                   </div>
 
                   {/* Updates */}
-                  <div className="bg-depth-surface border border-depth-border rounded-2xl p-6">
-                    <h3 className="text-lg font-semibold text-text-primary mb-4">Recent Updates</h3>
-                    {proposal.dashboard_updates.length > 0 ? (
-                      <div className="space-y-4">
-                        {proposal.dashboard_updates.map((update) => (
-                          <div
-                            key={update.id}
-                            className="border-l-2 border-radiance-gold/30 pl-4"
-                          >
-                            <h4 className="font-medium text-text-primary">{update.title}</h4>
-                            {update.content && (
-                              <p className="text-text-secondary text-sm mt-1">{update.content}</p>
-                            )}
-                            <p className="text-text-muted text-xs mt-2">
-                              {formatDate(update.created_at)}
-                            </p>
+                  <div className="relative group">
+                    <div className="absolute -inset-4 bg-radiance-gold/5 blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    <div className="relative bg-depth-elevated/30 border border-depth-border rounded-3xl p-10 backdrop-blur-sm overflow-hidden">
+                      {/* Blueprint pattern */}
+                      <div 
+                        className="absolute inset-0 opacity-[0.02] pointer-events-none" 
+                        style={{ 
+                          backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+                          backgroundSize: '24px 24px' 
+                        }} 
+                      />
+                      <div className="relative z-10">
+                        <h3 className="text-2xl font-bold text-text-primary mb-8 flex items-center gap-3">
+                          <span className="w-1.5 h-7 bg-radiance-gold rounded-full" />
+                          Recent Updates
+                        </h3>
+                        {proposal.dashboard_updates.length > 0 ? (
+                          <div className="space-y-5">
+                            {proposal.dashboard_updates.map((update) => (
+                              <div
+                                key={update.id}
+                                className="border-l-2 border-radiance-gold/30 pl-6 py-2 bg-depth-base/30 rounded-r-xl pr-4"
+                              >
+                                <h4 className="font-semibold text-text-primary text-lg">{update.title}</h4>
+                                {update.content && (
+                                  <p className="text-text-secondary mt-2 leading-relaxed">{update.content}</p>
+                                )}
+                                <p className="text-text-muted text-xs mt-3 font-mono">
+                                  {formatDate(update.created_at)}
+                                </p>
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        ) : (
+                          <p className="text-text-muted text-center py-8">No updates yet. Check back soon!</p>
+                        )}
                       </div>
-                    ) : (
-                      <p className="text-text-muted">No updates yet. Check back soon!</p>
-                    )}
+                    </div>
                   </div>
 
                   {/* Comments */}
-                  <div className="bg-depth-surface border border-depth-border rounded-2xl p-6">
-                    <h3 className="text-lg font-semibold text-text-primary mb-4">Comments</h3>
-
-                    {/* Add Comment */}
-                    <div className="mb-6">
-                      <textarea
-                        rows={3}
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        placeholder="Add a comment..."
-                        className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none resize-none mb-3"
+                  <div className="relative group">
+                    <div className="absolute -inset-4 bg-radiance-gold/5 blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    <div className="relative bg-depth-elevated/30 border border-depth-border rounded-3xl p-10 backdrop-blur-sm overflow-hidden">
+                      {/* Blueprint pattern */}
+                      <div 
+                        className="absolute inset-0 opacity-[0.02] pointer-events-none" 
+                        style={{ 
+                          backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+                          backgroundSize: '24px 24px' 
+                        }} 
                       />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleSubmitComment}
-                        isLoading={isSubmittingComment}
-                        disabled={!newComment.trim()}
-                      >
-                        Post Comment
-                      </Button>
-                    </div>
+                      <div className="relative z-10">
+                        <h3 className="text-2xl font-bold text-text-primary mb-8 flex items-center gap-3">
+                          <span className="w-1.5 h-7 bg-radiance-gold rounded-full" />
+                          Comments
+                        </h3>
 
-                    {/* Comments List */}
-                    {proposal.comments.length > 0 ? (
-                      <div className="space-y-4">
-                        {proposal.comments.map((comment) => (
-                          <div
-                            key={comment.id}
-                            className={`p-4 rounded-lg ${
-                              comment.is_client_comment
-                                ? 'bg-radiance-gold/5 border border-radiance-gold/20'
-                                : 'bg-depth-elevated'
-                            }`}
+                        {/* Add Comment */}
+                        <div className="mb-8">
+                          <textarea
+                            rows={3}
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            placeholder="Add a comment..."
+                            className="w-full bg-depth-base border border-depth-border rounded-xl px-5 py-4 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none resize-none mb-4 transition-colors"
+                          />
+                          <Button
+                            variant="outline"
+                            onClick={handleSubmitComment}
+                            isLoading={isSubmittingComment}
+                            disabled={!newComment.trim()}
                           >
-                            <div className="flex items-center justify-between mb-2">
-                              <span
-                                className={`text-sm font-medium ${
-                                  comment.is_client_comment ? 'text-radiance-gold' : 'text-wisdom-violet'
+                            Post Comment
+                          </Button>
+                        </div>
+
+                        {/* Comments List */}
+                        {proposal.comments.length > 0 ? (
+                          <div className="space-y-4">
+                            {proposal.comments.map((comment) => (
+                              <div
+                                key={comment.id}
+                                className={`p-5 rounded-xl border ${
+                                  comment.is_client_comment
+                                    ? 'bg-radiance-gold/5 border-radiance-gold/30'
+                                    : 'bg-depth-base/50 border-depth-border'
                                 }`}
                               >
-                                {comment.is_client_comment ? 'You' : 'Light Brand Team'}
-                              </span>
-                              <span className="text-text-muted text-xs">
-                                {formatDate(comment.created_at)}
-                              </span>
-                            </div>
-                            <p className="text-text-secondary text-sm">{comment.comment_text}</p>
+                                <div className="flex items-center justify-between mb-3">
+                                  <span
+                                    className={`text-sm font-semibold ${
+                                      comment.is_client_comment ? 'text-radiance-gold' : 'text-wisdom-violet'
+                                    }`}
+                                  >
+                                    {comment.is_client_comment ? 'You' : 'Light Brand Team'}
+                                  </span>
+                                  <span className="text-text-muted text-xs font-mono">
+                                    {formatDate(comment.created_at)}
+                                  </span>
+                                </div>
+                                <p className="text-text-secondary leading-relaxed">{comment.comment_text}</p>
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        ) : (
+                          <p className="text-text-muted text-center py-4">No comments yet.</p>
+                        )}
                       </div>
-                    ) : (
-                      <p className="text-text-muted">No comments yet.</p>
-                    )}
+                    </div>
                   </div>
                 </div>
 
                 {/* Sidebar */}
-                <div className="space-y-6">
+                <div className="space-y-10">
                   {/* Project Info */}
-                  <div className="bg-depth-surface border border-depth-border rounded-2xl p-6">
-                    <h3 className="font-semibold text-text-primary mb-4">Project Details</h3>
-                    <div className="space-y-3 text-sm">
-                      <div>
-                        <span className="text-text-muted block">Status</span>
-                        <span className="text-text-primary capitalize">
-                          {proposal.status.replace('_', ' ')}
-                        </span>
-                      </div>
-                      {proposal.total_timeline && (
-                        <div>
-                          <span className="text-text-muted block">Timeline</span>
-                          <span className="text-text-primary">{proposal.total_timeline}</span>
+                  <div className="relative group">
+                    <div className="absolute -inset-4 bg-radiance-gold/5 blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    <div className="relative bg-depth-elevated/30 border border-depth-border rounded-3xl p-8 backdrop-blur-sm overflow-hidden">
+                      {/* Blueprint pattern */}
+                      <div 
+                        className="absolute inset-0 opacity-[0.02] pointer-events-none" 
+                        style={{ 
+                          backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+                          backgroundSize: '24px 24px' 
+                        }} 
+                      />
+                      <div className="relative z-10">
+                        <h3 className="text-lg font-bold text-text-primary mb-6 flex items-center gap-2">
+                          <span className="w-1 h-6 bg-radiance-gold rounded-full" />
+                          Project Details
+                        </h3>
+                        <div className="space-y-5">
+                          <div className="bg-depth-base/30 rounded-xl p-4 border border-depth-border/50">
+                            <span className="text-text-muted block text-xs font-mono mb-2">STATUS</span>
+                            <span className="text-text-primary capitalize font-medium">
+                              {proposal.status.replace('_', ' ')}
+                            </span>
+                          </div>
+                          {proposal.total_timeline && (
+                            <div className="bg-depth-base/30 rounded-xl p-4 border border-depth-border/50">
+                              <span className="text-text-muted block text-xs font-mono mb-2">TIMELINE</span>
+                              <span className="text-text-primary font-medium">{proposal.total_timeline}</span>
+                            </div>
+                          )}
+                          <div className="bg-gradient-to-br from-radiance-gold/10 to-radiance-amber/5 rounded-xl p-4 border border-radiance-gold/30">
+                            <span className="text-radiance-gold/80 block text-xs font-mono mb-2">INVESTMENT</span>
+                            <span className="text-radiance-gold font-bold text-xl">
+                              {formatCurrency(proposal.final_amount)}
+                            </span>
+                          </div>
                         </div>
-                      )}
-                      <div>
-                        <span className="text-text-muted block">Investment</span>
-                        <span className="text-radiance-gold font-bold">
-                          {formatCurrency(proposal.final_amount)}
-                        </span>
                       </div>
                     </div>
                   </div>
 
                   {/* Quick Actions */}
-                  <div className="bg-depth-surface border border-depth-border rounded-2xl p-6">
-                    <h3 className="font-semibold text-text-primary mb-4">Quick Actions</h3>
-                    <div className="space-y-3">
-                      <Button
-                        variant="outline"
-                        fullWidth
-                        size="sm"
-                        onClick={() => setActiveStep('proposal')}
-                      >
-                        View Proposal
-                      </Button>
-                      <Button
-                        variant="outline"
-                        fullWidth
-                        size="sm"
-                        onClick={() => setActiveStep('billing')}
-                      >
-                        View Billing
-                      </Button>
+                  <div className="relative group">
+                    <div className="absolute -inset-4 bg-radiance-gold/5 blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    <div className="relative bg-depth-elevated/30 border border-depth-border rounded-3xl p-8 backdrop-blur-sm overflow-hidden">
+                      {/* Blueprint pattern */}
+                      <div 
+                        className="absolute inset-0 opacity-[0.02] pointer-events-none" 
+                        style={{ 
+                          backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+                          backgroundSize: '24px 24px' 
+                        }} 
+                      />
+                      <div className="relative z-10">
+                        <h3 className="text-lg font-bold text-text-primary mb-6 flex items-center gap-2">
+                          <span className="w-1 h-6 bg-radiance-gold rounded-full" />
+                          Quick Actions
+                        </h3>
+                        <div className="space-y-3">
+                          <Button
+                            variant="outline"
+                            fullWidth
+                            onClick={() => setActiveStep('proposal')}
+                          >
+                            View Proposal
+                          </Button>
+                          <Button
+                            variant="outline"
+                            fullWidth
+                            onClick={() => setActiveStep('billing')}
+                          >
+                            View Billing
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -932,12 +1207,26 @@ export default function ProposalPortalPage({ params }: PageProps) {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-depth-border py-8 mt-12">
+      <footer className="border-t border-depth-border/30 py-12 mt-20 relative">
+        {/* Subtle background pattern */}
+        <div 
+          className="absolute inset-0 opacity-[0.01] pointer-events-none" 
+          style={{ 
+            backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
+            backgroundSize: '32px 32px' 
+          }} 
+        />
         <Container size="wide">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-text-muted">
-            <p>&copy; {new Date().getFullYear()} Light Brand Consulting. All rights reserved.</p>
-            <div className="flex items-center gap-4">
-              <a href="mailto:hello@lightbrand.co" className="hover:text-text-primary transition-colors">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-text-muted relative z-10">
+            <p className="flex items-center gap-2">
+              <span className="w-1 h-1 rounded-full bg-radiance-gold" />
+              &copy; {new Date().getFullYear()} Light Brand Consulting. All rights reserved.
+            </p>
+            <div className="flex items-center gap-6">
+              <a 
+                href="mailto:hello@lightbrand.co" 
+                className="hover:text-radiance-gold transition-colors font-medium"
+              >
                 Contact Support
               </a>
             </div>
