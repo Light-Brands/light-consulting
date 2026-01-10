@@ -304,7 +304,7 @@ const BLOG_POSTS: BlogPost[] = [
     date: 'March 2024',
     content: [
       'The CFO asks the question that kills most AI initiatives: "What\'s the ROI?" And suddenly everyone gets vague. "It\'s transformative." "It\'s strategic." None of this is wrong. All of it is useless for making budget decisions.',
-      'Here\'s the uncomfortable truth: if you can\'t measure AI value in concrete terms, you can\'t justify continued investment. Measurement isn\'t about proving you\'re right. It\'s about creating the conditions for your AI work to survive and scale.',
+      'Here\'s the uncomfortable truth: if you can\'t measure AI value in concrete terms, you can\'t justify continued investment. Measurement isn\'t about proving you\'re right. It\'s about creating the conditions for your AI work to thrive and scale.',
       'Start with what matters: Direct Time Savings. This is your easiest, most defensible metric. Find a task that AI now assists with. Measure time before and after. Multiply by frequency and cost per hour.',
       'Next: Quality Improvements That Reduce Downstream Costs. AI often doesn\'t save time directly. It improves quality, which saves time later. Measure the downstream impact: fewer escalations, faster resolution times, reduced rework.',
       'Then: Revenue Enablement, But Make It Specific. "AI will increase revenue" is useless. "AI-powered recommendations increased average order value from $67 to $73" is a number you can defend.',

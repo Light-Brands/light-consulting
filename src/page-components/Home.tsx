@@ -83,7 +83,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <Heading level="h1" className="mb-8 animate-slide-up max-w-4xl">
               We design AI intelligence systems{' '}
               <span className="text-radiance-gold">
-                for businesses that want to survive and lead the next decade.
+                for businesses that want to thrive and lead the next decade.
               </span>
             </Heading>
 
@@ -128,7 +128,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
             <Heading level="h2" className="mb-8">
               AI isn't just changing how work is done.{' '}
-              <span className="text-radiance-gold">It's changing which businesses survive.</span>
+              <span className="text-radiance-gold">It's changing which businesses thrive.</span>
             </Heading>
           </div>
 
