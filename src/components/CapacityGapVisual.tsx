@@ -26,15 +26,17 @@ export const CapacityGapVisual: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Intersection observer for scroll-triggered entry
+  // Intersection observer for scroll-triggered entry and scroll-based interaction
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
       },
-      { threshold: 0.2 }
+      { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0] }
     );
 
     if (containerRef.current) {
@@ -42,6 +44,91 @@ export const CapacityGapVisual: React.FC = () => {
     }
 
     return () => observer.disconnect();
+  }, []);
+
+  // Scroll-based interaction - tracks scroll progress through sticky container
+  useEffect(() => {
+    let rafId: number | null = null;
+
+    const updateSlider = () => {
+      if (!containerRef.current) return;
+
+      // Find the parent sticky container (the div with vh height)
+      let stickyContainer = containerRef.current.parentElement;
+      while (stickyContainer && !stickyContainer.style.height?.includes('vh')) {
+        stickyContainer = stickyContainer.parentElement;
+      }
+
+      if (!stickyContainer) {
+        // Fallback if no sticky container found
+        setSliderValue(0);
+        setIsInteracting(false);
+        return;
+      }
+
+      // Get container and viewport dimensions
+      const containerRect = stickyContainer.getBoundingClientRect();
+      const containerTop = containerRect.top;
+      const windowHeight = window.innerHeight;
+      
+      // We want to reach 100% after scrolling through 300vh of content
+      // Container is 350vh total (300vh content + 50vh gap)
+      // When sticky activates: containerTop = 0, progress = 0
+      // When we've scrolled 300vh: containerTop = -(300vh - 100vh) = -200vh, progress = 1
+      // Then stay at 100% for the remaining 50vh gap
+      const mainScrollHeight = windowHeight * 2; // 200vh in pixels (300vh - 100vh)
+      
+      // Calculate progress based on container's position - linear progression
+      let rawProgress = 0;
+      
+      if (containerTop <= 0) {
+        const scrollDistance = Math.abs(containerTop);
+        if (scrollDistance <= mainScrollHeight) {
+          // We're scrolling through the main content area (0 to 300vh)
+          // Linear progression: equal speed as we scroll
+          rawProgress = scrollDistance / mainScrollHeight;
+          rawProgress = Math.max(0, Math.min(1, rawProgress));
+        } else {
+          // We're in the gap area (300vh to 350vh) - stay at 100%
+          rawProgress = 1;
+        }
+      } else {
+        // Before sticky activates
+        rawProgress = 0;
+      }
+      
+      // Convert to 0-100 with linear progression (no easing)
+      const newValue = Math.round(rawProgress * 100);
+      
+      setSliderValue(newValue);
+      setIsInteracting(rawProgress > 0 && rawProgress < 1);
+    };
+
+    const handleScroll = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = requestAnimationFrame(updateSlider);
+    };
+
+    const handleResize = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = requestAnimationFrame(updateSlider);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize, { passive: true });
+    updateSlider(); // Initial calculation
+
+    return () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   // Calculate interpolation
@@ -152,7 +239,7 @@ export const CapacityGapVisual: React.FC = () => {
           <div className="flex flex-col items-center gap-8">
             <div className="text-center space-y-3">
               <div className="text-[9px] font-mono text-text-muted tracking-[0.4em] uppercase">Manual Control / Bridge Scrubber</div>
-              <p className="text-sm text-text-secondary italic font-light tracking-wide">Slide to bridge the capacity gap</p>
+              <p className="text-sm text-text-secondary italic font-light tracking-wide">Scroll to bridge the capacity gap</p>
             </div>
 
             {/* The Scrubber */}
@@ -164,18 +251,6 @@ export const CapacityGapVisual: React.FC = () => {
               <div 
                 className="absolute left-0 h-[1px] bg-radiance-gold shadow-[0_0_15px_rgba(232,184,74,0.8)] transition-all duration-100"
                 style={{ width: `${sliderValue}%` }}
-              />
-
-              {/* Slider Input */}
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={sliderValue}
-                onChange={(e) => setSliderValue(parseInt(e.target.value))}
-                onMouseDown={() => setIsInteracting(true)}
-                onMouseUp={() => setIsInteracting(false)}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30"
               />
 
               {/* Custom Handle */}

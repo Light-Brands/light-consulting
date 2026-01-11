@@ -140,8 +140,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         </Container>
       </Section>
 
-      {/* Capacity Gap Section - Interactive */}
-      <Section spacing="lg" className="overflow-hidden">
+      {/* Capacity Gap Section Header */}
+      <Section spacing="lg" className="relative overflow-hidden">
         <Container size="wide">
           <div className="mb-12">
             <Badge variant="premium" size="md" className="mb-6">
@@ -154,18 +154,41 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               Every business has untapped potential, opportunities hidden in plain sight. The gap between where you are and where AI can take you isn't about technology. It's about seeing clearly.
             </Text>
           </div>
+        </Container>
+      </Section>
 
-          <div className="relative">
-            {/* Decorative elements */}
-            <div className="absolute -top-24 -right-24 w-96 h-96 bg-radiance-gold/5 blur-3xl pointer-events-none rounded-full" />
-            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-radiance-gold/5 blur-3xl pointer-events-none rounded-full" />
-            
-            <div className="relative z-10 bg-depth-elevated/30 border border-depth-border rounded-3xl overflow-hidden backdrop-blur-sm">
-              <CapacityGapVisual />
-            </div>
+      {/* Capacity Gap Visual - Sticky Scroll Section */}
+      {/* Scroll container - provides the scroll space for sticky behavior (300vh + 50vh gap at end) */}
+      <div className="relative" style={{ height: '350vh' }}>
+        {/* Sticky content - stays fixed in viewport until scroll reaches 100% */}
+        <div 
+          className="sticky top-0 h-screen w-full flex items-center justify-center"
+          style={{ 
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden'
+          }}
+        >
+          <div className="w-full px-4">
+            <Container size="wide">
+              <div className="relative">
+                {/* Decorative elements */}
+                <div className="absolute -top-24 -right-24 w-96 h-96 bg-radiance-gold/5 blur-3xl pointer-events-none rounded-full" />
+                <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-radiance-gold/5 blur-3xl pointer-events-none rounded-full" />
+                
+                <div className="relative z-10 bg-depth-elevated/30 border border-depth-border rounded-3xl overflow-hidden backdrop-blur-sm">
+                  <CapacityGapVisual />
+                </div>
+              </div>
+            </Container>
           </div>
+        </div>
+      </div>
 
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12 items-center border-t border-depth-border/50 pt-12">
+      {/* Capacity Gap Section Footer */}
+      <Section spacing="lg" className="relative overflow-hidden">
+        <Container size="wide">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center border-t border-depth-border/50 pt-12">
             <div>
               <Text className="text-lg">
                 <span className="text-radiance-gold font-semibold">2024-2026 is the strategic moment.</span> Like 1995 for the web, like 2008 for mobile.
