@@ -65,6 +65,10 @@ export { default as BlogPostCTAVisual } from './BlogPostCTAVisual';
 export { default as BlogPostRelatedVisual } from './BlogPostRelatedVisual';
 export { default as BackButtonVisual } from './BackButtonVisual';
 export { default as AIFoundationInfographic } from './AIFoundationInfographic';
+export { default as FunnelReadinessVisual } from './FunnelReadinessVisual';
+export { default as DiagnosticDeliverablesVisual } from './DiagnosticDeliverablesVisual';
+export { default as MotionVsLeverageVisual } from './MotionVsLeverageVisual';
+export { default as FoundationComparisonVisual } from './FoundationComparisonVisual';
 
 // Icons
 export * from './Icons';

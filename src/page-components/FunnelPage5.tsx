@@ -110,7 +110,7 @@ export const FunnelPage5: React.FC<FunnelPage5Props> = ({ onNavigate }) => {
                   { pain: 'You attract the wrong people', desc: "Partners who don't share your values, team members who drain your energy" },
                   { pain: 'Your ideas stay ideas', desc: "The vision is clear in your mind but translating it to reality feels overwhelming" },
                   { pain: 'You work harder, not smarter', desc: "No systems, no leverage - just endless effort that burns you out" },
-                  { pain: 'You question if it's possible', desc: "Maybe this was meant to stay a dream? Maybe you're not cut out for this?" },
+                  { pain: "You question if it's possible", desc: "Maybe this was meant to stay a dream? Maybe you're not cut out for this?" },
                 ].map((item, index) => (
                   <div key={index} className="flex items-start gap-4 p-4 bg-depth-surface rounded-lg">
                     <div className="w-8 h-8 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -188,7 +188,7 @@ export const FunnelPage5: React.FC<FunnelPage5Props> = ({ onNavigate }) => {
               },
               {
                 title: 'Sustainable Foundation',
-                desc: 'Revenue models that support your mission. Abundance is not anti-spiritual - it's fuel for greater impact.',
+                desc: "Revenue models that support your mission. Abundance is not anti-spiritual - it's fuel for greater impact.",
                 icon: (
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
