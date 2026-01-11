@@ -3,7 +3,7 @@
 /**
  * Funnel Page 3 - Next.js Wrapper
  * Light Brand Consulting
- * AI-Native Foundation - Growth, Automation, and Leverage
+ * AI Intelligent System - Growth, Automation, and Leverage
  */
 
 import { useRouter } from 'next/navigation';

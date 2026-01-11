@@ -1,9 +1,9 @@
 /**
- * Funnel Page 3: AI-Native Foundation
+ * Funnel Page 3: AI Intelligent System
  * Light Brand Consulting
  *
- * Page Function: Position AI as the foundation, not an add-on
- * - Move beyond website tactics to AI-native infrastructure
+ * Page Function: Position AI as a system that works for them
+ * - Sell clarity, leverage, and execution - not AI theory
  * - Build leverage through automation, personalization, and intelligence
  * - Target founders capped by outdated infrastructure
  */
@@ -43,19 +43,19 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary leading-tight">
               Move Beyond Website Tactics.
               <span className="block text-radiance-gold mt-2">
-                Build an AI-Native Foundation That Powers Growth, Automation, and Leverage.
+                Build an AI Intelligent System That Powers Growth, Automation, and Leverage.
               </span>
             </h1>
 
             <div className="max-w-3xl mx-auto space-y-4">
               <p className="text-xl md:text-2xl text-text-secondary leading-relaxed">
-                For founders who know their business is capped by outdated infrastructure — not effort.
+                You don't need more effort.
               </p>
-              <p className="text-xl md:text-2xl text-text-primary font-medium">
-                AI isn't the add-on.
+              <p className="text-xl md:text-2xl text-text-secondary leading-relaxed">
+                You don't need more tools.
               </p>
               <p className="text-2xl md:text-3xl text-radiance-gold font-semibold">
-                It's the foundation.
+                You need a system.
               </p>
             </div>
 
@@ -71,7 +71,7 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
             </div>
 
             <p className="text-text-muted text-sm max-w-xl mx-auto">
-              See if an AI-native foundation can unlock automation, personalization, and smarter decision-making in your business.
+              See if an AI Intelligent System can unlock automation, personalization, and smarter decision-making in your business.
             </p>
           </div>
         </Container>
@@ -115,7 +115,7 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
               <h3 className="text-xl font-bold text-text-muted mb-6">This is not for:</h3>
               <ul className="space-y-4">
                 {[
-                  'DIY AI experiments',
+                  'Businesses not ready for systematic change',
                   'Template-driven businesses',
                   'Anyone looking for quick wins or surface-level automation',
                 ].map((item, index) => (
@@ -203,7 +203,7 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
         </Container>
       </section>
 
-      {/* We Build AI-Native Foundations Section */}
+      {/* We Build AI Intelligent Systems Section */}
       <section className="section-spacing">
         <Container size="narrow">
           <div className="text-center mb-12">
@@ -211,16 +211,16 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
               Our Approach
             </Tag>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-              We Build AI-Native Foundations
+              We Build AI Intelligent Systems
             </h2>
             <p className="text-2xl text-radiance-gold font-medium">
-              — Not Websites
+              — Not Just Websites
             </p>
           </div>
 
           <div className="max-w-3xl mx-auto space-y-8">
             <p className="text-lg text-text-secondary text-center">
-              An AI-native foundation means intelligence is <span className="text-radiance-gold font-medium">embedded beneath the business</span>, not bolted on top.
+              An AI Intelligent System means intelligence is <span className="text-radiance-gold font-medium">embedded beneath the business</span>, not bolted on top.
             </p>
 
             <div className="grid md:grid-cols-2 gap-8">
@@ -270,7 +270,7 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
               What You Gain
             </Tag>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary">
-              With an AI-native foundation,
+              With an AI Intelligent System,
               <span className="block text-radiance-gold mt-2">your business gains:</span>
             </h2>
           </div>
@@ -359,7 +359,7 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
 
                 {/* Testimonial Quote */}
                 <blockquote className="text-xl md:text-2xl text-text-primary italic leading-relaxed">
-                  "After implementing our AI foundation, we reduced lead response time by 4× and automated workflows that used to take hours each week."
+                  "After implementing our AI Intelligent System, we reduced lead response time by 4× and automated workflows that used to take hours each week."
                 </blockquote>
 
                 {/* Attribution */}
@@ -420,8 +420,8 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
                 2
               </div>
               <div>
-                <h3 className="text-lg font-bold text-radiance-amber">AI Foundation Blueprint</h3>
-                <p className="text-text-secondary mt-2">If there's leverage, we map a custom AI-native architecture for your business.</p>
+                <h3 className="text-lg font-bold text-radiance-amber">AI System Blueprint</h3>
+                <p className="text-text-secondary mt-2">If there's leverage, we map a custom AI Intelligent System for your business.</p>
               </div>
             </div>
 
@@ -511,7 +511,7 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
       <section className="py-12 bg-depth-base border-t border-depth-border">
         <Container size="narrow" className="text-center">
           <p className="text-text-muted">
-            <span className="text-radiance-gold">Light Brand</span> builds AI-native foundations
+            <span className="text-radiance-gold">Light Brand</span> builds AI Intelligent Systems
             that power growth, automation, and leverage.
           </p>
         </Container>
