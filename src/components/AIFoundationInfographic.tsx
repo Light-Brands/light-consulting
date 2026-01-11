@@ -1,8 +1,8 @@
 /**
  * AI Foundation Infographic
  *
- * Visual representation of the AI Super Intelligence System
- * with connected modules orbiting around the central core.
+ * Advanced visual representation of the AI Intelligence System
+ * with orbital modules, particle effects, and sophisticated interactions.
  */
 
 'use client';
@@ -83,155 +83,101 @@ export const AIFoundationInfographic: React.FC = () => {
   const [activeModule, setActiveModule] = useState<string | null>(null);
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto py-8">
-      {/* Background Grid */}
-      <div
-        className="absolute inset-0 opacity-10"
-        style={{
-          backgroundImage: `
-            radial-gradient(circle at center, rgba(232, 184, 74, 0.15) 0%, transparent 70%),
-            linear-gradient(rgba(232, 184, 74, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(232, 184, 74, 0.03) 1px, transparent 1px)
-          `,
-          backgroundSize: '100% 100%, 40px 40px, 40px 40px',
-        }}
-      />
+    <div className="relative w-full max-w-6xl mx-auto py-16 flex flex-col items-center">
 
-      {/* SVG Connection Lines */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        viewBox="0 0 400 400"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <defs>
-          {/* Gradient for connection lines */}
-          <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#E8B84A" stopOpacity="0.1" />
-            <stop offset="50%" stopColor="#E8B84A" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="#E8B84A" stopOpacity="0.1" />
-          </linearGradient>
+      {/* Main Visualization Container */}
+      <div className="relative w-full max-w-[700px] aspect-square mx-auto">
+        {/* Advanced SVG Layer - Behind center circle */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none z-10"
+          viewBox="0 0 700 700"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <defs>
+            {/* Radial gradient that works for all angles */}
+            <radialGradient id="lineGradient" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#E8B84A" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#E8B84A" stopOpacity="0.3" />
+            </radialGradient>
+            {/* Fallback solid color for better visibility */}
+            <linearGradient id="lineGradientSolid" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#E8B84A" stopOpacity="0.3" />
+              <stop offset="50%" stopColor="#E8B84A" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="#E8B84A" stopOpacity="0.3" />
+            </linearGradient>
+          </defs>
 
-          {/* Animated pulse */}
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
+          {/* Connection lines - Draw all 6 modules */}
+          {modules.map((module, index) => {
+            const angle = (index * 60 - 90) * (Math.PI / 180);
+            // Center circle is w-32 h-32 (128px = 64px radius), accounting for 1px border
+            // Using 65px to ensure lines connect to the visual edge of the circle
+            const innerRadius = 65;
+            const outerRadius = 240;
+            const x1 = 350 + Math.cos(angle) * innerRadius;
+            const y1 = 350 + Math.sin(angle) * innerRadius;
+            const x2 = 350 + Math.cos(angle) * outerRadius;
+            const y2 = 350 + Math.sin(angle) * outerRadius;
 
-        {/* Connection lines from center to each module */}
-        {modules.map((module, index) => {
-          const angle = (index * 60 - 90) * (Math.PI / 180);
-          const innerRadius = 60;
-          const outerRadius = 150;
-          const x1 = 200 + Math.cos(angle) * innerRadius;
-          const y1 = 200 + Math.sin(angle) * innerRadius;
-          const x2 = 200 + Math.cos(angle) * outerRadius;
-          const y2 = 200 + Math.sin(angle) * outerRadius;
-
-          return (
-            <g key={module.id}>
-              {/* Base line */}
+            return (
               <line
+                key={module.id}
                 x1={x1}
                 y1={y1}
                 x2={x2}
                 y2={y2}
-                stroke="url(#lineGradient)"
-                strokeWidth="2"
-                className={`transition-all duration-300 ${
-                  activeModule === module.id ? 'opacity-100' : 'opacity-40'
-                }`}
+                stroke="#E8B84A"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeOpacity={activeModule === module.id ? "0.6" : "0.35"}
+                className="transition-all duration-300"
               />
+            );
+          })}
+        </svg>
 
-              {/* Animated pulse dot */}
-              <circle
-                r="3"
-                fill="#E8B84A"
-                filter="url(#glow)"
-                className={activeModule === module.id ? 'opacity-100' : 'opacity-60'}
-              >
-                <animateMotion
-                  dur={`${2 + index * 0.3}s`}
-                  repeatCount="indefinite"
-                  path={`M${x1},${y1} L${x2},${y2}`}
-                />
-              </circle>
-            </g>
-          );
-        })}
-
-        {/* Center glow ring */}
-        <circle
-          cx="200"
-          cy="200"
-          r="55"
-          fill="none"
-          stroke="#E8B84A"
-          strokeWidth="1"
-          opacity="0.3"
-          className="animate-pulse"
-        />
-        <circle
-          cx="200"
-          cy="200"
-          r="65"
-          fill="none"
-          stroke="#E8B84A"
-          strokeWidth="0.5"
-          opacity="0.15"
-        />
-      </svg>
-
-      {/* Main Container */}
-      <div className="relative aspect-square max-w-[500px] mx-auto">
-
-        {/* Center Node - AI Super Intelligence System */}
+        {/* Center Core */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
           <div className="relative group">
-            {/* Outer glow rings */}
-            <div className="absolute inset-0 -m-4 rounded-full bg-radiance-gold/10 blur-xl animate-pulse" />
-            <div className="absolute inset-0 -m-2 rounded-full bg-radiance-gold/5 blur-md" />
 
-            {/* Main center node */}
+            {/* Main center sphere */}
             <div
-              className="relative w-32 h-32 md:w-40 md:h-40 rounded-full flex items-center justify-center
-                         bg-gradient-to-br from-depth-elevated via-depth-surface to-depth-base
-                         border-2 border-radiance-gold/50 shadow-2xl
-                         transition-all duration-500 hover:border-radiance-gold hover:scale-105"
+              className="relative w-32 h-32 rounded-full flex items-center justify-center
+                         bg-gradient-to-br from-[#1a1a1a] via-[#252525] to-[#1a1a1a]
+                         border border-radiance-gold/60 backdrop-blur-xl
+                         transition-all duration-700 group-hover:scale-105
+                         group-hover:border-radiance-gold/90"
               style={{
-                boxShadow: '0 0 60px rgba(232, 184, 74, 0.3), inset 0 0 30px rgba(232, 184, 74, 0.1)',
+                boxShadow: `
+                  0 0 60px rgba(232, 184, 74, 0.3),
+                  inset 0 0 40px rgba(232, 184, 74, 0.06),
+                  inset 0 0 15px rgba(0, 0, 0, 0.5)
+                `,
               }}
             >
-              {/* Inner content */}
-              <div className="text-center px-3">
-                {/* AI Brain Icon */}
-                <div className="mx-auto mb-2 w-10 h-10 md:w-12 md:h-12 text-radiance-gold">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
-                  </svg>
+              {/* Inner glass effect */}
+              <div className="absolute inset-3 rounded-full bg-gradient-to-br from-radiance-gold/5 to-transparent opacity-50" />
+              
+              {/* Content */}
+              <div className="relative flex flex-col items-center justify-center text-center gap-2 z-10">
+                {/* Typography */}
+                <div className="space-y-0.5">
+                  <p className="text-xs font-bold text-radiance-gold uppercase tracking-[0.15em] leading-tight">
+                    AI Intelligence
+                  </p>
+                  <p className="text-xs font-bold text-text-primary/90 uppercase tracking-[0.15em] leading-tight">
+                    System
+                  </p>
                 </div>
-                <p className="text-[10px] md:text-xs font-bold text-radiance-gold uppercase tracking-wider leading-tight">
-                  AI Super
-                </p>
-                <p className="text-[10px] md:text-xs font-bold text-radiance-gold uppercase tracking-wider leading-tight">
-                  Intelligence
-                </p>
-                <p className="text-[10px] md:text-xs font-bold text-text-primary uppercase tracking-wider leading-tight">
-                  System
-                </p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Module Nodes */}
+        {/* Premium Module Cards */}
         {modules.map((module, index) => {
-          // Position each module in a circle around the center
           const angle = (index * 60 - 90) * (Math.PI / 180);
-          const radius = 42; // percentage from center
+          const radius = 43;
           const x = 50 + Math.cos(angle) * radius;
           const y = 50 + Math.sin(angle) * radius;
 
@@ -239,104 +185,115 @@ export const AIFoundationInfographic: React.FC = () => {
             <div
               key={module.id}
               className="absolute z-10 transform -translate-x-1/2 -translate-y-1/2"
-              style={{ left: `${x}%`, top: `${y}%` }}
+              style={{ 
+                left: `${x}%`, 
+                top: `${y}%`,
+              }}
               onMouseEnter={() => setActiveModule(module.id)}
               onMouseLeave={() => setActiveModule(null)}
             >
               <div
                 className={`
-                  relative group cursor-pointer transition-all duration-300
-                  ${activeModule === module.id ? 'scale-110' : 'scale-100'}
+                  relative cursor-pointer transition-all duration-500 ease-out
+                  ${activeModule === module.id ? 'scale-110 z-30' : 'scale-100'}
                 `}
+                style={{
+                  filter: activeModule && activeModule !== module.id ? 'blur(0.5px) brightness(0.8)' : 'none',
+                }}
               >
-                {/* Module glow on hover */}
+                {/* Hover glow */}
                 <div
                   className={`
-                    absolute inset-0 -m-2 rounded-xl blur-md transition-opacity duration-300
-                    ${activeModule === module.id ? 'opacity-100 bg-radiance-gold/20' : 'opacity-0'}
+                    absolute inset-0 -m-3 rounded-[1.5rem] blur-xl transition-all duration-300
+                    ${activeModule === module.id 
+                      ? 'opacity-100 bg-radiance-gold/20' 
+                      : 'opacity-0'}
                   `}
                 />
 
-                {/* Module card */}
+                {/* Glass morphism card */}
                 <div
                   className={`
-                    relative w-24 md:w-28 p-3 rounded-xl text-center
-                    bg-depth-elevated/90 backdrop-blur-sm
-                    border transition-all duration-300
+                    relative w-40 p-6 rounded-[1.25rem] text-center
+                    bg-gradient-to-br from-depth-elevated/95 via-depth-surface/90 to-depth-elevated/95
+                    backdrop-blur-xl
+                    border transition-all duration-500
                     ${activeModule === module.id
-                      ? 'border-radiance-gold/60 shadow-lg'
-                      : 'border-depth-border hover:border-radiance-gold/30'}
+                      ? 'border-radiance-gold/70 shadow-2xl'
+                      : 'border-depth-border/30 hover:border-radiance-gold/40'}
                   `}
                   style={{
                     boxShadow: activeModule === module.id
-                      ? '0 0 30px rgba(232, 184, 74, 0.2)'
-                      : 'none',
+                      ? '0 0 60px rgba(232, 184, 74, 0.4), inset 0 0 40px rgba(232, 184, 74, 0.05), 0 10px 40px rgba(0, 0, 0, 0.3)'
+                      : '0 4px 20px rgba(0, 0, 0, 0.15), inset 0 0 20px rgba(0, 0, 0, 0.1)',
                   }}
                 >
+                  {/* Inner gradient overlay */}
+                  <div 
+                    className={`
+                      absolute inset-0 rounded-[1.25rem] bg-gradient-to-br from-radiance-gold/0 via-radiance-gold/5 to-radiance-gold/0
+                      transition-opacity duration-500
+                      ${activeModule === module.id ? 'opacity-100' : 'opacity-0'}
+                    `}
+                  />
+
+
                   {/* Icon */}
                   <div
                     className={`
-                      mx-auto w-8 h-8 rounded-full flex items-center justify-center mb-2
-                      transition-colors duration-300
+                      relative mx-auto w-14 h-14 rounded-2xl flex items-center justify-center mb-4
+                      transition-all duration-300
                       ${activeModule === module.id
-                        ? 'bg-radiance-gold/20 text-radiance-gold'
-                        : 'bg-depth-surface text-text-secondary'}
+                        ? 'bg-gradient-to-br from-radiance-gold/20 to-radiance-gold/10 text-radiance-gold scale-105'
+                        : 'bg-gradient-to-br from-depth-surface/60 to-depth-base/40 text-text-secondary'}
                     `}
+                    style={{
+                      boxShadow: activeModule === module.id 
+                        ? '0 0 20px rgba(232, 184, 74, 0.2)'
+                        : 'inset 0 2px 8px rgba(0, 0, 0, 0.2)',
+                    }}
                   >
                     {module.icon}
                   </div>
 
-                  {/* Label */}
-                  <p
+                  {/* Label with premium typography */}
+                  <h3
                     className={`
-                      text-[10px] md:text-xs font-semibold leading-tight transition-colors duration-300
+                      relative text-sm font-bold leading-tight transition-all duration-500 mb-2.5
                       ${activeModule === module.id ? 'text-radiance-gold' : 'text-text-primary'}
                     `}
                   >
                     {module.label}
-                  </p>
+                    {activeModule === module.id && (
+                      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-12 h-px bg-gradient-to-r from-transparent via-radiance-gold to-transparent" />
+                    )}
+                  </h3>
 
-                  {/* Description - only visible on hover */}
+                  {/* Description with enhanced readability */}
                   <p
                     className={`
-                      text-[9px] md:text-[10px] text-text-muted mt-1 leading-tight
-                      transition-all duration-300
-                      ${activeModule === module.id ? 'opacity-100 max-h-10' : 'opacity-0 max-h-0'}
+                      text-[11px] leading-relaxed transition-all duration-500
+                      ${activeModule === module.id 
+                        ? 'text-text-secondary opacity-100' 
+                        : 'text-text-muted opacity-70'}
                     `}
                   >
                     {module.description}
                   </p>
                 </div>
-
-                {/* Connection indicator dot */}
-                <div
-                  className={`
-                    absolute w-2 h-2 rounded-full bg-radiance-gold
-                    transition-all duration-300
-                    ${activeModule === module.id ? 'opacity-100 scale-100' : 'opacity-50 scale-75'}
-                  `}
-                  style={{
-                    // Position the dot on the side facing the center
-                    left: x > 50 ? '-4px' : 'auto',
-                    right: x <= 50 ? '-4px' : 'auto',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                  }}
-                />
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Bottom tagline */}
-      <div className="text-center mt-8 space-y-2">
-        <p className="text-sm text-text-muted">
-          We set up the <span className="text-radiance-gold font-medium">foundation</span> —
-          then connect the modules your business needs.
-        </p>
-        <p className="text-xs text-text-muted/70">
-          Hover over each module to explore
+      {/* Enhanced Bottom Section */}
+      <div className="relative text-center mt-20 space-y-5 max-w-2xl mx-auto z-10">
+        <p className="text-lg text-text-secondary leading-relaxed">
+          We set up the <span className="text-radiance-gold font-bold relative inline-block">
+            foundation
+            <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-gradient-to-r from-transparent via-radiance-gold/50 to-transparent" />
+          </span> — then connect the modules your business needs.
         </p>
       </div>
     </div>

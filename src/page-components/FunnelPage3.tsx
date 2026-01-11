@@ -318,19 +318,21 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
 
       {/* AI Foundation Infographic Section */}
       <section className="section-spacing bg-depth-elevated overflow-hidden relative">
-        {/* Background atmosphere */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
-
         <Container size="wide">
-          <div className="text-center mb-8 relative z-10">
-            <Tag variant="premium" className="mx-auto mb-6 backdrop-blur-sm">
-              The Foundation
-            </Tag>
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-              One Core System.
+          <div className="text-center mb-16 relative z-10">
+            {/* Tag */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-radiance-gold/10 border border-radiance-gold/30 backdrop-blur-sm mb-8">
+              <span className="text-xs font-bold text-radiance-gold uppercase tracking-[0.2em]">The Foundation</span>
+            </div>
+
+            {/* Heading */}
+            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6">
+              <span className="block">One Core System.</span>
               <span className="block text-radiance-gold mt-2">Infinite Possibilities.</span>
             </h2>
-            <p className="text-lg text-text-secondary max-w-2xl mx-auto">
+
+            {/* Description */}
+            <p className="text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">
               Your AI Intelligence System sits at the center — and modules connect to unlock automation, personalization, and leverage.
             </p>
           </div>

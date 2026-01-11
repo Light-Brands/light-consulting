@@ -227,6 +227,28 @@
     animation: float 6s infinite ease-in-out;
   }
 
+  /* Floating particles animation */
+  @keyframes floatParticles {
+    0%, 100% {
+      transform: translate(0, 0);
+      opacity: 0.3;
+    }
+    50% {
+      transform: translate(20px, -20px);
+      opacity: 0.6;
+    }
+  }
+
+  /* Gradient text animation */
+  @keyframes gradient {
+    0%, 100% {
+      background-position: 0% center;
+    }
+    50% {
+      background-position: 100% center;
+    }
+  }
+
   @keyframes fade-in {
     from {
       opacity: 0;
