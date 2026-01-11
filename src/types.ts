@@ -24,6 +24,7 @@ export type PageKey =
   | 'home'
   | 'funnel'
   | 'funnel2'
+  | 'funnel3'
   | 'services'
   | 'services/diagnostic'
   | 'services/command-center'
