@@ -32,14 +32,13 @@ export const Navigation: React.FC<NavigationProps> = ({ activePage, onNavigate }
           {/* Logo */}
           <button
             onClick={() => handleNavigate('home')}
-            className="flex items-center gap-3 group"
+            className="flex items-center group"
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center shadow-illumination group-hover:shadow-illumination-intense transition-all">
-              <span className="text-depth-base font-bold text-sm">LB</span>
-            </div>
-            <span className="text-text-primary font-semibold hidden sm:block">
-              Light Brand
-            </span>
+            <img 
+              src="/lb-logo.svg" 
+              alt="Light Brand Consulting" 
+              className="h-8 md:h-10 w-auto transition-opacity group-hover:opacity-80"
+            />
           </button>
 
           {/* Desktop Navigation */}

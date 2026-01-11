@@ -60,11 +60,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
               {/* Brand */}
               <div className="md:col-span-2 space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center">
-                    <span className="text-depth-base font-bold text-sm">LB</span>
-                  </div>
-                  <span className="text-text-primary font-semibold">Light Brand Consulting</span>
+                <div className="flex items-center">
+                  <img 
+                    src="/lb-logo.svg" 
+                    alt="Light Brand Consulting" 
+                    className="h-8 md:h-10 w-auto"
+                  />
                 </div>
                 <p className="text-sm text-text-secondary max-w-md leading-relaxed">
                   Transform your business into an AI super intelligence.
