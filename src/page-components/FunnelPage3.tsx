@@ -66,7 +66,7 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
                 onClick={() => onNavigate('book')}
                 className="shadow-illumination"
               >
-                👉 Book a 15-Minute Transformation Clarity Session
+                👉 Book Your AI Transformation Clarity Session
               </Button>
             </div>
 
@@ -403,7 +403,7 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
                 1
               </div>
               <div>
-                <h3 className="text-lg font-bold text-radiance-gold">Transformation Clarity Session</h3>
+                <h3 className="text-lg font-bold text-radiance-gold">AI Transformation Clarity Session</h3>
                 <p className="text-text-secondary mt-2">We diagnose where your current foundation is leaking value — and where intelligence would actually help.</p>
               </div>
             </div>
@@ -467,7 +467,7 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
                 onClick={() => onNavigate('book')}
                 className="shadow-illumination"
               >
-                👉 Book a 15-Minute Transformation Clarity Session
+                👉 Book Your AI Transformation Clarity Session
               </Button>
             </div>
 
@@ -477,7 +477,7 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
 
             <Card elevation="subtle" className="p-8 border border-depth-border max-w-2xl mx-auto mt-8">
               <p className="text-text-secondary mb-4">
-                We intentionally limit the number of clarity sessions each week.
+                We intentionally limit the number of AI Transformation Clarity Sessions each week.
               </p>
               <p className="text-text-muted mb-4">
                 If it's not a fit, we'll tell you.
