@@ -22,7 +22,7 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img
@@ -33,170 +33,226 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
           <div className="absolute inset-0 bg-gradient-to-b from-depth-base/90 via-depth-base/70 to-depth-base"></div>
         </div>
 
+        {/* Single subtle glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-radial-gradient from-radiance-gold/4 to-transparent blur-[100px] pointer-events-none z-[1]" />
+
         {/* Hero Content */}
         <Container size="wide" className="relative z-10 py-20 md:py-32">
           <div className="max-w-4xl mx-auto text-center space-y-8">
-            <Tag variant="outline" className="mx-auto">
-              Beyond Website Tactics
-            </Tag>
+            <div className="animate-fade-in">
+              <Tag variant="default" className="mx-auto backdrop-blur-sm">
+                Beyond Website Tactics
+              </Tag>
+            </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary leading-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-text-primary leading-tight animate-slide-up">
               Move Beyond Website Tactics.
-              <span className="block text-radiance-gold mt-2">
-                Build an AI Intelligent System That Powers Growth, Automation, and Leverage.
+              <span className="block text-radiance-gold mt-2 relative inline-block">
+                Build an AI Intelligent System.
+                <span className="absolute -bottom-1 left-0 right-0 h-px bg-radiance-gold/30" />
               </span>
             </h1>
 
-            <div className="max-w-3xl mx-auto space-y-4">
+            <div className="max-w-3xl mx-auto space-y-4 animate-slide-up delay-200">
               <p className="text-xl md:text-2xl text-text-secondary leading-relaxed">
-                You don't need more effort.
+                You don't need more effort. You don't need more tools.
               </p>
-              <p className="text-xl md:text-2xl text-text-secondary leading-relaxed">
-                You don't need more tools.
-              </p>
-              <p className="text-2xl md:text-3xl text-radiance-gold font-semibold">
-                You need a system.
+              <p className="text-xl md:text-2xl text-text-primary font-medium">
+                You need a system that powers growth, automation, and leverage.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
+            <div className="pt-4 max-w-2xl mx-auto animate-slide-up delay-300 space-y-3">
+              <p className="text-text-muted leading-relaxed">
+                Most businesses are running modern operations on outdated infrastructure.
+              </p>
+              <div className="pt-2">
+                <p className="text-radiance-gold text-xl font-semibold">
+                  An AI Intelligent System changes the foundation itself.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6 animate-slide-up delay-400">
               <Button
                 variant="primary"
                 size="xl"
                 onClick={() => onNavigate('book')}
-                className="shadow-illumination"
+                className="shadow-illumination hover:shadow-[0_0_40px_rgba(232,184,74,0.35)] transition-shadow duration-500"
               >
-                👉 Book a 15-Minute Transformation Clarity Session
+                Book a Transformation Clarity Session
               </Button>
             </div>
 
-            <p className="text-text-muted text-sm max-w-xl mx-auto">
-              See if an AI Intelligent System can unlock automation, personalization, and smarter decision-making in your business.
+            <p className="text-text-muted text-sm animate-fade-in delay-500">
+              15 minutes · No obligation · Clarity first
             </p>
           </div>
         </Container>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
-          <div className="animate-bounce">
-            <svg className="w-6 h-6 text-radiance-gold" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-              <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-            </svg>
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-float">
+          <div className="w-6 h-10 rounded-full border-2 border-text-muted/30 flex justify-center pt-2">
+            <div className="w-1.5 h-3 bg-text-muted/30 rounded-full animate-bounce" />
           </div>
         </div>
       </section>
 
       {/* This Is For You If Section */}
-      <section className="section-spacing bg-gradient-to-b from-depth-base to-depth-elevated">
-        <Container size="narrow">
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <Card elevation="elevated" className="p-8 border border-radiance-gold/30">
-              <h3 className="text-xl font-bold text-radiance-gold mb-6">This is for you if:</h3>
-              <ul className="space-y-4">
-                {[
-                  "You've outgrown your current website, tools, or workflows",
-                  'Your business relies too heavily on manual decisions and founder effort',
-                  "You're experimenting with AI but seeing fragmented results",
-                  'You want real leverage, not another tactic',
-                ].map((item, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <span className="text-text-secondary">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </Card>
+      <section className="section-spacing bg-gradient-to-b from-depth-base to-depth-elevated relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
-            <Card elevation="subtle" className="p-8 border border-depth-border">
-              <h3 className="text-xl font-bold text-text-muted mb-6">This is not for:</h3>
-              <ul className="space-y-4">
-                {[
-                  'Businesses not ready for systematic change',
-                  'Template-driven businesses',
-                  'Anyone looking for quick wins or surface-level automation',
-                ].map((item, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-depth-border text-text-muted flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </div>
-                    <span className="text-text-muted">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </Card>
+        <Container size="wide">
+          <div className="relative max-w-5xl mx-auto">
+            {/* Subtle divider line */}
+            <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 w-px h-full bg-gradient-to-b from-transparent via-depth-border/50 to-transparent" />
+
+            <div className="grid md:grid-cols-2 gap-8 lg:gap-12 relative z-10 items-start">
+              {/* This is for */}
+              <div className="space-y-6 flex flex-col h-full">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-xl font-bold text-radiance-gold">This is for founders who:</h3>
+                  <span className="w-2 h-2 rounded-full bg-radiance-gold shadow-[0_0_8px_rgba(232,184,74,0.6)]" />
+                </div>
+
+                <div className="p-6 rounded-2xl border-l-2 border-radiance-gold/30 bg-radiance-gold/5 backdrop-blur-sm flex-1 relative">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-radiance-gold/20 rounded-l-2xl" />
+
+                  <ul className="space-y-3.5 relative z-10">
+                    {[
+                      "Have outgrown their current website, tools, or workflows",
+                      "Rely too heavily on manual decisions and founder effort",
+                      "Are experimenting with AI but seeing fragmented results",
+                      "Want real leverage, not another tactic",
+                    ].map((item, index) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <div className="w-4 h-4 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <span className="text-text-secondary text-sm leading-relaxed">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* This is not for */}
+              <div className="space-y-6 flex flex-col h-full">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-xl font-bold text-text-muted">This is not for:</h3>
+                  <span className="px-2 py-0.5 rounded-full border border-depth-border text-[8px] font-mono text-text-muted uppercase tracking-wider bg-depth-elevated">NOT_A_FIT</span>
+                </div>
+
+                <div className="p-6 rounded-2xl border-l-2 border-depth-border/30 bg-depth-surface/30 backdrop-blur-sm flex-1">
+                  <ul className="space-y-3.5">
+                    {[
+                      "Businesses not ready for systematic change",
+                      "Template-driven businesses seeking quick fixes",
+                      "Anyone looking for surface-level automation",
+                      "Those seeking the cheapest option available",
+                    ].map((item, index) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <div className="w-4 h-4 rounded-full bg-depth-border text-text-muted flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </div>
+                        <span className="text-text-muted text-sm leading-relaxed">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </Container>
       </section>
 
       {/* The Real Problem Section */}
-      <section className="section-spacing bg-depth-elevated">
-        <Container size="narrow">
-          <div className="text-center mb-12">
-            <Tag variant="primary" className="mx-auto mb-6">
+      <section className="section-spacing bg-depth-elevated relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+
+        <Container size="wide">
+          <div className="text-center mb-12 relative z-10">
+            <Tag variant="default" className="mx-auto mb-6 backdrop-blur-sm">
               The Real Issue
             </Tag>
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6">
               Your Website Isn't the Problem.
+              <span className="block text-radiance-amber mt-2">Your Foundation Is.</span>
             </h2>
-            <p className="text-2xl text-radiance-gold font-medium">
-              Your Foundation Is.
-            </p>
           </div>
 
-          <div className="max-w-3xl mx-auto space-y-6 text-lg text-text-secondary">
-            <p>Most businesses believe they have:</p>
+          <div className="max-w-3xl mx-auto space-y-8 relative z-10">
+            <p className="text-lg text-text-secondary text-center">Most businesses believe they have:</p>
 
-            <Card elevation="subtle" className="p-6 border border-depth-border">
-              <ul className="space-y-3 text-text-muted">
-                <li className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-text-muted mt-3 flex-shrink-0"></div>
-                  <span>a traffic problem</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-text-muted mt-3 flex-shrink-0"></div>
-                  <span>a conversion problem</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-text-muted mt-3 flex-shrink-0"></div>
-                  <span>a content problem</span>
-                </li>
-              </ul>
-            </Card>
+            <div className="relative group">
+              <div className="p-8 rounded-2xl border border-depth-border bg-depth-surface/30 backdrop-blur-sm relative overflow-hidden">
+                <div className="absolute inset-0 opacity-[0.02] pointer-events-none"
+                  style={{
+                    backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                    backgroundSize: '24px 24px'
+                  }}
+                />
+                <div className="relative z-10">
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <span className="w-2 h-2 rounded-full bg-text-muted/50" />
+                    <span className="text-[10px] font-mono tracking-widest text-text-muted uppercase">Perceived_Problems</span>
+                  </div>
+                  <div className="grid sm:grid-cols-3 gap-4 text-center">
+                    <div className="p-4 rounded-xl bg-depth-elevated/50 border border-depth-border/50">
+                      <p className="text-text-muted">a traffic problem</p>
+                    </div>
+                    <div className="p-4 rounded-xl bg-depth-elevated/50 border border-depth-border/50">
+                      <p className="text-text-muted">a conversion problem</p>
+                    </div>
+                    <div className="p-4 rounded-xl bg-depth-elevated/50 border border-depth-border/50">
+                      <p className="text-text-muted">a content problem</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-            <p className="text-text-primary font-medium text-xl text-center pt-4">
+            <p className="text-text-primary font-medium text-xl text-center">
               In reality, they have a <span className="text-radiance-gold">foundation problem.</span>
             </p>
 
-            <p className="text-center">They're running modern businesses on Web2 infrastructure:</p>
+            <div className="relative group">
+              <div className="p-8 rounded-2xl border border-radiance-gold/20 bg-radiance-gold/5 backdrop-blur-sm relative overflow-hidden">
+                <div className="absolute inset-0 opacity-[0.02] pointer-events-none"
+                  style={{
+                    backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                    backgroundSize: '24px 24px'
+                  }}
+                />
+                <div className="relative z-10">
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <span className="w-2 h-2 rounded-full bg-radiance-amber" />
+                    <span className="text-[10px] font-mono tracking-widest text-text-muted uppercase">Foundation::Web2_Limitations</span>
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {[
+                      'Static websites',
+                      'Disconnected tools',
+                      'Manual decision-making',
+                      'AI layered on after the fact',
+                    ].map((item, index) => (
+                      <div key={index} className="flex items-center gap-3 p-3 rounded-xl bg-depth-elevated/30">
+                        <div className="w-1.5 h-1.5 rounded-full bg-radiance-amber flex-shrink-0"></div>
+                        <span className="text-text-secondary text-sm">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
 
-            <Card elevation="elevated" className="p-8 border border-depth-border">
-              <ul className="space-y-3 text-text-secondary">
-                <li className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-text-muted mt-3 flex-shrink-0"></div>
-                  <span>Static websites</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-text-muted mt-3 flex-shrink-0"></div>
-                  <span>Disconnected tools</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-text-muted mt-3 flex-shrink-0"></div>
-                  <span>Manual decision-making</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-text-muted mt-3 flex-shrink-0"></div>
-                  <span>AI layered on after the fact</span>
-                </li>
-              </ul>
-            </Card>
-
-            <p className="text-radiance-amber font-semibold text-xl text-center pt-4">
+            <p className="text-radiance-amber font-semibold text-xl text-center">
               No amount of plugins can fix a broken foundation.
             </p>
           </div>
@@ -204,49 +260,70 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
       </section>
 
       {/* We Build AI Intelligent Systems Section */}
-      <section className="section-spacing">
-        <Container size="narrow">
-          <div className="text-center mb-12">
-            <Tag variant="outline" className="mx-auto mb-6">
+      <section className="section-spacing relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/5 to-transparent blur-[120px] pointer-events-none" />
+
+        <Container size="wide">
+          <div className="text-center mb-12 relative z-10">
+            <Tag variant="premium" className="mx-auto mb-6 backdrop-blur-sm">
               Our Approach
             </Tag>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
               We Build AI Intelligent Systems
             </h2>
-            <p className="text-2xl text-radiance-gold font-medium">
-              — Not Just Websites
+            <p className="text-xl text-radiance-gold font-medium">
+              Not just websites.
             </p>
           </div>
 
-          <div className="max-w-3xl mx-auto space-y-8">
+          <div className="max-w-4xl mx-auto space-y-8 relative z-10">
             <p className="text-lg text-text-secondary text-center">
               An AI Intelligent System means intelligence is <span className="text-radiance-gold font-medium">embedded beneath the business</span>, not bolted on top.
             </p>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              <Card elevation="subtle" className="p-8 border border-depth-border">
-                <h3 className="text-lg font-bold text-text-muted mb-4">Instead of asking:</h3>
-                <p className="text-text-muted text-xl italic">"How do we use AI?"</p>
-              </Card>
+            <div className="relative max-w-3xl mx-auto">
+              {/* Subtle divider line */}
+              <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 w-px h-full bg-gradient-to-b from-transparent via-depth-border/50 to-transparent" />
 
-              <Card elevation="elevated" className="p-8 border border-radiance-gold/30">
-                <h3 className="text-lg font-bold text-radiance-gold mb-4">We ask:</h3>
-                <p className="text-text-primary text-xl italic">"Where should intelligence live inside this business?"</p>
-              </Card>
+              <div className="grid md:grid-cols-2 gap-8 items-start">
+                <div className="p-6 rounded-2xl border-l-2 border-depth-border/30 bg-depth-surface/30 backdrop-blur-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="px-2 py-0.5 rounded-full border border-depth-border text-[8px] font-mono text-text-muted uppercase tracking-wider bg-depth-elevated">WRONG_QUESTION</span>
+                  </div>
+                  <p className="text-text-muted text-lg italic">"How do we use AI?"</p>
+                </div>
+
+                <div className="p-6 rounded-2xl border-l-2 border-radiance-gold/30 bg-radiance-gold/5 backdrop-blur-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="w-2 h-2 rounded-full bg-radiance-gold shadow-[0_0_8px_rgba(232,184,74,0.6)]" />
+                    <span className="px-2 py-0.5 rounded-full border border-radiance-gold/30 text-[8px] font-mono text-radiance-gold uppercase tracking-wider bg-radiance-gold/10">RIGHT_QUESTION</span>
+                  </div>
+                  <p className="text-text-primary text-lg italic">"Where should intelligence live inside this business?"</p>
+                </div>
+              </div>
             </div>
 
-            <p className="text-radiance-gold font-semibold text-xl text-center pt-4">
-              That shift changes everything.
-            </p>
+            <div className="mt-12 p-8 bg-depth-elevated/50 rounded-2xl border border-depth-border text-center backdrop-blur-sm relative overflow-hidden group">
+              <div className="absolute inset-0 bg-radial-gradient from-radiance-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div className="relative z-10">
+                <p className="text-radiance-gold font-medium text-xl">
+                  That shift changes everything.
+                </p>
+              </div>
+            </div>
           </div>
         </Container>
       </section>
 
       {/* AI Foundation Infographic Section */}
-      <section className="section-spacing bg-depth-elevated overflow-hidden">
+      <section className="section-spacing bg-depth-elevated overflow-hidden relative">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+
         <Container size="wide">
-          <div className="text-center mb-8">
-            <Tag variant="primary" className="mx-auto mb-6">
+          <div className="text-center mb-8 relative z-10">
+            <Tag variant="premium" className="mx-auto mb-6 backdrop-blur-sm">
               The Foundation
             </Tag>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
@@ -254,19 +331,24 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
               <span className="block text-radiance-gold mt-2">Infinite Possibilities.</span>
             </h2>
             <p className="text-lg text-text-secondary max-w-2xl mx-auto">
-              Your AI Super Intelligence System sits at the center — and modules connect to unlock automation, personalization, and leverage.
+              Your AI Intelligence System sits at the center — and modules connect to unlock automation, personalization, and leverage.
             </p>
           </div>
 
-          <AIFoundationInfographic />
+          <div className="relative z-10">
+            <AIFoundationInfographic />
+          </div>
         </Container>
       </section>
 
       {/* Benefits Section */}
-      <section className="section-spacing bg-depth-elevated">
-        <Container size="narrow">
-          <div className="text-center mb-12">
-            <Tag variant="primary" className="mx-auto mb-6">
+      <section className="section-spacing relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+
+        <Container size="wide">
+          <div className="text-center mb-12 relative z-10">
+            <Tag variant="default" className="mx-auto mb-6 backdrop-blur-sm">
               What You Gain
             </Tag>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary">
@@ -275,7 +357,7 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
             </h2>
           </div>
 
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-5xl mx-auto relative z-10">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
                 {
@@ -324,59 +406,73 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
                   ),
                 },
               ].map((item, index) => (
-                <Card key={index} elevation="elevated" className="p-6">
-                  <div className="w-12 h-12 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center mb-4">
-                    {item.icon}
-                  </div>
-                  <h3 className="text-lg font-bold text-text-primary mb-2">{item.title}</h3>
-                  <p className="text-text-secondary text-sm">{item.description}</p>
-                </Card>
+                <div key={index} className="relative group">
+                  <Card elevation="elevated" className="p-6 bg-depth-surface/30 border border-depth-border backdrop-blur-sm hover:border-radiance-gold/30 transition-all h-full">
+                    <div className="w-12 h-12 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center mb-4 shadow-[0_0_15px_rgba(232,184,74,0.2)] group-hover:shadow-[0_0_25px_rgba(232,184,74,0.3)] transition-shadow">
+                      {item.icon}
+                    </div>
+                    <h3 className="text-lg font-bold text-text-primary mb-2 group-hover:text-radiance-gold transition-colors">{item.title}</h3>
+                    <p className="text-text-secondary text-sm leading-relaxed">{item.description}</p>
+                  </Card>
+                </div>
               ))}
             </div>
 
-            <div className="mt-12 text-center">
-              <p className="text-text-muted text-lg">This isn't a redesign.</p>
-              <p className="text-radiance-gold font-semibold text-xl mt-2">It's a structural upgrade.</p>
+            <div className="mt-12 p-8 bg-depth-elevated/50 rounded-2xl border border-depth-border text-center backdrop-blur-sm relative overflow-hidden group">
+              <div className="absolute inset-0 bg-radial-gradient from-radiance-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div className="relative z-10">
+                <p className="text-text-muted text-lg mb-4">This isn't a redesign.</p>
+                <p className="text-radiance-gold font-semibold text-xl">It's a structural upgrade.</p>
+              </div>
             </div>
           </div>
         </Container>
       </section>
 
       {/* Proof / Credibility Section */}
-      <section className="section-spacing">
+      <section className="section-spacing relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+
         <Container size="narrow">
-          <div className="max-w-3xl mx-auto">
-            <Card elevation="elevated" className="p-8 md:p-12 border border-radiance-gold/20">
-              <div className="text-center space-y-6">
-                {/* Star Rating */}
+          <div className="max-w-3xl mx-auto relative group">
+            {/* Hover glow effect */}
+            <div className="absolute -inset-4 bg-gradient-to-b from-radiance-gold/10 to-transparent blur-2xl rounded-[3rem] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+
+            <Card elevation="elevated" className="p-10 md:p-12 bg-depth-elevated/30 border border-radiance-gold/30 backdrop-blur-md rounded-3xl relative overflow-hidden">
+              {/* Blueprint background */}
+              <div className="absolute inset-0 opacity-[0.02] pointer-events-none"
+                style={{
+                  backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                  backgroundSize: '24px 24px'
+                }}
+              />
+
+              <div className="absolute inset-0 bg-radial-gradient from-radiance-gold/5 to-transparent" />
+
+              <div className="relative z-10 space-y-8">
                 <div className="flex justify-center gap-1">
                   {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-radiance-gold" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    <svg key={i} className="w-6 h-6 text-radiance-gold fill-current drop-shadow-[0_0_8px_rgba(232,184,74,0.5)]" viewBox="0 0 20 20">
+                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                     </svg>
                   ))}
                 </div>
 
-                {/* Testimonial Quote */}
-                <blockquote className="text-xl md:text-2xl text-text-primary italic leading-relaxed">
-                  "After implementing our AI Intelligent System, we reduced lead response time by 4× and automated workflows that used to take hours each week."
-                </blockquote>
+                <div className="relative">
+                  {/* Quote mark decoration */}
+                  <div className="absolute -top-4 -left-2 text-6xl text-radiance-gold/20 font-serif leading-none">"</div>
 
-                {/* Attribution */}
-                <div className="pt-4">
-                  <p className="text-text-secondary font-medium">— Founder, Service Business</p>
+                  <blockquote className="text-xl md:text-2xl text-text-primary leading-relaxed text-center font-medium relative z-10">
+                    After implementing our AI Intelligent System, we reduced lead response time by 4× and automated workflows that used to take hours each week.
+                  </blockquote>
                 </div>
 
-                {/* Trust Line */}
-                <p className="text-text-muted text-sm pt-4">
-                  Trusted by founders across service, tech, and advisory businesses.
-                </p>
-
-                {/* Logo Placeholder */}
-                <div className="pt-4 border-t border-depth-border">
-                  <p className="text-text-muted text-xs uppercase tracking-wide">
-                    [Client Logos or Niche Names]
-                  </p>
+                <div className="flex flex-col items-center gap-4 pt-6 border-t border-depth-border/30">
+                  <div className="text-center">
+                    <p className="font-bold text-lg text-text-primary">Service Business Founder</p>
+                    <p className="text-text-muted text-sm">B2B Services Industry</p>
+                  </div>
                 </div>
               </div>
             </Card>
@@ -385,115 +481,120 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
       </section>
 
       {/* Process Section */}
-      <section className="section-spacing bg-depth-elevated">
+      <section className="section-spacing bg-depth-elevated relative overflow-hidden">
+        {/* Blueprint grid background */}
+        <div className="absolute inset-0 opacity-[0.015] pointer-events-none"
+          style={{
+            backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+            backgroundSize: '32px 32px'
+          }}
+        />
+
         <Container size="narrow">
-          <div className="text-center mb-12">
-            <Tag variant="primary" className="mx-auto mb-6">
+          <div className="text-center mb-12 relative z-10">
+            <Tag variant="default" className="mx-auto mb-6 backdrop-blur-sm">
               How It Works
             </Tag>
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary">
-              A Simple 3-Step Process
-            </h2>
           </div>
 
-          <div className="max-w-3xl mx-auto">
-            {/* Step 1 */}
-            <div className="flex items-start gap-6 p-6 rounded-lg bg-depth-surface mb-4">
-              <div className="w-14 h-14 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 font-bold text-lg">
-                1
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-radiance-gold">Transformation Clarity Session</h3>
-                <p className="text-text-secondary mt-2">We diagnose where your current foundation is leaking value — and where intelligence would actually help.</p>
-              </div>
-            </div>
+          <div className="max-w-2xl mx-auto space-y-6 relative z-10">
+            {[
+              { step: 1, title: 'Transformation Clarity Session', text: 'We diagnose where your current foundation is leaking value — and where intelligence would actually help.' },
+              { step: 2, title: 'AI System Blueprint', text: 'If there\'s leverage, we map a custom AI Intelligent System for your business.' },
+              { step: 3, title: 'Strategic Support', text: 'Implementation guidance and optimization — so the system drives real ROI, not just ideas.' }
+            ].map((item, idx) => (
+              <div key={item.step} className="relative group">
+                {/* Connecting line */}
+                {idx < 2 && (
+                  <div className="absolute left-5 top-10 w-px h-6 bg-gradient-to-b from-radiance-gold/30 to-transparent" />
+                )}
 
-            <div className="flex justify-center">
-              <svg className="w-6 h-12 text-radiance-gold/50" fill="none" viewBox="0 0 24 48" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v40m0 0l-6-6m6 6l6-6" />
-              </svg>
-            </div>
-
-            {/* Step 2 */}
-            <div className="flex items-start gap-6 p-6 rounded-lg bg-depth-surface mb-4">
-              <div className="w-14 h-14 rounded-full bg-radiance-gold/20 text-radiance-amber flex items-center justify-center flex-shrink-0 font-bold text-lg">
-                2
+                <div className="flex items-start gap-4 p-6 bg-depth-surface/30 border border-depth-border rounded-2xl backdrop-blur-sm hover:border-radiance-gold/30 transition-all group-hover:scale-[1.02]">
+                  <div className="relative">
+                    <div className="w-10 h-10 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center font-bold flex-shrink-0 font-mono shadow-[0_0_20px_rgba(232,184,74,0.2)] group-hover:shadow-[0_0_30px_rgba(232,184,74,0.4)] transition-shadow">
+                      {item.step}
+                    </div>
+                    {/* Pulse ring on hover */}
+                    <div className="absolute inset-0 rounded-full border-2 border-radiance-gold/30 animate-ping opacity-0 group-hover:opacity-75" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-[8px] font-mono text-text-muted mb-1 uppercase tracking-[0.2em]">STEP_{item.step}</div>
+                    <h3 className="text-lg font-bold text-text-primary mb-1">{item.title}</h3>
+                    <p className="text-text-secondary text-sm leading-relaxed">{item.text}</p>
+                  </div>
+                </div>
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-radiance-amber">AI System Blueprint</h3>
-                <p className="text-text-secondary mt-2">If there's leverage, we map a custom AI Intelligent System for your business.</p>
-              </div>
-            </div>
+            ))}
+          </div>
 
-            <div className="flex justify-center">
-              <svg className="w-6 h-12 text-radiance-gold/50" fill="none" viewBox="0 0 24 48" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v40m0 0l-6-6m6 6l6-6" />
-              </svg>
-            </div>
-
-            {/* Step 3 */}
-            <div className="flex items-start gap-6 p-6 rounded-lg bg-radiance-gold/10 border border-radiance-gold/30">
-              <div className="w-14 h-14 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 font-bold text-lg">
-                3
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-radiance-gold">Strategic Support</h3>
-                <p className="text-text-primary mt-2">Implementation guidance and optimization — so the system drives real ROI, not just ideas.</p>
-              </div>
-            </div>
-
-            {/* Reassurance */}
-            <div className="mt-10 text-center space-y-2">
-              <p className="text-text-secondary">No pressure.</p>
-              <p className="text-text-secondary">No pitchy calls.</p>
-              <p className="text-radiance-gold font-medium text-lg">Clarity first.</p>
-            </div>
+          <div className="text-center mt-12 relative z-10">
+            <p className="text-text-muted border-t border-depth-border/50 pt-8 flex items-center justify-center gap-3">
+              <span className="opacity-40 text-[10px] font-mono">//</span>
+              <span>No pressure. No pitchy calls. Just clarity.</span>
+              <span className="opacity-40 text-[10px] font-mono">//</span>
+            </p>
           </div>
         </Container>
       </section>
 
       {/* CTA Section */}
-      <section className="section-spacing">
-        <Container size="narrow">
-          <div className="max-w-4xl mx-auto text-center space-y-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary">
-              Ready to See If Your Business Is Built to Scale?
-            </h2>
+      <section className="section-spacing bg-gradient-to-b from-depth-base to-depth-elevated relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/5 to-transparent blur-[120px] pointer-events-none" />
 
-            <div className="pt-4">
+        {/* Blueprint grid */}
+        <div className="absolute inset-0 opacity-[0.015] pointer-events-none"
+          style={{
+            backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+            backgroundSize: '40px 40px'
+          }}
+        />
+
+        <Container size="narrow">
+          <div className="max-w-4xl mx-auto text-center space-y-8 relative z-10">
+            <div className="relative inline-block">
+              {/* Decorative glow around heading */}
+              <div className="absolute -inset-8 bg-radiance-gold/10 blur-3xl rounded-full" />
+
+              <h2 className="text-3xl md:text-4xl font-bold text-text-primary relative z-10">
+                Ready to see if your business is built to scale?
+              </h2>
+            </div>
+
+            <p className="text-xl text-radiance-gold font-medium">
+              One conversation can reveal years of hidden leverage.
+            </p>
+
+            <div className="pt-6 relative">
+              {/* Button glow effect */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-64 h-64 bg-radiance-gold/10 blur-3xl rounded-full animate-pulse" />
+              </div>
+
               <Button
                 variant="primary"
                 size="xl"
                 onClick={() => onNavigate('book')}
-                className="shadow-illumination"
+                className="shadow-[0_0_30px_rgba(232,184,74,0.25)] hover:shadow-[0_0_50px_rgba(232,184,74,0.4)] transition-all duration-500 relative z-10"
               >
-                👉 Book a 15-Minute Transformation Clarity Session
+                Book a Transformation Clarity Session
               </Button>
             </div>
 
-            <p className="text-text-muted text-sm">
-              Limited availability. We only take businesses where intelligence creates real leverage.
+            <p className="text-text-muted text-sm font-mono tracking-wider">
+              <span className="opacity-40">//</span> 15 minutes <span className="opacity-40">·</span> Limited availability <span className="opacity-40">·</span> Zero pressure <span className="opacity-40">//</span>
             </p>
-
-            <Card elevation="subtle" className="p-8 border border-depth-border max-w-2xl mx-auto mt-8">
-              <p className="text-text-secondary mb-4">
-                We intentionally limit the number of clarity sessions each week.
-              </p>
-              <p className="text-text-muted mb-4">
-                If it's not a fit, we'll tell you.
-              </p>
-              <p className="text-text-primary font-medium">
-                If it is, you'll walk away with clear next steps — either way.
-              </p>
-            </Card>
           </div>
         </Container>
       </section>
 
       {/* Final Positioning Section */}
-      <section className="section-spacing bg-depth-elevated">
+      <section className="section-spacing bg-depth-elevated relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+
         <Container size="narrow">
-          <div className="max-w-3xl mx-auto text-center space-y-6">
+          <div className="max-w-3xl mx-auto text-center space-y-6 relative z-10">
             <p className="text-lg text-text-secondary">
               Most businesses try to scale on top of broken foundations.
             </p>
@@ -508,12 +609,19 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
       </section>
 
       {/* Closing Line */}
-      <section className="py-12 bg-depth-base border-t border-depth-border">
+      <section className="py-12 bg-depth-base border-t border-depth-border relative overflow-hidden">
+        {/* Subtle glow at bottom */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-32 bg-radial-gradient from-radiance-gold/5 to-transparent blur-3xl pointer-events-none" />
+
         <Container size="narrow" className="text-center">
-          <p className="text-text-muted">
-            <span className="text-radiance-gold">Light Brand</span> builds AI Intelligent Systems
-            that power growth, automation, and leverage.
-          </p>
+          <div className="relative z-10 flex items-center justify-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-radiance-gold/30" />
+            <p className="text-text-muted">
+              <span className="text-radiance-gold font-medium">Light Brand</span> builds AI Intelligent Systems
+              that power growth, automation, and leverage.
+            </p>
+            <span className="w-2 h-2 rounded-full bg-radiance-gold/30" />
+          </div>
         </Container>
       </section>
     </div>
