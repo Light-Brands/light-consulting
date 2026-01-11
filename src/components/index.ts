@@ -64,6 +64,7 @@ export { default as BlogPostTakeawaysVisual } from './BlogPostTakeawaysVisual';
 export { default as BlogPostCTAVisual } from './BlogPostCTAVisual';
 export { default as BlogPostRelatedVisual } from './BlogPostRelatedVisual';
 export { default as BackButtonVisual } from './BackButtonVisual';
+export { default as AIFoundationInfographic } from './AIFoundationInfographic';
 
 // Icons
 export * from './Icons';

@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import { Button, Card, Tag } from '../components';
+import { Button, Card, Tag, AIFoundationInfographic } from '../components';
 import { Container } from '../components/ui';
 import { PageKey } from '../types';
 import { IMAGE_CONFIG } from '../lib/constants';
@@ -239,6 +239,26 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
               That shift changes everything.
             </p>
           </div>
+        </Container>
+      </section>
+
+      {/* AI Foundation Infographic Section */}
+      <section className="section-spacing bg-depth-elevated overflow-hidden">
+        <Container size="wide">
+          <div className="text-center mb-8">
+            <Tag variant="primary" className="mx-auto mb-6">
+              The Foundation
+            </Tag>
+            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
+              One Core System.
+              <span className="block text-radiance-gold mt-2">Infinite Possibilities.</span>
+            </h2>
+            <p className="text-lg text-text-secondary max-w-2xl mx-auto">
+              Your AI Super Intelligence System sits at the center — and modules connect to unlock automation, personalization, and leverage.
+            </p>
+          </div>
+
+          <AIFoundationInfographic />
         </Container>
       </section>
 
