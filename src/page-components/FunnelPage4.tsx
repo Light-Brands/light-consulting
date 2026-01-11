@@ -45,7 +45,7 @@ export const FunnelPage4: React.FC<FunnelPage4Props> = ({ onNavigate }) => {
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary leading-tight">
               Your Business Doesn't Need More Effort.
               <span className="block text-radiance-gold mt-2">
-                It Needs a System.
+                It Needs an AI Intelligence System.
               </span>
             </h1>
 
@@ -256,46 +256,6 @@ export const FunnelPage4: React.FC<FunnelPage4Props> = ({ onNavigate }) => {
               </p>
             </Card>
 
-            {/* Part 3: The Offer */}
-            <Card elevation="floating" className="p-8 md:p-10 border-2 border-radiance-gold/50 bg-gradient-to-br from-depth-elevated to-depth-surface">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-radiance-gold/30 text-radiance-gold flex items-center justify-center font-bold text-lg">
-                  3
-                </div>
-                <h3 className="text-xl font-bold text-radiance-gold">$5K Offer — AI Intelligence System + Strategy</h3>
-              </div>
-              <p className="text-text-secondary mb-6">
-                Eyob makes the offer on this call. Here's what's included:
-              </p>
-              <ul className="space-y-4 mb-8">
-                {[
-                  'Creation of your custom AI Intelligence System',
-                  'A full in-depth AI Strategy',
-                  'System architecture tailored to your business',
-                  'Clear implementation roadmap',
-                ].map((item, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-radiance-gold text-depth-base flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <span className="text-text-primary font-medium">{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <Card elevation="subtle" className="p-6 border border-depth-border mb-6">
-                <p className="text-text-secondary italic text-center">
-                  "What you've seen today is the preview.
-                </p>
-                <p className="text-radiance-gold font-medium text-center mt-2">
-                  The next step is for us to actually build this system for your business and design the strategy behind it."
-                </p>
-              </Card>
-              <p className="text-text-muted text-sm text-center">
-                This is framed as <span className="text-radiance-gold">system creation</span>, not consulting.
-              </p>
-            </Card>
           </div>
         </Container>
       </section>
@@ -468,52 +428,6 @@ export const FunnelPage4: React.FC<FunnelPage4Props> = ({ onNavigate }) => {
                 ))}
               </ul>
             </Card>
-          </div>
-        </Container>
-      </section>
-
-      {/* Why This Funnel Is Strong */}
-      <section className="section-spacing">
-        <Container size="narrow">
-          <div className="text-center mb-12">
-            <Tag variant="primary" className="mx-auto mb-6">
-              The Complete System
-            </Tag>
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-              Why This Funnel Works
-            </h2>
-          </div>
-
-          <div className="max-w-3xl mx-auto">
-            <div className="space-y-4">
-              {[
-                { step: 'Step 0', desc: 'Pre-frames belief and intent', color: 'text-muted' },
-                { step: 'Step 1', desc: 'Filters for seriousness', color: 'radiance-gold' },
-                { step: 'Step 2', desc: 'Sells before heavy work', color: 'radiance-amber' },
-                { step: 'Step 3', desc: 'Delivers real value', color: 'wisdom-violet' },
-                { step: 'Step 4', desc: 'Compounds revenue', color: 'radiance-gold' },
-              ].map((item, index) => (
-                <div key={index} className="flex items-center gap-6 p-4 bg-depth-surface rounded-lg">
-                  <div className={`w-16 flex-shrink-0 text-${item.color} font-bold`}>
-                    {item.step}
-                  </div>
-                  <div className="flex-1 h-2 bg-depth-border rounded-full overflow-hidden">
-                    <div
-                      className={`h-full bg-${item.color === 'text-muted' ? 'text-muted' : item.color}`}
-                      style={{ width: `${(index + 1) * 20}%` }}
-                    ></div>
-                  </div>
-                  <p className="text-text-secondary flex-1">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-12 text-center space-y-4">
-              <p className="text-lg text-text-secondary">This is not a funnel.</p>
-              <p className="text-2xl md:text-3xl text-radiance-gold font-bold">
-                This is an AI-powered client ascension system.
-              </p>
-            </div>
           </div>
         </Container>
       </section>
