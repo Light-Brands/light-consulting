@@ -54,7 +54,7 @@ export const FunnelPage4: React.FC<FunnelPage4Props> = ({ onNavigate }) => {
                 AI is not an add-on. It's the foundation.
               </p>
               <p className="text-xl md:text-2xl text-text-primary font-medium">
-                See exactly how AI could run your business.
+                See exactly how AI could support your business.
               </p>
               <p className="text-2xl md:text-3xl text-radiance-gold font-semibold">
                 Relief from friction starts here.
@@ -461,9 +461,6 @@ export const FunnelPage4: React.FC<FunnelPage4Props> = ({ onNavigate }) => {
 
             <Card elevation="subtle" className="p-8 border border-depth-border max-w-2xl mx-auto mt-8">
               <div className="space-y-4">
-                <p className="text-text-secondary">
-                  You're not advertising for AI.
-                </p>
                 <p className="text-text-primary font-medium">
                   You're seeking relief from friction.
                 </p>
