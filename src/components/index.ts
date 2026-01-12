@@ -73,6 +73,7 @@ export { default as FunnelReadinessVisual } from './FunnelReadinessVisual';
 export { default as DiagnosticDeliverablesVisual } from './DiagnosticDeliverablesVisual';
 export { default as MotionVsLeverageVisual } from './MotionVsLeverageVisual';
 export { default as FoundationComparisonVisual } from './FoundationComparisonVisual';
+export { default as ProjectCarousel } from './ProjectCarousel';
 
 // Icons
 export * from './Icons';
