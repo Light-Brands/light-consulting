@@ -281,7 +281,7 @@ export const Blockquote: React.FC<BlockquoteProps> = ({
       {children}
       {author && (
         <footer className="text-text-muted text-sm not-italic mt-2">
-          — {author}
+          - {author}
         </footer>
       )}
     </Component>

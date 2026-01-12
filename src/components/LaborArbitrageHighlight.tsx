@@ -109,7 +109,7 @@ export const LaborArbitrageHighlight: React.FC<{ onLearnMore: () => void }> = ({
                   <div className="w-2.5 h-2.5 rounded-full bg-radiance-gold/40" />
                   <div className="w-2.5 h-2.5 rounded-full bg-success/40" />
                 </div>
-                <div className="text-[10px] font-mono text-text-muted">business_model.tsx — 100%</div>
+                <div className="text-[10px] font-mono text-text-muted">business_model.tsx | 100%</div>
               </div>
 
               {/* Code Area */}
@@ -156,7 +156,7 @@ export const LaborArbitrageHighlight: React.FC<{ onLearnMore: () => void }> = ({
               <div className="bg-depth-surface/30 border-t border-depth-border px-6 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="text-[10px] font-mono text-text-muted">
-                    <span className="text-text-primary">Ln {activeLines.length}, Col 1</span> — UTF-8
+                    <span className="text-text-primary">Ln {activeLines.length}, Col 1</span> | UTF-8
                   </div>
                 </div>
                 <button 

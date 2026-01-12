@@ -293,7 +293,7 @@ export const AIFoundationInfographic: React.FC = () => {
           We set up the <span className="text-radiance-gold font-bold relative inline-block">
             foundation
             <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-gradient-to-r from-transparent via-radiance-gold/50 to-transparent" />
-          </span> — then connect the modules your business needs.
+          </span>, then connect the modules your business needs.
         </p>
       </div>
     </div>

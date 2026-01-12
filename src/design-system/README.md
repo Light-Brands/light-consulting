@@ -15,7 +15,7 @@ src/design-system/
 
 ## 🎨 Design Philosophy
 
-The Light Brand Consulting design system is built around the concept of **"Light emerging from depth"** — a sophisticated dark theme with warm, illuminating accents.
+The Light Brand Consulting design system is built around the concept of **"Light emerging from depth"**, a sophisticated dark theme with warm, illuminating accents.
 
 ### Core Principles
 
