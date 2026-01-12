@@ -151,7 +151,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               The Capacity Gap
             </Heading>
             <Text variant="large" className="max-w-3xl text-text-secondary leading-relaxed">
-              Every business has untapped potential, opportunities hidden in plain sight. The gap between where you are and where AI can take you isn't about technology—it's about mindset. Seeing clearly what's possible.
+              Every business has untapped potential, opportunities hidden in plain sight. The gap between where you are and where AI can take you isn't about technology, it's about mindset. Seeing clearly what's possible.
             </Text>
           </div>
         </Container>
@@ -221,7 +221,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </Heading>
             <Text variant="large" align="center" className="max-w-3xl mx-auto text-text-secondary font-light leading-relaxed block">
               Most founders are scaling chaos by adding tools to broken structures.
-              The real transformation isn't technological—it's a mindset shift. The future belongs to those who design an intentional architecture for intelligence.
+              The real transformation isn't technological, it's a mindset shift. The future belongs to those who design an intentional architecture for intelligence.
             </Text>
           </div>
 
