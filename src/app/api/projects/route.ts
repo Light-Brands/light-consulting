@@ -767,6 +767,14 @@ export async function GET(request: NextRequest) {
         );
       }
 
+      // Sort by sort_order (ascending), then by created_at (descending)
+      projects.sort((a, b) => {
+        if (a.sort_order !== b.sort_order) {
+          return a.sort_order - b.sort_order;
+        }
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+
       // Apply limit
       if (limit) {
         projects = projects.slice(0, parseInt(limit));
