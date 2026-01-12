@@ -570,7 +570,7 @@ export const FunnelPage5: React.FC<FunnelPage5Props> = ({ onNavigate }) => {
               Most light workers try to go it alone or compromise their values to fit the business world.
             </p>
             <p className="text-xl text-text-primary font-medium">
-              We help you build differently —
+              We help you build differently.
             </p>
             <p className="text-2xl text-radiance-gold font-semibold">
               with integrity, aligned people, and intelligent systems that amplify your impact.

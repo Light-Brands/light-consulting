@@ -4,7 +4,7 @@
  *
  * Page Function: Help clients understand the foundational shift
  * - From traditional website (Web2) to AI intelligence system
- * - Not an upgrade—a complete transformation of the foundation
+ * - Not an upgrade. A complete transformation of the foundation
  * - Everything built next becomes possible when the foundation changes
  */
 
@@ -117,7 +117,7 @@ export const FunnelPage2: React.FC<FunnelPage2Props> = ({ onNavigate }) => {
           <div className="max-w-3xl mx-auto space-y-6 text-lg text-text-secondary relative z-10 text-center">
             <p>Most businesses today are operating on a traditional website foundation.</p>
 
-            <p>Their website is the base of their online presence—and everything else they try to build depends on that foundation.</p>
+            <p>Their website is the base of their online presence, and everything else they try to build depends on that foundation.</p>
 
             <div className="relative mt-8 group">
               <div className="p-8 rounded-2xl border border-depth-border bg-depth-elevated/30 backdrop-blur-sm relative overflow-hidden">

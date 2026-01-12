@@ -64,7 +64,7 @@ export const FunnelPage17: React.FC<FunnelPage17Props> = ({ onNavigate }) => {
 
             <div className="pt-4 max-w-2xl mx-auto animate-slide-up delay-300 space-y-3">
               <p className="text-text-muted leading-relaxed">
-                HIPAA. Patient safety. Clinical workflows. The stakes are higher—and so is the potential.
+                HIPAA. Patient safety. Clinical workflows. The stakes are higher, and so is the potential.
               </p>
               <div className="pt-2">
                 <p className="text-radiance-gold text-xl font-semibold">
@@ -453,7 +453,7 @@ export const FunnelPage17: React.FC<FunnelPage17Props> = ({ onNavigate }) => {
               <div className="absolute -inset-8 bg-radiance-gold/10 blur-3xl rounded-full" />
 
               <h2 className="text-3xl md:text-4xl font-bold text-text-primary relative z-10">
-                Ready to lead healthcare AI—responsibly?
+                Ready to lead healthcare AI responsibly?
               </h2>
             </div>
 

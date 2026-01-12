@@ -152,7 +152,7 @@ export const FunnelPage29: React.FC<FunnelPage29Props> = ({ onNavigate }) => {
                   <span className="w-2 h-2 rounded-full bg-text-muted" />
                   <span className="text-[10px] font-mono tracking-widest text-text-muted uppercase">Scarcity_Mode</span>
                 </div>
-                <p className="text-text-muted italic">&ldquo;I can&apos;t charge what I&apos;m worth—healing should be accessible.&rdquo;</p>
+                <p className="text-text-muted italic">&ldquo;I can&apos;t charge what I&apos;m worth. Healing should be accessible.&rdquo;</p>
               </div>
               <div className="p-6 rounded-2xl bg-radiance-gold/5 border border-radiance-gold/30 backdrop-blur-sm">
                 <div className="flex items-center gap-2 mb-4">

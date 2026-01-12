@@ -333,7 +333,7 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
 
             {/* Description */}
             <p className="text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">
-              Your AI Intelligence System sits at the center — and modules connect to unlock automation, personalization, and leverage.
+              Your AI Intelligence System sits at the center, and modules connect to unlock automation, personalization, and leverage.
             </p>
           </div>
 
@@ -487,9 +487,9 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
 
           <div className="max-w-2xl mx-auto space-y-6 relative z-10">
             {[
-              { step: 1, title: 'Transformation Clarity Session', text: 'We diagnose where your current foundation is leaking value — and where intelligence would actually help.' },
+              { step: 1, title: 'Transformation Clarity Session', text: 'We diagnose where your current foundation is leaking value, and where intelligence would actually help.' },
               { step: 2, title: 'AI System Blueprint', text: 'If there\'s leverage, we map a custom AI Intelligent System for your business.' },
-              { step: 3, title: 'Strategic Support', text: 'Implementation guidance and optimization — so the system drives real ROI, not just ideas.' }
+              { step: 3, title: 'Strategic Support', text: 'Implementation guidance and optimization, so the system drives real ROI, not just ideas.' }
             ].map((item, idx) => (
               <div key={item.step} className="relative group">
                 {/* Connecting line */}
@@ -587,7 +587,7 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
               Most businesses try to scale on top of broken foundations.
             </p>
             <p className="text-xl text-text-primary font-medium">
-              We help you rebuild beneath the business —
+              We help you rebuild beneath the business.
             </p>
             <p className="text-2xl text-radiance-gold font-semibold">
               so growth becomes simpler, smarter, and sustainable.

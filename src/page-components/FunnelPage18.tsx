@@ -64,7 +64,7 @@ export const FunnelPage18: React.FC<FunnelPage18Props> = ({ onNavigate }) => {
 
             <div className="pt-4 max-w-2xl mx-auto animate-slide-up delay-300 space-y-3">
               <p className="text-text-muted leading-relaxed">
-                SOC 2. GLBA. SEC. FINRA. The regulatory landscape is complex—your AI strategy should navigate it flawlessly.
+                SOC 2. GLBA. SEC. FINRA. The regulatory landscape is complex. Your AI strategy should navigate it flawlessly.
               </p>
               <div className="pt-2">
                 <p className="text-radiance-gold text-xl font-semibold">
@@ -151,14 +151,14 @@ export const FunnelPage18: React.FC<FunnelPage18Props> = ({ onNavigate }) => {
                   <span className="w-2 h-2 rounded-full bg-text-muted" />
                   <span className="text-[10px] font-mono tracking-widest text-text-muted uppercase">Regulatory_Fear</span>
                 </div>
-                <p className="text-text-muted italic">"We can't move fast with AI—the regulators won't allow it."</p>
+                <p className="text-text-muted italic">"We can't move fast with AI. The regulators won't allow it."</p>
               </div>
               <div className="p-6 rounded-2xl bg-radiance-gold/5 border border-radiance-gold/30 backdrop-blur-sm">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="w-2 h-2 rounded-full bg-radiance-gold shadow-[0_0_8px_rgba(232,184,74,0.6)]" />
                   <span className="text-[10px] font-mono tracking-widest text-radiance-gold uppercase">Strategic_Compliance</span>
                 </div>
-                <p className="text-text-primary italic">"Our AI is our competitive advantage—built on a foundation of compliance."</p>
+                <p className="text-text-primary italic">"Our AI is our competitive advantage, built on a foundation of compliance."</p>
               </div>
             </div>
           </div>

@@ -159,7 +159,7 @@ export const FunnelPage36: React.FC<FunnelPage36Props> = ({ onNavigate }) => {
                   <span className="w-2 h-2 rounded-full bg-radiance-gold shadow-[0_0_8px_rgba(232,184,74,0.6)]" />
                   <span className="text-[10px] font-mono tracking-widest text-radiance-gold uppercase">Vision_Keeper</span>
                 </div>
-                <p className="text-text-primary italic">&ldquo;I&apos;ve been thinking about your Q2 launch—here&apos;s what we should consider...&rdquo;</p>
+                <p className="text-text-primary italic">&ldquo;I&apos;ve been thinking about your Q2 launch. Here&apos;s what we should consider...&rdquo;</p>
               </div>
             </div>
           </div>
