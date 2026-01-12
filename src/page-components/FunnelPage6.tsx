@@ -332,7 +332,7 @@ export const FunnelPage6: React.FC<FunnelPage6Props> = ({ onNavigate }) => {
               {
                 step: 1,
                 title: 'Pilot Purgatory Assessment',
-                text: 'Identify what\'s actually blocking your scale — is it technical, organizational, or strategic?',
+                text: 'Identify what\'s actually blocking your scale: is it technical, organizational, or strategic?',
                 price: 'Free',
               },
               {

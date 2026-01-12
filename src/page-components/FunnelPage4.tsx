@@ -108,7 +108,7 @@ export const FunnelPage4: React.FC<FunnelPage4Props> = ({ onNavigate }) => {
         <Container size="wide">
           <div className="text-center mb-12 relative z-10">
             <Tag variant="default" className="mx-auto mb-6 backdrop-blur-sm">
-              Step 1 — Entry Point
+              Step 1: Entry Point
             </Tag>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
               Free AI Readiness Diagnostic
@@ -214,7 +214,7 @@ export const FunnelPage4: React.FC<FunnelPage4Props> = ({ onNavigate }) => {
         <Container size="wide">
           <div className="text-center mb-12 relative z-10">
             <Tag variant="premium" className="mx-auto mb-6 backdrop-blur-sm">
-              Step 2 — The Conversion Engine
+              Step 2: The Conversion Engine
             </Tag>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
               AI Readiness Executive Summary
@@ -330,7 +330,7 @@ export const FunnelPage4: React.FC<FunnelPage4Props> = ({ onNavigate }) => {
         <Container size="wide">
           <div className="text-center mb-12 relative z-10">
             <Tag variant="default" className="mx-auto mb-6 backdrop-blur-sm">
-              Step 3 — Delivery Phase
+              Step 3: Delivery Phase
             </Tag>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
               Build + Strategy
@@ -444,7 +444,7 @@ export const FunnelPage4: React.FC<FunnelPage4Props> = ({ onNavigate }) => {
         <Container size="wide">
           <div className="text-center mb-12 relative z-10">
             <Tag variant="premium" className="mx-auto mb-6 backdrop-blur-sm">
-              Step 4 — Expansion & Upsell
+              Step 4: Expansion & Upsell
             </Tag>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
               Second Call with Eyob
@@ -595,7 +595,7 @@ export const FunnelPage4: React.FC<FunnelPage4Props> = ({ onNavigate }) => {
               Most businesses try to add AI on top of broken systems.
             </p>
             <p className="text-xl text-text-primary font-medium">
-              We help you build AI as the foundation —
+              We help you build AI as the foundation.
             </p>
             <p className="text-2xl text-radiance-gold font-semibold">
               so growth becomes automated, intelligent, and leveraged.

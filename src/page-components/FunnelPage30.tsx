@@ -58,7 +58,7 @@ export const FunnelPage30: React.FC<FunnelPage30Props> = ({ onNavigate }) => {
                 The coaching market is saturated with 300,000+ practitioners.
               </p>
               <p className="text-xl md:text-2xl text-text-primary font-medium">
-                But spiritual coaching is fundamentally different—and your positioning should reflect that.
+                But spiritual coaching is fundamentally different, and your positioning should reflect that.
               </p>
             </div>
 
