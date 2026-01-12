@@ -11,14 +11,17 @@
     "generate-images": "tsx scripts/generate-images.ts"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@supabase/supabase-js": "^2.90.1",
     "@tailwindcss/postcss": "^4.1.18",
     "autoprefixer": "^10.4.23",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.25.0",
+    "mammoth": "^1.11.0",
     "next": "^16.1.1",
     "next-auth": "^4.24.13",
+    "pdf-parse": "^2.4.5",
     "postcss": "^8.5.6",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
@@ -27,6 +30,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
+    "@types/pdf-parse": "^1.1.5",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "openai": "^4.75.0",

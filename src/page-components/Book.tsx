@@ -1,122 +1,68 @@
 /**
- * Booking Page
+ * Booking Page - AI Document Analysis
  * Light Brand Consulting
+ *
+ * Ultra-frictionless 3-step booking flow:
+ * 1. Upload Document + Contact Info (combined)
+ * 2. AI Analysis (automatic)
+ * 3. Report Display + Auto-Submit (combined)
  */
 
-import React, { useState } from 'react';
+'use client';
+
+import React, { useState, useCallback } from 'react';
 import {
-  Button,
   BookProgressVisual,
-  ServiceSelectionVisual,
-  ContactInfoFormVisual,
-  IntakeQuestionsVisual,
-  BookingConfirmationVisual,
-  BookingSuccessVisual,
+  DocumentUploadVisual,
+  AIAnalysisVisual,
+  ValuePropositionReport,
 } from '../components';
 import { Container, Section } from '../components/ui';
-import { SERVICES, INTAKE_QUESTIONS } from '../lib/constants';
-import { BookingFormData, PageKey } from '../types';
-import { isValidEmail, cn } from '../lib/utils';
-
+import { AIBookingFormData, AIReport, PageKey } from '../types';
+import { isValidEmail } from '../lib/utils';
 
 interface BookPageProps {
   onNavigate: (page: PageKey) => void;
 }
 
-type ServiceKey = 'diagnostic' | 'command-center' | 'authority-engine' | 'ascension';
+type AnalysisPhase = 'reading' | 'understanding' | 'identifying' | 'creating';
 
 export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<BookingFormData>({});
+  const [formData, setFormData] = useState<AIBookingFormData>({
+    document: null,
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
+  const [analysisPhase, setAnalysisPhase] = useState<AnalysisPhase>('reading');
+  const [analysisProgress, setAnalysisProgress] = useState(0);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
 
-  const validateStep = (currentStep: number): boolean => {
+  const stepLabels = [
+    'Upload Document',
+    'AI Analysis',
+    'Your Report',
+  ];
+
+  const validateStep1 = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (currentStep === 1 && !formData.service) {
-      newErrors.service = 'Please select a service';
+    if (!formData.document) {
+      newErrors.document = 'Please upload a document';
     }
-
-    if (currentStep === 2) {
-      if (!formData.name?.trim()) {
-        newErrors.name = 'Name is required';
-      }
-      if (!formData.email?.trim()) {
-        newErrors.email = 'Email is required';
-      } else if (!isValidEmail(formData.email)) {
-        newErrors.email = 'Please enter a valid email';
-      }
+    if (!formData.name?.trim()) {
+      newErrors.name = 'Name is required';
     }
-
-    if (currentStep === 3) {
-      const questions = INTAKE_QUESTIONS[formData.service || 'diagnostic'];
-      questions.forEach((q) => {
-        if (q.required && !formData.intake?.[q.id]?.trim()) {
-          newErrors[q.id] = 'This field is required';
-        }
-      });
+    if (!formData.email?.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!isValidEmail(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNext = () => {
-    if (validateStep(step)) {
-      if (step === 4) {
-        handleSubmit();
-      } else {
-        setStep(step + 1);
-      }
-    }
-  };
-
-  const handleBack = () => {
-    if (step > 1) {
-      setStep(step - 1);
-    }
-  };
-
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch('/api/leads', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          service: formData.service,
-          name: formData.name,
-          email: formData.email,
-          company: formData.company,
-          phone: formData.phone,
-          intake_data: formData.intake,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        console.error('Error submitting lead:', result.error);
-        setErrors({ submit: result.error || 'Failed to submit. Please try again.' });
-        setIsSubmitting(false);
-        return;
-      }
-
-      setIsSubmitting(false);
-      setIsComplete(true);
-    } catch (error) {
-      console.error('Error submitting lead:', error);
-      setErrors({ submit: 'Failed to submit. Please try again.' });
-      setIsSubmitting(false);
-    }
-  };
-
-  const updateFormData = (updates: Partial<BookingFormData>) => {
+  const updateFormData = useCallback((updates: Partial<AIBookingFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
     // Clear related errors
     Object.keys(updates).forEach((key) => {
@@ -128,57 +74,113 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
         });
       }
     });
+  }, [errors]);
+
+  const handleDocumentChange = useCallback((file: File | null) => {
+    updateFormData({ document: file });
+  }, [updateFormData]);
+
+  const handleFieldChange = useCallback((field: string, value: string) => {
+    if (field === 'documentError') {
+      setErrors((prev) => ({ ...prev, document: value }));
+    } else {
+      updateFormData({ [field]: value });
+    }
+  }, [updateFormData]);
+
+  const simulateProgress = (
+    startProgress: number,
+    endProgress: number,
+    phase: AnalysisPhase,
+    duration: number
+  ): Promise<void> => {
+    return new Promise((resolve) => {
+      setAnalysisPhase(phase);
+      const steps = 20;
+      const stepDuration = duration / steps;
+      const progressIncrement = (endProgress - startProgress) / steps;
+      let currentStep = 0;
+
+      const interval = setInterval(() => {
+        currentStep++;
+        setAnalysisProgress(startProgress + progressIncrement * currentStep);
+
+        if (currentStep >= steps) {
+          clearInterval(interval);
+          resolve();
+        }
+      }, stepDuration);
+    });
   };
 
-  const updateIntake = (questionId: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      intake: { ...prev.intake, [questionId]: value },
-    }));
-    if (errors[questionId]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[questionId];
-        return newErrors;
+  const analyzeDocument = async () => {
+    if (!validateStep1()) return;
+
+    // Move to analysis step
+    setStep(2);
+    setAnalysisError(null);
+    setAnalysisProgress(0);
+    updateFormData({ isAnalyzing: true });
+
+    try {
+      // Create form data for upload
+      const uploadData = new FormData();
+      uploadData.append('file', formData.document!);
+      uploadData.append('name', formData.name!);
+      uploadData.append('email', formData.email!);
+      if (formData.company) {
+        uploadData.append('company', formData.company);
+      }
+
+      // Start progress simulation in parallel with API call
+      const progressPromise = (async () => {
+        await simulateProgress(0, 25, 'reading', 3000);
+        await simulateProgress(25, 50, 'understanding', 4000);
+        await simulateProgress(50, 75, 'identifying', 3000);
+        await simulateProgress(75, 95, 'creating', 5000);
+      })();
+
+      // Make API call
+      const response = await fetch('/api/analyze-documents', {
+        method: 'POST',
+        body: uploadData,
       });
+
+      const result = await response.json();
+
+      // Wait for progress animation to catch up
+      await progressPromise;
+      setAnalysisProgress(100);
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Analysis failed');
+      }
+
+      // Short delay to show 100% before transitioning
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      // Update form data with report and move to final step
+      updateFormData({
+        aiReport: result.report as AIReport,
+        isAnalyzing: false,
+        isComplete: true,
+        leadId: result.leadId,
+      });
+
+      setStep(3);
+    } catch (error) {
+      console.error('Analysis error:', error);
+      setAnalysisError(
+        error instanceof Error ? error.message : 'An unexpected error occurred'
+      );
+      updateFormData({ isAnalyzing: false });
     }
   };
 
-  const stepLabels = [
-    'Select Service',
-    'Your Information',
-    'Intake Questions',
-    'Confirm Booking',
-  ];
-
-  const services = (Object.keys(SERVICES) as ServiceKey[]).map((key) => ({
-    key,
-    name: SERVICES[key].name,
-    tagline: SERVICES[key].tagline,
-    investment: SERVICES[key].investment,
-    duration: SERVICES[key].duration,
-  }));
-
-  if (isComplete) {
-    return (
-      <div className="min-h-screen pt-24 md:pt-32">
-        <Section spacing="lg" className="relative overflow-hidden">
-          {/* Background atmosphere */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
-
-          <Container size="narrow">
-            <div className="relative z-10">
-              <BookingSuccessVisual
-                serviceName={SERVICES[formData.service!]?.name || ''}
-                onHomeClick={() => onNavigate('home')}
-                onServicesClick={() => onNavigate('services')}
-              />
-            </div>
-          </Container>
-        </Section>
-      </div>
-    );
-  }
+  const handleReadyToAnalyze = useCallback(() => {
+    // Auto-trigger analysis when all fields are ready
+    analyzeDocument();
+  }, [formData]);
 
   return (
     <div className="min-h-screen pt-24 md:pt-32">
@@ -190,95 +192,53 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
           {/* Progress */}
           <BookProgressVisual
             currentStep={step}
-            totalSteps={4}
+            totalSteps={3}
             stepLabels={stepLabels}
           />
 
-          {/* Step Content with Transitions */}
-          <div className="relative min-h-[400px]">
-            {/* Step 1: Service Selection */}
+          {/* Step Content */}
+          <div className="relative min-h-[500px]">
+            {/* Step 1: Document Upload + Contact Info */}
             {step === 1 && (
-              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms' }}>
-                <ServiceSelectionVisual
-                  services={services}
-                  selectedService={formData.service}
-                  onSelect={(key) => updateFormData({ service: key as ServiceKey })}
-                  error={errors.service}
-                />
-              </div>
-            )}
-
-            {/* Step 2: Contact Information */}
-            {step === 2 && (
-              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms' }}>
-                <ContactInfoFormVisual
+              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
+                <DocumentUploadVisual
                   formData={{
+                    document: formData.document,
                     name: formData.name,
                     email: formData.email,
                     company: formData.company,
-                    phone: formData.phone,
                   }}
                   errors={errors}
-                  onFieldChange={(field, value) => {
-                    const updates: Partial<BookingFormData> = {};
-                    if (field === 'name') updates.name = value;
-                    else if (field === 'email') updates.email = value;
-                    else if (field === 'company') updates.company = value;
-                    else if (field === 'phone') updates.phone = value;
-                    updateFormData(updates);
-                  }}
+                  onDocumentChange={handleDocumentChange}
+                  onFieldChange={handleFieldChange}
+                  onReady={handleReadyToAnalyze}
                 />
               </div>
             )}
 
-            {/* Step 3: Intake Questions */}
-            {step === 3 && formData.service && (
-              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms' }}>
-                <IntakeQuestionsVisual
-                  questions={INTAKE_QUESTIONS[formData.service]}
-                  answers={formData.intake || {}}
-                  errors={errors}
-                  onAnswerChange={updateIntake}
+            {/* Step 2: AI Analysis */}
+            {step === 2 && (
+              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
+                <AIAnalysisVisual
+                  fileName={formData.document?.name}
+                  progress={analysisProgress}
+                  currentPhase={analysisPhase}
+                  error={analysisError}
                 />
               </div>
             )}
 
-            {/* Step 4: Confirmation */}
-            {step === 4 && formData.service && (
-              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms' }}>
-                <BookingConfirmationVisual
-                  serviceName={SERVICES[formData.service].name}
-                  investment={SERVICES[formData.service].investment}
-                  name={formData.name || ''}
-                  email={formData.email || ''}
-                  company={formData.company}
+            {/* Step 3: Report Display */}
+            {step === 3 && formData.aiReport && (
+              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
+                <ValuePropositionReport
+                  report={formData.aiReport}
+                  userName={formData.name || 'Valued Client'}
+                  onHomeClick={() => onNavigate('home')}
+                  onContactClick={() => onNavigate('contact')}
                 />
               </div>
             )}
-          </div>
-
-          {/* Navigation */}
-          <div className="flex justify-between items-center mt-10 pt-6 border-t border-depth-border/50">
-            <Button
-              variant="ghost"
-              onClick={handleBack}
-              disabled={step === 1}
-              className={cn(
-                step === 1 ? 'invisible' : '',
-                'transition-all duration-200'
-              )}
-            >
-              Back
-            </Button>
-            <Button
-              variant="primary"
-              onClick={handleNext}
-              isLoading={isSubmitting}
-              disabled={isSubmitting}
-              className="min-w-[140px]"
-            >
-              {step === 4 ? 'Submit Booking' : 'Continue'}
-            </Button>
           </div>
         </Container>
       </Section>
