@@ -353,73 +353,59 @@ export const FunnelPage3: React.FC<FunnelPage3Props> = ({ onNavigate }) => {
             <Tag variant="default" className="mx-auto mb-6 backdrop-blur-sm">
               What You Gain
             </Tag>
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary">
+            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
               With an AI Intelligent System,
               <span className="block text-radiance-gold mt-2">your business gains:</span>
             </h2>
           </div>
 
-          <div className="max-w-5xl mx-auto relative z-10">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                {
-                  title: 'Automation',
-                  description: 'That removes operational drag',
-                  icon: (
-                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                  ),
-                },
-                {
-                  title: 'Personalization',
-                  description: 'Across customer journeys',
-                  icon: (
-                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  ),
-                },
-                {
-                  title: 'Intelligence',
-                  description: 'That improves decisions over time',
-                  icon: (
-                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                    </svg>
-                  ),
-                },
-                {
-                  title: 'Leverage',
-                  description: 'Without hiring or burnout',
-                  icon: (
-                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                    </svg>
-                  ),
-                },
-                {
-                  title: 'Scalability',
-                  description: 'Without complexity',
-                  icon: (
-                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                  ),
-                },
-              ].map((item, index) => (
-                <div key={index} className="relative group">
-                  <Card elevation="elevated" className="p-6 bg-depth-surface/30 border border-depth-border backdrop-blur-sm hover:border-radiance-gold/30 transition-all h-full">
-                    <div className="w-12 h-12 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center mb-4 shadow-[0_0_15px_rgba(232,184,74,0.2)] group-hover:shadow-[0_0_25px_rgba(232,184,74,0.3)] transition-shadow">
-                      {item.icon}
-                    </div>
-                    <h3 className="text-lg font-bold text-text-primary mb-2 group-hover:text-radiance-gold transition-colors">{item.title}</h3>
+          <div className="max-w-4xl mx-auto relative z-10">
+            {/* Smart 2-3 layout: 2 items on top (centered), 3 items on bottom */}
+            <div className="space-y-6">
+              {/* First row: 2 items centered */}
+              <div className="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                {[
+                  {
+                    title: 'Automation',
+                    description: 'That removes operational drag',
+                  },
+                  {
+                    title: 'Personalization',
+                    description: 'Across customer journeys',
+                  },
+                ].map((item, index) => (
+                  <div key={index} className="p-5 bg-depth-surface/30 border border-depth-border/50 rounded-2xl backdrop-blur-sm hover:border-radiance-gold/30 transition-colors group">
+                    <h3 className="text-text-primary font-bold mb-2 group-hover:text-radiance-gold transition-colors">{item.title}</h3>
                     <p className="text-text-secondary text-sm leading-relaxed">{item.description}</p>
-                  </Card>
-                </div>
-              ))}
+                  </div>
+                ))}
+              </div>
+
+              {/* Second row: 3 items */}
+              <div className="grid sm:grid-cols-3 gap-6">
+                {[
+                  {
+                    title: 'Intelligence',
+                    description: 'That improves decisions over time',
+                  },
+                  {
+                    title: 'Leverage',
+                    description: 'Without hiring or burnout',
+                  },
+                  {
+                    title: 'Scalability',
+                    description: 'Without complexity',
+                  },
+                ].map((item, index) => (
+                  <div key={index} className="p-5 bg-depth-surface/30 border border-depth-border/50 rounded-2xl backdrop-blur-sm hover:border-radiance-gold/30 transition-colors group">
+                    <h3 className="text-text-primary font-bold mb-2 group-hover:text-radiance-gold transition-colors">{item.title}</h3>
+                    <p className="text-text-secondary text-sm leading-relaxed">{item.description}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
+            {/* Closing statement */}
             <div className="mt-12 p-8 bg-depth-elevated/50 rounded-2xl border border-depth-border text-center backdrop-blur-sm relative overflow-hidden group">
               <div className="absolute inset-0 bg-radial-gradient from-radiance-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               <div className="relative z-10">

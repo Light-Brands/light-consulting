@@ -55,7 +55,7 @@ export const ContactInfoFormVisual: React.FC<ContactInfoFormVisualProps> = ({
       </div>
 
       {/* Form */}
-      <div className="relative">
+      <div className="relative group">
         {/* Hover glow effect */}
         <div className="absolute -inset-4 bg-gradient-to-b from-radiance-gold/5 to-transparent blur-2xl rounded-[3rem] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 

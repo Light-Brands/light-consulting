@@ -9,10 +9,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { Container, Section, Heading, Text, Card, CardBody } from '@/components/ui';
-import { Button, Tag } from '@/components';
-import { ArrowLeftIcon, ClockIcon } from '@/components/Icons';
+import { Container } from '@/components/ui';
+import { Button, Tag, BackButtonVisual, Card } from '@/components';
+import { ClockIcon } from '@/components/Icons';
 import type { Project } from '@/types/database';
 import type { PageKey } from '@/types';
 
@@ -133,116 +132,118 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-32">
-        <Container size="wide">
-          <div className="animate-pulse space-y-8">
-            <div className="h-8 bg-depth-surface rounded w-48" />
-            <div className="h-16 bg-depth-surface rounded w-3/4" />
-            <div className="aspect-video bg-depth-surface rounded-2xl" />
-          </div>
-        </Container>
+      <div className="min-h-screen pt-24 md:pt-32">
+        <section className="section-spacing">
+          <Container size="wide">
+            <div className="animate-pulse space-y-8">
+              <div className="h-8 bg-depth-surface rounded w-48" />
+              <div className="h-16 bg-depth-surface rounded w-3/4" />
+              <div className="aspect-video bg-depth-surface rounded-2xl" />
+            </div>
+          </Container>
+        </section>
       </div>
     );
   }
 
   if (!project) {
     return (
-      <div className="min-h-screen pt-32">
-        <Container size="wide">
-          <div className="text-center py-16">
-            <h1 className="text-2xl text-text-primary mb-4">Project not found</h1>
-            <Button variant="ghost" onClick={() => onNavigate('portfolio')}>
-              Back to Portfolio
-            </Button>
-          </div>
-        </Container>
+      <div className="min-h-screen pt-24 md:pt-32">
+        <section className="section-spacing">
+          <Container size="wide">
+            <div className="text-center py-16">
+              <h1 className="text-2xl text-text-primary mb-4">Project not found</h1>
+              <Button variant="ghost" onClick={() => onNavigate('portfolio')}>
+                Back to Portfolio
+              </Button>
+            </div>
+          </Container>
+        </section>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-24 md:pt-32">
-      {/* Hero Section */}
-      <Section className="pb-12 md:pb-16">
-        <Container size="wide">
-          {/* Back Button */}
-          <motion.button
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+    <div className="min-h-screen">
+      {/* Hero Section with Background Image */}
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden pt-24 md:pt-32">
+        {/* Background Image */}
+        {project.image_url && (
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={project.image_url}
+              alt={project.title}
+              fill
+              className="object-cover opacity-30"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-depth-base/95 via-depth-base/85 to-depth-base" />
+          </div>
+        )}
+
+        {/* Glow effects */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-radial-gradient from-radiance-gold/4 to-transparent blur-[100px] pointer-events-none z-[1]" />
+
+        {/* Bottom fade gradient */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-[30%] pointer-events-none z-[1]"
+          style={{
+            background: 'linear-gradient(to bottom, transparent 0%, rgba(15, 14, 13, 0.5) 50%, rgba(15, 14, 13, 1) 100%)',
+          }}
+        />
+
+        {/* Hero Content */}
+        <Container size="wide" className="relative z-10 py-20 md:py-32">
+          <BackButtonVisual
+            label="Back to Portfolio"
             onClick={() => onNavigate('portfolio')}
-            className="text-text-muted hover:text-text-secondary text-sm mb-8 flex items-center gap-2 transition-colors group"
-          >
-            <ArrowLeftIcon size={16} className="group-hover:-translate-x-1 transition-transform" />
-            <span>Back to Portfolio</span>
-          </motion.button>
+          />
 
           <div className="max-w-4xl">
             {/* Badges */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="flex flex-wrap items-center gap-3 mb-6"
-            >
+            <div className="flex flex-wrap items-center gap-3 mb-6">
               {project.featured && (
-                <Tag variant="premium" className="text-xs">
+                <Tag variant="premium" className="backdrop-blur-sm">
                   Featured Project
                 </Tag>
               )}
               {project.industry && (
-                <Tag variant="default" className="text-xs">
+                <Tag variant="default" className="backdrop-blur-sm">
                   {project.industry}
                 </Tag>
               )}
               {project.project_type && (
-                <span className="px-3 py-1 bg-depth-surface/50 text-text-muted text-xs rounded-full">
+                <span className="px-3 py-1 bg-depth-surface/50 text-text-muted text-xs rounded-full backdrop-blur-sm">
                   {project.project_type}
                 </span>
               )}
-            </motion.div>
+            </div>
 
             {/* Title */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <Heading level="h1" className="text-4xl md:text-5xl lg:text-6xl mb-6">
-                {project.title}
-              </Heading>
-            </motion.div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary mb-6 leading-tight">
+              {project.title}
+            </h1>
 
             {/* Description */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              <Text variant="lead" className="text-text-secondary text-lg md:text-xl mb-8">
-                {project.description}
-              </Text>
-            </motion.div>
+            <p className="text-text-secondary text-lg md:text-xl mb-8 leading-relaxed">
+              {project.description}
+            </p>
 
             {/* Project Meta */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="flex flex-wrap items-center gap-6 mb-8 text-sm text-text-muted"
-            >
+            <div className="flex flex-wrap items-center gap-6 mb-8 text-sm">
               {project.client_name && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 px-4 py-2 bg-depth-surface/30 border border-depth-border rounded-lg backdrop-blur-sm">
                   <span className="font-medium text-text-secondary">Client:</span>
-                  <span>{project.client_name}</span>
+                  <span className="text-text-muted">{project.client_name}</span>
                 </div>
               )}
               {project.origin && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 px-4 py-2 bg-depth-surface/30 border border-depth-border rounded-lg backdrop-blur-sm">
                   <span className="font-medium text-text-secondary">Region:</span>
-                  <span>{project.origin}</span>
+                  <span className="text-text-muted">{project.origin}</span>
                 </div>
               )}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 px-4 py-2 bg-depth-surface/30 border border-depth-border rounded-lg backdrop-blur-sm text-text-muted">
                 <ClockIcon size={16} />
                 <span>
                   {new Date(project.created_at).toLocaleDateString('en-US', {
@@ -251,59 +252,45 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
                   })}
                 </span>
               </div>
-            </motion.div>
+            </div>
 
             {/* Tags */}
             {project.tags && project.tags.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="flex flex-wrap gap-2 mb-8"
-              >
+              <div className="flex flex-wrap gap-2">
                 {project.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className="px-3 py-1.5 bg-depth-surface text-text-secondary text-sm rounded-lg border border-depth-border"
+                    className="px-3 py-1.5 bg-depth-surface/50 text-text-secondary text-sm rounded-lg border border-depth-border backdrop-blur-sm hover:border-radiance-gold/30 transition-colors"
                   >
                     {tag}
                   </span>
                 ))}
-              </motion.div>
+              </div>
             )}
 
             {/* Live Site Button */}
             {project.case_study_url && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-              >
+              <div className="mt-8">
                 <a
                   href={project.case_study_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-radiance-gold text-depth-base font-medium rounded-lg hover:bg-radiance-gold/90 transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-radiance-gold text-depth-base font-medium rounded-lg hover:bg-radiance-gold/90 transition-colors shadow-[0_0_20px_rgba(232,184,74,0.3)]"
                 >
                   <span>View Live Site</span>
                   <ExternalLinkIcon size={16} />
                 </a>
-              </motion.div>
+              </div>
             )}
           </div>
         </Container>
-      </Section>
+      </section>
 
       {/* Gallery Section */}
       {galleryImages.length > 0 && (
-        <Section className="py-0 pb-12 md:pb-16">
+        <section className="section-spacing relative overflow-hidden">
           <Container size="wide">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
-              className="relative"
-            >
+            <div className="relative group">
               {/* Main Image */}
               <div className="relative aspect-video rounded-2xl overflow-hidden border border-depth-border bg-depth-elevated">
                 {!imageError[activeImageIndex] ? (
@@ -372,222 +359,128 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
                   ))}
                 </div>
               )}
-            </motion.div>
-          </Container>
-        </Section>
-      )}
-
-      {/* Services & Key Features */}
-      {(project.services?.length || project.key_features?.length) && (
-        <Section className="py-12 md:py-16 bg-depth-elevated/50">
-          <Container size="wide">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Services Provided */}
-              {project.services && project.services.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <Heading level="h3" className="text-xl mb-4">
-                    Services Provided
-                  </Heading>
-                  <ul className="space-y-3">
-                    {project.services.map((service, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <div className="w-5 h-5 rounded-full bg-radiance-gold/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <CheckIcon size={12} />
-                        </div>
-                        <Text variant="body" className="text-text-secondary">
-                          {service}
-                        </Text>
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-              )}
-
-              {/* Key Features */}
-              {project.key_features && project.key_features.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
-                >
-                  <Heading level="h3" className="text-xl mb-4">
-                    Key Features
-                  </Heading>
-                  <ul className="space-y-3">
-                    {project.key_features.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <div className="w-5 h-5 rounded-full bg-radiance-gold/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <CheckIcon size={12} />
-                        </div>
-                        <Text variant="body" className="text-text-secondary">
-                          {feature}
-                        </Text>
-                      </li>
-                    ))}
-                  </ul>
-                </motion.div>
-              )}
             </div>
           </Container>
-        </Section>
+        </section>
       )}
 
-      {/* Challenge & Solution */}
-      {(project.challenge || project.solution) && (
-        <Section className="py-16 md:py-24">
-          <Container size="wide">
-            <div className="max-w-4xl mx-auto">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <Heading level="h2" className="text-3xl md:text-4xl mb-8">
-                  Project Overview
-                </Heading>
+      </section>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  {project.challenge && (
-                    <Card elevation="subtle">
-                      <CardBody>
-                        <h3 className="text-lg font-semibold text-text-primary mb-3">
-                          The Challenge
-                        </h3>
-                        <Text variant="body" className="text-text-secondary">
-                          {project.challenge}
-                        </Text>
-                      </CardBody>
-                    </Card>
-                  )}
+      {/* Project Details */}
+      <section className="section-spacing bg-depth-elevated relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
-                  {project.solution && (
-                    <Card elevation="subtle">
-                      <CardBody>
-                        <h3 className="text-lg font-semibold text-text-primary mb-3">
-                          Our Solution
-                        </h3>
-                        <Text variant="body" className="text-text-secondary">
-                          {project.solution}
-                        </Text>
-                      </CardBody>
-                    </Card>
-                  )}
+        <Container size="wide" className="relative z-10">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-8">
+              Project Overview
+            </h2>
+
+            <div className="space-y-8">
+              <p className="text-text-secondary text-lg leading-relaxed">
+                This project demonstrates our approach to transforming complex business operations
+                through intelligent automation. By leveraging cutting-edge AI technologies, we
+                created a solution that not only addresses immediate operational challenges but
+                also establishes a foundation for future growth and innovation.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card elevation="elevated" className="p-6 bg-depth-surface/30 border border-depth-border backdrop-blur-sm hover:border-radiance-gold/30 transition-all group">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-semibold text-text-primary group-hover:text-radiance-gold transition-colors">
+                      Challenge
+                    </h3>
+                  </div>
+                  <p className="text-text-secondary leading-relaxed">
+                    The client faced significant challenges in processing and analyzing large
+                    volumes of healthcare data, with manual processes taking weeks to complete
+                    and creating bottlenecks in decision-making.
+                  </p>
+                </Card>
+
+                <Card elevation="elevated" className="p-6 bg-depth-surface/30 border border-depth-border backdrop-blur-sm hover:border-radiance-gold/30 transition-all group">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-semibold text-text-primary group-hover:text-radiance-gold transition-colors">Solution</h3>
+                  </div>
+                  <p className="text-text-secondary leading-relaxed">
+                    We developed an AI-powered analytics platform that processes data in
+                    real-time, reduces analysis time by 95%, and ensures full compliance with
+                    healthcare regulations.
+                  </p>
+                </Card>
+              </div>
+
+              <div className="mt-12">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-radiance-gold/30 to-transparent" />
+                  <h3 className="text-xl font-semibold text-text-primary">Key Results</h3>
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-radiance-gold/30 to-transparent" />
                 </div>
-              </motion.div>
-            </div>
-          </Container>
-        </Section>
-      )}
-
-      {/* Results */}
-      {project.results && project.results.length > 0 && (
-        <Section className="py-16 md:py-24 bg-depth-elevated">
-          <Container size="wide">
-            <div className="max-w-4xl mx-auto">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <Heading level="h2" className="text-3xl md:text-4xl mb-8">
-                  Key Results
-                </Heading>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {project.results.map((result, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: index * 0.1 }}
-                      className="flex items-start gap-3 p-4 bg-depth-surface rounded-xl border border-depth-border"
-                    >
-                      <div className="w-2 h-2 rounded-full bg-radiance-gold mt-2 flex-shrink-0" />
-                      <Text variant="body" className="text-text-secondary">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    '95% reduction in data processing time',
+                    '100% HIPAA compliance maintained',
+                    'Real-time analytics capabilities enabled',
+                    'Scalable architecture for future growth',
+                  ].map((result, index) => (
+                    <div key={index} className="group flex items-start gap-3 p-5 bg-depth-surface/30 border border-depth-border rounded-xl backdrop-blur-sm hover:border-radiance-gold/30 transition-all">
+                      <div className="w-6 h-6 rounded-lg bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-radiance-gold/30 transition-colors">
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <p className="text-text-secondary leading-relaxed font-medium">
                         {result}
-                      </Text>
-                    </motion.div>
+                      </p>
+                    </div>
                   ))}
                 </div>
-              </motion.div>
+              </div>
             </div>
-          </Container>
-        </Section>
-      )}
-
-      {/* Tech Stack */}
-      {project.tech_stack && (project.tech_stack.frontend || project.tech_stack.backend) && (
-        <Section className="py-12 md:py-16">
-          <Container size="wide">
-            <div className="max-w-4xl mx-auto">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <Heading level="h3" className="text-2xl mb-6">
-                  Technology Stack
-                </Heading>
-                <div className="flex flex-wrap gap-4">
-                  {project.tech_stack.frontend && (
-                    <div className="px-4 py-2 bg-depth-surface rounded-lg border border-depth-border">
-                      <span className="text-text-muted text-xs block mb-1">Frontend</span>
-                      <span className="text-text-primary font-medium">
-                        {project.tech_stack.frontend}
-                      </span>
-                    </div>
-                  )}
-                  {project.tech_stack.backend && (
-                    <div className="px-4 py-2 bg-depth-surface rounded-lg border border-depth-border">
-                      <span className="text-text-muted text-xs block mb-1">Backend</span>
-                      <span className="text-text-primary font-medium">
-                        {project.tech_stack.backend}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            </div>
-          </Container>
-        </Section>
-      )}
+          </div>
+        </Container>
+      </section>
 
       {/* CTA Section */}
-      <Section className="py-20 md:py-32">
-        <Container size="wide">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-2xl mx-auto"
-          >
-            <Heading level="h2" className="text-3xl md:text-4xl mb-4">
+      <section className="section-spacing relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+
+        <Container size="narrow" className="relative z-10">
+          <div className="text-center max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
               Ready to Transform Your Business?
-            </Heading>
-            <Text variant="lead" className="text-text-secondary mb-8">
-              Let&apos;s discuss how we can help you achieve similar results with AI-powered solutions.
-            </Text>
+            </h2>
+            <p className="text-text-secondary text-lg mb-8 leading-relaxed">
+              Let's discuss how we can help you achieve similar results with AI-powered solutions.
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="primary" size="lg" onClick={() => onNavigate('contact')}>
+              <Button 
+                variant="primary" 
+                size="lg" 
+                onClick={() => onNavigate('book')}
+                className="shadow-[0_0_30px_rgba(232,184,74,0.25)] hover:shadow-[0_0_50px_rgba(232,184,74,0.4)] transition-all duration-500"
+              >
                 Start Your Project
               </Button>
-              <Button variant="secondary" size="lg" onClick={() => onNavigate('portfolio')}>
+              <Button variant="ghost" size="lg" onClick={() => onNavigate('portfolio')}>
                 View More Projects
               </Button>
             </div>
-          </motion.div>
+          </div>
         </Container>
-      </Section>
+      </section>
     </div>
   );
 };

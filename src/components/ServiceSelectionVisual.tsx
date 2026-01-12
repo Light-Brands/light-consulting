@@ -14,7 +14,6 @@ interface Service {
   tagline: string;
   investment: string;
   duration: string;
-  icon: React.ReactNode;
 }
 
 interface ServiceSelectionVisualProps {
@@ -62,7 +61,7 @@ export const ServiceSelectionVisual: React.FC<ServiceSelectionVisualProps> = ({
       </div>
 
       {/* Services Grid */}
-      <div className="grid gap-4">
+      <div className="grid gap-5">
         {services.map((service, index) => {
           const isSelected = selectedService === service.key;
 
@@ -80,35 +79,23 @@ export const ServiceSelectionVisual: React.FC<ServiceSelectionVisualProps> = ({
                 className={cn(
                   'relative z-10 bg-depth-elevated/20 border rounded-2xl p-6 cursor-pointer backdrop-blur-sm transition-all duration-300',
                   isSelected
-                    ? 'border-radiance-gold/50 ring-1 ring-radiance-gold/20 bg-depth-elevated/30'
+                    ? 'border-radiance-gold/50 ring-1 ring-radiance-gold/20 bg-depth-elevated/30 shadow-[0_0_20px_rgba(232,184,74,0.1)]'
                     : 'border-depth-border group-hover:border-radiance-gold/30 group-hover:bg-depth-elevated/30'
                 )}
                 onClick={() => onSelect(service.key)}
               >
-                <div className="flex items-start gap-4">
-                  {/* Icon */}
-                  <div
-                    className={cn(
-                      'w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300',
-                      isSelected
-                        ? 'bg-gradient-to-br from-radiance-gold to-radiance-amber text-depth-base'
-                        : 'bg-depth-surface text-text-muted group-hover:text-radiance-gold'
-                    )}
-                  >
-                    {service.icon}
-                  </div>
-
+                <div className="flex items-center justify-between gap-4">
                   {/* Content */}
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-text-primary mb-1 group-hover:text-radiance-gold transition-colors">
+                    <h3 className="text-lg font-semibold text-text-primary mb-1.5 group-hover:text-radiance-gold transition-colors">
                       {service.name}
                     </h3>
-                    <p className="text-text-secondary text-sm mb-2">
+                    <p className="text-text-secondary text-sm mb-2.5">
                       {service.tagline}
                     </p>
-                    <div className="flex gap-4 text-sm text-text-muted">
+                    <div className="flex items-center gap-3 text-sm text-text-muted">
                       <span>{service.investment}</span>
-                      <span>•</span>
+                      <span className="w-1 h-1 rounded-full bg-text-muted/40" />
                       <span>{service.duration}</span>
                     </div>
                   </div>
@@ -118,11 +105,16 @@ export const ServiceSelectionVisual: React.FC<ServiceSelectionVisualProps> = ({
                     className={cn(
                       'w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300',
                       isSelected
-                        ? 'bg-radiance-gold border-radiance-gold'
-                        : 'border-depth-border group-hover:border-radiance-gold/50'
+                        ? 'bg-radiance-gold border-radiance-gold scale-110 shadow-[0_0_12px_rgba(232,184,74,0.4)]'
+                        : 'border-depth-border group-hover:border-radiance-gold/50 group-hover:scale-105'
                     )}
                   >
-                    {isSelected && <CheckIcon size={14} className="text-depth-base" />}
+                    {isSelected && (
+                      <CheckIcon 
+                        size={14} 
+                        className="text-depth-base transition-all duration-200" 
+                      />
+                    )}
                   </div>
                 </div>
               </div>
@@ -132,7 +124,9 @@ export const ServiceSelectionVisual: React.FC<ServiceSelectionVisualProps> = ({
       </div>
 
       {error && (
-        <p className="text-error text-sm mt-4">{error}</p>
+        <div className="mt-6 p-4 bg-error/10 border border-error/30 rounded-xl">
+          <p className="text-error text-sm">{error}</p>
+        </div>
       )}
     </div>
   );

@@ -6,6 +6,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Input, Textarea } from './';
+import { cn } from '../lib/utils';
 
 interface IntakeQuestion {
   id: string;
@@ -60,7 +61,7 @@ export const IntakeQuestionsVisual: React.FC<IntakeQuestionsVisualProps> = ({
       </div>
 
       {/* Questions */}
-      <div className="relative">
+      <div className="relative group">
         {/* Hover glow effect */}
         <div className="absolute -inset-4 bg-gradient-to-b from-radiance-gold/5 to-transparent blur-2xl rounded-[3rem] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
 
@@ -87,11 +88,14 @@ export const IntakeQuestionsVisual: React.FC<IntakeQuestionsVisualProps> = ({
                       {question.required && <span className="text-error"> *</span>}
                     </label>
                     <select
-                      className="block w-full bg-depth-base border border-depth-border rounded-brand-btn text-text-primary focus:outline-none focus:ring-2 focus:ring-radiance-gold/20 focus:border-radiance-gold transition-all duration-300 px-4 py-3.5 text-sm"
+                      className={cn(
+                        "block w-full bg-depth-base border rounded-brand-btn text-text-primary focus:outline-none focus:ring-2 focus:ring-radiance-gold/20 focus:border-radiance-gold transition-all duration-300 px-4 py-3.5 text-sm cursor-pointer",
+                        errors[question.id] ? 'border-error focus:ring-error/20 focus:border-error' : 'border-depth-border'
+                      )}
                       value={answers[question.id] || ''}
                       onChange={(e) => onAnswerChange(question.id, e.target.value)}
                     >
-                      <option value="">Select an option...</option>
+                      <option value="" disabled className="text-text-muted">Select an option...</option>
                       {question.options?.map((option) => (
                         <option key={option} value={option}>
                           {option}
@@ -99,7 +103,7 @@ export const IntakeQuestionsVisual: React.FC<IntakeQuestionsVisualProps> = ({
                       ))}
                     </select>
                     {errors[question.id] && (
-                      <p className="text-error text-xs mt-1">{errors[question.id]}</p>
+                      <p className="text-error text-xs mt-1.5 font-medium">{errors[question.id]}</p>
                     )}
                   </div>
                 ) : question.type === 'textarea' ? (

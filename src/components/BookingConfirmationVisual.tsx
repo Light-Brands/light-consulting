@@ -72,26 +72,26 @@ export const BookingConfirmationVisual: React.FC<BookingConfirmationVisualProps>
           </h3>
 
           <div className="space-y-4">
-            <div className="flex justify-between py-2 border-b border-depth-border">
-              <span className="text-text-muted">Service</span>
-              <span className="text-text-primary font-medium">{serviceName}</span>
+            <div className="flex justify-between items-center py-3 border-b border-depth-border">
+              <span className="text-text-muted text-sm">Service</span>
+              <span className="text-text-primary font-medium text-right">{serviceName}</span>
             </div>
-            <div className="flex justify-between py-2 border-b border-depth-border">
-              <span className="text-text-muted">Investment</span>
-              <span className="text-radiance-gold font-medium">{investment}</span>
+            <div className="flex justify-between items-center py-3 border-b border-depth-border">
+              <span className="text-text-muted text-sm">Investment</span>
+              <span className="text-radiance-gold font-semibold">{investment}</span>
             </div>
-            <div className="flex justify-between py-2 border-b border-depth-border">
-              <span className="text-text-muted">Name</span>
-              <span className="text-text-primary">{name}</span>
+            <div className="flex justify-between items-center py-3 border-b border-depth-border">
+              <span className="text-text-muted text-sm">Name</span>
+              <span className="text-text-primary text-right">{name}</span>
             </div>
-            <div className="flex justify-between py-2 border-b border-depth-border">
-              <span className="text-text-muted">Email</span>
-              <span className="text-text-primary">{email}</span>
+            <div className="flex justify-between items-center py-3 border-b border-depth-border">
+              <span className="text-text-muted text-sm">Email</span>
+              <span className="text-text-primary text-right break-all">{email}</span>
             </div>
             {company && (
-              <div className="flex justify-between py-2">
-                <span className="text-text-muted">Company</span>
-                <span className="text-text-primary">{company}</span>
+              <div className="flex justify-between items-center py-3">
+                <span className="text-text-muted text-sm">Company</span>
+                <span className="text-text-primary text-right">{company}</span>
               </div>
             )}
           </div>
