@@ -51,31 +51,20 @@ export const IntakeQuestionsVisual: React.FC<IntakeQuestionsVisualProps> = ({
       }`}
     >
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-text-primary mb-2">
+      <div className="mb-10">
+        <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-3">
           Help Us Prepare
         </h1>
-        <p className="text-text-secondary">
+        <p className="text-text-secondary text-base leading-relaxed">
           These questions help us make the most of our time together.
         </p>
       </div>
 
       {/* Questions */}
       <div className="relative group">
-        {/* Hover glow effect */}
-        <div className="absolute -inset-4 bg-gradient-to-b from-radiance-gold/5 to-transparent blur-2xl rounded-[3rem] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-
         {/* Styled container */}
-        <div className="relative z-10 bg-depth-elevated/20 border border-depth-border rounded-2xl p-6 md:p-8 backdrop-blur-sm">
-          {/* Technical header */}
-          <div className="flex items-center gap-2 border-b border-depth-border pb-4 mb-6">
-            <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold animate-pulse" />
-            <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
-              Form::Intake_Questions
-            </span>
-          </div>
-
-          <div className="space-y-6">
+        <div className="relative z-10 bg-depth-elevated/20 border border-depth-border rounded-2xl p-6 md:p-8 backdrop-blur-sm transition-all duration-300 group-hover:border-radiance-gold/20">
+          <div className="space-y-5">
             {questions.map((question, index) => (
               <div
                 key={question.id}
@@ -89,8 +78,9 @@ export const IntakeQuestionsVisual: React.FC<IntakeQuestionsVisualProps> = ({
                     </label>
                     <select
                       className={cn(
-                        "block w-full bg-depth-base border rounded-brand-btn text-text-primary focus:outline-none focus:ring-2 focus:ring-radiance-gold/20 focus:border-radiance-gold transition-all duration-300 px-4 py-3.5 text-sm cursor-pointer",
-                        errors[question.id] ? 'border-error focus:ring-error/20 focus:border-error' : 'border-depth-border'
+                        "block w-full bg-depth-base border rounded-brand-btn text-text-primary focus:outline-none focus:ring-2 focus:ring-radiance-gold/20 focus:border-radiance-gold focus:bg-depth-elevated/30 transition-all duration-200 ease-out px-4 py-3.5 text-sm cursor-pointer",
+                        "hover:border-radiance-gold/30 hover:bg-depth-elevated/10",
+                        errors[question.id] ? 'border-error focus:ring-error/20 focus:border-error bg-error/5' : 'border-depth-border'
                       )}
                       value={answers[question.id] || ''}
                       onChange={(e) => onAnswerChange(question.id, e.target.value)}

@@ -5,7 +5,6 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { CheckIcon } from './Icons';
 import { Button } from './';
 
 interface BookingSuccessVisualProps {
@@ -44,21 +43,13 @@ export const BookingSuccessVisual: React.FC<BookingSuccessVisualProps> = ({
       <div className="absolute -inset-4 bg-gradient-to-b from-radiance-gold/10 to-transparent blur-2xl rounded-[3rem] opacity-100" />
 
       {/* Styled container */}
-      <div className="relative z-10 bg-depth-elevated/30 border border-radiance-gold/20 rounded-[3rem] overflow-hidden backdrop-blur-md">
+      <div className="relative z-10 bg-depth-elevated/30 border border-radiance-gold/20 rounded-2xl overflow-hidden backdrop-blur-md">
         <div className="p-8 md:p-12 text-center">
-          {/* Technical header */}
-          <div className="flex items-center justify-center border-b border-depth-border pb-4 mb-6">
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold animate-pulse" />
-              <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
-                Success::Booking_Received
-              </span>
-            </div>
-          </div>
 
-          {/* Success Icon */}
-          <div className="w-16 h-16 rounded-full bg-success/20 text-success mx-auto mb-6 flex items-center justify-center">
-            <CheckIcon size={32} />
+          {/* Success Indicator */}
+          <div className="w-16 h-16 rounded-full bg-success/20 border-2 border-success/30 mx-auto mb-6 flex items-center justify-center relative">
+            <div className="w-8 h-8 rounded-full bg-success animate-pulse" />
+            <div className="absolute inset-0 rounded-full bg-success/20 animate-ping" />
           </div>
 
           {/* Title */}

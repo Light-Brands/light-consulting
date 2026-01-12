@@ -45,64 +45,71 @@ export const ContactInfoFormVisual: React.FC<ContactInfoFormVisualProps> = ({
       }`}
     >
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-text-primary mb-2">
+      <div className="mb-12">
+        <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
           Your Information
         </h1>
-        <p className="text-text-secondary">
-          Tell us a bit about yourself so we can prepare for our conversation.
+        <p className="text-text-secondary text-base leading-relaxed max-w-2xl">
+          We'll use this to personalize your session and send you preparation materials.
         </p>
       </div>
 
       {/* Form */}
       <div className="relative group">
-        {/* Hover glow effect */}
-        <div className="absolute -inset-4 bg-gradient-to-b from-radiance-gold/5 to-transparent blur-2xl rounded-[3rem] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-
         {/* Styled container */}
-        <div className="relative z-10 bg-depth-elevated/20 border border-depth-border rounded-2xl p-6 md:p-8 backdrop-blur-sm">
-          {/* Technical header */}
-          <div className="flex items-center gap-2 border-b border-depth-border pb-4 mb-6">
-            <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold animate-pulse" />
-            <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
-              Form::Contact_Information
-            </span>
-          </div>
-
+        <div className="relative z-10 bg-depth-elevated/20 border border-depth-border rounded-2xl p-8 md:p-10 backdrop-blur-sm transition-all duration-300 group-hover:border-radiance-gold/20">
           <div className="space-y-6">
-            <Input
-              label="Full Name"
-              placeholder="John Smith"
-              value={formData.name || ''}
-              onChange={(e) => onFieldChange('name', e.target.value)}
-              error={errors.name}
-              required
-            />
+            {/* Required Fields Section */}
+            <div className="space-y-6 pb-6 border-b border-depth-border/50">
+              <div>
+                <Input
+                  label="Full Name"
+                  placeholder="Enter your full name"
+                  value={formData.name || ''}
+                  onChange={(e) => onFieldChange('name', e.target.value)}
+                  error={errors.name}
+                  required
+                  hint="How you'd like us to address you"
+                />
+              </div>
 
-            <Input
-              label="Email Address"
-              type="email"
-              placeholder="john@company.com"
-              value={formData.email || ''}
-              onChange={(e) => onFieldChange('email', e.target.value)}
-              error={errors.email}
-              required
-            />
+              <div>
+                <Input
+                  label="Email Address"
+                  type="email"
+                  placeholder="your.email@company.com"
+                  value={formData.email || ''}
+                  onChange={(e) => onFieldChange('email', e.target.value)}
+                  error={errors.email}
+                  required
+                  hint="We'll send confirmation and preparation materials here"
+                />
+              </div>
+            </div>
 
-            <Input
-              label="Company Name"
-              placeholder="Acme Inc"
-              value={formData.company || ''}
-              onChange={(e) => onFieldChange('company', e.target.value)}
-            />
+            {/* Optional Fields Section */}
+            <div className="space-y-6 pt-2">
+              <div>
+                <Input
+                  label="Company Name"
+                  placeholder="Your company or organization"
+                  value={formData.company || ''}
+                  onChange={(e) => onFieldChange('company', e.target.value)}
+                  hint="Helps us understand your context"
+                />
+              </div>
 
-            <Input
-              label="Phone (Optional)"
-              type="tel"
-              placeholder="+1 (555) 123-4567"
-              value={formData.phone || ''}
-              onChange={(e) => onFieldChange('phone', e.target.value)}
-            />
+              <div>
+                <Input
+                  label="Phone Number"
+                  type="tel"
+                  placeholder="+1 (555) 123-4567"
+                  value={formData.phone || ''}
+                  onChange={(e) => onFieldChange('phone', e.target.value)}
+                  hint="Optional - for urgent scheduling updates"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

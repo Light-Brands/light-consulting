@@ -5,7 +5,6 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { CheckIcon } from './Icons';
 import { cn } from '../lib/utils';
 
 interface Service {
@@ -51,11 +50,11 @@ export const ServiceSelectionVisual: React.FC<ServiceSelectionVisualProps> = ({
       }`}
     >
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-text-primary mb-2">
+      <div className="mb-10">
+        <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-3">
           Choose Your Service
         </h1>
-        <p className="text-text-secondary">
+        <p className="text-text-secondary text-base leading-relaxed">
           Select the service that best fits your needs.
         </p>
       </div>
@@ -78,11 +77,21 @@ export const ServiceSelectionVisual: React.FC<ServiceSelectionVisualProps> = ({
               <div
                 className={cn(
                   'relative z-10 bg-depth-elevated/20 border rounded-2xl p-6 cursor-pointer backdrop-blur-sm transition-all duration-300',
+                  'focus-within:outline-none focus-within:ring-2 focus-within:ring-radiance-gold/30 focus-within:ring-offset-2 focus-within:ring-offset-depth-base',
                   isSelected
                     ? 'border-radiance-gold/50 ring-1 ring-radiance-gold/20 bg-depth-elevated/30 shadow-[0_0_20px_rgba(232,184,74,0.1)]'
                     : 'border-depth-border group-hover:border-radiance-gold/30 group-hover:bg-depth-elevated/30'
                 )}
                 onClick={() => onSelect(service.key)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSelect(service.key);
+                  }
+                }}
+                tabIndex={0}
+                role="button"
+                aria-pressed={isSelected}
               >
                 <div className="flex items-center justify-between gap-4">
                   {/* Content */}
@@ -100,20 +109,17 @@ export const ServiceSelectionVisual: React.FC<ServiceSelectionVisualProps> = ({
                     </div>
                   </div>
 
-                  {/* Checkbox */}
+                  {/* Selection Indicator */}
                   <div
                     className={cn(
-                      'w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300',
+                      'w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300',
                       isSelected
                         ? 'bg-radiance-gold border-radiance-gold scale-110 shadow-[0_0_12px_rgba(232,184,74,0.4)]'
                         : 'border-depth-border group-hover:border-radiance-gold/50 group-hover:scale-105'
                     )}
                   >
                     {isSelected && (
-                      <CheckIcon 
-                        size={14} 
-                        className="text-depth-base transition-all duration-200" 
-                      />
+                      <div className="w-2 h-2 rounded-full bg-depth-base transition-all duration-200" />
                     )}
                   </div>
                 </div>
@@ -124,8 +130,8 @@ export const ServiceSelectionVisual: React.FC<ServiceSelectionVisualProps> = ({
       </div>
 
       {error && (
-        <div className="mt-6 p-4 bg-error/10 border border-error/30 rounded-xl">
-          <p className="text-error text-sm">{error}</p>
+        <div className="mt-6 p-4 bg-error/10 border border-error/30 rounded-xl transition-all duration-200">
+          <p className="text-error text-sm font-medium">{error}</p>
         </div>
       )}
     </div>

@@ -364,8 +364,6 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
         </section>
       )}
 
-      </section>
-
       {/* Project Details */}
       <section className="section-spacing bg-depth-elevated relative overflow-hidden">
         {/* Background atmosphere */}

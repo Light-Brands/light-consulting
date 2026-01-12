@@ -16,7 +16,7 @@ import {
 import { Container, Section } from '../components/ui';
 import { SERVICES, INTAKE_QUESTIONS } from '../lib/constants';
 import { BookingFormData, PageKey } from '../types';
-import { isValidEmail } from '../lib/utils';
+import { isValidEmail, cn } from '../lib/utils';
 
 
 interface BookPageProps {
@@ -194,65 +194,79 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
             stepLabels={stepLabels}
           />
 
-          {/* Step 1: Service Selection */}
-          {step === 1 && (
-            <ServiceSelectionVisual
-              services={services}
-              selectedService={formData.service}
-              onSelect={(key) => updateFormData({ service: key as ServiceKey })}
-              error={errors.service}
-            />
-          )}
+          {/* Step Content with Transitions */}
+          <div className="relative min-h-[400px]">
+            {/* Step 1: Service Selection */}
+            {step === 1 && (
+              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms' }}>
+                <ServiceSelectionVisual
+                  services={services}
+                  selectedService={formData.service}
+                  onSelect={(key) => updateFormData({ service: key as ServiceKey })}
+                  error={errors.service}
+                />
+              </div>
+            )}
 
-          {/* Step 2: Contact Information */}
-          {step === 2 && (
-            <ContactInfoFormVisual
-              formData={{
-                name: formData.name,
-                email: formData.email,
-                company: formData.company,
-                phone: formData.phone,
-              }}
-              errors={errors}
-              onFieldChange={(field, value) => {
-                const updates: Partial<BookingFormData> = {};
-                if (field === 'name') updates.name = value;
-                else if (field === 'email') updates.email = value;
-                else if (field === 'company') updates.company = value;
-                else if (field === 'phone') updates.phone = value;
-                updateFormData(updates);
-              }}
-            />
-          )}
+            {/* Step 2: Contact Information */}
+            {step === 2 && (
+              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms' }}>
+                <ContactInfoFormVisual
+                  formData={{
+                    name: formData.name,
+                    email: formData.email,
+                    company: formData.company,
+                    phone: formData.phone,
+                  }}
+                  errors={errors}
+                  onFieldChange={(field, value) => {
+                    const updates: Partial<BookingFormData> = {};
+                    if (field === 'name') updates.name = value;
+                    else if (field === 'email') updates.email = value;
+                    else if (field === 'company') updates.company = value;
+                    else if (field === 'phone') updates.phone = value;
+                    updateFormData(updates);
+                  }}
+                />
+              </div>
+            )}
 
-          {/* Step 3: Intake Questions */}
-          {step === 3 && formData.service && (
-            <IntakeQuestionsVisual
-              questions={INTAKE_QUESTIONS[formData.service]}
-              answers={formData.intake || {}}
-              errors={errors}
-              onAnswerChange={updateIntake}
-            />
-          )}
+            {/* Step 3: Intake Questions */}
+            {step === 3 && formData.service && (
+              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms' }}>
+                <IntakeQuestionsVisual
+                  questions={INTAKE_QUESTIONS[formData.service]}
+                  answers={formData.intake || {}}
+                  errors={errors}
+                  onAnswerChange={updateIntake}
+                />
+              </div>
+            )}
 
-          {/* Step 4: Confirmation */}
-          {step === 4 && formData.service && (
-            <BookingConfirmationVisual
-              serviceName={SERVICES[formData.service].name}
-              investment={SERVICES[formData.service].investment}
-              name={formData.name || ''}
-              email={formData.email || ''}
-              company={formData.company}
-            />
-          )}
+            {/* Step 4: Confirmation */}
+            {step === 4 && formData.service && (
+              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms' }}>
+                <BookingConfirmationVisual
+                  serviceName={SERVICES[formData.service].name}
+                  investment={SERVICES[formData.service].investment}
+                  name={formData.name || ''}
+                  email={formData.email || ''}
+                  company={formData.company}
+                />
+              </div>
+            )}
+          </div>
 
           {/* Navigation */}
-          <div className="flex justify-between items-center mt-12 pt-8 border-t border-depth-border">
+          <div className="flex justify-between items-center mt-10 pt-6 border-t border-depth-border/50">
             <Button
               variant="ghost"
               onClick={handleBack}
               disabled={step === 1}
-              className={step === 1 ? 'invisible' : ''}
+              className={cn(
+                step === 1 ? 'invisible' : '',
+                'transition-all duration-200'
+              )}
             >
               Back
             </Button>
@@ -261,6 +275,7 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
               onClick={handleNext}
               isLoading={isSubmitting}
               disabled={isSubmitting}
+              className="min-w-[140px]"
             >
               {step === 4 ? 'Submit Booking' : 'Continue'}
             </Button>
