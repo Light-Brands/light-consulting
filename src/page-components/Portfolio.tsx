@@ -21,10 +21,12 @@ interface PortfolioPageProps {
 const FILTER_OPTIONS = [
   { label: 'All', value: 'all' },
   { label: 'Featured', value: 'featured' },
-  { label: 'AI & Automation', value: 'AI' },
+  { label: 'AI & Technology', value: 'AI' },
+  { label: 'Hospitality', value: 'Hospitality' },
   { label: 'Healthcare', value: 'Healthcare' },
-  { label: 'Finance', value: 'Finance' },
-  { label: 'E-commerce', value: 'E-commerce' },
+  { label: 'Tourism & Travel', value: 'Tourism' },
+  { label: 'Energy', value: 'Energy' },
+  { label: 'Community & Social', value: 'Community' },
 ];
 
 export const PortfolioPage: React.FC<PortfolioPageProps> = ({ onNavigate }) => {
