@@ -58,6 +58,7 @@ export type PageKey =
   | 'funnel34'
   | 'funnel35'
   | 'funnel36'
+  | 'funnel-gallery'
   | 'services'
   | 'services/diagnostic'
   | 'services/command-center'
