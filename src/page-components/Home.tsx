@@ -26,6 +26,7 @@ import {
   NewsletterVisual,
   CTAVisual,
   FooterVisual,
+  ProjectCarousel,
 } from '../components';
 import {
   Container,
@@ -349,6 +350,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           </Container>
         </Section>
       )}
+
+      {/* Project Carousel Section */}
+      <Section spacing="lg" className="relative overflow-hidden">
+        {/* Background atmosphere */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
+
+        <ProjectCarousel speed={40} pauseOnHover={true} />
+      </Section>
 
       {/* Newsletter Section */}
       <Section spacing="lg" className="relative overflow-hidden">
