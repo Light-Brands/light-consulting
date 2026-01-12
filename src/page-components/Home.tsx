@@ -219,7 +219,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               Using AI is not the advantage.{' '}
               <span className="text-radiance-gold text-glow-gold">Owning intelligence is.</span>
             </Heading>
-            <Text variant="large" className="max-w-3xl text-text-secondary font-light leading-relaxed">
+            <Text variant="large" align="center" className="max-w-3xl mx-auto text-text-secondary font-light leading-relaxed block">
               Most founders are scaling chaos by adding tools to broken structures. 
               The future belongs to those who design an intentional architecture for intelligence.
             </Text>
@@ -249,26 +249,19 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </Heading>
           </div>
 
-          <div className="relative group">
-            {/* Decorative elements */}
-            <div className="absolute -top-24 -right-24 w-96 h-96 bg-radiance-gold/5 blur-3xl pointer-events-none rounded-full" />
-            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-radiance-gold/5 blur-3xl pointer-events-none rounded-full" />
-            
-            {/* Hover glow effect */}
-            <div className="absolute -inset-4 bg-gradient-to-b from-radiance-gold/10 to-transparent blur-2xl rounded-[3rem] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-            
-            {/* Styled container */}
-            <div className="relative z-10 bg-depth-elevated/30 border border-depth-border rounded-[3rem] overflow-hidden backdrop-blur-md">
+          <div className="relative">
+            {/* Styled container with minimal decoration - let the component breathe */}
+            <div className="relative z-10 bg-depth-elevated/15 border border-depth-border/40 rounded-2xl overflow-hidden backdrop-blur-sm">
               <AIReadinessCurve />
             </div>
           </div>
 
-          <div className="mt-16 text-center max-w-2xl mx-auto relative z-10">
+          <div className="mt-14 md:mt-16 text-center max-w-3xl mx-auto relative z-10">
             <Text variant="large" className="text-text-primary font-medium mb-4 text-center">
               Most companies stall in the middle.
             </Text>
-            <Text variant="large" className="text-radiance-gold font-light text-center">
-              We help you move to the top, where AI becomes a structural advantage, not a novelty.
+            <Text variant="large" className="text-radiance-gold font-light text-center leading-relaxed">
+              We help you reach the top—where AI becomes a structural advantage, not a novelty.
             </Text>
           </div>
         </Container>
@@ -287,7 +280,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <Heading level="h2" className="mb-6">
               We don't sell websites. We don't install tools. We don't chase trends.
             </Heading>
-            <Text variant="large" className="text-radiance-gold font-medium text-center">
+            <Text variant="large" align="center" className="text-radiance-gold font-medium max-w-2xl mx-auto block">
               We design AI intelligence systems that grow with your business.
             </Text>
           </div>
