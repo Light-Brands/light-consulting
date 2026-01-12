@@ -161,8 +161,8 @@ export const SERVICES: Record<string, Service> = {
     name: 'AI Readiness Diagnostic',
     tagline: 'Determine whether it makes sense to build intelligence into your business',
     description: 'A fixed-fee, productized diagnostic that provides decision-making infrastructure, not transformation. This is not coaching. This is not implementation. This is clarity.',
-    investment: 'Fixed-fee',
-    duration: 'Fast turnaround',
+    investment: '',
+    duration: '',
     deliverables: [
       'Your AI Readiness Level: a clear view of how prepared your business actually is',
       'A Leverage Snapshot: where effort is leaking and where structure would compound results',
@@ -219,8 +219,8 @@ export const SERVICES: Record<string, Service> = {
     name: 'AI Intelligence Strategy',
     tagline: 'The paid decision gate that determines whether anything should be built',
     description: 'This is not a build. This is not implementation. This is a paid strategy artifact that determines whether anything should be built at all. It exists to prevent premature development, wasted systems, and misaligned AI investments.',
-    investment: '$1,000 – $3,000',
-    duration: 'Fast turnaround',
+    investment: '',
+    duration: '',
     deliverables: [
       'AI Intelligence Map: where intelligence could live inside the business and where it should not',
       'System Prioritization: which potential systems matter and which are noise',

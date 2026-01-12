@@ -18,6 +18,7 @@ interface ServiceStep {
   icon: React.ReactNode;
   available?: boolean;
   onAction?: () => void;
+  audience?: string;
 }
 
 interface ServicesFlowVisualProps {
@@ -93,7 +94,7 @@ export const ServicesFlowVisual: React.FC<ServicesFlowVisualProps> = ({ steps })
         </div>
 
         {/* Steps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((step, index) => {
             const isHovered = hoveredIndex === index;
             const colors = getColorClasses(step.color, isHovered);
@@ -135,9 +136,16 @@ export const ServicesFlowVisual: React.FC<ServicesFlowVisualProps> = ({ steps })
                         {step.icon}
                       </div>
                       <div className="flex-1">
-                        <p className={`text-sm font-medium mb-1 ${colors.text}`}>
-                          Step {step.step}
-                        </p>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className={`text-sm font-medium ${colors.text}`}>
+                            Step {step.step}
+                          </p>
+                          {step.audience && (
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-depth-surface text-text-muted">
+                              {step.audience}
+                            </span>
+                          )}
+                        </div>
                         <h3 className="text-lg font-semibold text-text-primary">
                           {step.title}
                         </h3>
@@ -169,9 +177,11 @@ export const ServicesFlowVisual: React.FC<ServicesFlowVisualProps> = ({ steps })
 
                     {/* Footer */}
                     <div className="pt-4 border-t border-depth-border/50 space-y-4">
-                      <p className="text-xs text-text-muted">
-                        {step.investment} · {step.duration}
-                      </p>
+                      {(step.investment || step.duration) && (
+                        <p className="text-xs text-text-muted">
+                          {step.investment}{step.investment && step.duration && ' · '}{step.duration}
+                        </p>
+                      )}
                       {step.available && step.onAction ? (
                         <button
                           onClick={step.onAction}
@@ -182,9 +192,11 @@ export const ServicesFlowVisual: React.FC<ServicesFlowVisualProps> = ({ steps })
                       ) : (
                         <p className="text-xs text-text-muted italic">
                           {step.step === 2
-                            ? 'Available after completing the Diagnostic'
+                            ? 'For those who demonstrate readiness'
                             : step.step === 3
-                            ? 'Only outcome #3 leads to system builds.'
+                            ? 'For those who align with our values'
+                            : step.step === 4
+                            ? 'By invitation only'
                             : ''}
                         </p>
                       )}

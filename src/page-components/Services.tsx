@@ -36,6 +36,21 @@ const StrategyIcon = ({ size = 24 }: { size?: number }) => (
   </svg>
 );
 
+const BlueprintIcon = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M9 17H7a2 2 0 01-2-2v-2m14 0v2a2 2 0 01-2 2h-2M9 7H7a2 2 0 00-2 2v2m14 0V9a2 2 0 00-2-2h-2" />
+    <path d="M12 12L12 12.01" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);
+
+const SuperIntelligenceIcon = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+    <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
+  </svg>
+);
+
 interface ServicesPageProps {
   onNavigate: (page: PageKey) => void;
 }
@@ -107,47 +122,68 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
                 steps={[
                   {
                     step: 1,
-                    title: diagnostic.name,
-                    description: diagnostic.description,
-                    deliverables: diagnostic.deliverables,
-                    investment: diagnostic.investment,
-                    duration: diagnostic.duration,
+                    title: 'AI Readiness Diagnostic',
+                    description: 'We allow everyone to experience what we do. This is your opportunity to discover where you stand and step into your highest potential.',
+                    deliverables: [
+                      'Your AI Readiness Level assessment',
+                      'A Leverage Snapshot of your business',
+                      'Your Next Strategic Move',
+                    ],
+                    investment: '',
+                    duration: '',
                     color: 'gold',
                     icon: <DiagnosticIcon size={24} />,
                     available: true,
                     onAction: () => onNavigate('funnel'),
+                    audience: 'Everybody',
                   },
                   {
                     step: 2,
-                    title: strategy.name,
-                    description: strategy.description,
-                    deliverables: strategy.deliverables,
-                    investment: strategy.investment,
-                    duration: strategy.duration,
+                    title: 'AI Informed System',
+                    description: 'For those who demonstrate readiness. We help you build foundational intelligence systems that create real leverage in your business.',
+                    deliverables: [
+                      'AI Intelligence Map',
+                      'System Prioritization',
+                      'Foundational automation',
+                    ],
+                    investment: '',
+                    duration: '',
                     color: 'amber',
                     icon: <StrategyIcon size={24} />,
                     available: false,
+                    audience: 'Those that are ready',
                   },
                   {
                     step: 3,
-                    title: 'If Opportunity Exists',
-                    description:
-                      'Only after the Strategy artifact confirms development readiness do we discuss building. AI Intelligence Engines and deeper partnership work are by invitation only.',
+                    title: 'AI Acceleration Blueprint',
+                    description: 'For those who align with our values. A deeper strategic partnership where we architect comprehensive intelligence infrastructure.',
                     deliverables: [
-                      'No build recommended',
-                      'Build possible, but not ready yet',
-                      'Qualifies for development',
+                      'Complete intelligence architecture',
+                      'Multi-system integration',
+                      'Founder leverage systems',
+                    ],
+                    investment: '',
+                    duration: '',
+                    color: 'amber',
+                    icon: <BlueprintIcon size={24} />,
+                    available: false,
+                    audience: 'Those that align',
+                  },
+                  {
+                    step: 4,
+                    title: 'AI Super Intelligence System',
+                    description: 'Reserved for those we choose. Built upon a foundation of core values, we believe our highest-level work should be with those operating at the highest level of integrity with themselves and the planet.',
+                    deliverables: [
+                      'Complete AI integration',
+                      'Strategic advisory partnership',
+                      'Ongoing system evolution',
                     ],
                     investment: 'By invitation only',
-                    duration: 'After Strategy',
+                    duration: '',
                     color: 'muted',
-                    icon: (
-                      <svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
-                      </svg>
-                    ),
+                    icon: <SuperIntelligenceIcon size={24} />,
                     available: false,
+                    audience: 'Those we choose',
                   },
                 ]}
               />
