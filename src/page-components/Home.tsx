@@ -157,33 +157,20 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         </Container>
       </Section>
 
-      {/* Capacity Gap Visual - Sticky Scroll Section */}
-      {/* Scroll container - provides the scroll space for sticky behavior (300vh + 50vh gap at end) */}
-      <div className="relative" style={{ height: '350vh' }}>
-        {/* Sticky content - stays fixed in viewport until scroll reaches 100% */}
-        <div 
-          className="sticky top-0 h-screen w-full flex items-center justify-center"
-          style={{ 
-            willChange: 'transform',
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden'
-          }}
-        >
-          <div className="w-full px-4">
-            <Container size="wide">
-              <div className="relative">
-                {/* Decorative elements */}
-                <div className="absolute -top-24 -right-24 w-96 h-96 bg-radiance-gold/5 blur-3xl pointer-events-none rounded-full" />
-                <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-radiance-gold/5 blur-3xl pointer-events-none rounded-full" />
-                
-                <div className="relative z-10 bg-depth-elevated/30 border border-depth-border rounded-3xl overflow-hidden backdrop-blur-sm">
-                  <CapacityGapVisual />
-                </div>
-              </div>
-            </Container>
+      {/* Capacity Gap Visual */}
+      <Section spacing="lg" className="relative overflow-hidden">
+        <Container size="wide">
+          <div className="relative">
+            {/* Decorative elements */}
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-radiance-gold/5 blur-3xl pointer-events-none rounded-full" />
+            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-radiance-gold/5 blur-3xl pointer-events-none rounded-full" />
+            
+            <div className="relative z-10 bg-depth-elevated/30 border border-depth-border rounded-3xl overflow-hidden backdrop-blur-sm">
+              <CapacityGapVisual />
+            </div>
           </div>
-        </div>
-      </div>
+        </Container>
+      </Section>
 
       {/* Capacity Gap Section Footer */}
       <Section spacing="lg" className="relative overflow-hidden">
