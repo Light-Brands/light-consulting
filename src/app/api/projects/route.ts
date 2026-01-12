@@ -10,9 +10,13 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 import type { ProjectInsert, Project } from '@/types/database';
+import { PORTFOLIO_PROJECTS } from '@/data/projects';
 
-// Portfolio projects from Master List
-const PLACEHOLDER_PROJECTS: Project[] = [
+// Use the comprehensive portfolio projects data
+const PLACEHOLDER_PROJECTS: Project[] = PORTFOLIO_PROJECTS;
+
+// Legacy placeholder data removed - now using @/data/projects
+const _LEGACY_PLACEHOLDER_PROJECTS: Project[] = [
   {
     id: '1',
     title: 'Light Brand Consulting',
@@ -742,6 +746,8 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status');
     const featured = searchParams.get('featured');
     const limit = searchParams.get('limit');
+    const brandId = searchParams.get('brand_id');
+    const industry = searchParams.get('industry');
 
     // Check if admin (to show all projects including drafts)
     const session = await getServerSession(authOptions);
@@ -762,6 +768,18 @@ export async function GET(request: NextRequest) {
       // Filter by featured
       if (featured === 'true') {
         projects = projects.filter(p => p.featured);
+      }
+
+      // Filter by brand_id
+      if (brandId) {
+        projects = projects.filter(p => p.brand_id === brandId);
+      }
+
+      // Filter by industry (partial match)
+      if (industry) {
+        projects = projects.filter(p =>
+          p.industry?.toLowerCase().includes(industry.toLowerCase())
+        );
       }
 
       // Apply limit
@@ -790,6 +808,16 @@ export async function GET(request: NextRequest) {
     // Filter by featured
     if (featured === 'true') {
       query = query.eq('featured', true);
+    }
+
+    // Filter by brand_id
+    if (brandId) {
+      query = query.eq('brand_id', brandId);
+    }
+
+    // Filter by industry (partial match)
+    if (industry) {
+      query = query.ilike('industry', `%${industry}%`);
     }
 
     // Apply limit

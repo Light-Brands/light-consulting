@@ -95,6 +95,20 @@ export interface Project {
   sort_order: number;
   created_at: string;
   updated_at: string;
+  // Enhanced fields for project detail pages
+  brand_id?: string | null;
+  gallery_images?: string[];
+  services?: string[];
+  key_features?: string[];
+  challenge?: string | null;
+  solution?: string | null;
+  results?: string[];
+  tech_stack?: {
+    frontend?: string;
+    backend?: string;
+  };
+  origin?: string | null;
+  project_type?: string | null;
 }
 
 export interface ProjectInsert {
@@ -108,6 +122,19 @@ export interface ProjectInsert {
   featured?: boolean;
   status?: 'draft' | 'published';
   sort_order?: number;
+  brand_id?: string | null;
+  gallery_images?: string[];
+  services?: string[];
+  key_features?: string[];
+  challenge?: string | null;
+  solution?: string | null;
+  results?: string[];
+  tech_stack?: {
+    frontend?: string;
+    backend?: string;
+  };
+  origin?: string | null;
+  project_type?: string | null;
 }
 
 export interface ProjectUpdate {

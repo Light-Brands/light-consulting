@@ -10,6 +10,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 import type { ProjectUpdate } from '@/types/database';
+import { getProjectById, PORTFOLIO_PROJECTS } from '@/data/projects';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -24,12 +25,23 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const session = await getServerSession(authOptions);
     const isAdmin = session?.user?.role === 'admin';
 
-    // If Supabase is not configured, return 404
+    // If Supabase is not configured, return from placeholder data
     if (!isSupabaseConfigured()) {
-      return NextResponse.json(
-        { data: null, error: 'Project not found' },
-        { status: 404 }
-      );
+      const project = getProjectById(id);
+      if (!project) {
+        return NextResponse.json(
+          { data: null, error: 'Project not found' },
+          { status: 404 }
+        );
+      }
+      // Non-admin users can only see published projects
+      if (!isAdmin && project.status !== 'published') {
+        return NextResponse.json(
+          { data: null, error: 'Project not found' },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json({ data: project, error: null });
     }
 
     let query = supabaseAdmin
