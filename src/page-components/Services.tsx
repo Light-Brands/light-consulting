@@ -178,7 +178,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
                       'Strategic advisory partnership',
                       'Ongoing system evolution',
                     ],
-                    investment: 'By invitation only',
+                    investment: '',
                     duration: '',
                     color: 'muted',
                     icon: <SuperIntelligenceIcon size={24} />,

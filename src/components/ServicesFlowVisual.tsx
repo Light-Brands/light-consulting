@@ -125,9 +125,9 @@ export const ServicesFlowVisual: React.FC<ServicesFlowVisualProps> = ({ steps })
                     }`}
                   />
 
-                  <div className="relative z-10 space-y-6">
+                  <div className="relative z-10 flex flex-col h-full">
                     {/* Header */}
-                    <div className="flex items-start gap-4">
+                    <div className="flex items-start gap-4 mb-6">
                       <div
                         className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
                           isHovered ? colors.iconBg : colors.iconBg
@@ -135,13 +135,13 @@ export const ServicesFlowVisual: React.FC<ServicesFlowVisualProps> = ({ steps })
                       >
                         {step.icon}
                       </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className={`text-sm font-medium ${colors.text}`}>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                          <p className={`text-sm font-medium whitespace-nowrap ${colors.text}`}>
                             Step {step.step}
                           </p>
                           {step.audience && (
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-depth-surface text-text-muted">
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-depth-surface text-text-muted whitespace-nowrap">
                               {step.audience}
                             </span>
                           )}
@@ -152,36 +152,35 @@ export const ServicesFlowVisual: React.FC<ServicesFlowVisualProps> = ({ steps })
                       </div>
                     </div>
 
-                    {/* Description */}
-                    <p className="text-sm text-text-secondary leading-relaxed">
-                      {step.description}
-                    </p>
-
-                    {/* Deliverables */}
-                    <div className="space-y-3">
-                      <p className="text-xs font-medium text-text-muted uppercase tracking-wider">
-                        You'll receive:
+                    {/* Description - fixed height for alignment */}
+                    <div className="min-h-[120px] mb-6">
+                      <p className="text-sm text-text-secondary leading-relaxed">
+                        {step.description}
                       </p>
-                      {step.deliverables.slice(0, 3).map((item, i) => (
-                        <div key={i} className="flex items-start gap-2">
-                          <CheckIcon
-                            size={14}
-                            className={`mt-0.5 flex-shrink-0 ${colors.text}`}
-                          />
-                          <span className="text-xs text-text-secondary leading-relaxed">
-                            {item}
-                          </span>
-                        </div>
-                      ))}
                     </div>
 
-                    {/* Footer */}
-                    <div className="pt-4 border-t border-depth-border/50 space-y-4">
-                      {(step.investment || step.duration) && (
-                        <p className="text-xs text-text-muted">
-                          {step.investment}{step.investment && step.duration && ' · '}{step.duration}
-                        </p>
-                      )}
+                    {/* Deliverables - grows to fill space */}
+                    <div className="flex-1 mb-6">
+                      <p className="text-xs font-medium text-text-muted uppercase tracking-wider mb-3">
+                        You'll receive:
+                      </p>
+                      <div className="space-y-3">
+                        {step.deliverables.slice(0, 3).map((item, i) => (
+                          <div key={i} className="flex items-start gap-2">
+                            <CheckIcon
+                              size={14}
+                              className={`mt-0.5 flex-shrink-0 ${colors.text}`}
+                            />
+                            <span className="text-xs text-text-secondary leading-relaxed">
+                              {item}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Footer - pushed to bottom */}
+                    <div className="pt-4 border-t border-depth-border/50 mt-auto">
                       {step.available && step.onAction ? (
                         <button
                           onClick={step.onAction}
