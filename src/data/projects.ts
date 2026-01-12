@@ -74,6 +74,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Consulting / Landing site',
+    preview_enabled: false,
   },
   {
     id: '2',
@@ -99,6 +100,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Personal / Healing site',
+    preview_enabled: false,
   },
   {
     id: '3',
@@ -124,6 +126,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Demo / Landing page',
+    preview_enabled: false,
   },
   {
     id: '4',
@@ -149,6 +152,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Custom (React)', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Institute / Community site',
+    preview_enabled: false,
   },
   {
     id: '5',
@@ -174,6 +178,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'CY',
     project_type: 'Technical whitepaper site',
+    preview_enabled: true,
   },
   {
     id: '6',
@@ -199,6 +204,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Community / Ecosystem site',
+    preview_enabled: false,
   },
   {
     id: '7',
@@ -224,6 +230,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Circular Economy platform',
+    preview_enabled: true,
   },
   {
     id: '8',
@@ -249,6 +256,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Vue.js', backend: 'Real-time messaging backend' },
     origin: 'US',
     project_type: 'Social Platform',
+    preview_enabled: false,
   },
   {
     id: '9',
@@ -274,6 +282,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Renewable Energy Services',
+    preview_enabled: true,
   },
   {
     id: '10',
@@ -299,6 +308,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Custom CMS', backend: 'Property management system' },
     origin: 'EU',
     project_type: 'Real Estate Platform',
+    preview_enabled: false,
   },
   {
     id: '11',
@@ -324,6 +334,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Video streaming integration', backend: 'Client management system' },
     origin: 'EU',
     project_type: 'Production Portfolio',
+    preview_enabled: true,
   },
   {
     id: '12',
@@ -349,6 +360,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js, React components', backend: 'AI/ML APIs, Vercel deployment' },
     origin: 'US',
     project_type: 'AI Platform',
+    preview_enabled: true,
   },
   {
     id: '13',
@@ -374,6 +386,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'AI/ML frameworks', backend: 'Dashboard development' },
     origin: 'US',
     project_type: 'Business AI Platform',
+    preview_enabled: true,
   },
   {
     id: '14',
@@ -399,31 +412,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Custom booking system', backend: 'Hotel PMS integration' },
     origin: 'EU',
     project_type: 'Reservation System',
-  },
-  {
-    id: '15',
-    title: 'Anemi Event Management',
-    description: 'Comprehensive event management dashboard for hotel operations. Features event planning, resource management, and booking coordination with booking integration.',
-    image_url: '/images/portfolio/anemi-events.jpg',
-    tags: ['Event Management', 'Dashboard', 'Hospitality', 'CMS'],
-    case_study_url: 'https://events.anemihotel.com/dashboard',
-    client_name: 'Anemi Hotel',
-    industry: 'Event Management / Hospitality',
-    featured: false,
-    status: 'published',
-    sort_order: 15,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    brand_id: 'hospitality',
-    gallery_images: getGalleryImages('anemi-events'),
-    services: ['Event management platform', 'Dashboard development'],
-    key_features: ['Event planning', 'Resource management', 'Booking coordination', 'Reporting'],
-    challenge: 'Coordinating complex hotel events while managing resources and staff efficiently.',
-    solution: 'Built a comprehensive dashboard for end-to-end event management and resource coordination.',
-    results: ['50% reduction in planning time', 'Improved resource utilization', 'Better event outcomes'],
-    tech_stack: { frontend: 'Event management CMS', backend: 'Booking integration' },
-    origin: 'EU',
-    project_type: 'Event Management Dashboard',
+    preview_enabled: false,
   },
   {
     id: '16',
@@ -449,6 +438,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Audio processing libraries', backend: 'AI music generation' },
     origin: 'US',
     project_type: 'Music AI Platform',
+    preview_enabled: true,
   },
   {
     id: '17',
@@ -474,6 +464,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React dashboard', backend: 'Cryptocurrency APIs' },
     origin: 'US',
     project_type: 'Crypto Dashboard',
+    preview_enabled: true,
   },
   {
     id: '18',
@@ -499,6 +490,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'AI/ML integration', backend: 'Learning management' },
     origin: 'US',
     project_type: 'AI Orchestration Platform',
+    preview_enabled: true,
   },
   {
     id: '19',
@@ -524,6 +516,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Project management tools', backend: 'Automation systems' },
     origin: 'US',
     project_type: 'Business Management / POS',
+    preview_enabled: true,
   },
   {
     id: '20',
@@ -549,6 +542,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Restaurant CMS', backend: 'Reservation integration' },
     origin: 'EU',
     project_type: 'Restaurant Website',
+    preview_enabled: true,
   },
   {
     id: '21',
@@ -574,6 +568,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Event management system', backend: 'Social media integration' },
     origin: 'EU',
     project_type: 'Nightlife Venue',
+    preview_enabled: true,
   },
   {
     id: '22',
@@ -599,6 +594,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Membership management', backend: 'Secure login areas' },
     origin: 'EU',
     project_type: 'Private Club Platform',
+    preview_enabled: true,
   },
   {
     id: '23',
@@ -624,6 +620,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'CMS platform', backend: 'Donation integration' },
     origin: 'US',
     project_type: 'Non-Profit Website',
+    preview_enabled: true,
   },
   {
     id: '24',
@@ -649,6 +646,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Blockchain (Ethereum)', backend: 'OpenSea integration' },
     origin: 'US',
     project_type: 'NFT Collection',
+    preview_enabled: false,
   },
   {
     id: '25',
@@ -674,6 +672,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Machine learning models', backend: 'Cloud deployment' },
     origin: 'US',
     project_type: 'Analytics Platform',
+    preview_enabled: true,
   },
   {
     id: '26',
@@ -699,6 +698,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'CMS integration' },
     origin: 'EU',
     project_type: 'Agency Website',
+    preview_enabled: false,
   },
   {
     id: '27',
@@ -724,6 +724,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Webflow', backend: 'Product showcase system' },
     origin: 'EU',
     project_type: 'Product Landing Page',
+    preview_enabled: false,
   },
   {
     id: '28',
@@ -749,6 +750,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Event management system', backend: 'Results tracking' },
     origin: 'EU',
     project_type: 'Sports Event Platform',
+    preview_enabled: false,
   },
   {
     id: '29',
@@ -774,6 +776,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Booking system', backend: 'Tour management CMS' },
     origin: 'CY',
     project_type: 'Tourism Platform',
+    preview_enabled: false,
   },
   {
     id: '30',
@@ -799,6 +802,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Healthcare CMS', backend: 'Patient management' },
     origin: 'CY',
     project_type: 'Medical Website',
+    preview_enabled: false,
   },
   {
     id: '31',
@@ -824,6 +828,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Webflow', backend: 'Client portal' },
     origin: 'EU',
     project_type: 'Legal Website',
+    preview_enabled: false,
   },
   {
     id: '32',
@@ -849,6 +854,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Webflow', backend: 'Client portals' },
     origin: 'EU',
     project_type: 'Corporate Website',
+    preview_enabled: false,
   },
   {
     id: '33',
@@ -874,6 +880,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Industrial CMS', backend: 'B2B integration' },
     origin: 'CY',
     project_type: 'Manufacturing Website',
+    preview_enabled: true,
   },
   {
     id: '34',
@@ -899,6 +906,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Healthcare systems', backend: 'Nutrition databases' },
     origin: 'EU',
     project_type: 'Healthcare Platform',
+    preview_enabled: true,
   },
   {
     id: '35',
@@ -924,6 +932,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Tourism CMS', backend: 'Educational content management' },
     origin: 'EU',
     project_type: 'Tourism Website',
+    preview_enabled: false,
   },
   {
     id: '36',
@@ -949,6 +958,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Tourism CMS', backend: 'Booking integration' },
     origin: 'EU',
     project_type: 'Sports Tourism Platform',
+    preview_enabled: true,
   },
   {
     id: '37',
@@ -974,6 +984,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Residential Accommodation',
+    preview_enabled: false,
   },
   {
     id: '38',
@@ -999,6 +1010,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Accommodation Website',
+    preview_enabled: false,
   },
   {
     id: '39',
@@ -1024,6 +1036,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Boutique Residences',
+    preview_enabled: false,
   },
   {
     id: '40',
@@ -1049,6 +1062,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Holiday Apartments Website',
+    preview_enabled: false,
   },
   {
     id: '41',
@@ -1074,6 +1088,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Wedding and Events Venue',
+    preview_enabled: true,
   },
   {
     id: '42',
@@ -1099,6 +1114,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Solar Energy Provider',
+    preview_enabled: true,
   },
   {
     id: '43',
@@ -1124,6 +1140,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Consulting Platform',
+    preview_enabled: true,
   },
   {
     id: '44',
@@ -1149,6 +1166,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Communication Platform',
+    preview_enabled: true,
   },
   {
     id: '45',
@@ -1174,6 +1192,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Event Management Web App',
+    preview_enabled: true,
   },
   {
     id: '46',
@@ -1199,6 +1218,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Consulting Site',
+    preview_enabled: true,
   },
   {
     id: '47',
@@ -1224,6 +1244,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Portfolio Website',
+    preview_enabled: true,
   },
   {
     id: '48',
@@ -1249,6 +1270,33 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Yacht Charter Platform',
+    preview_enabled: true,
+  },
+  {
+    id: '49',
+    title: 'Aesthetics Gym',
+    description: 'Premium fitness collective in Paphos, Cyprus featuring two elite facilities (Gold Downtown & Arc Uptown) equipped with world-class Panatta, Pure Kraft, and Gym 80 equipment. Creating environments where athletic potential is realized through precision hypertrophy, functional capacity, recovery systems, and exceptional culture.',
+    image_url: '/images/portfolio/aesthetics-gym.jpg',
+    tags: ['Fitness', 'Premium Gym', 'Athletic Performance', 'Recovery', 'Next.js', 'React'],
+    case_study_url: 'https://www.aestheticsgym.com/',
+    client_name: 'Aesthetics',
+    industry: 'Fitness & Wellness / Premium Gym',
+    featured: true,
+    status: 'published',
+    sort_order: 49,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    brand_id: 'healthcare-wellness',
+    gallery_images: getGalleryImages('aesthetics-gym'),
+    services: ['Website development', 'Brand identity', 'Membership system'],
+    key_features: ['Two location showcase (Gold & Arc)', 'Equipment showcase (Panatta, Pure Kraft, Gym 80)', 'Membership plans', 'Testimonials section', 'Recovery facilities', 'Interactive gallery'],
+    challenge: 'Positioning a premium fitness brand with two distinct locations while showcasing elite equipment and creating an aspirational yet accessible brand identity.',
+    solution: 'Developed a sophisticated website that highlights both facilities, showcases world-class equipment, and communicates the premium fitness experience through compelling design and member testimonials.',
+    results: ['Strong brand positioning in Paphos fitness market', 'Clear differentiation between Gold and Arc locations', 'Enhanced member acquisition through premium positioning', 'Showcased elite equipment selection'],
+    tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
+    origin: 'EU',
+    project_type: 'Premium Fitness Website',
+    preview_enabled: true,
   },
 ];
 

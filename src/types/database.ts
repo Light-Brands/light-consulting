@@ -109,6 +109,7 @@ export interface Project {
   };
   origin?: string | null;
   project_type?: string | null;
+  preview_enabled?: boolean; // If false, skip live preview and use fallback image
 }
 
 export interface ProjectInsert {
@@ -135,6 +136,7 @@ export interface ProjectInsert {
   };
   origin?: string | null;
   project_type?: string | null;
+  preview_enabled?: boolean;
 }
 
 export interface ProjectUpdate {
