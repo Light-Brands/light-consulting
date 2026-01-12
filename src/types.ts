@@ -151,6 +151,26 @@ export interface BookingFormData {
   slot?: Date;
 }
 
+// AI-powered booking form data
+export interface AIReport {
+  context: string;
+  challenges: string[];
+  opportunities: string[];
+  valueProposition: string;
+  nextSteps: string[];
+}
+
+export interface AIBookingFormData {
+  document: File | null;
+  name?: string;
+  email?: string;
+  company?: string;
+  aiReport?: AIReport;
+  isAnalyzing?: boolean;
+  isComplete?: boolean;
+  leadId?: string;
+}
+
 export interface IntakeQuestion {
   id: string;
   question: string;
