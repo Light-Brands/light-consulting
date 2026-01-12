@@ -171,7 +171,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
                   },
                   {
                     step: 4,
-                    title: 'AI Super Intelligence System',
+                    title: 'AI Super Intelligence',
                     description: 'Reserved for those we choose. Built upon a foundation of core values, we believe our highest-level work should be with those operating at the highest level of integrity with themselves and the planet.',
                     deliverables: [
                       'Complete AI integration',
