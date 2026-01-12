@@ -262,7 +262,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               Most companies stall in the middle.
             </Text>
             <Text variant="large" className="text-radiance-gold font-light text-center leading-relaxed">
-              We help you reach the top—where AI becomes a structural advantage, not a novelty.
+              We help you reach the top, where AI becomes a structural advantage, not a novelty.
             </Text>
           </div>
         </Container>
