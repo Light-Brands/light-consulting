@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 import type { ProposalWithDetails, ProposalDetailApiResponse } from '@/types/proposals';
+import { getProposalByToken } from '@/data/proposals';
 
 interface RouteParams {
   params: Promise<{ accessToken: string }>;
@@ -26,6 +27,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         { data: null, error: 'Access token is required' },
         { status: 400 }
       );
+    }
+
+    // Check for static proposal first
+    const staticProposal = getProposalByToken(accessToken);
+    if (staticProposal) {
+      return NextResponse.json({ data: staticProposal, error: null });
     }
 
     // If Supabase is not configured, return placeholder
