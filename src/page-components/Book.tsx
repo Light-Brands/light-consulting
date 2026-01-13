@@ -2,10 +2,10 @@
  * Booking Page - AI Readiness Diagnostic
  * Light Brand Consulting
  *
- * Ultra-frictionless 3-step booking flow:
- * 1. Website URL + Contact Info (combined)
- * 2. AI Analysis (automatic)
- * 3. Readiness Report + Book Call (combined)
+ * 3-step booking flow:
+ * 1. Website URL + Contact Info (with manual trigger button)
+ * 2. AI Analysis (shows progress)
+ * 3. Readiness Report + Book Call
  */
 
 'use client';
@@ -17,7 +17,7 @@ import {
   AIAnalysisVisual,
   ReadinessReport,
 } from '../components';
-import { Container, Section } from '../components/ui';
+import { Container, Section, Button } from '../components/ui';
 import { AIBookingFormData, WebsiteAnalysis, PageKey } from '../types';
 import { isValidEmail } from '../lib/utils';
 
@@ -36,6 +36,7 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
   const [analysisPhase, setAnalysisPhase] = useState<AnalysisPhase>('scraping');
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const stepLabels = [
     'Enter Website',
@@ -43,15 +44,15 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
     'Your Assessment',
   ];
 
-  const validateStep1 = (): boolean => {
+  const validateStep1 = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.websiteUrl?.trim()) {
       newErrors.websiteUrl = 'Website URL is required';
     } else {
       try {
-        const testUrl = formData.websiteUrl.startsWith('http') 
-          ? formData.websiteUrl 
+        const testUrl = formData.websiteUrl.startsWith('http')
+          ? formData.websiteUrl
           : `https://${formData.websiteUrl}`;
         new URL(testUrl);
       } catch {
@@ -69,21 +70,22 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
+  }, [formData.websiteUrl, formData.name, formData.email]);
 
   const updateFormData = useCallback((updates: Partial<AIBookingFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
     // Clear related errors
     Object.keys(updates).forEach((key) => {
-      if (errors[key]) {
-        setErrors((prev) => {
+      setErrors((prev) => {
+        if (prev[key]) {
           const newErrors = { ...prev };
           delete newErrors[key];
           return newErrors;
-        });
-      }
+        }
+        return prev;
+      });
     });
-  }, [errors]);
+  }, []);
 
   const handleFieldChange = useCallback((field: string, value: string) => {
     updateFormData({ [field]: value });
@@ -114,10 +116,20 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
     });
   };
 
-  const analyzeWebsite = async () => {
+  const handleGoBack = useCallback(() => {
+    setStep(1);
+    setAnalysisError(null);
+    setAnalysisProgress(0);
+    setIsAnalyzing(false);
+    updateFormData({ isAnalyzing: false });
+  }, [updateFormData]);
+
+  const analyzeWebsite = useCallback(async () => {
     if (!validateStep1()) return;
+    if (isAnalyzing) return;
 
     // Move to analysis step
+    setIsAnalyzing(true);
     setStep(2);
     setAnalysisError(null);
     setAnalysisProgress(0);
@@ -171,22 +183,17 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
         leadId: result.leadId,
       });
 
+      setIsAnalyzing(false);
       setStep(3);
     } catch (error) {
       console.error('Analysis error:', error);
       setAnalysisError(
         error instanceof Error ? error.message : 'An unexpected error occurred'
       );
+      setIsAnalyzing(false);
       updateFormData({ isAnalyzing: false });
     }
-  };
-
-  const handleReadyToAnalyze = useCallback(() => {
-    // Auto-trigger analysis when all fields are ready
-    if (validateStep1()) {
-      analyzeWebsite();
-    }
-  }, [formData]);
+  }, [validateStep1, isAnalyzing, formData.websiteUrl, formData.name, formData.email, formData.company, formData.phone, updateFormData]);
 
   return (
     <div className="min-h-screen pt-24 md:pt-32">
@@ -217,7 +224,8 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
                   }}
                   errors={errors}
                   onFieldChange={handleFieldChange}
-                  onReady={handleReadyToAnalyze}
+                  onAnalyze={analyzeWebsite}
+                  isAnalyzing={isAnalyzing}
                 />
               </div>
             )}
@@ -230,6 +238,7 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
                   progress={analysisProgress}
                   currentPhase={analysisPhase}
                   error={analysisError}
+                  onGoBack={handleGoBack}
                 />
               </div>
             )}

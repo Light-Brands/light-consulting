@@ -1,12 +1,12 @@
 /**
  * AI Analysis Visual
- * CONCEPT: "The Magic"
- * Animated visualization of AI reading and analyzing the document
+ * Animated visualization of AI analyzing the website
  */
 
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { Button } from './ui';
 import { cn } from '../lib/utils';
 
 interface AIAnalysisVisualProps {
@@ -14,13 +14,11 @@ interface AIAnalysisVisualProps {
   progress?: number; // 0-100
   currentPhase?: string;
   error?: string | null;
+  onGoBack?: () => void;
 }
 
-const ANALYSIS_PHASES = [
-  { id: 'reading', label: 'Reading your business document...', icon: '1' },
-  { id: 'understanding', label: 'Understanding your business context...', icon: '2' },
-  { id: 'identifying', label: 'Identifying opportunities...', icon: '3' },
-  { id: 'creating', label: 'Creating your personalized value proposition...', icon: '4' },
+// Website analysis phases only
+const WEBSITE_PHASES = [
   { id: 'scraping', label: 'Scraping your website...', icon: '1' },
   { id: 'analyzing', label: 'Analyzing your tech stack...', icon: '2' },
   { id: 'evaluating', label: 'Evaluating AI readiness...', icon: '3' },
@@ -30,8 +28,9 @@ const ANALYSIS_PHASES = [
 export const AIAnalysisVisual: React.FC<AIAnalysisVisualProps> = ({
   fileName,
   progress = 0,
-  currentPhase = 'reading',
+  currentPhase = 'scraping',
   error,
+  onGoBack,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [animatedProgress, setAnimatedProgress] = useState(0);
@@ -61,7 +60,7 @@ export const AIAnalysisVisual: React.FC<AIAnalysisVisualProps> = ({
   }, []);
 
   const getCurrentPhaseIndex = () => {
-    return ANALYSIS_PHASES.findIndex((p) => p.id === currentPhase);
+    return WEBSITE_PHASES.findIndex((p) => p.id === currentPhase);
   };
 
   if (error) {
@@ -72,11 +71,26 @@ export const AIAnalysisVisual: React.FC<AIAnalysisVisualProps> = ({
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         )}
       >
-        <div className="text-center mb-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-            Analysis Error
-          </h1>
-          <p className="text-error text-lg">{error}</p>
+        <div className="text-center">
+          <div className="mb-6">
+            <div className="w-16 h-16 mx-auto rounded-full bg-error/20 flex items-center justify-center mb-4">
+              <svg className="w-8 h-8 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
+              Analysis Error
+            </h1>
+            <p className="text-error text-lg mb-6">{error}</p>
+            <p className="text-text-secondary mb-8">
+              This could be due to the website being inaccessible, taking too long to load, or having restricted access.
+            </p>
+          </div>
+          {onGoBack && (
+            <Button onClick={onGoBack} variant="secondary" size="lg">
+              Go Back & Try Again
+            </Button>
+          )}
         </div>
       </div>
     );
@@ -95,9 +109,7 @@ export const AIAnalysisVisual: React.FC<AIAnalysisVisualProps> = ({
           Analyzing Your Website
         </h1>
         <p className="text-text-secondary text-lg">
-          {currentPhase === 'scraping' || currentPhase === 'analyzing' || currentPhase === 'evaluating' || currentPhase === 'generating'
-            ? 'Our AI is analyzing your website and assessing AI readiness'
-            : 'Our AI is reading your document and creating insights'}
+          Our AI is analyzing your website and assessing AI readiness
         </p>
       </div>
 
@@ -177,7 +189,7 @@ export const AIAnalysisVisual: React.FC<AIAnalysisVisualProps> = ({
 
           {/* Phase Steps */}
           <div className="space-y-4">
-            {ANALYSIS_PHASES.map((phase, index) => {
+            {WEBSITE_PHASES.map((phase, index) => {
               const currentIndex = getCurrentPhaseIndex();
               const isComplete = index < currentIndex;
               const isCurrent = index === currentIndex;
