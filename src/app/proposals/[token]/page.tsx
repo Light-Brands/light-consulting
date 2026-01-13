@@ -795,21 +795,35 @@ export default function ProposalPortalPage({ params }: PageProps) {
                           <p className="text-2xl font-bold text-text-primary mb-3">
                             {formatCurrency(milestone.amount)}
                           </p>
-                          <span
-                            className={`inline-block px-4 py-2 text-xs rounded-full font-medium uppercase tracking-wider ${
-                              milestone.payment_status === 'paid'
-                                ? 'bg-green-500/10 text-green-400 border border-green-500/30'
+                          {milestone.payment_status !== 'paid' && milestone.payment_link ? (
+                            <a
+                              href={milestone.payment_link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 px-5 py-2.5 bg-radiance-gold text-depth-base text-sm font-semibold rounded-full hover:bg-radiance-gold/90 transition-colors shadow-illumination"
+                            >
+                              Pay Now
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                            </a>
+                          ) : (
+                            <span
+                              className={`inline-block px-4 py-2 text-xs rounded-full font-medium uppercase tracking-wider ${
+                                milestone.payment_status === 'paid'
+                                  ? 'bg-green-500/10 text-green-400 border border-green-500/30'
+                                  : milestone.payment_status === 'overdue'
+                                  ? 'bg-red-500/10 text-red-400 border border-red-500/30'
+                                  : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+                              }`}
+                            >
+                              {milestone.payment_status === 'paid'
+                                ? 'Paid'
                                 : milestone.payment_status === 'overdue'
-                                ? 'bg-red-500/10 text-red-400 border border-red-500/30'
-                                : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
-                            }`}
-                          >
-                            {milestone.payment_status === 'paid'
-                              ? 'Paid'
-                              : milestone.payment_status === 'overdue'
-                              ? 'Overdue'
-                              : 'Pending'}
-                          </span>
+                                ? 'Overdue'
+                                : 'Pending'}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>

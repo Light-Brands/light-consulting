@@ -133,6 +133,7 @@ We identify the single best entry point that delivers immediate value while layi
         payment_status: 'pending',
         milestone_status: 'not_started',
         invoice_number: null,
+        payment_link: 'https://buy.stripe.com/8x28wQ82R7el01mfX1bo400',
         paid_at: null,
         sort_order: 0,
         created_at: new Date().toISOString(),
