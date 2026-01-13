@@ -69,6 +69,8 @@ function extractTextContent(html: string): string {
   let text = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
   text = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
   text = text.replace(/<noscript[^>]*>[\s\S]*?<\/noscript>/gi, '');
+  text = text.replace(/<svg[^>]*>[\s\S]*?<\/svg>/gi, '');
+  text = text.replace(/<!--[\s\S]*?-->/g, '');
 
   // Remove HTML tags but keep content
   text = text.replace(/<[^>]+>/g, ' ');
@@ -80,12 +82,48 @@ function extractTextContent(html: string): string {
   text = text.replace(/&gt;/g, '>');
   text = text.replace(/&quot;/g, '"');
   text = text.replace(/&#39;/g, "'");
+  text = text.replace(/&#x27;/g, "'");
+  text = text.replace(/&#(\d+);/g, (_, num) => String.fromCharCode(parseInt(num, 10)));
   text = text.replace(/&[a-zA-Z0-9#]+;/g, ' ');
 
   // Clean up whitespace
   text = text.replace(/\s+/g, ' ').trim();
 
   return text;
+}
+
+/**
+ * Extract main content area from HTML (prioritize article/main content)
+ */
+function extractMainContent(html: string): string {
+  // Try to find main content areas
+  const mainPatterns = [
+    /<main[^>]*>([\s\S]*?)<\/main>/gi,
+    /<article[^>]*>([\s\S]*?)<\/article>/gi,
+    /<div[^>]*role=["']main["'][^>]*>([\s\S]*?)<\/div>/gi,
+    /<div[^>]*class=["'][^"']*content[^"']*["'][^>]*>([\s\S]*?)<\/div>/gi,
+    /<div[^>]*id=["'][^"']*content[^"']*["'][^>]*>([\s\S]*?)<\/div>/gi,
+  ];
+
+  for (const pattern of mainPatterns) {
+    const matches = [...html.matchAll(pattern)];
+    if (matches.length > 0) {
+      // Combine all matches and extract text
+      const combined = matches.map(m => m[1]).join(' ');
+      const text = extractTextContent(combined);
+      if (text.length > 200) {
+        return text;
+      }
+    }
+  }
+
+  // Fallback to body content
+  const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+  if (bodyMatch) {
+    return extractTextContent(bodyMatch[1]);
+  }
+
+  return extractTextContent(html);
 }
 
 /**
@@ -139,12 +177,17 @@ async function scrapeWebsite(url: string): Promise<ScrapedData> {
                           html.match(/<meta[^>]*content=["']([^"']*)["'][^>]*name=["']description["'][^>]*>/i);
     const metaDescription = metaDescMatch ? metaDescMatch[1].trim() : '';
 
-    // Extract headings
+    // Extract headings (h1-h4) with better content extraction
     const headings: string[] = [];
-    const headingMatches = html.matchAll(/<h[123][^>]*>([^<]*(?:<[^>]+>[^<]*)*)<\/h[123]>/gi);
+    const headingMatches = html.matchAll(/<h([1-4])[^>]*>([\s\S]*?)<\/h\1>/gi);
     for (const match of headingMatches) {
-      const text = match[1].replace(/<[^>]+>/g, '').trim();
-      if (text && headings.length < 20) {
+      let text = match[2];
+      // Remove nested tags but keep text
+      text = text.replace(/<[^>]+>/g, ' ').trim();
+      // Decode entities
+      text = text.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&[a-zA-Z0-9#]+;/g, '');
+      text = text.replace(/\s+/g, ' ').trim();
+      if (text && text.length > 2 && text.length < 200 && headings.length < 25) {
         headings.push(text);
       }
     }
@@ -193,8 +236,11 @@ async function scrapeWebsite(url: string): Promise<ScrapedData> {
     // Extract stylesheet sources
     const styles = extractAttributes(html, /<link[^>]*rel=["']stylesheet["'][^>]*>/gi, 'href');
 
-    // Extract text content
-    const content = extractTextContent(html);
+    // Extract text content (prioritize main content area)
+    const mainContent = extractMainContent(html);
+    const fullContent = extractTextContent(html);
+    // Use main content if it's substantial, otherwise use full content
+    const content = mainContent.length > 500 ? mainContent : fullContent;
 
     return {
       content: content.substring(0, 50000), // Limit content size
@@ -598,32 +644,89 @@ function inferRevenueModel(scrapedData: ScrapedData, techStack: EnhancedTechStac
 }
 
 function extractValueProps(scrapedData: ScrapedData): string[] {
-  const headings = scrapedData.headings.slice(0, 10);
+  const headings = scrapedData.headings;
+  const content = scrapedData.content.toLowerCase();
   const valueProps: string[] = [];
 
-  // Look for benefit-oriented headings
+  // Look for benefit-oriented headings that describe actual value
+  const valuePhrases = [
+    'why choose', 'why us', 'our advantage', 'what we offer', 'our services',
+    'what makes us', 'our approach', 'our difference', 'benefits', 'features',
+    'solutions', 'how we help', 'we provide', 'we deliver', 'our expertise',
+    'our promise', 'our commitment', 'what we do', 'our mission'
+  ];
+
   for (const heading of headings) {
     const lower = heading.toLowerCase();
-    if (lower.includes('why') || lower.includes('benefit') || lower.includes('advantage') ||
-        lower.includes('feature') || lower.includes('solution') || lower.includes('how we')) {
-      valueProps.push(heading);
+    if (valuePhrases.some(phrase => lower.includes(phrase))) {
+      // Clean up the heading and add if it's substantive
+      const cleaned = heading.replace(/^(why|how|what|our)\s+/i, '').trim();
+      if (cleaned.length > 5 && cleaned.length < 100) {
+        valueProps.push(heading);
+      }
     }
   }
 
-  // If we didn't find explicit value props, create generic ones based on content
+  // Look for action-oriented headings that describe services/capabilities
+  if (valueProps.length < 3) {
+    for (const heading of headings) {
+      const lower = heading.toLowerCase();
+      // Skip navigation-like headings
+      if (['home', 'about', 'contact', 'blog', 'login', 'sign up', 'menu'].some(nav => lower === nav)) {
+        continue;
+      }
+      // Look for service/capability descriptions
+      if ((lower.includes('service') || lower.includes('solution') || lower.includes('help') ||
+           lower.includes('build') || lower.includes('create') || lower.includes('grow') ||
+           lower.includes('transform') || lower.includes('optimize') || lower.includes('drive')) &&
+          !valueProps.includes(heading)) {
+        valueProps.push(heading);
+      }
+    }
+  }
+
+  // Extract specific value propositions from content patterns
+  if (valueProps.length < 3) {
+    const patterns = [
+      { regex: /we (help|enable|empower|assist) (?:you |businesses |companies |clients )?([^.!?]{10,60})/gi, extract: 2 },
+      { regex: /(?:dedicated to|committed to|focused on) ([^.!?]{10,60})/gi, extract: 1 },
+      { regex: /(?:specializ(?:e|ing) in|expert(?:s)? in) ([^.!?]{10,60})/gi, extract: 1 },
+      { regex: /(?:providing|delivering|offering) ([^.!?]{10,60})/gi, extract: 1 },
+    ];
+
+    for (const { regex, extract } of patterns) {
+      const matches = content.matchAll(regex);
+      for (const match of matches) {
+        if (match[extract] && valueProps.length < 3) {
+          const prop = match[extract].trim();
+          // Capitalize first letter and clean up
+          const cleaned = prop.charAt(0).toUpperCase() + prop.slice(1);
+          if (cleaned.length > 10 && cleaned.length < 80 && !valueProps.some(v => v.toLowerCase().includes(prop))) {
+            valueProps.push(cleaned);
+          }
+        }
+      }
+    }
+  }
+
+  // If still empty, extract from H1 and meta description
   if (valueProps.length === 0) {
-    if (scrapedData.content.toLowerCase().includes('experience')) {
-      valueProps.push('Industry experience and expertise');
+    const h1 = headings.find(h => h.length > 10 && h.length < 100);
+    if (h1) {
+      valueProps.push(h1);
     }
-    if (scrapedData.content.toLowerCase().includes('quality')) {
-      valueProps.push('Quality-focused approach');
-    }
-    if (scrapedData.content.toLowerCase().includes('customer') || scrapedData.content.toLowerCase().includes('client')) {
-      valueProps.push('Client-centric service');
+    if (scrapedData.metaDescription && scrapedData.metaDescription.length > 20) {
+      // Extract first sentence from meta description
+      const firstSentence = scrapedData.metaDescription.split(/[.!?]/)[0].trim();
+      if (firstSentence.length > 15 && firstSentence.length < 100) {
+        valueProps.push(firstSentence);
+      }
     }
   }
 
-  return valueProps.slice(0, 3);
+  // Deduplicate and return top 3
+  const uniqueProps = [...new Set(valueProps.map(p => p.trim()))];
+  return uniqueProps.slice(0, 3);
 }
 
 /**
@@ -692,6 +795,7 @@ ANALYSIS GUIDELINES:
 - For industry: Be specific! "Marketing" is too vague - use "Digital Marketing Agency" or "Marketing Technology SaaS"
 - For company_size: Infer from website sophistication, team pages, office locations, and content volume
 - For target_audience: Who would benefit from their product/service? What problems do they solve?
+- For value_proposition: Extract SPECIFIC, CONCRETE benefits from the actual website content. What do they promise? What outcomes do they deliver? Use their actual language/claims.
 - For pain_points: What challenges would their customers face that led them to this business?
 - For efficiency_opportunities: Where could AI/automation help THIS specific business?
 
@@ -705,7 +809,7 @@ Return ONLY valid JSON (no markdown code blocks, no explanations):
     "demographics": "Role, company size, budget level, decision-making authority",
     "psychographics": "Goals they want to achieve, challenges they face, what motivates their buying decisions"
   },
-  "value_proposition": ["Unique benefit 1", "Unique benefit 2", "Unique benefit 3"],
+  "value_proposition": ["Extract real value claims from the website - e.g., 'Custom AI solutions that increase efficiency by 40%', 'Award-winning design that converts visitors to customers', 'Same-day delivery for urgent orders'. Be specific, use their actual claims."],
   "revenue_model": "How they make money: Subscription, project-based, retainer, hourly, commission, product sales, etc.",
   "company_size": {
     "employees": "Infer from team page, about page, or website sophistication: 1-10, 10-50, 50-200, 200-500, or 500+",
@@ -808,6 +912,23 @@ Return ONLY valid JSON (no markdown code blocks, no explanations):
     const inferredIndustry = parsed.industry || inferIndustryFromContent(scrapedData, domain);
     const inferredBusinessModel = parsed.business_model || inferBusinessModel(scrapedData, techStack);
 
+    // Validate and clean value_proposition - ensure it's an array of non-empty strings
+    let valueProposition: string[] = [];
+    if (Array.isArray(parsed.value_proposition)) {
+      valueProposition = parsed.value_proposition
+        .filter((v: unknown) => typeof v === 'string' && v.trim().length > 5)
+        .map((v: string) => v.trim())
+        .slice(0, 5);
+    }
+    // If AI didn't return valid value props, extract from content
+    if (valueProposition.length === 0) {
+      valueProposition = extractValueProps(scrapedData);
+    }
+    // Ensure we always have at least one value proposition
+    if (valueProposition.length === 0 && scrapedData.title) {
+      valueProposition = [scrapedData.title];
+    }
+
     const targetAudience: TargetAudience = {
       primary: parsed.target_audience?.primary || `Visitors to ${domain}`,
       demographics: parsed.target_audience?.demographics || 'Decision makers and stakeholders',
@@ -826,7 +947,7 @@ Return ONLY valid JSON (no markdown code blocks, no explanations):
         business_model: inferredBusinessModel,
         industry: inferredIndustry,
         target_audience: targetAudience,
-        value_proposition: parsed.value_proposition || extractValueProps(scrapedData),
+        value_proposition: valueProposition,
         revenue_model: parsed.revenue_model || inferRevenueModel(scrapedData, techStack),
         company_size: companySize,
         geographic_presence: parsed.geographic_presence || ['North America'],
