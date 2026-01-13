@@ -8,7 +8,7 @@
 import type { ProposalWithDetails } from '@/types/proposals';
 
 // Token for Cho Ventures AI Readiness Diagnostic
-export const CHO_VENTURES_TOKEN = 'cho-ventures-ai-readiness-2024';
+export const CHO_VENTURES_TOKEN = 'cho-ventures-ai-readiness-2026';
 
 export const proposals: Record<string, ProposalWithDetails> = {
   [CHO_VENTURES_TOKEN]: {

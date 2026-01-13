@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 import type { ProposalWithDetails, ProposalDetailApiResponse } from '@/types/proposals';
 import { DEFAULT_PORTAL_SECTIONS } from '@/types/proposals';
+import { getProposalByToken } from '@/data/proposals';
 
 interface RouteParams {
   params: Promise<{ accessToken: string }>;
@@ -29,15 +30,25 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
+    // Check static proposals first (for hardcoded proposals like Cho Ventures)
+    const staticProposal = getProposalByToken(accessToken);
+    if (staticProposal) {
+      const response: ProposalDetailApiResponse = {
+        data: staticProposal,
+        error: null,
+      };
+      return NextResponse.json(response);
+    }
+
     // If Supabase is not configured, return error
     if (!isSupabaseConfigured()) {
       return NextResponse.json(
-        { data: null, error: 'Database not configured. Please check your Supabase setup.' },
-        { status: 503 }
+        { data: null, error: 'Proposal not found' },
+        { status: 404 }
       );
     }
 
-    // Fetch proposal by access token
+    // Fetch proposal by access token from database
     const { data: proposal, error: proposalError } = await supabaseAdmin
       .from('proposals')
       .select('*')
