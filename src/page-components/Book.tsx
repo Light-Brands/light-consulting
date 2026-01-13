@@ -4,8 +4,8 @@
  *
  * 3-step booking flow:
  * 1. Website URL + Contact Info (with manual trigger button)
- * 2. AI Analysis (shows progress)
- * 3. Readiness Report + Book Call
+ * 2. AI Analysis (shows progress with enhanced phases)
+ * 3. Readiness Report + Book Call (with business intelligence)
  */
 
 'use client';
@@ -20,16 +20,31 @@ import {
 import { Container, Section, Button } from '../components/ui';
 import { AIBookingFormData, WebsiteAnalysis, PageKey } from '../types';
 import { isValidEmail } from '../lib/utils';
+import type { BusinessIntelligence } from '@/types/business-intelligence';
 
 interface BookPageProps {
   onNavigate: (page: PageKey) => void;
 }
 
-type AnalysisPhase = 'scraping' | 'analyzing' | 'evaluating' | 'generating';
+// Enhanced analysis phases for the UI
+type AnalysisPhase =
+  | 'scraping'
+  | 'tech_detection'
+  | 'business_analysis'
+  | 'digital_presence'
+  | 'technical_audit'
+  | 'ai_readiness'
+  | 'operations_analysis'
+  | 'generating_report';
+
+interface EnhancedFormData extends AIBookingFormData {
+  businessIntelligence?: BusinessIntelligence;
+  fullReadinessReport?: string;
+}
 
 export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<AIBookingFormData>({
+  const [formData, setFormData] = useState<EnhancedFormData>({
     websiteUrl: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -72,7 +87,7 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
     return Object.keys(newErrors).length === 0;
   }, [formData.websiteUrl, formData.name, formData.email]);
 
-  const updateFormData = useCallback((updates: Partial<AIBookingFormData>) => {
+  const updateFormData = useCallback((updates: Partial<EnhancedFormData>) => {
     setFormData((prev) => ({ ...prev, ...updates }));
     // Clear related errors
     Object.keys(updates).forEach((key) => {
@@ -91,6 +106,7 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
     updateFormData({ [field]: value });
   }, [updateFormData]);
 
+  // Enhanced progress simulation with more phases
   const simulateProgress = (
     startProgress: number,
     endProgress: number,
@@ -141,12 +157,16 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
         ? formData.websiteUrl
         : `https://${formData.websiteUrl}`;
 
-      // Start progress simulation in parallel with API call
+      // Start enhanced progress simulation in parallel with API call
       const progressPromise = (async () => {
-        await simulateProgress(0, 25, 'scraping', 4000);
-        await simulateProgress(25, 50, 'analyzing', 5000);
-        await simulateProgress(50, 75, 'evaluating', 4000);
-        await simulateProgress(75, 95, 'generating', 3000);
+        await simulateProgress(0, 12, 'scraping', 3000);
+        await simulateProgress(12, 25, 'tech_detection', 2000);
+        await simulateProgress(25, 40, 'business_analysis', 4000);
+        await simulateProgress(40, 55, 'digital_presence', 3000);
+        await simulateProgress(55, 70, 'technical_audit', 2500);
+        await simulateProgress(70, 85, 'ai_readiness', 3000);
+        await simulateProgress(85, 95, 'operations_analysis', 2500);
+        await simulateProgress(95, 98, 'generating_report', 2000);
       })();
 
       // Make API call
@@ -175,9 +195,11 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
       // Short delay to show 100% before transitioning
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Update form data with analysis and move to final step
+      // Update form data with enhanced analysis and move to final step
       updateFormData({
         websiteAnalysis: result.analysis as WebsiteAnalysis,
+        businessIntelligence: result.analysis?.businessIntelligence,
+        fullReadinessReport: result.analysis?.fullReadinessReport,
         isAnalyzing: false,
         isComplete: true,
         leadId: result.leadId,
@@ -230,7 +252,7 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
               </div>
             )}
 
-            {/* Step 2: AI Analysis */}
+            {/* Step 2: AI Analysis with Enhanced Progress */}
             {step === 2 && (
               <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
                 <AIAnalysisVisual
@@ -239,11 +261,12 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
                   currentPhase={analysisPhase}
                   error={analysisError}
                   onGoBack={handleGoBack}
+                  showDetailedProgress={true}
                 />
               </div>
             )}
 
-            {/* Step 3: Readiness Report */}
+            {/* Step 3: Enhanced Readiness Report with Business Intelligence */}
             {step === 3 && formData.websiteAnalysis && (
               <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
                 <ReadinessReport
@@ -251,6 +274,8 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
                   readinessBrief={formData.websiteAnalysis.readinessBrief}
                   capacityGapBrief={formData.websiteAnalysis.capacityGapBrief}
                   techStack={formData.websiteAnalysis.techStack}
+                  businessIntelligence={formData.businessIntelligence}
+                  websiteStory={formData.websiteAnalysis.websiteStory}
                   leadId={formData.leadId}
                   onBookCall={(calendlyLink) => {
                     // Handle booking callback
