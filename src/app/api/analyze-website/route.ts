@@ -15,8 +15,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import puppeteer from 'puppeteer-core';
-import chromium from '@sparticuz/chromium';
 import type {
   BusinessIntelligence,
   EnhancedTechStack,
@@ -64,112 +62,157 @@ interface ScrapedData {
 }
 
 /**
+ * Helper function to extract text content from HTML by removing tags
+ */
+function extractTextContent(html: string): string {
+  // Remove script and style content
+  let text = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+  text = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+  text = text.replace(/<noscript[^>]*>[\s\S]*?<\/noscript>/gi, '');
+
+  // Remove HTML tags but keep content
+  text = text.replace(/<[^>]+>/g, ' ');
+
+  // Decode HTML entities
+  text = text.replace(/&nbsp;/g, ' ');
+  text = text.replace(/&amp;/g, '&');
+  text = text.replace(/&lt;/g, '<');
+  text = text.replace(/&gt;/g, '>');
+  text = text.replace(/&quot;/g, '"');
+  text = text.replace(/&#39;/g, "'");
+  text = text.replace(/&[a-zA-Z0-9#]+;/g, ' ');
+
+  // Clean up whitespace
+  text = text.replace(/\s+/g, ' ').trim();
+
+  return text;
+}
+
+/**
+ * Helper function to extract attribute values using regex
+ */
+function extractAttributes(html: string, tagPattern: RegExp, attrName: string): string[] {
+  const results: string[] = [];
+  const matches = html.matchAll(tagPattern);
+
+  for (const match of matches) {
+    const tag = match[0];
+    const attrMatch = tag.match(new RegExp(`${attrName}=["']([^"']*)["']`, 'i'));
+    if (attrMatch && attrMatch[1]) {
+      results.push(attrMatch[1]);
+    }
+  }
+
+  return results;
+}
+
+/**
  * Enhanced website scraping with additional data extraction
- * Uses puppeteer-core with @sparticuz/chromium for serverless compatibility
+ * Uses fetch-based HTML parsing for serverless compatibility
  */
 async function scrapeWebsite(url: string): Promise<ScrapedData> {
-  let browser;
   try {
-    // Configure chromium for serverless environment
-    const executablePath = await chromium.executablePath();
-
-    browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: { width: 1280, height: 720 },
-      executablePath,
-      headless: true,
+    // Fetch the HTML content
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; LightConsultingBot/1.0; +https://lightbrandconsulting.com)',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+      },
+      redirect: 'follow',
     });
-    const page = await browser.newPage();
 
-    // Set a reasonable timeout
-    await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-    // Extract comprehensive data
-    const data = await page.evaluate(() => {
-      // Remove script and style elements for text extraction
-      const clonedDoc = document.cloneNode(true) as Document;
-      const scripts = clonedDoc.querySelectorAll('script, style, noscript');
-      scripts.forEach((el) => el.remove());
+    const html = await response.text();
+    const parsedUrl = new URL(url);
+    const baseHost = parsedUrl.hostname;
 
-      // Get main content areas
-      const mainContent = clonedDoc.querySelector('main') ||
-                         clonedDoc.querySelector('article') ||
-                         clonedDoc.querySelector('[role="main"]') ||
-                         clonedDoc.body;
+    // Extract title
+    const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i);
+    const title = titleMatch ? titleMatch[1].trim() : '';
 
-      // Extract headings
-      const headings: string[] = [];
-      document.querySelectorAll('h1, h2, h3').forEach((h) => {
-        const text = h.textContent?.trim();
-        if (text) headings.push(text);
-      });
+    // Extract meta description
+    const metaDescMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["'][^>]*>/i) ||
+                          html.match(/<meta[^>]*content=["']([^"']*)["'][^>]*name=["']description["'][^>]*>/i);
+    const metaDescription = metaDescMatch ? metaDescMatch[1].trim() : '';
 
-      // Extract links
-      const internalLinks: string[] = [];
-      const externalLinks: string[] = [];
-      const socialLinks: string[] = [];
-      const baseHost = window.location.hostname;
+    // Extract headings
+    const headings: string[] = [];
+    const headingMatches = html.matchAll(/<h[123][^>]*>([^<]*(?:<[^>]+>[^<]*)*)<\/h[123]>/gi);
+    for (const match of headingMatches) {
+      const text = match[1].replace(/<[^>]+>/g, '').trim();
+      if (text && headings.length < 20) {
+        headings.push(text);
+      }
+    }
 
-      document.querySelectorAll('a[href]').forEach((a) => {
-        const href = a.getAttribute('href') || '';
-        try {
-          const linkUrl = new URL(href, window.location.origin);
-          if (linkUrl.hostname === baseHost) {
+    // Extract links
+    const internalLinks: string[] = [];
+    const externalLinks: string[] = [];
+    const socialLinks: string[] = [];
+    const socialDomains = ['facebook.com', 'twitter.com', 'linkedin.com', 'instagram.com', 'youtube.com', 'tiktok.com', 'x.com'];
+
+    const linkMatches = html.matchAll(/<a[^>]*href=["']([^"']*)["'][^>]*>/gi);
+    for (const match of linkMatches) {
+      const href = match[1];
+      try {
+        const linkUrl = new URL(href, url);
+        if (linkUrl.hostname === baseHost || linkUrl.hostname === 'www.' + baseHost || 'www.' + linkUrl.hostname === baseHost) {
+          if (!internalLinks.includes(linkUrl.pathname)) {
             internalLinks.push(linkUrl.pathname);
-          } else if (['facebook.com', 'twitter.com', 'linkedin.com', 'instagram.com', 'youtube.com', 'tiktok.com', 'x.com'].some(s => linkUrl.hostname.includes(s))) {
-            socialLinks.push(linkUrl.hostname.replace('www.', ''));
-          } else if (href.startsWith('http')) {
+          }
+        } else if (socialDomains.some(s => linkUrl.hostname.includes(s))) {
+          const socialHost = linkUrl.hostname.replace('www.', '');
+          if (!socialLinks.includes(socialHost)) {
+            socialLinks.push(socialHost);
+          }
+        } else if (href.startsWith('http')) {
+          if (!externalLinks.includes(linkUrl.hostname)) {
             externalLinks.push(linkUrl.hostname);
           }
-        } catch {
-          // Invalid URL, skip
         }
-      });
+      } catch {
+        // Invalid URL, skip
+      }
+    }
 
-      // Count forms
-      const forms = document.querySelectorAll('form').length;
+    // Count forms
+    const formMatches = html.match(/<form[^>]*>/gi);
+    const forms = formMatches ? formMatches.length : 0;
 
-      // Count images
-      const images = document.querySelectorAll('img').length;
+    // Count images
+    const imgMatches = html.match(/<img[^>]*>/gi);
+    const images = imgMatches ? imgMatches.length : 0;
 
-      // Get script sources
-      const scriptSrcs: string[] = [];
-      document.querySelectorAll('script[src]').forEach((s) => {
-        const src = s.getAttribute('src') || '';
-        scriptSrcs.push(src);
-      });
+    // Extract script sources
+    const scripts = extractAttributes(html, /<script[^>]*>/gi, 'src');
 
-      // Get stylesheet sources
-      const styleSrcs: string[] = [];
-      document.querySelectorAll('link[rel="stylesheet"]').forEach((l) => {
-        const href = l.getAttribute('href') || '';
-        styleSrcs.push(href);
-      });
+    // Extract stylesheet sources
+    const styles = extractAttributes(html, /<link[^>]*rel=["']stylesheet["'][^>]*>/gi, 'href');
 
-      return {
-        content: mainContent.innerText || document.body.innerText,
-        title: document.title,
-        metaDescription: document.querySelector('meta[name="description"]')?.getAttribute('content') || '',
-        headings: headings.slice(0, 20),
-        links: {
-          internal: [...new Set(internalLinks)].slice(0, 50),
-          external: [...new Set(externalLinks)].slice(0, 20),
-          social: [...new Set(socialLinks)],
-        },
-        forms,
-        images,
-        scripts: scriptSrcs,
-        styles: styleSrcs,
-      };
-    });
+    // Extract text content
+    const content = extractTextContent(html);
 
-    // Get HTML for tech stack detection
-    const html = await page.content();
-
-    await browser.close();
-    return { ...data, html, content: data.content.trim() };
+    return {
+      content: content.substring(0, 50000), // Limit content size
+      html,
+      title,
+      metaDescription,
+      headings,
+      links: {
+        internal: internalLinks.slice(0, 50),
+        external: externalLinks.slice(0, 20),
+        social: socialLinks,
+      },
+      forms,
+      images,
+      scripts,
+      styles,
+    };
   } catch (error) {
-    if (browser) await browser.close();
     console.error('Error scraping website:', error);
     throw new Error(`Failed to scrape website: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
