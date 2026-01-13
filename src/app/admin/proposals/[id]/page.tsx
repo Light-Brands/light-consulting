@@ -9,7 +9,7 @@ import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/admin';
 import { Container, Button } from '@/components/ui';
-import type { ProposalWithDetails, ProposalStatus } from '@/types/proposals';
+import type { ProposalWithDetails, ProposalStatus, ProposalPhase } from '@/types/proposals';
 
 const STATUS_LABELS: Record<ProposalStatus, string> = {
   draft: 'Draft',
@@ -40,6 +40,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
   const [proposal, setProposal] = useState<ProposalWithDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [updatingPhaseId, setUpdatingPhaseId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchProposal();
@@ -91,6 +92,40 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const handlePhaseVisibilityToggle = async (phaseId: string, visible: boolean) => {
+    if (!proposal) return;
+
+    setUpdatingPhaseId(phaseId);
+    try {
+      const response = await fetch(`/api/proposals/${id}/phases/${phaseId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visible_in_portal: visible }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Update the local state with the updated phase
+        setProposal((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            phases: prev.phases.map((p) =>
+              p.id === phaseId ? { ...p, visible_in_portal: visible } : p
+            ),
+          };
+        });
+      }
+    } catch (error) {
+      console.error('Error updating phase visibility:', error);
+    } finally {
+      setUpdatingPhaseId(null);
+    }
+  };
+
+  const visiblePhasesCount = proposal?.phases.filter((p) => p.visible_in_portal).length ?? 0;
+  const totalPhasesCount = proposal?.phases.length ?? 0;
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return '-';
@@ -222,30 +257,66 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                         Proposal::Phases
                       </span>
                     </div>
-                    <h2 className="text-lg font-semibold text-text-primary">
-                      Project Phases ({proposal.phases.length})
-                    </h2>
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-lg font-semibold text-text-primary">
+                        Project Phases ({proposal.phases.length})
+                      </h2>
+                      <span className="text-sm text-text-muted">
+                        <span className="text-radiance-gold font-medium">{visiblePhasesCount}</span> of {totalPhasesCount} visible to client
+                      </span>
+                    </div>
                   </div>
                   <div className="divide-y divide-depth-border">
                     {proposal.phases.length > 0 ? (
                       proposal.phases.map((phase) => (
-                        <div key={phase.id} className="p-6">
+                        <div
+                          key={phase.id}
+                          className={`p-6 transition-opacity ${
+                            !phase.visible_in_portal ? 'opacity-60' : ''
+                          }`}
+                        >
                           <div className="flex items-start justify-between mb-3">
-                            <div>
-                              <span className="text-radiance-gold text-sm font-mono">
-                                Phase {phase.phase_number}
-                              </span>
-                              <h3 className="text-lg font-semibold text-text-primary">
-                                {phase.phase_name}
-                              </h3>
+                            <div className="flex items-start gap-3">
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-radiance-gold text-sm font-mono">
+                                    Phase {phase.phase_number}
+                                  </span>
+                                  {!phase.visible_in_portal && (
+                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full bg-gray-500/10 text-gray-400">
+                                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                      </svg>
+                                      Hidden
+                                    </span>
+                                  )}
+                                </div>
+                                <h3 className="text-lg font-semibold text-text-primary">
+                                  {phase.phase_name}
+                                </h3>
+                              </div>
                             </div>
-                            <div className="text-right">
-                              <p className="text-text-primary font-bold">
-                                {formatCurrency(phase.amount)}
-                              </p>
-                              {phase.timeline && (
-                                <p className="text-text-muted text-sm">{phase.timeline}</p>
-                              )}
+                            <div className="flex items-start gap-4">
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={phase.visible_in_portal}
+                                  onChange={(e) => handlePhaseVisibilityToggle(phase.id, e.target.checked)}
+                                  disabled={updatingPhaseId === phase.id}
+                                  className="w-4 h-4 rounded border-depth-border bg-depth-base text-radiance-gold focus:ring-radiance-gold focus:ring-offset-0 disabled:opacity-50"
+                                />
+                                <span className="text-sm text-text-muted whitespace-nowrap">
+                                  {updatingPhaseId === phase.id ? 'Saving...' : 'Visible'}
+                                </span>
+                              </label>
+                              <div className="text-right">
+                                <p className="text-text-primary font-bold">
+                                  {formatCurrency(phase.amount)}
+                                </p>
+                                {phase.timeline && (
+                                  <p className="text-text-muted text-sm">{phase.timeline}</p>
+                                )}
+                              </div>
                             </div>
                           </div>
                           {phase.description && (

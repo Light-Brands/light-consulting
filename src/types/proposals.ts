@@ -183,6 +183,7 @@ export interface ProposalPhase {
   goals: string[] | null;
   amount: number;
   sort_order: number;
+  visible_in_portal: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -200,6 +201,7 @@ export interface ProposalPhaseInsert {
   goals?: string[] | null;
   amount: number;
   sort_order?: number;
+  visible_in_portal?: boolean;
 }
 
 export interface ProposalPhaseUpdate {
@@ -214,6 +216,7 @@ export interface ProposalPhaseUpdate {
   goals?: string[] | null;
   amount?: number;
   sort_order?: number;
+  visible_in_portal?: boolean;
 }
 
 // ============================================================================

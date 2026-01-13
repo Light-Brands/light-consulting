@@ -103,6 +103,7 @@ This engagement covers the full lifecycle of AI transformation:
             goals: ['Complete comprehensive technical and business audit'],
             amount: 25000,
             sort_order: 0,
+            visible_in_portal: true,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           },
@@ -128,6 +129,7 @@ This engagement covers the full lifecycle of AI transformation:
             goals: ['Finalize strategic direction and technical approach'],
             amount: 35000,
             sort_order: 1,
+            visible_in_portal: true,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           },
@@ -153,6 +155,7 @@ This engagement covers the full lifecycle of AI transformation:
             goals: ['Successful deployment of all planned AI solutions'],
             amount: 60000,
             sort_order: 2,
+            visible_in_portal: true,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           },
@@ -178,6 +181,7 @@ This engagement covers the full lifecycle of AI transformation:
             goals: ['Full operational handoff to internal team'],
             amount: 15000,
             sort_order: 3,
+            visible_in_portal: true,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           },
@@ -385,6 +389,7 @@ By signing below, both parties agree to the terms and conditions set forth in th
         .from('proposal_phases')
         .select('*')
         .eq('proposal_id', proposal.id)
+        .eq('visible_in_portal', true)
         .order('sort_order'),
       supabaseAdmin
         .from('milestones')
