@@ -159,18 +159,6 @@ VALUES
     7
   ),
   (
-    'VIBEUP',
-    'Beta community platform extending the VIBEUP ecosystem. Full-stack development with UI/UX design and brand identity. Features social feeds, messaging, community features, and user profiles with real-time messaging.',
-    '/images/portfolio/vibeup.jpg',
-    ARRAY['Social Platform', 'Community', 'Real-time', 'React', 'Full-stack'],
-    'https://vibeup.io',
-    'VIBEUP',
-    'Social Media / Community Platform',
-    true,
-    'published',
-    8
-  ),
-  (
     'Lightwaves Energy',
     'Solar calculator and energy optimization solutions for renewable energy. Features Solar Calculator and Energy Optimization tools to help customers understand their solar potential.',
     '/images/portfolio/lightwaves-energy.jpg',
