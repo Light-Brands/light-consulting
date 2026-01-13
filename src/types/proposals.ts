@@ -19,6 +19,16 @@ export interface LeadSubmission {
   intake_data: Record<string, string> | null;
   status: LeadStatus;
   notes: string | null;
+  website_url: string | null;
+  tech_stack: Record<string, unknown> | null;
+  website_story: string | null;
+  readiness_score: number | null;
+  readiness_brief: string | null;
+  capacity_gap_analysis: string | null;
+  full_readiness_report: string | null;
+  system_demo_links: Array<{ name: string; url: string }> | null;
+  booking_calendly_link: string | null;
+  booked_at: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -32,6 +42,16 @@ export interface LeadSubmissionInsert {
   intake_data?: Record<string, string> | null;
   status?: LeadStatus;
   notes?: string | null;
+  website_url?: string | null;
+  tech_stack?: Record<string, unknown> | null;
+  website_story?: string | null;
+  readiness_score?: number | null;
+  readiness_brief?: string | null;
+  capacity_gap_analysis?: string | null;
+  full_readiness_report?: string | null;
+  system_demo_links?: Array<{ name: string; url: string }> | null;
+  booking_calendly_link?: string | null;
+  booked_at?: string | null;
 }
 
 export interface LeadSubmissionUpdate {
@@ -43,6 +63,16 @@ export interface LeadSubmissionUpdate {
   intake_data?: Record<string, string> | null;
   status?: LeadStatus;
   notes?: string | null;
+  website_url?: string | null;
+  tech_stack?: Record<string, unknown> | null;
+  website_story?: string | null;
+  readiness_score?: number | null;
+  readiness_brief?: string | null;
+  capacity_gap_analysis?: string | null;
+  full_readiness_report?: string | null;
+  system_demo_links?: Array<{ name: string; url: string }> | null;
+  booking_calendly_link?: string | null;
+  booked_at?: string | null;
 }
 
 // ============================================================================

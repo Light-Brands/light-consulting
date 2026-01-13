@@ -21,6 +21,10 @@ const ANALYSIS_PHASES = [
   { id: 'understanding', label: 'Understanding your business context...', icon: '2' },
   { id: 'identifying', label: 'Identifying opportunities...', icon: '3' },
   { id: 'creating', label: 'Creating your personalized value proposition...', icon: '4' },
+  { id: 'scraping', label: 'Scraping your website...', icon: '1' },
+  { id: 'analyzing', label: 'Analyzing your tech stack...', icon: '2' },
+  { id: 'evaluating', label: 'Evaluating AI readiness...', icon: '3' },
+  { id: 'generating', label: 'Generating your assessment...', icon: '4' },
 ];
 
 export const AIAnalysisVisual: React.FC<AIAnalysisVisualProps> = ({
@@ -88,10 +92,12 @@ export const AIAnalysisVisual: React.FC<AIAnalysisVisualProps> = ({
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-          Analyzing Your Business
+          Analyzing Your Website
         </h1>
         <p className="text-text-secondary text-lg">
-          Our AI is reading your document and creating insights
+          {currentPhase === 'scraping' || currentPhase === 'analyzing' || currentPhase === 'evaluating' || currentPhase === 'generating'
+            ? 'Our AI is analyzing your website and assessing AI readiness'
+            : 'Our AI is reading your document and creating insights'}
         </p>
       </div>
 

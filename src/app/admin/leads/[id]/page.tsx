@@ -216,6 +216,239 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
                 </div>
               </div>
 
+              {/* Website & Tech Stack */}
+              {lead.website_url && (
+                <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                  <div
+                    className="absolute inset-0 opacity-[0.015] pointer-events-none"
+                    style={{
+                      backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                      backgroundSize: '32px 32px',
+                    }}
+                  />
+                  <div className="relative z-10">
+                    <div className="p-6 border-b border-depth-border">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
+                        <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
+                          Diagnostic::Website_Analysis
+                        </span>
+                      </div>
+                      <h2 className="text-lg font-semibold text-text-primary">
+                        Website & Technology Stack
+                      </h2>
+                    </div>
+                    <div className="p-6 space-y-4">
+                      <div>
+                        <label className="text-text-muted text-sm block mb-1">Website URL</label>
+                        <a
+                          href={lead.website_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-radiance-gold hover:text-radiance-amber transition-colors break-all"
+                        >
+                          {lead.website_url}
+                        </a>
+                      </div>
+                      {lead.tech_stack && (
+                        <div>
+                          <label className="text-text-muted text-sm block mb-2">Detected Tech Stack</label>
+                          <div className="flex flex-wrap gap-2">
+                            {lead.tech_stack.platform && (
+                              <span className="px-3 py-1 bg-radiance-gold/20 text-radiance-gold rounded-lg text-sm font-medium">
+                                {lead.tech_stack.platform}
+                              </span>
+                            )}
+                            {Array.isArray(lead.tech_stack.frameworks) && lead.tech_stack.frameworks.map((fw: string) => (
+                              <span
+                                key={fw}
+                                className="px-3 py-1 bg-wisdom-violet/20 text-wisdom-violet rounded-lg text-sm"
+                              >
+                                {fw}
+                              </span>
+                            ))}
+                            {lead.tech_stack.hosting && (
+                              <span className="px-3 py-1 bg-depth-elevated text-text-secondary rounded-lg text-sm">
+                                {lead.tech_stack.hosting}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      {lead.website_story && (
+                        <div>
+                          <label className="text-text-muted text-sm block mb-1">Business Story</label>
+                          <p className="text-text-primary whitespace-pre-wrap text-sm">{lead.website_story}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* AI Readiness Assessment */}
+              {lead.readiness_score !== null && (
+                <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                  <div
+                    className="absolute inset-0 opacity-[0.015] pointer-events-none"
+                    style={{
+                      backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                      backgroundSize: '32px 32px',
+                    }}
+                  />
+                  <div className="relative z-10">
+                    <div className="p-6 border-b border-depth-border">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-wisdom-violet/50" />
+                        <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
+                          Diagnostic::AI_Readiness
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <h2 className="text-lg font-semibold text-text-primary">
+                          AI Readiness Assessment
+                        </h2>
+                        <div className="text-right">
+                          <div className="text-3xl font-bold text-radiance-gold">
+                            {lead.readiness_score}
+                          </div>
+                          <div className="text-xs text-text-muted">/ 100</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-6 space-y-4">
+                      {lead.readiness_brief && (
+                        <div>
+                          <label className="text-text-muted text-sm block mb-1">Readiness Brief</label>
+                          <p className="text-text-primary whitespace-pre-wrap">{lead.readiness_brief}</p>
+                        </div>
+                      )}
+                      {lead.capacity_gap_analysis && (
+                        <div>
+                          <label className="text-text-muted text-sm block mb-1">Capacity Gap Analysis</label>
+                          <p className="text-text-primary whitespace-pre-wrap">{lead.capacity_gap_analysis}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Full Readiness Report */}
+              {lead.full_readiness_report && (
+                <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                  <div
+                    className="absolute inset-0 opacity-[0.015] pointer-events-none"
+                    style={{
+                      backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                      backgroundSize: '32px 32px',
+                    }}
+                  />
+                  <div className="relative z-10">
+                    <div className="p-6 border-b border-depth-border">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
+                        <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
+                          Diagnostic::Full_Report
+                        </span>
+                      </div>
+                      <h2 className="text-lg font-semibold text-text-primary">
+                        Full AI Readiness Report
+                      </h2>
+                    </div>
+                    <div className="p-6">
+                      <div className="prose prose-invert max-w-none">
+                        <div className="text-text-primary whitespace-pre-wrap text-sm">
+                          {lead.full_readiness_report}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* System Demo Links */}
+              {lead.system_demo_links && Array.isArray(lead.system_demo_links) && lead.system_demo_links.length > 0 && (
+                <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                  <div
+                    className="absolute inset-0 opacity-[0.015] pointer-events-none"
+                    style={{
+                      backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                      backgroundSize: '32px 32px',
+                    }}
+                  />
+                  <div className="relative z-10">
+                    <div className="p-6 border-b border-depth-border">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-wisdom-violet/50" />
+                        <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
+                          Diagnostic::System_Demos
+                        </span>
+                      </div>
+                      <h2 className="text-lg font-semibold text-text-primary">
+                        System Demo Links
+                      </h2>
+                    </div>
+                    <div className="p-6 space-y-3">
+                      {lead.system_demo_links.map((demo: { name: string; url: string }, index: number) => (
+                        <a
+                          key={index}
+                          href={demo.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block p-3 bg-depth-base border border-depth-border rounded-lg hover:border-radiance-gold transition-colors"
+                        >
+                          <div className="font-medium text-text-primary">{demo.name}</div>
+                          <div className="text-sm text-text-muted mt-1">{demo.url}</div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Booking Information */}
+              {lead.booking_calendly_link && (
+                <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                  <div
+                    className="absolute inset-0 opacity-[0.015] pointer-events-none"
+                    style={{
+                      backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                      backgroundSize: '32px 32px',
+                    }}
+                  />
+                  <div className="relative z-10">
+                    <div className="p-6 border-b border-depth-border">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
+                        <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
+                          Booking::Call_Scheduled
+                        </span>
+                      </div>
+                      <h2 className="text-lg font-semibold text-text-primary">
+                        Booking Information
+                      </h2>
+                    </div>
+                    <div className="p-6 space-y-3">
+                      <a
+                        href={lead.booking_calendly_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-radiance-gold hover:text-radiance-amber transition-colors break-all"
+                      >
+                        {lead.booking_calendly_link}
+                      </a>
+                      {lead.booked_at && (
+                        <div>
+                          <label className="text-text-muted text-sm block mb-1">Booked At</label>
+                          <p className="text-text-primary">{formatDate(lead.booked_at)}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Intake Responses */}
               {lead.intake_data && Object.keys(lead.intake_data).length > 0 && (
                 <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">

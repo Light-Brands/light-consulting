@@ -233,7 +233,10 @@ export default function AdminLeadsPage() {
                           Contact
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                          Service
+                          Website
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          Readiness
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                           Status
@@ -266,9 +269,31 @@ export default function AdminLeadsPage() {
                             </div>
                           </td>
                           <td className="px-6 py-4">
-                            <span className="text-text-secondary">
-                              {SERVICE_LABELS[lead.service] || lead.service}
-                            </span>
+                            {lead.website_url ? (
+                              <a
+                                href={lead.website_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-radiance-gold hover:text-radiance-amber transition-colors text-sm break-all max-w-xs truncate block"
+                                title={lead.website_url}
+                              >
+                                {lead.website_url.replace(/^https?:\/\//, '')}
+                              </a>
+                            ) : (
+                              <span className="text-text-muted text-sm">—</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4">
+                            {lead.readiness_score !== null ? (
+                              <div className="flex items-center gap-2">
+                                <span className="text-lg font-semibold text-radiance-gold">
+                                  {lead.readiness_score}
+                                </span>
+                                <span className="text-xs text-text-muted">/100</span>
+                              </div>
+                            ) : (
+                              <span className="text-text-muted text-sm">—</span>
+                            )}
                           </td>
                           <td className="px-6 py-4">
                             <select

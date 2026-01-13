@@ -1,11 +1,11 @@
 /**
- * Booking Page - AI Document Analysis
+ * Booking Page - AI Readiness Diagnostic
  * Light Brand Consulting
  *
  * Ultra-frictionless 3-step booking flow:
- * 1. Upload Document + Contact Info (combined)
+ * 1. Website URL + Contact Info (combined)
  * 2. AI Analysis (automatic)
- * 3. Report Display + Auto-Submit (combined)
+ * 3. Readiness Report + Book Call (combined)
  */
 
 'use client';
@@ -13,41 +13,50 @@
 import React, { useState, useCallback } from 'react';
 import {
   BookProgressVisual,
-  DocumentUploadVisual,
+  WebsiteInputVisual,
   AIAnalysisVisual,
-  ValuePropositionReport,
+  ReadinessReport,
 } from '../components';
 import { Container, Section } from '../components/ui';
-import { AIBookingFormData, AIReport, PageKey } from '../types';
+import { AIBookingFormData, WebsiteAnalysis, PageKey } from '../types';
 import { isValidEmail } from '../lib/utils';
 
 interface BookPageProps {
   onNavigate: (page: PageKey) => void;
 }
 
-type AnalysisPhase = 'reading' | 'understanding' | 'identifying' | 'creating';
+type AnalysisPhase = 'scraping' | 'analyzing' | 'evaluating' | 'generating';
 
 export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<AIBookingFormData>({
-    document: null,
+    websiteUrl: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [analysisPhase, setAnalysisPhase] = useState<AnalysisPhase>('reading');
+  const [analysisPhase, setAnalysisPhase] = useState<AnalysisPhase>('scraping');
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
 
   const stepLabels = [
-    'Upload Document',
+    'Enter Website',
     'AI Analysis',
-    'Your Report',
+    'Your Assessment',
   ];
 
   const validateStep1 = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.document) {
-      newErrors.document = 'Please upload a document';
+    if (!formData.websiteUrl?.trim()) {
+      newErrors.websiteUrl = 'Website URL is required';
+    } else {
+      try {
+        const testUrl = formData.websiteUrl.startsWith('http') 
+          ? formData.websiteUrl 
+          : `https://${formData.websiteUrl}`;
+        new URL(testUrl);
+      } catch {
+        newErrors.websiteUrl = 'Please enter a valid website URL';
+      }
     }
     if (!formData.name?.trim()) {
       newErrors.name = 'Name is required';
@@ -76,16 +85,8 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
     });
   }, [errors]);
 
-  const handleDocumentChange = useCallback((file: File | null) => {
-    updateFormData({ document: file });
-  }, [updateFormData]);
-
   const handleFieldChange = useCallback((field: string, value: string) => {
-    if (field === 'documentError') {
-      setErrors((prev) => ({ ...prev, document: value }));
-    } else {
-      updateFormData({ [field]: value });
-    }
+    updateFormData({ [field]: value });
   }, [updateFormData]);
 
   const simulateProgress = (
@@ -113,7 +114,7 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
     });
   };
 
-  const analyzeDocument = async () => {
+  const analyzeWebsite = async () => {
     if (!validateStep1()) return;
 
     // Move to analysis step
@@ -123,27 +124,30 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
     updateFormData({ isAnalyzing: true });
 
     try {
-      // Create form data for upload
-      const uploadData = new FormData();
-      uploadData.append('file', formData.document!);
-      uploadData.append('name', formData.name!);
-      uploadData.append('email', formData.email!);
-      if (formData.company) {
-        uploadData.append('company', formData.company);
-      }
+      // Normalize URL
+      const websiteUrl = formData.websiteUrl?.startsWith('http')
+        ? formData.websiteUrl
+        : `https://${formData.websiteUrl}`;
 
       // Start progress simulation in parallel with API call
       const progressPromise = (async () => {
-        await simulateProgress(0, 25, 'reading', 3000);
-        await simulateProgress(25, 50, 'understanding', 4000);
-        await simulateProgress(50, 75, 'identifying', 3000);
-        await simulateProgress(75, 95, 'creating', 5000);
+        await simulateProgress(0, 25, 'scraping', 4000);
+        await simulateProgress(25, 50, 'analyzing', 5000);
+        await simulateProgress(50, 75, 'evaluating', 4000);
+        await simulateProgress(75, 95, 'generating', 3000);
       })();
 
       // Make API call
-      const response = await fetch('/api/analyze-documents', {
+      const response = await fetch('/api/analyze-website', {
         method: 'POST',
-        body: uploadData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          websiteUrl,
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          phone: formData.phone,
+        }),
       });
 
       const result = await response.json();
@@ -159,9 +163,9 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
       // Short delay to show 100% before transitioning
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Update form data with report and move to final step
+      // Update form data with analysis and move to final step
       updateFormData({
-        aiReport: result.report as AIReport,
+        websiteAnalysis: result.analysis as WebsiteAnalysis,
         isAnalyzing: false,
         isComplete: true,
         leadId: result.leadId,
@@ -179,7 +183,9 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
 
   const handleReadyToAnalyze = useCallback(() => {
     // Auto-trigger analysis when all fields are ready
-    analyzeDocument();
+    if (validateStep1()) {
+      analyzeWebsite();
+    }
   }, [formData]);
 
   return (
@@ -198,18 +204,18 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
 
           {/* Step Content */}
           <div className="relative min-h-[500px]">
-            {/* Step 1: Document Upload + Contact Info */}
+            {/* Step 1: Website URL + Contact Info */}
             {step === 1 && (
               <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
-                <DocumentUploadVisual
+                <WebsiteInputVisual
                   formData={{
-                    document: formData.document,
+                    websiteUrl: formData.websiteUrl,
                     name: formData.name,
                     email: formData.email,
                     company: formData.company,
+                    phone: formData.phone,
                   }}
                   errors={errors}
-                  onDocumentChange={handleDocumentChange}
                   onFieldChange={handleFieldChange}
                   onReady={handleReadyToAnalyze}
                 />
@@ -220,7 +226,7 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
             {step === 2 && (
               <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
                 <AIAnalysisVisual
-                  fileName={formData.document?.name}
+                  fileName={formData.websiteUrl}
                   progress={analysisProgress}
                   currentPhase={analysisPhase}
                   error={analysisError}
@@ -228,14 +234,19 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
               </div>
             )}
 
-            {/* Step 3: Report Display */}
-            {step === 3 && formData.aiReport && (
+            {/* Step 3: Readiness Report */}
+            {step === 3 && formData.websiteAnalysis && (
               <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
-                <ValuePropositionReport
-                  report={formData.aiReport}
-                  userName={formData.name || 'Valued Client'}
-                  onHomeClick={() => onNavigate('home')}
-                  onContactClick={() => onNavigate('contact')}
+                <ReadinessReport
+                  readinessScore={formData.websiteAnalysis.readinessScore}
+                  readinessBrief={formData.websiteAnalysis.readinessBrief}
+                  capacityGapBrief={formData.websiteAnalysis.capacityGapBrief}
+                  techStack={formData.websiteAnalysis.techStack}
+                  leadId={formData.leadId}
+                  onBookCall={(calendlyLink) => {
+                    // Handle booking callback
+                    console.log('Booking call:', calendlyLink);
+                  }}
                 />
               </div>
             )}

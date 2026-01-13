@@ -161,12 +161,30 @@ export interface AIReport {
   nextSteps: string[];
 }
 
+export interface WebsiteAnalysis {
+  techStack: {
+    platform?: string;
+    cms?: string;
+    frameworks?: string[];
+    hosting?: string;
+    analytics?: string[];
+    other?: string[];
+  };
+  websiteStory: string;
+  readinessScore: number;
+  readinessBrief: string;
+  capacityGapBrief: string;
+}
+
 export interface AIBookingFormData {
-  document: File | null;
+  document?: File | null;
+  websiteUrl?: string;
   name?: string;
   email?: string;
   company?: string;
+  phone?: string;
   aiReport?: AIReport;
+  websiteAnalysis?: WebsiteAnalysis;
   isAnalyzing?: boolean;
   isComplete?: boolean;
   leadId?: string;
