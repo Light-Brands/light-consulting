@@ -167,8 +167,8 @@ function NewProposalContent() {
   };
 
   const handleGenerateWithAI = async () => {
-    if (!lead?.business_intelligence || selectedServices.length === 0) {
-      alert('Please select at least one service and ensure the lead has business intelligence data.');
+    if (!lead || selectedServices.length === 0) {
+      alert('Please select at least one service.');
       return;
     }
 
@@ -180,11 +180,13 @@ function NewProposalContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           leadId: lead.id,
-          businessIntelligence: lead.business_intelligence,
+          businessIntelligence: lead.business_intelligence || null,
           selectedServices,
           customRequirements,
           readinessScore: lead.readiness_score || 50,
-          websiteStory: lead.website_story,
+          websiteStory: lead.website_story || '',
+          clientName: lead.name,
+          clientCompany: lead.company || '',
         }),
       });
 
@@ -468,8 +470,8 @@ function NewProposalContent() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
-              {/* AI Generation Panel */}
-              {lead && businessIntelligence && (
+              {/* AI Generation Panel - Show when lead exists */}
+              {lead && (
                 <div className="bg-gradient-to-br from-radiance-gold/10 to-radiance-amber/5 border border-radiance-gold/30 rounded-xl p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div>
@@ -480,13 +482,40 @@ function NewProposalContent() {
                         AI-Powered Proposal Generation
                       </h3>
                       <p className="text-text-muted text-sm mt-1">
-                        Generate a complete proposal based on the lead&apos;s business intelligence
+                        {businessIntelligence
+                          ? 'Generate a complete proposal based on the lead\'s business intelligence'
+                          : 'Select services to generate a proposal template'}
                       </p>
                     </div>
-                    <div className="px-3 py-1 bg-radiance-gold/20 text-radiance-gold rounded-full text-xs font-medium">
-                      Score: {lead.readiness_score || 'N/A'}/100
-                    </div>
+                    {lead.readiness_score !== undefined && lead.readiness_score !== null && (
+                      <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        lead.readiness_score >= 70
+                          ? 'bg-green-500/20 text-green-400'
+                          : lead.readiness_score >= 40
+                            ? 'bg-amber-500/20 text-amber-400'
+                            : 'bg-red-500/20 text-red-400'
+                      }`}>
+                        AI Score: {lead.readiness_score}/100
+                      </div>
+                    )}
                   </div>
+
+                  {/* Show data quality warning if limited data */}
+                  {!businessIntelligence && (
+                    <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+                      <div className="flex items-start gap-2">
+                        <svg className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <div>
+                          <p className="text-amber-400 text-sm font-medium">Limited Business Intelligence</p>
+                          <p className="text-amber-400/70 text-xs mt-1">
+                            This lead was created before AI analysis or analysis failed. You can still generate a proposal, but it will use default templates. Consider re-analyzing the website for better results.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Service Selection */}
                   <div className="mb-4">
@@ -528,7 +557,7 @@ function NewProposalContent() {
                     disabled={selectedServices.length === 0}
                     className="w-full"
                   >
-                    {isGenerating ? 'Generating Proposal...' : 'Generate Proposal with AI'}
+                    {isGenerating ? 'Generating Proposal...' : businessIntelligence ? 'Generate Personalized Proposal' : 'Generate Proposal Template'}
                   </Button>
                 </div>
               )}
@@ -902,19 +931,92 @@ function NewProposalContent() {
               </div>
             </div>
 
-            {/* Sidebar - Business Intelligence */}
+            {/* Sidebar - Lead Info & Business Intelligence */}
             <div className="lg:col-span-1">
-              {businessIntelligence && (
-                <div className="sticky top-24">
+              {lead && (
+                <div className="sticky top-24 space-y-4">
+                  {/* Lead Info Card - Always show for leads */}
+                  <div className="bg-depth-surface border border-depth-border rounded-xl p-4">
+                    <h4 className="text-sm font-semibold text-text-primary mb-3 flex items-center gap-2">
+                      <svg className="w-4 h-4 text-radiance-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      Lead Info
+                    </h4>
+                    <div className="space-y-2 text-sm">
+                      <div>
+                        <span className="text-text-muted">Name:</span>
+                        <span className="text-text-primary ml-2 font-medium">{lead.name}</span>
+                      </div>
+                      {lead.company && (
+                        <div>
+                          <span className="text-text-muted">Company:</span>
+                          <span className="text-text-primary ml-2">{lead.company}</span>
+                        </div>
+                      )}
+                      <div>
+                        <span className="text-text-muted">Email:</span>
+                        <a href={`mailto:${lead.email}`} className="text-radiance-gold hover:underline ml-2">
+                          {lead.email}
+                        </a>
+                      </div>
+                      {lead.website_url && (
+                        <div>
+                          <span className="text-text-muted">Website:</span>
+                          <a
+                            href={lead.website_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-radiance-gold hover:underline ml-2"
+                          >
+                            {(() => {
+                              try {
+                                return new URL(lead.website_url).hostname;
+                              } catch {
+                                return lead.website_url;
+                              }
+                            })()}
+                          </a>
+                        </div>
+                      )}
+                      <div className="pt-2 border-t border-depth-border flex items-center justify-between">
+                        <div>
+                          <span className="text-text-muted">Service:</span>
+                          <span className="text-text-primary ml-2 capitalize">{lead.service}</span>
+                        </div>
+                        <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                          lead.status === 'new' ? 'bg-blue-500/20 text-blue-400' :
+                          lead.status === 'contacted' ? 'bg-amber-500/20 text-amber-400' :
+                          lead.status === 'proposal_sent' ? 'bg-green-500/20 text-green-400' :
+                          lead.status === 'converted' ? 'bg-purple-500/20 text-purple-400' :
+                          'bg-gray-500/20 text-gray-400'
+                        }`}>
+                          {lead.status}
+                        </span>
+                      </div>
+                      <div className="text-xs text-text-muted">
+                        Created {new Date(lead.created_at).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Business Intelligence Card */}
                   <div className="bg-depth-surface border border-depth-border rounded-xl p-4">
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-text-primary">Business Intel</h3>
-                      <button
-                        onClick={() => setShowBusinessIntel(!showBusinessIntel)}
-                        className="text-text-muted hover:text-text-primary text-sm"
-                      >
-                        {showBusinessIntel ? 'Collapse' : 'Expand'}
-                      </button>
+                      <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+                        <svg className="w-4 h-4 text-radiance-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        Business Intelligence
+                      </h3>
+                      {businessIntelligence && (
+                        <button
+                          onClick={() => setShowBusinessIntel(!showBusinessIntel)}
+                          className="text-text-muted hover:text-text-primary text-xs"
+                        >
+                          {showBusinessIntel ? 'Collapse' : 'Expand'}
+                        </button>
+                      )}
                     </div>
                     {showBusinessIntel && (
                       <BusinessIntelligenceSummary
@@ -924,58 +1026,28 @@ function NewProposalContent() {
                       />
                     )}
                   </div>
-
-                  {/* Lead Info */}
-                  {lead && (
-                    <div className="mt-4 bg-depth-surface border border-depth-border rounded-xl p-4">
-                      <h4 className="text-sm font-semibold text-text-primary mb-3">Lead Info</h4>
-                      <div className="space-y-2 text-sm">
-                        {lead.website_url && (
-                          <div>
-                            <span className="text-text-muted">Website:</span>
-                            <a
-                              href={lead.website_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-radiance-gold hover:underline ml-2"
-                            >
-                              {new URL(lead.website_url).hostname}
-                            </a>
-                          </div>
-                        )}
-                        <div>
-                          <span className="text-text-muted">Service:</span>
-                          <span className="text-text-primary ml-2 capitalize">{lead.service}</span>
-                        </div>
-                        <div>
-                          <span className="text-text-muted">Status:</span>
-                          <span className="text-text-primary ml-2 capitalize">{lead.status}</span>
-                        </div>
-                        <div>
-                          <span className="text-text-muted">Created:</span>
-                          <span className="text-text-primary ml-2">
-                            {new Date(lead.created_at).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
 
               {/* Placeholder when no lead */}
               {!lead && (
-                <div className="bg-depth-surface border border-depth-border rounded-xl p-6 text-center">
+                <div className="sticky top-24 bg-depth-surface border border-depth-border rounded-xl p-6 text-center">
                   <svg className="w-12 h-12 mx-auto text-text-muted mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <p className="text-text-muted text-sm">
-                    No lead selected. Select a lead from the leads list to access AI-powered proposal generation.
+                  <p className="text-text-muted text-sm mb-2">
+                    No lead selected
+                  </p>
+                  <p className="text-text-muted text-xs mb-4">
+                    Select a lead to access AI-powered proposal generation and business intelligence.
                   </p>
                   <Link
                     href="/admin/leads"
-                    className="text-radiance-gold hover:underline text-sm mt-2 inline-block"
+                    className="inline-flex items-center gap-2 text-radiance-gold hover:underline text-sm"
                   >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
                     View Leads
                   </Link>
                 </div>

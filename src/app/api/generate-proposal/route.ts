@@ -73,11 +73,81 @@ const SERVICE_DEFINITIONS = {
 
 interface GenerateProposalRequest {
   leadId: string;
-  businessIntelligence: BusinessIntelligence;
+  businessIntelligence: BusinessIntelligence | null;
   selectedServices: string[];
   customRequirements?: string;
   readinessScore: number;
   websiteStory?: string;
+  clientName?: string;
+  clientCompany?: string;
+}
+
+// Default business intelligence when none is available
+function getDefaultBusinessIntelligence(clientName?: string, clientCompany?: string): BusinessIntelligence {
+  return {
+    industry: 'Professional Services',
+    business_model: 'service-based',
+    target_audience: {
+      primary: 'Business decision makers',
+      demographics: 'Company stakeholders and managers',
+      psychographics: 'Goal-oriented professionals seeking efficiency',
+    },
+    value_proposition: ['Quality service delivery', 'Professional expertise'],
+    revenue_model: 'Project-based',
+    company_size: {
+      employees: '10-50',
+      revenue_range: '$1M-$5M',
+      growth_stage: 'Growth',
+    },
+    geographic_presence: ['North America'],
+    competitive_positioning: clientCompany ? `${clientCompany} - Established provider` : 'Established market presence',
+    digital_presence: {
+      content_quality: 'Moderate',
+      site_structure: 'Basic',
+      mobile_responsive: true,
+      conversion_elements: ['Contact form'],
+      marketing_stack: [],
+      social_presence: [],
+      seo_signals: {
+        has_meta_tags: true,
+        has_structured_data: false,
+        has_sitemap: false,
+      },
+    },
+    technical_assessment: {
+      performance: 'Fair',
+      security: 'Moderate',
+      accessibility: 'Fair',
+      integrations: [],
+      backend_architecture: 'Standard web platform',
+      cdn_usage: false,
+      monitoring_tools: [],
+      https_enabled: true,
+      modern_framework: false,
+    },
+    ai_readiness: {
+      overall_score: 40,
+      current_ai_usage: [],
+      data_infrastructure: 'Basic',
+      automation_level: 'Low',
+      integration_readiness: 'Moderate',
+      content_generation_needs: 'Moderate',
+      customer_intelligence_gaps: ['Customer analytics', 'Personalization'],
+    },
+    operations_insights: {
+      pain_points: ['Manual processes', 'Content creation bandwidth'],
+      growth_indicators: [],
+      efficiency_opportunities: ['Process automation', 'AI-powered workflows'],
+      customer_journey_gaps: ['Limited touchpoints'],
+      support_infrastructure: 'Standard support',
+    },
+    analysis_metadata: {
+      analyzed_at: new Date().toISOString(),
+      analysis_version: '2.0',
+      confidence_score: 0.3,
+      pages_analyzed: 0,
+    },
+  };
 }
 
 interface GeneratedPhase {
@@ -372,22 +442,18 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateP
     }
 
     const body = await request.json() as GenerateProposalRequest;
-    const { businessIntelligence, selectedServices, customRequirements, readinessScore, websiteStory } = body;
+    const { businessIntelligence: rawBI, selectedServices, customRequirements, readinessScore, websiteStory, clientName, clientCompany } = body;
 
     // Validate required fields
-    if (!businessIntelligence) {
-      return NextResponse.json(
-        { success: false, error: 'Business intelligence data is required' },
-        { status: 400 }
-      );
-    }
-
     if (!selectedServices || selectedServices.length === 0) {
       return NextResponse.json(
         { success: false, error: 'At least one service must be selected' },
         { status: 400 }
       );
     }
+
+    // Use provided business intelligence or generate defaults
+    const businessIntelligence = rawBI || getDefaultBusinessIntelligence(clientName, clientCompany);
 
     // Calculate pricing
     const calculatedTotal = calculatePricing(businessIntelligence, selectedServices);
