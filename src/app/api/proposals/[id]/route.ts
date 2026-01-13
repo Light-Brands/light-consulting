@@ -83,6 +83,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
             goals: ['Complete comprehensive audit'],
             amount: 25000,
             sort_order: 0,
+            visible_in_portal: true,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           },

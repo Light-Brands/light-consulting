@@ -175,6 +175,7 @@ export async function POST(request: NextRequest) {
         goals: phase.goals || null,
         amount: phase.amount,
         sort_order: index,
+        visible_in_portal: phase.visible_in_portal !== undefined ? phase.visible_in_portal : true,
       }));
 
       const { error: phasesError } = await supabaseAdmin

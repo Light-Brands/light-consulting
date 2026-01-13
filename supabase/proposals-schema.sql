@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS proposal_phases (
   goals JSONB, -- Array of goal strings
   amount DECIMAL(12, 2) NOT NULL,
   sort_order INTEGER DEFAULT 0,
+  visible_in_portal BOOLEAN DEFAULT true, -- Controls visibility in client portal
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   UNIQUE(proposal_id, phase_number)
@@ -88,6 +89,17 @@ CREATE TABLE IF NOT EXISTS proposal_phases (
 
 CREATE INDEX IF NOT EXISTS idx_proposal_phases_proposal_id ON proposal_phases(proposal_id);
 CREATE INDEX IF NOT EXISTS idx_proposal_phases_sort_order ON proposal_phases(proposal_id, sort_order);
+
+-- Index for efficient filtering of visible phases in client portal
+CREATE INDEX IF NOT EXISTS idx_proposal_phases_visible
+ON proposal_phases(proposal_id, visible_in_portal)
+WHERE visible_in_portal = true;
+
+-- Add column to existing table (for migrations)
+-- ALTER TABLE proposal_phases ADD COLUMN IF NOT EXISTS visible_in_portal BOOLEAN DEFAULT true;
+
+COMMENT ON COLUMN proposal_phases.visible_in_portal IS
+'Controls whether this phase is visible to clients in the portal. Admins can toggle this to gradually reveal phases.';
 
 -- ============================================================================
 -- Milestones (Payment Checkpoints)

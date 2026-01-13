@@ -22,6 +22,7 @@ interface PhaseFormData {
   deliverables: Deliverable[];
   objectives: string[];
   goals: string[];
+  visible_in_portal: boolean;
 }
 
 interface MilestoneFormData {
@@ -115,6 +116,7 @@ function NewProposalContent() {
       deliverables: [],
       objectives: [],
       goals: [],
+      visible_in_portal: true,
     },
   ]);
 
@@ -226,6 +228,7 @@ function NewProposalContent() {
             })),
             objectives: phase.objectives,
             goals: [],
+            visible_in_portal: true,
           })));
         }
 
@@ -293,6 +296,7 @@ function NewProposalContent() {
         deliverables: [],
         objectives: [],
         goals: [],
+        visible_in_portal: true,
       },
     ]);
   };
@@ -403,6 +407,7 @@ function NewProposalContent() {
             objectives: p.objectives.filter(Boolean),
             goals: p.goals.filter(Boolean),
             amount: parseFloat(p.amount) || 0,
+            visible_in_portal: p.visible_in_portal,
           })),
         milestones: milestones
           .filter((m) => m.milestone_name)
@@ -724,20 +729,43 @@ function NewProposalContent() {
                       {phases.map((phase, phaseIndex) => (
                         <div
                           key={phaseIndex}
-                          className="p-6 bg-depth-elevated border border-depth-border rounded-xl"
+                          className={`p-6 bg-depth-elevated border border-depth-border rounded-xl transition-opacity ${
+                            !phase.visible_in_portal ? 'opacity-60' : ''
+                          }`}
                         >
                           <div className="flex items-center justify-between mb-4">
-                            <h4 className="text-lg font-semibold text-text-primary">
-                              Phase {phaseIndex + 1}
-                            </h4>
-                            {phases.length > 1 && (
-                              <button
-                                onClick={() => removePhase(phaseIndex)}
-                                className="text-red-400 hover:text-red-300 text-sm"
-                              >
-                                Remove Phase
-                              </button>
-                            )}
+                            <div className="flex items-center gap-3">
+                              <h4 className="text-lg font-semibold text-text-primary">
+                                Phase {phaseIndex + 1}
+                              </h4>
+                              {!phase.visible_in_portal && (
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full bg-gray-500/10 text-gray-400">
+                                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                  </svg>
+                                  Hidden from client
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <label className="flex items-center gap-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={phase.visible_in_portal}
+                                  onChange={(e) => updatePhase(phaseIndex, 'visible_in_portal', e.target.checked)}
+                                  className="w-4 h-4 rounded border-depth-border bg-depth-base text-radiance-gold focus:ring-radiance-gold focus:ring-offset-0"
+                                />
+                                <span className="text-sm text-text-muted">Visible in Portal</span>
+                              </label>
+                              {phases.length > 1 && (
+                                <button
+                                  onClick={() => removePhase(phaseIndex)}
+                                  className="text-red-400 hover:text-red-300 text-sm"
+                                >
+                                  Remove Phase
+                                </button>
+                              )}
+                            </div>
                           </div>
 
                           <div className="space-y-4">

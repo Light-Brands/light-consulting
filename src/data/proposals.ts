@@ -109,6 +109,7 @@ We identify the single best entry point that delivers immediate value while layi
         goals: ['Deliver actionable AI roadmap with clear first step'],
         amount: 5000,
         sort_order: 0,
+        visible_in_portal: true,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       },
