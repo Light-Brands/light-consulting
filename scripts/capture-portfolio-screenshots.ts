@@ -18,7 +18,6 @@ const PROJECTS = [
   { slug: 'mindflow-vision', url: 'https://mindflow-vision.vercel.app/', name: 'Mindflow Vision' },
   { slug: 'planetary-party', url: 'https://planetary-party.vercel.app/', name: 'The Planetary Party' },
   { slug: 'love-token', url: 'https://love-token.vercel.app/', name: 'Love Token' },
-  { slug: 'vibeup', url: 'https://vibeup.io', name: 'VIBEUP' },
   { slug: 'lightwaves-energy', url: 'https://lightwaves.energy', name: 'Lightwaves Energy' },
   { slug: 'downtown-park', url: 'https://www.downtown-park.com/', name: 'Downtown Park' },
   { slug: 'skyzor-productions', url: 'https://www.skyzorproductions.com/', name: 'Skyzor Productions' },
