@@ -168,12 +168,19 @@ export interface WebsiteAnalysis {
     frameworks?: string[];
     hosting?: string;
     analytics?: string[];
+    marketing_tools?: string[];
+    ecommerce?: string[];
+    security?: string[];
+    performance?: string[];
     other?: string[];
   };
   websiteStory: string;
   readinessScore: number;
   readinessBrief: string;
   capacityGapBrief: string;
+  // Enhanced business intelligence (optional for backwards compatibility)
+  businessIntelligence?: import('./types/business-intelligence').BusinessIntelligence;
+  fullReadinessReport?: string;
 }
 
 export interface AIBookingFormData {

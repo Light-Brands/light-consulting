@@ -3,6 +3,8 @@
  * Light Brand Consulting
  */
 
+import type { BusinessIntelligence } from './business-intelligence';
+
 // ============================================================================
 // Lead Submissions
 // ============================================================================
@@ -26,6 +28,7 @@ export interface LeadSubmission {
   readiness_brief: string | null;
   capacity_gap_analysis: string | null;
   full_readiness_report: string | null;
+  business_intelligence: BusinessIntelligence | null;
   system_demo_links: Array<{ name: string; url: string }> | null;
   booking_calendly_link: string | null;
   booked_at: string | null;
@@ -49,6 +52,7 @@ export interface LeadSubmissionInsert {
   readiness_brief?: string | null;
   capacity_gap_analysis?: string | null;
   full_readiness_report?: string | null;
+  business_intelligence?: BusinessIntelligence | null;
   system_demo_links?: Array<{ name: string; url: string }> | null;
   booking_calendly_link?: string | null;
   booked_at?: string | null;
@@ -70,6 +74,7 @@ export interface LeadSubmissionUpdate {
   readiness_brief?: string | null;
   capacity_gap_analysis?: string | null;
   full_readiness_report?: string | null;
+  business_intelligence?: BusinessIntelligence | null;
   system_demo_links?: Array<{ name: string; url: string }> | null;
   booking_calendly_link?: string | null;
   booked_at?: string | null;
