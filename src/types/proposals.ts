@@ -257,6 +257,7 @@ export interface Milestone {
   payment_status: PaymentStatus;
   milestone_status: MilestoneStatus;
   invoice_number: string | null;
+  payment_link: string | null;
   paid_at: string | null;
   sort_order: number;
   created_at: string;
@@ -273,6 +274,7 @@ export interface MilestoneInsert {
   payment_status?: PaymentStatus;
   milestone_status?: MilestoneStatus;
   invoice_number?: string | null;
+  payment_link?: string | null;
   sort_order?: number;
 }
 
@@ -285,6 +287,7 @@ export interface MilestoneUpdate {
   payment_status?: PaymentStatus;
   milestone_status?: MilestoneStatus;
   invoice_number?: string | null;
+  payment_link?: string | null;
   paid_at?: string | null;
   sort_order?: number;
 }
