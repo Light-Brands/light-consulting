@@ -77,6 +77,13 @@ We identify the single best entry point that delivers immediate value while layi
     final_amount: 5000,
     status: 'sent',
     access_token: CHO_VENTURES_TOKEN,
+    portal_sections: {
+      proposal: true,
+      agreement: true,
+      billing: true,
+      onboarding: true,
+      dashboard: true,
+    },
     created_by: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),

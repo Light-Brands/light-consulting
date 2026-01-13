@@ -93,6 +93,23 @@ export type ProposalStatus =
   | 'completed'
   | 'cancelled';
 
+// Portal section visibility settings
+export interface PortalSections {
+  proposal: boolean;
+  agreement: boolean;
+  billing: boolean;
+  onboarding: boolean;
+  dashboard: boolean;
+}
+
+export const DEFAULT_PORTAL_SECTIONS: PortalSections = {
+  proposal: true,
+  agreement: true,
+  billing: true,
+  onboarding: true,
+  dashboard: true,
+};
+
 export interface Proposal {
   id: string;
   lead_submission_id: string | null;
@@ -111,6 +128,7 @@ export interface Proposal {
   final_amount: number;
   status: ProposalStatus;
   access_token: string;
+  portal_sections: PortalSections;
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -135,6 +153,7 @@ export interface ProposalInsert {
   discount_percentage?: number;
   final_amount: number;
   status?: ProposalStatus;
+  portal_sections?: PortalSections;
   created_by?: string | null;
 }
 
@@ -154,6 +173,7 @@ export interface ProposalUpdate {
   discount_percentage?: number;
   final_amount?: number;
   status?: ProposalStatus;
+  portal_sections?: PortalSections;
   sent_at?: string | null;
   viewed_at?: string | null;
   agreement_signed_at?: string | null;

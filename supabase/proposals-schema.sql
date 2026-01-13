@@ -49,6 +49,8 @@ CREATE TABLE IF NOT EXISTS proposals (
   final_amount DECIMAL(12, 2) NOT NULL,
   status VARCHAR(50) DEFAULT 'draft' CHECK (status IN ('draft', 'sent', 'viewed', 'agreement_signed', 'active', 'completed', 'cancelled')),
   access_token UUID DEFAULT uuid_generate_v4(), -- Unique token for client portal access
+  -- Portal section visibility settings (controls which tabs clients can see)
+  portal_sections JSONB DEFAULT '{"proposal": true, "agreement": true, "billing": true, "onboarding": true, "dashboard": true}'::jsonb,
   created_by UUID, -- Admin user ID
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -56,6 +58,12 @@ CREATE TABLE IF NOT EXISTS proposals (
   viewed_at TIMESTAMP WITH TIME ZONE,
   agreement_signed_at TIMESTAMP WITH TIME ZONE
 );
+
+-- Add column to existing table (for migrations)
+-- ALTER TABLE proposals ADD COLUMN IF NOT EXISTS portal_sections JSONB DEFAULT '{"proposal": true, "agreement": true, "billing": true, "onboarding": true, "dashboard": true}'::jsonb;
+
+COMMENT ON COLUMN proposals.portal_sections IS
+'Controls which portal sections/tabs are visible to clients. Admins can progressively reveal sections.';
 
 CREATE INDEX IF NOT EXISTS idx_proposals_status ON proposals(status);
 CREATE INDEX IF NOT EXISTS idx_proposals_access_token ON proposals(access_token);

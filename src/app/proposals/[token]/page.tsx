@@ -7,10 +7,11 @@
 
 'use client';
 
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect, use, useMemo } from 'react';
 import Link from 'next/link';
 import { Container, Button } from '@/components/ui';
-import type { ProposalWithDetails, OnboardingFormField } from '@/types/proposals';
+import type { ProposalWithDetails, OnboardingFormField, PortalSections } from '@/types/proposals';
+import { DEFAULT_PORTAL_SECTIONS } from '@/types/proposals';
 
 interface PageProps {
   params: Promise<{ token: string }>;
@@ -180,9 +181,9 @@ export default function ProposalPortalPage({ params }: PageProps) {
   };
 
   const getStepStatus = (step: PortalStep): 'complete' | 'current' | 'upcoming' => {
-    const steps: PortalStep[] = ['proposal', 'agreement', 'billing', 'onboarding', 'dashboard'];
-    const currentIndex = steps.indexOf(activeStep);
-    const stepIndex = steps.indexOf(step);
+    const visibleStepKeys = steps.map(s => s.key);
+    const currentIndex = visibleStepKeys.indexOf(activeStep);
+    const stepIndex = visibleStepKeys.indexOf(step);
 
     if (step === 'agreement' && proposal?.agreement?.status === 'signed') return 'complete';
     if (step === 'onboarding' && proposal?.onboarding_form?.status === 'submitted') return 'complete';
@@ -190,6 +191,16 @@ export default function ProposalPortalPage({ params }: PageProps) {
     if (stepIndex < currentIndex) return 'complete';
     if (stepIndex === currentIndex) return 'current';
     return 'upcoming';
+  };
+
+  // Get next visible step
+  const getNextStep = (currentStep: PortalStep): PortalStep | null => {
+    const visibleStepKeys = steps.map(s => s.key);
+    const currentIndex = visibleStepKeys.indexOf(currentStep);
+    if (currentIndex < visibleStepKeys.length - 1) {
+      return visibleStepKeys[currentIndex + 1] as PortalStep;
+    }
+    return null;
   };
 
   if (isLoading) {
@@ -236,13 +247,30 @@ export default function ProposalPortalPage({ params }: PageProps) {
     );
   }
 
-  const steps = [
+  const portalSections = proposal?.portal_sections || DEFAULT_PORTAL_SECTIONS;
+
+  const allSteps = [
     { key: 'proposal', label: 'Proposal' },
     { key: 'agreement', label: 'Agreement' },
     { key: 'billing', label: 'Billing' },
     { key: 'onboarding', label: 'Onboarding' },
     { key: 'dashboard', label: 'Dashboard' },
   ];
+
+  // Filter steps based on portal section visibility
+  const steps = useMemo(() => {
+    return allSteps.filter(step => portalSections[step.key as keyof PortalSections]);
+  }, [portalSections]);
+
+  // Ensure activeStep is a visible section, fallback to first visible
+  useEffect(() => {
+    if (proposal && steps.length > 0) {
+      const isActiveStepVisible = steps.some(s => s.key === activeStep);
+      if (!isActiveStepVisible) {
+        setActiveStep(steps[0].key as PortalStep);
+      }
+    }
+  }, [steps, activeStep, proposal]);
 
   return (
     <div className="min-h-screen bg-depth-base relative">
@@ -279,50 +307,59 @@ export default function ProposalPortalPage({ params }: PageProps) {
         </Container>
       </header>
 
-      {/* Progress Steps */}
-      <div className="border-b border-depth-border/30 bg-depth-elevated/20 backdrop-blur-sm relative overflow-hidden">
-        {/* Subtle background pattern */}
-        <div 
-          className="absolute inset-0 opacity-[0.015] pointer-events-none" 
-          style={{ 
-            backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)', 
-            backgroundSize: '24px 24px' 
-          }} 
-        />
+      {/* Progress Steps - Refined Navigation */}
+      <div className="border-b border-depth-border/20 bg-depth-base/50 backdrop-blur-md relative overflow-hidden">
         <Container size="wide">
-          <nav className="flex overflow-x-auto overflow-y-hidden relative z-10 no-scrollbar">
+          <nav className="flex overflow-x-auto overflow-y-hidden relative z-10 no-scrollbar py-1">
             {steps.map((step, index) => {
               const status = getStepStatus(step.key as PortalStep);
+              const stepNumber = index + 1;
               return (
                 <button
                   key={step.key}
                   onClick={() => setActiveStep(step.key as PortalStep)}
-                  className={`flex items-center gap-3 px-6 py-4 border-b-2 -mb-px whitespace-nowrap transition-all ${
+                  className={`group flex items-center gap-3 px-5 py-3.5 whitespace-nowrap transition-all duration-300 relative ${
                     status === 'current'
-                      ? 'border-radiance-gold text-radiance-gold'
+                      ? 'text-text-primary'
                       : status === 'complete'
-                      ? 'border-transparent text-green-400 hover:text-green-300 hover:border-green-400/30'
-                      : 'border-transparent text-text-muted hover:text-text-secondary hover:border-text-muted/20'
+                      ? 'text-text-secondary hover:text-text-primary'
+                      : 'text-text-muted hover:text-text-secondary'
                   }`}
                 >
+                  {/* Active indicator line */}
                   <span
-                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                    className={`absolute bottom-0 left-4 right-4 h-0.5 rounded-full transition-all duration-300 ${
                       status === 'current'
-                        ? 'bg-radiance-gold text-depth-base shadow-md shadow-radiance-gold/20'
+                        ? 'bg-radiance-gold'
+                        : 'bg-transparent group-hover:bg-depth-border'
+                    }`}
+                  />
+
+                  {/* Step indicator */}
+                  <span
+                    className={`relative w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-mono tracking-tight transition-all duration-300 ${
+                      status === 'current'
+                        ? 'bg-radiance-gold/15 text-radiance-gold ring-1 ring-radiance-gold/30'
                         : status === 'complete'
-                        ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                        : 'bg-depth-elevated text-text-muted border border-depth-border'
+                        ? 'bg-green-500/10 text-green-400 ring-1 ring-green-500/20'
+                        : 'bg-depth-elevated/50 text-text-muted ring-1 ring-depth-border/50 group-hover:ring-depth-border'
                     }`}
                   >
                     {status === 'complete' ? (
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     ) : (
-                      index + 1
+                      stepNumber
                     )}
                   </span>
-                  <span className="font-medium text-sm">{step.label}</span>
+
+                  {/* Label */}
+                  <span className={`text-sm font-medium tracking-tight transition-colors duration-300 ${
+                    status === 'current' ? 'text-text-primary' : ''
+                  }`}>
+                    {step.label}
+                  </span>
                 </button>
               );
             })}
@@ -537,19 +574,24 @@ export default function ProposalPortalPage({ params }: PageProps) {
               </div>
 
               {/* Accept Button */}
-              <div className="text-center pt-8">
-                <div className="relative inline-block group">
-                  <div className="absolute -inset-2 bg-radiance-gold/20 blur-xl rounded-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    onClick={() => setActiveStep('agreement')}
-                    className="relative"
-                  >
-                    Accept Proposal & Sign Agreement
-                  </Button>
+              {getNextStep('proposal') && (
+                <div className="text-center pt-8">
+                  <div className="relative inline-block group">
+                    <div className="absolute -inset-2 bg-radiance-gold/20 blur-xl rounded-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      onClick={() => {
+                        const next = getNextStep('proposal');
+                        if (next) setActiveStep(next);
+                      }}
+                      className="relative"
+                    >
+                      {portalSections.agreement ? 'Accept Proposal & Sign Agreement' : 'Continue'}
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
 
@@ -578,9 +620,14 @@ export default function ProposalPortalPage({ params }: PageProps) {
                         Signed by <span className="text-green-400 font-medium">{proposal.agreement.signed_by_name}</span> on{' '}
                         {formatDate(proposal.agreement.signed_at)}
                       </p>
-                      <Button variant="outline" onClick={() => setActiveStep('billing')} size="lg">
-                        Continue to Billing →
-                      </Button>
+                      {getNextStep('agreement') && (
+                        <Button variant="outline" onClick={() => {
+                          const next = getNextStep('agreement');
+                          if (next) setActiveStep(next);
+                        }} size="lg">
+                          Continue →
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -817,11 +864,16 @@ export default function ProposalPortalPage({ params }: PageProps) {
                 </div>
               </div>
 
-              <div className="text-center pt-4">
-                <Button variant="primary" onClick={() => setActiveStep('onboarding')} size="lg">
-                  Continue to Onboarding →
-                </Button>
-              </div>
+              {getNextStep('billing') && (
+                <div className="text-center pt-4">
+                  <Button variant="primary" onClick={() => {
+                    const next = getNextStep('billing');
+                    if (next) setActiveStep(next);
+                  }} size="lg">
+                    Continue →
+                  </Button>
+                </div>
+              )}
             </div>
           )}
 
@@ -849,9 +901,14 @@ export default function ProposalPortalPage({ params }: PageProps) {
                       <p className="text-text-secondary mb-8 text-lg">
                         Thank you for completing the onboarding form. Our team will review your information.
                       </p>
-                      <Button variant="outline" onClick={() => setActiveStep('dashboard')} size="lg">
-                        Go to Dashboard →
-                      </Button>
+                      {getNextStep('onboarding') && (
+                        <Button variant="outline" onClick={() => {
+                          const next = getNextStep('onboarding');
+                          if (next) setActiveStep(next);
+                        }} size="lg">
+                          Continue →
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1181,20 +1238,24 @@ export default function ProposalPortalPage({ params }: PageProps) {
                           Quick Actions
                         </h3>
                         <div className="space-y-3">
-                          <Button
-                            variant="outline"
-                            fullWidth
-                            onClick={() => setActiveStep('proposal')}
-                          >
-                            View Proposal
-                          </Button>
-                          <Button
-                            variant="outline"
-                            fullWidth
-                            onClick={() => setActiveStep('billing')}
-                          >
-                            View Billing
-                          </Button>
+                          {portalSections.proposal && (
+                            <Button
+                              variant="outline"
+                              fullWidth
+                              onClick={() => setActiveStep('proposal')}
+                            >
+                              View Proposal
+                            </Button>
+                          )}
+                          {portalSections.billing && (
+                            <Button
+                              variant="outline"
+                              fullWidth
+                              onClick={() => setActiveStep('billing')}
+                            >
+                              View Billing
+                            </Button>
+                          )}
                         </div>
                       </div>
                     </div>
