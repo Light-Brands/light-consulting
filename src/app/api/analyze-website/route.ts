@@ -15,7 +15,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { chromium } from 'playwright';
+import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
 import type {
   BusinessIntelligence,
   EnhancedTechStack,
@@ -64,15 +65,24 @@ interface ScrapedData {
 
 /**
  * Enhanced website scraping with additional data extraction
+ * Uses puppeteer-core with @sparticuz/chromium for serverless compatibility
  */
 async function scrapeWebsite(url: string): Promise<ScrapedData> {
   let browser;
   try {
-    browser = await chromium.launch({ headless: true });
+    // Configure chromium for serverless environment
+    const executablePath = await chromium.executablePath();
+
+    browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: { width: 1280, height: 720 },
+      executablePath,
+      headless: true,
+    });
     const page = await browser.newPage();
 
     // Set a reasonable timeout
-    await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
+    await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
 
     // Extract comprehensive data
     const data = await page.evaluate(() => {
