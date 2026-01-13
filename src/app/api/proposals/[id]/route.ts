@@ -17,6 +17,7 @@ import type {
   ProposalUpdate,
   ProposalDetailApiResponse,
 } from '@/types/proposals';
+import { DEFAULT_PORTAL_SECTIONS } from '@/types/proposals';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -62,6 +63,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         final_amount: 135000,
         status: 'sent',
         access_token: 'abc123-def456-ghi789',
+        portal_sections: DEFAULT_PORTAL_SECTIONS,
         created_by: null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -193,6 +195,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
     const proposalWithDetails: ProposalWithDetails = {
       ...proposal,
+      portal_sections: proposal.portal_sections || DEFAULT_PORTAL_SECTIONS,
       phases: phases || [],
       milestones: milestones || [],
       agreement: agreement || null,
@@ -256,6 +259,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       'discount_percentage',
       'final_amount',
       'status',
+      'portal_sections',
       'sent_at',
       'viewed_at',
       'agreement_signed_at',
@@ -287,6 +291,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         final_amount: updateData.final_amount || 150000,
         status: updateData.status || 'draft',
         access_token: 'abc123-def456-ghi789',
+        portal_sections: updateData.portal_sections || DEFAULT_PORTAL_SECTIONS,
         created_by: null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),

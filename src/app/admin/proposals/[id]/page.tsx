@@ -9,7 +9,8 @@ import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/admin';
 import { Container, Button } from '@/components/ui';
-import type { ProposalWithDetails, ProposalStatus, ProposalPhase } from '@/types/proposals';
+import type { ProposalWithDetails, ProposalStatus, ProposalPhase, PortalSections } from '@/types/proposals';
+import { DEFAULT_PORTAL_SECTIONS } from '@/types/proposals';
 
 const STATUS_LABELS: Record<ProposalStatus, string> = {
   draft: 'Draft',
@@ -41,6 +42,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [updatingPhaseId, setUpdatingPhaseId] = useState<string | null>(null);
+  const [updatingSection, setUpdatingSection] = useState<string | null>(null);
 
   useEffect(() => {
     fetchProposal();
@@ -126,6 +128,41 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
 
   const visiblePhasesCount = proposal?.phases.filter((p) => p.visible_in_portal).length ?? 0;
   const totalPhasesCount = proposal?.phases.length ?? 0;
+
+  const handleSectionVisibilityToggle = async (section: keyof PortalSections, visible: boolean) => {
+    if (!proposal) return;
+
+    setUpdatingSection(section);
+    try {
+      const currentSections = proposal.portal_sections || DEFAULT_PORTAL_SECTIONS;
+      const updatedSections = { ...currentSections, [section]: visible };
+
+      const response = await fetch(`/api/proposals/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ portal_sections: updatedSections }),
+      });
+
+      if (response.ok) {
+        setProposal((prev) =>
+          prev ? { ...prev, portal_sections: updatedSections } : null
+        );
+      }
+    } catch (error) {
+      console.error('Error updating section visibility:', error);
+    } finally {
+      setUpdatingSection(null);
+    }
+  };
+
+  const portalSections = proposal?.portal_sections || DEFAULT_PORTAL_SECTIONS;
+  const SECTION_LABELS: Record<keyof PortalSections, string> = {
+    proposal: 'Proposal',
+    agreement: 'Agreement',
+    billing: 'Billing',
+    onboarding: 'Onboarding',
+    dashboard: 'Dashboard',
+  };
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return '-';
@@ -450,6 +487,54 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                       Manage Dashboard
                     </Button>
                   </Link>
+                </div>
+              </div>
+
+              {/* Portal Sections Visibility */}
+              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                <div
+                  className="absolute inset-0 opacity-[0.015] pointer-events-none"
+                  style={{
+                    backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                    backgroundSize: '32px 32px',
+                  }}
+                />
+                <div className="relative z-10 p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-1.5 h-1.5 rounded-full bg-wisdom-violet/50" />
+                    <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
+                      Portal Sections
+                    </span>
+                  </div>
+                  <p className="text-text-muted text-xs mb-4">
+                    Control which tabs are visible to the client
+                  </p>
+                  <div className="space-y-3">
+                    {(Object.keys(SECTION_LABELS) as (keyof PortalSections)[]).map((section) => (
+                      <label
+                        key={section}
+                        className="flex items-center justify-between cursor-pointer group"
+                      >
+                        <span className={`text-sm transition-colors ${
+                          portalSections[section] ? 'text-text-primary' : 'text-text-muted'
+                        }`}>
+                          {SECTION_LABELS[section]}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          {updatingSection === section && (
+                            <span className="text-xs text-text-muted">Saving...</span>
+                          )}
+                          <input
+                            type="checkbox"
+                            checked={portalSections[section]}
+                            onChange={(e) => handleSectionVisibilityToggle(section, e.target.checked)}
+                            disabled={updatingSection === section}
+                            className="w-4 h-4 rounded border-depth-border bg-depth-base text-radiance-gold focus:ring-radiance-gold focus:ring-offset-0 disabled:opacity-50"
+                          />
+                        </div>
+                      </label>
+                    ))}
+                  </div>
                 </div>
               </div>
 
