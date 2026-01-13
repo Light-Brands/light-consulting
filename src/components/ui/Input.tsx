@@ -5,7 +5,7 @@
  * Production-ready input components with variants and validation
  */
 
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useId } from 'react';
 import { cn, focusRing, transition } from './utils';
 import { Label } from './Typography';
 import { tokens } from '@/design-system';
@@ -80,8 +80,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
-    // Generate ID if not provided
-    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
+    // Generate stable ID for server/client consistency
+    const generatedId = useId();
+    const inputId = id || generatedId;
 
     const sizeStyles = {
       sm: 'py-2 text-xs',
@@ -208,8 +209,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     },
     ref
   ) => {
-    // Generate ID if not provided
-    const textareaId = id || `textarea-${Math.random().toString(36).substr(2, 9)}`;
+    // Generate stable ID for server/client consistency
+    const generatedId = useId();
+    const textareaId = id || generatedId;
 
     const sizeStyles = {
       sm: 'py-2 text-xs',
