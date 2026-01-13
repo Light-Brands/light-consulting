@@ -1,13 +1,13 @@
 /**
  * Website Input Visual
  * Ultra-frictionless website URL input with inline contact form
- * Auto-proceeds when URL + name + email are ready
+ * Manual trigger with Analyze button (no auto-proceed to avoid stuck states)
  */
 
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Input } from './';
+import { Input, Button } from './ui';
 import { cn } from '../lib/utils';
 
 interface WebsiteInputVisualProps {
@@ -20,17 +20,18 @@ interface WebsiteInputVisualProps {
   };
   errors: Record<string, string>;
   onFieldChange: (field: string, value: string) => void;
-  onReady?: () => void;
+  onAnalyze: () => void;
+  isAnalyzing?: boolean;
 }
 
 export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
   formData,
   errors,
   onFieldChange,
-  onReady,
+  onAnalyze,
+  isAnalyzing = false,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [readinessChecked, setReadinessChecked] = useState(false);
 
   // Check readiness
   const isValidUrl = (url: string) => {
@@ -53,21 +54,16 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
     setIsVisible(true);
   }, []);
 
-  // Auto-proceed when all fields are ready
-  useEffect(() => {
-    if (isAllReady && !readinessChecked && onReady) {
-      setReadinessChecked(true);
-      // Small delay for UX
-      const timer = setTimeout(() => {
-        onReady();
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [isAllReady, readinessChecked, onReady]);
-
   const handleUrlChange = useCallback((value: string) => {
     onFieldChange('websiteUrl', value);
   }, [onFieldChange]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isAllReady && !isAnalyzing) {
+      onAnalyze();
+    }
+  };
 
   return (
     <div
@@ -87,7 +83,7 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
       </div>
 
       {/* Main Form */}
-      <div className="max-w-2xl mx-auto space-y-6">
+      <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
         {/* Website URL Input */}
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
@@ -104,6 +100,7 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
               placeholder="example.com or https://example.com"
               value={formData.websiteUrl || ''}
               onChange={(e) => handleUrlChange(e.target.value)}
+              disabled={isAnalyzing}
               className={cn(
                 'pl-12',
                 errors.websiteUrl && 'border-error',
@@ -134,6 +131,7 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
                 placeholder="Your name"
                 value={formData.name || ''}
                 onChange={(e) => onFieldChange('name', e.target.value)}
+                disabled={isAnalyzing}
                 className={cn(
                   errors.name && 'border-error',
                   isNameReady && !errors.name && 'border-radiance-gold/50'
@@ -153,6 +151,7 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
                 placeholder="your@email.com"
                 value={formData.email || ''}
                 onChange={(e) => onFieldChange('email', e.target.value)}
+                disabled={isAnalyzing}
                 className={cn(
                   errors.email && 'border-error',
                   isEmailReady && !errors.email && 'border-radiance-gold/50'
@@ -172,6 +171,7 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
                 placeholder="Company name"
                 value={formData.company || ''}
                 onChange={(e) => onFieldChange('company', e.target.value)}
+                disabled={isAnalyzing}
               />
             </div>
 
@@ -184,23 +184,30 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
                 placeholder="+1 (555) 123-4567"
                 value={formData.phone || ''}
                 onChange={(e) => onFieldChange('phone', e.target.value)}
+                disabled={isAnalyzing}
               />
             </div>
           </div>
         </div>
 
-        {/* Readiness Indicator */}
-        {isAllReady && (
-          <div className="mt-6 p-4 bg-radiance-gold/10 border border-radiance-gold/30 rounded-lg">
-            <div className="flex items-center gap-2 text-radiance-gold">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span className="font-medium">All set! Analyzing your website...</span>
-            </div>
-          </div>
-        )}
-      </div>
+        {/* Submit Button */}
+        <div className="pt-6">
+          <Button
+            type="submit"
+            size="lg"
+            disabled={!isAllReady || isAnalyzing}
+            isLoading={isAnalyzing}
+            className="w-full"
+          >
+            {isAnalyzing ? 'Analyzing...' : 'Analyze My Website'}
+          </Button>
+          {!isAllReady && (
+            <p className="mt-2 text-sm text-text-muted text-center">
+              Fill in all required fields to continue
+            </p>
+          )}
+        </div>
+      </form>
     </div>
   );
 };

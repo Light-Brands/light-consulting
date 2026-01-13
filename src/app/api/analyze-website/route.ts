@@ -345,12 +345,11 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnalyzeWe
     
     // Create lead submission
     const { supabaseAdmin, isSupabaseConfigured } = await import('@/lib/supabase');
-    const { LeadSubmissionInsert } = await import('@/types/proposals');
-    
+
     let leadId: string | null = null;
-    
+
     if (isSupabaseConfigured()) {
-      const leadData: LeadSubmissionInsert = {
+      const leadData = {
         service: 'diagnostic',
         name,
         email,
