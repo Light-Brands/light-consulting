@@ -18,8 +18,8 @@ interface LiveProjectCardProps {
   viewMode?: 'preview' | 'details';
 }
 
-// Timeout for detecting CORS/loading failures (8 seconds)
-const PREVIEW_LOAD_TIMEOUT = 8000;
+// Timeout for detecting CORS/loading failures (5 seconds for better UX)
+const PREVIEW_LOAD_TIMEOUT = 5000;
 
 export const LiveProjectCard: React.FC<LiveProjectCardProps> = ({ 
   project, 
@@ -176,7 +176,7 @@ export const LiveProjectCard: React.FC<LiveProjectCardProps> = ({
       aria-labelledby={`project-title-${project.id}`}
     >
       {/* Live Preview Container */}
-      <div 
+      <div
         ref={containerRef}
         className="relative w-full overflow-hidden bg-depth-elevated"
         style={{
@@ -184,29 +184,25 @@ export const LiveProjectCard: React.FC<LiveProjectCardProps> = ({
           minHeight: '300px',
         }}
       >
-        {/* Determine if we should show preview or fallback */}
+        {/* Determine what to show: preview, fallback image, or placeholder */}
         {(() => {
-          const shouldShowPreview =
+          // Check if we should attempt to show a live preview
+          const canShowPreview =
             viewMode === 'preview' &&
             project.case_study_url &&
             previewEnabled &&
-            !useFallbackImage;
+            !useFallbackImage &&
+            !hasError;
 
-          // Show fallback image if:
-          // 1. Preview is disabled
-          // 2. No case_study_url
-          // 3. Error occurred and we have an image_url
-          // 4. Explicitly set to use fallback
-          const shouldShowFallback =
-            !shouldShowPreview ||
-            (hasError && project.image_url) ||
-            useFallbackImage;
+          // Check if we have a fallback image available
+          const hasFallbackImage = Boolean(project.image_url);
 
-          if (shouldShowPreview) {
+          // Show live preview iframe
+          if (canShowPreview) {
             return (
               <>
-                {/* Loading State */}
-                {!isLoaded && !hasError && (
+                {/* Loading State - shown while iframe loads */}
+                {!isLoaded && (
                   <div className="absolute inset-0 flex items-center justify-center bg-depth-elevated z-10">
                     <div className="flex flex-col items-center gap-3">
                       <div className="w-12 h-12 rounded-full border-2 border-radiance-gold/20 border-t-radiance-gold animate-spin" />
@@ -255,17 +251,17 @@ export const LiveProjectCard: React.FC<LiveProjectCardProps> = ({
             );
           }
 
-          // Fallback: Show image if available, otherwise placeholder
-          if (shouldShowFallback && project.image_url) {
+          // Show fallback image (when preview disabled, failed, or not available)
+          if (hasFallbackImage) {
             return (
               <div className="absolute inset-0 overflow-hidden">
                 <Image
-                  src={project.image_url}
+                  src={project.image_url!}
                   alt={project.title}
                   fill
                   className="object-cover transition-opacity duration-500"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  priority={index < 6} // Prioritize first 6 images
+                  priority={index < 6}
                 />
                 {/* Hover Overlay with Gradient */}
                 <AnimatePresence>
@@ -283,7 +279,7 @@ export const LiveProjectCard: React.FC<LiveProjectCardProps> = ({
             );
           }
 
-          // Final fallback: Placeholder icon
+          // Final fallback: Placeholder icon (no preview and no image)
           return (
             <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-depth-elevated to-depth-surface">
               <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-radiance-gold/20 to-radiance-amber/20 flex items-center justify-center">
