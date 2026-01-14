@@ -7,8 +7,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
 interface NavItem {
@@ -58,6 +58,17 @@ const navItems: NavItem[] = [
 
 export const AdminSidebar: React.FC = () => {
   const pathname = usePathname();
+  const router = useRouter();
+  const { signOut, user, isConfigured } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      router.push('/admin/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   return (
     <aside className="relative w-64 min-h-screen bg-depth-surface border-r border-depth-border flex flex-col overflow-hidden">
@@ -69,7 +80,7 @@ export const AdminSidebar: React.FC = () => {
           backgroundSize: '32px 32px',
         }}
       />
-      
+
       {/* Logo */}
       <div className="relative z-10 p-6 border-b border-depth-border">
         <Link href="/admin" className="flex items-center gap-3 group">
@@ -112,12 +123,12 @@ export const AdminSidebar: React.FC = () => {
                     'absolute inset-0 bg-radial-gradient from-radiance-gold/5 to-transparent opacity-0 group-hover/nav:opacity-100 transition-opacity duration-500 pointer-events-none',
                     isActive && 'opacity-100'
                   )} />
-                  
+
                   <div className="relative z-10 flex items-center gap-3">
                     {item.icon}
                     <span className="font-medium text-sm">{item.label}</span>
                   </div>
-                  
+
                   {isActive && (
                     <div className="absolute right-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-radiance-gold animate-pulse" />
                   )}
@@ -128,10 +139,19 @@ export const AdminSidebar: React.FC = () => {
         </ul>
       </nav>
 
-      {/* Footer */}
+      {/* User info and Footer */}
       <div className="p-4 border-t border-depth-border">
+        {/* User email display */}
+        {isConfigured && user?.email && (
+          <div className="mb-3 px-4 py-2 bg-depth-elevated rounded-lg">
+            <p className="text-text-muted text-xs font-mono truncate" title={user.email}>
+              {user.email}
+            </p>
+          </div>
+        )}
+
         <button
-          onClick={() => signOut({ callbackUrl: '/admin/login' })}
+          onClick={handleLogout}
           className="flex items-center gap-3 w-full px-4 py-3 text-text-secondary hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
