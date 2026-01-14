@@ -751,6 +751,11 @@ ANALYSIS GUIDELINES:
 - For pain_points: What challenges would their customers face that led them to this business?
 - For efficiency_opportunities: Where could AI/automation help THIS specific business?
 
+CRITICAL FIELD FORMATTING:
+- value_proposition: MUST be 3 SHORT phrases you SYNTHESIZE (max 8 words each). Examples: "Custom design for every project", "Full-service digital transformation", "Results-driven marketing strategy". NEVER copy raw text from the site - write clean, professional benefits.
+- All array fields (pain_points, efficiency_opportunities, customer_intelligence_gaps, etc.): Each item should be a clean, concise phrase - NEVER include CSS, HTML, code, or long text blocks.
+- If you see garbled content with CSS like "@media", "animation:", "{", "}", etc. - IGNORE IT COMPLETELY and write your own clean analysis.
+
 Return ONLY valid JSON (no markdown code blocks, no explanations):
 {
   "website_story": "2-3 paragraphs describing the business, what they do, who they serve, and their unique value. Be specific about their offerings.",
@@ -761,7 +766,7 @@ Return ONLY valid JSON (no markdown code blocks, no explanations):
     "demographics": "Role, company size, budget level, decision-making authority",
     "psychographics": "Goals they want to achieve, challenges they face, what motivates their buying decisions"
   },
-  "value_proposition": ["Unique benefit 1", "Unique benefit 2", "Unique benefit 3"],
+  "value_proposition": ["SHORT benefit phrase (max 8 words)", "Another concise benefit", "Third key differentiator"],
   "revenue_model": "How they make money: Subscription, project-based, retainer, hourly, commission, product sales, etc.",
   "company_size": {
     "employees": "Infer from team page, about page, or website sophistication: 1-10, 10-50, 50-200, 200-500, or 500+",
@@ -818,6 +823,70 @@ Return ONLY valid JSON (no markdown code blocks, no explanations):
 
     const parsed = JSON.parse(jsonMatch[0]);
 
+    // Sanitize array fields to remove any CSS/HTML artifacts
+    const sanitizeArrayField = (arr: string[] | undefined): string[] => {
+      if (!arr || !Array.isArray(arr)) return [];
+      return arr
+        .filter(item => {
+          if (typeof item !== 'string') return false;
+          // Reject items that look like CSS/HTML/code artifacts
+          const artifactPatterns = [
+            /@media/i,
+            /\{.*\}/,
+            /animation:/i,
+            /keyframes/i,
+            /transform:/i,
+            /grid-column/i,
+            /\.items-holder/i,
+            /&amp;|&#\d+;|&#x[a-f0-9]+;/i,
+            /<[a-z]/i,
+            /\[item-style/i,
+            /pointer-events/i,
+            /translateX/i,
+            /hover\s*\{/i,
+            /\.youtube-embed/i,
+            /\burl\s*\(/i,
+            /max-height:/i,
+            /font-size:/i,
+            /border-radius:/i,
+          ];
+          const hasArtifact = artifactPatterns.some(pattern => pattern.test(item));
+          // Also reject very long items (likely raw content dumps)
+          const isTooLong = item.length > 150;
+          return !hasArtifact && !isTooLong;
+        })
+        .map(item => {
+          // Clean up any remaining HTML entities
+          return item
+            .replace(/&amp;/g, '&')
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, "'")
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&#x27;/g, "'")
+            .trim();
+        })
+        .filter(item => item.length > 0);
+    };
+
+    // Sanitize text fields
+    const sanitizeTextField = (text: string | undefined): string => {
+      if (!text || typeof text !== 'string') return '';
+      // Remove obvious CSS/code patterns
+      let cleaned = text
+        .replace(/@media[^}]+\}/g, '')
+        .replace(/\{[^}]*\}/g, '')
+        .replace(/animation:[^;]+;/g, '')
+        .replace(/\[item-style[^\]]*\]/g, '')
+        .replace(/\.[\w-]+\s*\{/g, '')
+        .replace(/&amp;/g, '&')
+        .replace(/&#\d+;/g, '')
+        .replace(/&#x[a-f0-9]+;/gi, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      return cleaned;
+    };
+
     // Build structured business intelligence
     const digitalPresence: DigitalPresence = {
       content_quality: parsed.digital_presence?.content_quality || 'Moderate',
@@ -844,19 +913,25 @@ Return ONLY valid JSON (no markdown code blocks, no explanations):
 
     const aiReadiness: AIReadiness = {
       overall_score: Math.max(0, Math.min(100, parsed.ai_readiness?.overall_score || 50)),
-      current_ai_usage: parsed.ai_readiness?.current_ai_usage || [],
+      current_ai_usage: sanitizeArrayField(parsed.ai_readiness?.current_ai_usage),
       data_infrastructure: parsed.ai_readiness?.data_infrastructure || 'Basic',
       automation_level: parsed.ai_readiness?.automation_level || 'Low',
       integration_readiness: parsed.ai_readiness?.integration_readiness || 'Moderate',
       content_generation_needs: parsed.ai_readiness?.content_generation_needs || 'Moderate',
-      customer_intelligence_gaps: parsed.ai_readiness?.customer_intelligence_gaps || [],
+      customer_intelligence_gaps: sanitizeArrayField(parsed.ai_readiness?.customer_intelligence_gaps).length > 0
+        ? sanitizeArrayField(parsed.ai_readiness?.customer_intelligence_gaps)
+        : ['Customer behavior analytics', 'Personalization opportunities'],
     };
 
     const operationsInsights: OperationsInsights = {
-      pain_points: parsed.operations_insights?.pain_points || [],
-      growth_indicators: parsed.operations_insights?.growth_indicators || [],
-      efficiency_opportunities: parsed.operations_insights?.efficiency_opportunities || [],
-      customer_journey_gaps: parsed.operations_insights?.customer_journey_gaps || [],
+      pain_points: sanitizeArrayField(parsed.operations_insights?.pain_points).length > 0
+        ? sanitizeArrayField(parsed.operations_insights?.pain_points)
+        : ['Manual processes that could be automated'],
+      growth_indicators: sanitizeArrayField(parsed.operations_insights?.growth_indicators),
+      efficiency_opportunities: sanitizeArrayField(parsed.operations_insights?.efficiency_opportunities).length > 0
+        ? sanitizeArrayField(parsed.operations_insights?.efficiency_opportunities)
+        : ['Process automation', 'AI-powered workflows'],
+      customer_journey_gaps: sanitizeArrayField(parsed.operations_insights?.customer_journey_gaps),
       support_infrastructure: parsed.operations_insights?.support_infrastructure || 'Unknown',
     };
 
@@ -876,17 +951,25 @@ Return ONLY valid JSON (no markdown code blocks, no explanations):
       growth_stage: parsed.company_size?.growth_stage || 'Growth',
     };
 
+    // Sanitize main text fields
+    const cleanWebsiteStory = sanitizeTextField(parsed.website_story) ||
+      `${scrapedData.title} - This business operates in the ${inferredIndustry} space, offering solutions to their target market.`;
+    const cleanCompetitivePositioning = sanitizeTextField(parsed.competitive_positioning) ||
+      'Positioned as a trusted provider in their market';
+
     return {
-      websiteStory: parsed.website_story || `${scrapedData.title} - This business operates in the ${inferredIndustry} space, offering solutions to their target market.`,
+      websiteStory: cleanWebsiteStory,
       businessIntelligence: {
         business_model: inferredBusinessModel,
         industry: inferredIndustry,
         target_audience: targetAudience,
-        value_proposition: parsed.value_proposition || extractValueProps(scrapedData),
+        value_proposition: sanitizeArrayField(parsed.value_proposition).length > 0
+          ? sanitizeArrayField(parsed.value_proposition)
+          : extractValueProps(scrapedData),
         revenue_model: parsed.revenue_model || inferRevenueModel(scrapedData, techStack),
         company_size: companySize,
         geographic_presence: parsed.geographic_presence || ['North America'],
-        competitive_positioning: parsed.competitive_positioning || 'Positioned as a trusted provider in their market',
+        competitive_positioning: cleanCompetitivePositioning,
         digital_presence: digitalPresence,
         technical_assessment: technicalAssessment,
         ai_readiness: aiReadiness,
