@@ -263,6 +263,10 @@ export interface Milestone {
   payment_link: string | null;
   paid_at: string | null;
   sort_order: number;
+  // Stripe payment integration fields
+  stripe_checkout_session_id: string | null;
+  stripe_payment_intent_id: string | null;
+  stripe_payment_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -279,6 +283,9 @@ export interface MilestoneInsert {
   invoice_number?: string | null;
   payment_link?: string | null;
   sort_order?: number;
+  stripe_checkout_session_id?: string | null;
+  stripe_payment_intent_id?: string | null;
+  stripe_payment_url?: string | null;
 }
 
 export interface MilestoneUpdate {
@@ -293,6 +300,9 @@ export interface MilestoneUpdate {
   payment_link?: string | null;
   paid_at?: string | null;
   sort_order?: number;
+  stripe_checkout_session_id?: string | null;
+  stripe_payment_intent_id?: string | null;
+  stripe_payment_url?: string | null;
 }
 
 // ============================================================================

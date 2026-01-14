@@ -132,9 +132,27 @@ CREATE TABLE IF NOT EXISTS milestones (
   invoice_number VARCHAR(100),
   paid_at TIMESTAMP WITH TIME ZONE,
   sort_order INTEGER DEFAULT 0,
+  -- Stripe payment integration fields
+  stripe_checkout_session_id VARCHAR(255),
+  stripe_payment_intent_id VARCHAR(255),
+  stripe_payment_url VARCHAR(500),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Add Stripe columns to existing table (for migrations)
+-- ALTER TABLE milestones ADD COLUMN IF NOT EXISTS stripe_checkout_session_id VARCHAR(255);
+-- ALTER TABLE milestones ADD COLUMN IF NOT EXISTS stripe_payment_intent_id VARCHAR(255);
+-- ALTER TABLE milestones ADD COLUMN IF NOT EXISTS stripe_payment_url VARCHAR(500);
+
+COMMENT ON COLUMN milestones.stripe_checkout_session_id IS
+'Stripe checkout session ID for the payment';
+
+COMMENT ON COLUMN milestones.stripe_payment_intent_id IS
+'Stripe payment intent ID after successful payment';
+
+COMMENT ON COLUMN milestones.stripe_payment_url IS
+'Generated Stripe checkout URL for the milestone payment';
 
 CREATE INDEX IF NOT EXISTS idx_milestones_proposal_id ON milestones(proposal_id);
 CREATE INDEX IF NOT EXISTS idx_milestones_payment_status ON milestones(payment_status);

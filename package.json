@@ -27,6 +27,7 @@
     "react-dom": "^19.2.3",
     "react-hook-form": "^7.70.0",
     "react-markdown": "^10.1.0",
+    "stripe": "^20.1.2",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
