@@ -107,7 +107,7 @@ VALUES
     'NeuroTracker X',
     'Cognitive Enhancement / Wellness',
     true,
-    'published',
+    'draft',
     3
   ),
   (
@@ -637,5 +637,17 @@ VALUES
     true,
     'published',
     48
+  ),
+  (
+    'VIBEUP',
+    'Beta community platform extending the VIBEUP ecosystem. Full-stack development with UI/UX design and brand identity. Features social feeds, community engagement, and real-time interactions.',
+    '/images/portfolio/vibeup.jpg',
+    ARRAY['Social Platform', 'Community', 'Real-time', 'Next.js', 'React'],
+    'https://vibeup.vercel.app/',
+    'VIBEUP',
+    'Social Media / Community Platform',
+    true,
+    'draft',
+    49
   )
 ON CONFLICT DO NOTHING;
