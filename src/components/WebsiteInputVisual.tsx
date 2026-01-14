@@ -21,6 +21,7 @@ interface WebsiteInputVisualProps {
   errors: Record<string, string>;
   onFieldChange: (field: string, value: string) => void;
   onAnalyze: () => void;
+  onSkipToBooking?: () => void;
   isAnalyzing?: boolean;
 }
 
@@ -29,6 +30,7 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
   errors,
   onFieldChange,
   onAnalyze,
+  onSkipToBooking,
   isAnalyzing = false,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -48,7 +50,9 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
   const isUrlReady = isValidUrl(formData.websiteUrl || '');
   const isNameReady = !!formData.name?.trim();
   const isEmailReady = !!formData.email?.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
-  const isAllReady = isUrlReady && isNameReady && isEmailReady;
+  const hasUrl = !!formData.websiteUrl?.trim();
+  const isContactReady = isNameReady && isEmailReady;
+  const isAllReady = isUrlReady && isContactReady;
 
   useEffect(() => {
     setIsVisible(true);
@@ -87,7 +91,7 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
         {/* Website URL Input */}
         <div>
           <label className="block text-sm font-medium text-text-primary mb-2">
-            Your Website URL <span className="text-radiance-gold">*</span>
+            Your Website URL <span className="text-text-muted">(Optional)</span>
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -190,20 +194,58 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
           </div>
         </div>
 
-        {/* Submit Button */}
-        <div className="pt-6">
-          <Button
-            type="submit"
-            size="lg"
-            disabled={!isAllReady || isAnalyzing}
-            isLoading={isAnalyzing}
-            className="w-full"
-          >
-            {isAnalyzing ? 'Analyzing...' : 'Analyze My Website'}
-          </Button>
-          {!isAllReady && (
+        {/* Submit Buttons */}
+        <div className="pt-6 space-y-4">
+          {/* Primary action: Analyze (only if URL is provided) */}
+          {hasUrl && (
+            <Button
+              type="submit"
+              size="lg"
+              disabled={!isAllReady || isAnalyzing}
+              isLoading={isAnalyzing}
+              className="w-full"
+            >
+              {isAnalyzing ? 'Analyzing...' : 'Analyze My Website'}
+            </Button>
+          )}
+
+          {/* Secondary action: Skip to booking (when no URL or as alternative) */}
+          {onSkipToBooking && (
+            <div className={cn(hasUrl && 'pt-2')}>
+              {hasUrl && (
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="flex-1 h-px bg-depth-border" />
+                  <span className="text-sm text-text-muted">or</span>
+                  <div className="flex-1 h-px bg-depth-border" />
+                </div>
+              )}
+              <Button
+                type="button"
+                variant={hasUrl ? 'outline' : 'primary'}
+                size="lg"
+                disabled={!isContactReady || isAnalyzing}
+                onClick={onSkipToBooking}
+                className="w-full"
+              >
+                {hasUrl ? 'Skip Analysis & Book Directly' : 'Book a Strategy Call'}
+              </Button>
+            </div>
+          )}
+
+          {/* Help text */}
+          {!isContactReady && (
             <p className="mt-2 text-sm text-text-muted text-center">
-              Fill in all required fields to continue
+              Fill in your name and email to continue
+            </p>
+          )}
+          {isContactReady && !hasUrl && (
+            <p className="mt-2 text-sm text-text-muted text-center">
+              Add your website URL for a personalized AI readiness analysis, or book directly
+            </p>
+          )}
+          {hasUrl && !isUrlReady && isContactReady && (
+            <p className="mt-2 text-sm text-text-muted text-center">
+              Enter a valid URL to analyze, or skip to book directly
             </p>
           )}
         </div>
