@@ -7,8 +7,9 @@
 
 'use client';
 
-import React, { useState, useEffect, use, useMemo } from 'react';
+import React, { useState, useEffect, use, useMemo, useCallback } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import { Container, Button } from '@/components/ui';
 import type { ProposalWithDetails, OnboardingFormField, PortalSections } from '@/types/proposals';
@@ -22,6 +23,7 @@ type PortalStep = 'proposal' | 'agreement' | 'billing' | 'onboarding' | 'dashboa
 
 export default function ProposalPortalPage({ params }: PageProps) {
   const { token } = use(params);
+  const searchParams = useSearchParams();
   const [proposal, setProposal] = useState<ProposalWithDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,9 +47,89 @@ export default function ProposalPortalPage({ params }: PageProps) {
   const [newComment, setNewComment] = useState('');
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
+  // Payment state
+  const [paymentLoading, setPaymentLoading] = useState<string | null>(null);
+  const [paymentNotification, setPaymentNotification] = useState<{
+    type: 'success' | 'error' | 'info';
+    message: string;
+  } | null>(null);
+
   // Check if this proposal requires a passcode (from database)
   const requiredPasscode = proposal?.portal_password;
   const needsPasscode = !!requiredPasscode && !isUnlocked;
+
+  // Handle payment URL parameters
+  useEffect(() => {
+    const payment = searchParams.get('payment');
+    const milestoneId = searchParams.get('milestone');
+
+    if (payment === 'success' && milestoneId) {
+      setPaymentNotification({
+        type: 'success',
+        message: 'Payment successful! Thank you for your payment. Your milestone status will be updated shortly.',
+      });
+      setActiveStep('billing');
+      // Refresh proposal data to get updated payment status
+      fetchProposal();
+      // Clear the URL params after showing notification
+      window.history.replaceState({}, '', `/proposals/${token}`);
+    } else if (payment === 'cancelled') {
+      setPaymentNotification({
+        type: 'info',
+        message: 'Payment was cancelled. You can try again when ready.',
+      });
+      setActiveStep('billing');
+      window.history.replaceState({}, '', `/proposals/${token}`);
+    }
+  }, [searchParams, token]);
+
+  // Auto-dismiss payment notification after 8 seconds
+  useEffect(() => {
+    if (paymentNotification) {
+      const timer = setTimeout(() => {
+        setPaymentNotification(null);
+      }, 8000);
+      return () => clearTimeout(timer);
+    }
+  }, [paymentNotification]);
+
+  // Initiate payment for a milestone
+  const handlePayment = useCallback(async (milestoneId: string) => {
+    setPaymentLoading(milestoneId);
+    setPaymentNotification(null);
+
+    try {
+      const response = await fetch('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          milestone_id: milestoneId,
+          access_token: token,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+
+      if (data.checkout_url) {
+        // Redirect to Stripe checkout
+        window.location.href = data.checkout_url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (err) {
+      console.error('Payment initiation error:', err);
+      setPaymentNotification({
+        type: 'error',
+        message: err instanceof Error ? err.message : 'Failed to initiate payment. Please try again.',
+      });
+    } finally {
+      setPaymentLoading(null);
+    }
+  }, [token]);
 
   // All possible portal steps
   const allSteps = useMemo(() => [
@@ -817,6 +899,71 @@ export default function ProposalPortalPage({ params }: PageProps) {
                 </p>
               </div>
 
+              {/* Payment Notification */}
+              {paymentNotification && (
+                <div
+                  className={`relative rounded-2xl p-6 border backdrop-blur-sm ${
+                    paymentNotification.type === 'success'
+                      ? 'bg-green-500/10 border-green-500/30'
+                      : paymentNotification.type === 'error'
+                      ? 'bg-red-500/10 border-red-500/30'
+                      : 'bg-amber-500/10 border-amber-500/30'
+                  }`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        paymentNotification.type === 'success'
+                          ? 'bg-green-500/20'
+                          : paymentNotification.type === 'error'
+                          ? 'bg-red-500/20'
+                          : 'bg-amber-500/20'
+                      }`}
+                    >
+                      {paymentNotification.type === 'success' ? (
+                        <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : paymentNotification.type === 'error' ? (
+                        <svg className="w-5 h-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <p
+                        className={`font-medium ${
+                          paymentNotification.type === 'success'
+                            ? 'text-green-400'
+                            : paymentNotification.type === 'error'
+                            ? 'text-red-400'
+                            : 'text-amber-400'
+                        }`}
+                      >
+                        {paymentNotification.type === 'success'
+                          ? 'Payment Successful'
+                          : paymentNotification.type === 'error'
+                          ? 'Payment Error'
+                          : 'Payment Cancelled'}
+                      </p>
+                      <p className="text-text-secondary mt-1">{paymentNotification.message}</p>
+                    </div>
+                    <button
+                      onClick={() => setPaymentNotification(null)}
+                      className="text-text-muted hover:text-text-secondary transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* Milestones */}
               <div className="space-y-6">
                 {proposal.milestones.map((milestone, index) => (
@@ -876,18 +1023,29 @@ export default function ProposalPortalPage({ params }: PageProps) {
                           <p className="text-2xl font-bold text-text-primary mb-3">
                             {formatCurrency(milestone.amount)}
                           </p>
-                          {milestone.payment_status !== 'paid' && milestone.payment_link ? (
-                            <a
-                              href={milestone.payment_link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 px-5 py-2.5 bg-radiance-gold text-depth-base text-sm font-semibold rounded-full hover:bg-radiance-gold/90 transition-colors shadow-illumination"
+                          {milestone.payment_status !== 'paid' ? (
+                            <button
+                              onClick={() => handlePayment(milestone.id)}
+                              disabled={paymentLoading === milestone.id}
+                              className="inline-flex items-center gap-2 px-5 py-2.5 bg-radiance-gold text-depth-base text-sm font-semibold rounded-full hover:bg-radiance-gold/90 transition-colors shadow-illumination disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                              Pay Now
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                              </svg>
-                            </a>
+                              {paymentLoading === milestone.id ? (
+                                <>
+                                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                  </svg>
+                                  Processing...
+                                </>
+                              ) : (
+                                <>
+                                  Pay Now
+                                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                                  </svg>
+                                </>
+                              )}
+                            </button>
                           ) : (
                             <span
                               className={`inline-block px-4 py-2 text-xs rounded-full font-medium uppercase tracking-wider ${
