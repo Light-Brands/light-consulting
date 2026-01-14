@@ -256,7 +256,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Renewable Energy Services',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '10',
@@ -308,7 +308,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Video streaming integration', backend: 'Client management system' },
     origin: 'EU',
     project_type: 'Production Portfolio',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '12',
@@ -360,7 +360,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'AI/ML frameworks', backend: 'Dashboard development' },
     origin: 'US',
     project_type: 'Business AI Platform',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '14',
@@ -542,7 +542,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Event management system', backend: 'Social media integration' },
     origin: 'EU',
     project_type: 'Nightlife Venue',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '22',
@@ -568,7 +568,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Membership management', backend: 'Secure login areas' },
     origin: 'EU',
     project_type: 'Private Club Platform',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '23',
@@ -594,7 +594,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'CMS platform', backend: 'Donation integration' },
     origin: 'US',
     project_type: 'Non-Profit Website',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '24',
@@ -854,7 +854,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Industrial CMS', backend: 'B2B integration' },
     origin: 'CY',
     project_type: 'Manufacturing Website',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '34',
@@ -880,7 +880,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Healthcare systems', backend: 'Nutrition databases' },
     origin: 'EU',
     project_type: 'Healthcare Platform',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '35',
@@ -932,7 +932,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Tourism CMS', backend: 'Booking integration' },
     origin: 'EU',
     project_type: 'Sports Tourism Platform',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '37',
@@ -1062,7 +1062,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Wedding and Events Venue',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '42',
@@ -1088,7 +1088,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Solar Energy Provider',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '43',
@@ -1114,7 +1114,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Consulting Platform',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '44',
@@ -1166,7 +1166,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Event Management Web App',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '46',
@@ -1192,7 +1192,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Consulting Site',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '47',
@@ -1270,7 +1270,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Premium Fitness Website',
-    preview_enabled: true,
+    preview_enabled: false,
   },
   {
     id: '50',
