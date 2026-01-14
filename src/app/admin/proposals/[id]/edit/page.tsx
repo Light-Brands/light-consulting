@@ -318,6 +318,22 @@ export default function AdminEditProposalPage({ params }: PageProps) {
           body: JSON.stringify({ phases: phasesPayload }),
         });
 
+        // Batch update all milestones (replaces existing milestones with new set)
+        const milestonesPayload = milestones
+          .filter((m) => m.milestone_name)
+          .map((milestone, index) => ({
+            milestone_name: milestone.milestone_name,
+            description: milestone.description || null,
+            amount: parseFloat(milestone.amount) || 0,
+            due_date: milestone.due_date || null,
+            sort_order: index,
+          }));
+
+        await authFetch(`/api/proposals/${id}/milestones`, {
+          method: 'PUT',
+          body: JSON.stringify({ milestones: milestonesPayload }),
+        });
+
         router.push(`/admin/proposals/${id}`);
       } else {
         const result = await response.json();
