@@ -17,9 +17,11 @@ function AdminContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { isAuthenticated, loading, isConfigured } = useAuth();
 
+  const isLoginPage = pathname === '/admin/login';
+
   useEffect(() => {
     // Skip auth check for login page
-    if (pathname === '/admin/login') {
+    if (isLoginPage) {
       return;
     }
 
@@ -27,10 +29,10 @@ function AdminContent({ children }: { children: React.ReactNode }) {
     if (!loading && isConfigured && !isAuthenticated) {
       router.push('/admin/login');
     }
-  }, [isAuthenticated, loading, isConfigured, pathname, router]);
+  }, [isAuthenticated, loading, isConfigured, isLoginPage, router]);
 
-  // Show loading spinner while checking auth
-  if (loading) {
+  // Show loading spinner while checking auth (but not on login page)
+  if (loading && !isLoginPage) {
     return (
       <div className="flex min-h-screen bg-depth-base items-center justify-center">
         <div className="text-center">
@@ -41,14 +43,23 @@ function AdminContent({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // If auth is configured and user is not authenticated, show redirecting state
-  if (isConfigured && !isAuthenticated && pathname !== '/admin/login') {
+  // If auth is configured and user is not authenticated, show redirecting state (except login page)
+  if (isConfigured && !isAuthenticated && !isLoginPage) {
     return (
       <div className="flex min-h-screen bg-depth-base items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 border-2 border-radiance-gold border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-text-secondary">Redirecting to login...</p>
         </div>
+      </div>
+    );
+  }
+
+  // Login page - render without sidebar
+  if (isLoginPage) {
+    return (
+      <div className="min-h-screen bg-depth-base">
+        {children}
       </div>
     );
   }
