@@ -93,6 +93,20 @@ function NewProposalContent() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [customRequirements, setCustomRequirements] = useState('');
   const [showBusinessIntel, setShowBusinessIntel] = useState(true);
+  const [showAdvancedContext, setShowAdvancedContext] = useState(false);
+
+  // Enhanced context state for richer AI generation
+  const [enhancedContext, setEnhancedContext] = useState({
+    salesNotes: '',
+    clientGoals: [''],
+    clientChallenges: [''],
+    budgetRange: '',
+    timeline: '',
+    competitorContext: '',
+    previousEngagements: '',
+    stakeholders: [''],
+    successMetrics: [''],
+  });
 
   // Form state
   const [formData, setFormData] = useState({
@@ -191,6 +205,16 @@ function NewProposalContent() {
           websiteStory: lead.website_story || '',
           clientName: lead.name,
           clientCompany: lead.company || '',
+          // Enhanced context fields - filter out empty entries
+          salesNotes: enhancedContext.salesNotes || undefined,
+          clientGoals: enhancedContext.clientGoals.filter(g => g.trim()) || undefined,
+          clientChallenges: enhancedContext.clientChallenges.filter(c => c.trim()) || undefined,
+          budgetRange: enhancedContext.budgetRange || undefined,
+          timeline: enhancedContext.timeline || undefined,
+          competitorContext: enhancedContext.competitorContext || undefined,
+          previousEngagements: enhancedContext.previousEngagements || undefined,
+          stakeholders: enhancedContext.stakeholders.filter(s => s.trim()) || undefined,
+          successMetrics: enhancedContext.successMetrics.filter(m => m.trim()) || undefined,
         }),
       });
 
@@ -557,6 +581,242 @@ function NewProposalContent() {
                       placeholder="Any specific requirements or customizations..."
                     />
                   </div>
+
+                  {/* Advanced Context Toggle */}
+                  <div className="mb-4">
+                    <button
+                      type="button"
+                      onClick={() => setShowAdvancedContext(!showAdvancedContext)}
+                      className="flex items-center gap-2 text-sm text-radiance-gold hover:text-radiance-amber transition-colors"
+                    >
+                      <svg
+                        className={`w-4 h-4 transition-transform ${showAdvancedContext ? 'rotate-90' : ''}`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                      {showAdvancedContext ? 'Hide' : 'Add'} Detailed Context for Better AI Output
+                    </button>
+                    <p className="text-text-muted text-xs mt-1 ml-6">
+                      The more context you provide, the more tailored and compelling the proposal
+                    </p>
+                  </div>
+
+                  {/* Enhanced Context Fields */}
+                  {showAdvancedContext && (
+                    <div className="mb-4 p-4 bg-depth-elevated border border-depth-border rounded-lg space-y-4">
+                      <div className="text-xs text-radiance-gold/80 bg-radiance-gold/10 px-3 py-2 rounded-lg mb-3">
+                        💡 Fill in as much as you know from discovery calls. AI will use this to create a highly personalized proposal.
+                      </div>
+
+                      {/* Sales Notes */}
+                      <div>
+                        <Textarea
+                          label="Sales Notes"
+                          rows={3}
+                          value={enhancedContext.salesNotes}
+                          onChange={(e) => setEnhancedContext(prev => ({ ...prev, salesNotes: e.target.value }))}
+                          placeholder="Free-form notes from discovery calls, emails, meetings... What did you learn about their situation?"
+                        />
+                      </div>
+
+                      {/* Client Goals */}
+                      <div>
+                        <label className="block text-text-primary text-sm font-medium mb-2">
+                          Client&apos;s Goals (what they want to achieve)
+                        </label>
+                        {enhancedContext.clientGoals.map((goal, index) => (
+                          <div key={index} className="flex gap-2 mb-2">
+                            <Input
+                              value={goal}
+                              onChange={(e) => {
+                                const newGoals = [...enhancedContext.clientGoals];
+                                newGoals[index] = e.target.value;
+                                setEnhancedContext(prev => ({ ...prev, clientGoals: newGoals }));
+                              }}
+                              placeholder="e.g., Increase lead generation by 50%"
+                            />
+                            {enhancedContext.clientGoals.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newGoals = enhancedContext.clientGoals.filter((_, i) => i !== index);
+                                  setEnhancedContext(prev => ({ ...prev, clientGoals: newGoals }));
+                                }}
+                                className="px-3 text-red-400 hover:text-red-300"
+                              >
+                                ×
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => setEnhancedContext(prev => ({ ...prev, clientGoals: [...prev.clientGoals, ''] }))}
+                          className="text-radiance-gold hover:text-radiance-amber text-sm"
+                        >
+                          + Add Goal
+                        </button>
+                      </div>
+
+                      {/* Client Challenges */}
+                      <div>
+                        <label className="block text-text-primary text-sm font-medium mb-2">
+                          Challenges They Mentioned
+                        </label>
+                        {enhancedContext.clientChallenges.map((challenge, index) => (
+                          <div key={index} className="flex gap-2 mb-2">
+                            <Input
+                              value={challenge}
+                              onChange={(e) => {
+                                const newChallenges = [...enhancedContext.clientChallenges];
+                                newChallenges[index] = e.target.value;
+                                setEnhancedContext(prev => ({ ...prev, clientChallenges: newChallenges }));
+                              }}
+                              placeholder="e.g., Team is overwhelmed with manual data entry"
+                            />
+                            {enhancedContext.clientChallenges.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newChallenges = enhancedContext.clientChallenges.filter((_, i) => i !== index);
+                                  setEnhancedContext(prev => ({ ...prev, clientChallenges: newChallenges }));
+                                }}
+                                className="px-3 text-red-400 hover:text-red-300"
+                              >
+                                ×
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => setEnhancedContext(prev => ({ ...prev, clientChallenges: [...prev.clientChallenges, ''] }))}
+                          className="text-radiance-gold hover:text-radiance-amber text-sm"
+                        >
+                          + Add Challenge
+                        </button>
+                      </div>
+
+                      {/* Budget & Timeline */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <Input
+                          label="Budget Range (if known)"
+                          value={enhancedContext.budgetRange}
+                          onChange={(e) => setEnhancedContext(prev => ({ ...prev, budgetRange: e.target.value }))}
+                          placeholder="e.g., $20k-30k, flexible"
+                        />
+                        <Input
+                          label="Desired Timeline"
+                          value={enhancedContext.timeline}
+                          onChange={(e) => setEnhancedContext(prev => ({ ...prev, timeline: e.target.value }))}
+                          placeholder="e.g., Need to launch by Q2"
+                        />
+                      </div>
+
+                      {/* Competitive Context */}
+                      <div>
+                        <Textarea
+                          label="Competitive Landscape"
+                          rows={2}
+                          value={enhancedContext.competitorContext}
+                          onChange={(e) => setEnhancedContext(prev => ({ ...prev, competitorContext: e.target.value }))}
+                          placeholder="What are their competitors doing? Are they falling behind? Any urgency?"
+                        />
+                      </div>
+
+                      {/* Previous Engagements */}
+                      <div>
+                        <Textarea
+                          label="Previous Conversations / History"
+                          rows={2}
+                          value={enhancedContext.previousEngagements}
+                          onChange={(e) => setEnhancedContext(prev => ({ ...prev, previousEngagements: e.target.value }))}
+                          placeholder="Any past work, previous proposals, referral context..."
+                        />
+                      </div>
+
+                      {/* Stakeholders */}
+                      <div>
+                        <label className="block text-text-primary text-sm font-medium mb-2">
+                          Key Stakeholders
+                        </label>
+                        {enhancedContext.stakeholders.map((stakeholder, index) => (
+                          <div key={index} className="flex gap-2 mb-2">
+                            <Input
+                              value={stakeholder}
+                              onChange={(e) => {
+                                const newStakeholders = [...enhancedContext.stakeholders];
+                                newStakeholders[index] = e.target.value;
+                                setEnhancedContext(prev => ({ ...prev, stakeholders: newStakeholders }));
+                              }}
+                              placeholder="e.g., John (CEO, final decision), Sarah (CMO, champion)"
+                            />
+                            {enhancedContext.stakeholders.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newStakeholders = enhancedContext.stakeholders.filter((_, i) => i !== index);
+                                  setEnhancedContext(prev => ({ ...prev, stakeholders: newStakeholders }));
+                                }}
+                                className="px-3 text-red-400 hover:text-red-300"
+                              >
+                                ×
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => setEnhancedContext(prev => ({ ...prev, stakeholders: [...prev.stakeholders, ''] }))}
+                          className="text-radiance-gold hover:text-radiance-amber text-sm"
+                        >
+                          + Add Stakeholder
+                        </button>
+                      </div>
+
+                      {/* Success Metrics */}
+                      <div>
+                        <label className="block text-text-primary text-sm font-medium mb-2">
+                          How They&apos;ll Measure Success
+                        </label>
+                        {enhancedContext.successMetrics.map((metric, index) => (
+                          <div key={index} className="flex gap-2 mb-2">
+                            <Input
+                              value={metric}
+                              onChange={(e) => {
+                                const newMetrics = [...enhancedContext.successMetrics];
+                                newMetrics[index] = e.target.value;
+                                setEnhancedContext(prev => ({ ...prev, successMetrics: newMetrics }));
+                              }}
+                              placeholder="e.g., Time saved per week, cost reduction, lead quality"
+                            />
+                            {enhancedContext.successMetrics.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newMetrics = enhancedContext.successMetrics.filter((_, i) => i !== index);
+                                  setEnhancedContext(prev => ({ ...prev, successMetrics: newMetrics }));
+                                }}
+                                className="px-3 text-red-400 hover:text-red-300"
+                              >
+                                ×
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => setEnhancedContext(prev => ({ ...prev, successMetrics: [...prev.successMetrics, ''] }))}
+                          className="text-radiance-gold hover:text-radiance-amber text-sm"
+                        >
+                          + Add Metric
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   <Button
                     onClick={handleGenerateWithAI}

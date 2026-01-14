@@ -80,6 +80,16 @@ interface GenerateProposalRequest {
   websiteStory?: string;
   clientName?: string;
   clientCompany?: string;
+  // Enhanced context fields for richer AI generation
+  salesNotes?: string;           // Free-form notes from sales team
+  clientGoals?: string[];        // Specific goals the client mentioned
+  clientChallenges?: string[];   // Specific challenges they're facing
+  budgetRange?: string;          // Budget expectations if known
+  timeline?: string;             // Desired timeline if mentioned
+  competitorContext?: string;    // What competitors are doing
+  previousEngagements?: string;  // Any past work or conversations
+  stakeholders?: string[];       // Key decision makers
+  successMetrics?: string[];     // How client will measure success
 }
 
 // Default business intelligence when none is available
@@ -228,8 +238,20 @@ function calculatePricing(
   return Math.round(baseTotal * multiplier);
 }
 
+interface EnhancedContext {
+  salesNotes?: string;
+  clientGoals?: string[];
+  clientChallenges?: string[];
+  budgetRange?: string;
+  timeline?: string;
+  competitorContext?: string;
+  previousEngagements?: string;
+  stakeholders?: string[];
+  successMetrics?: string[];
+}
+
 /**
- * Generate proposal content using AI
+ * Generate proposal content using AI with deep thinking
  */
 async function generateProposalWithAI(
   bi: BusinessIntelligence,
@@ -237,9 +259,11 @@ async function generateProposalWithAI(
   customRequirements: string | undefined,
   readinessScore: number,
   websiteStory: string | undefined,
-  calculatedTotal: number
+  calculatedTotal: number,
+  enhancedContext?: EnhancedContext
 ): Promise<GeneratedProposal> {
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  // Use gemini-1.5-pro for better reasoning on proposals
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
 
   // Build service info string
   const serviceInfo = selectedServices
@@ -253,9 +277,70 @@ async function generateProposalWithAI(
     .filter(Boolean)
     .join('\n');
 
-  const prompt = `You are an expert business consultant creating a professional proposal for AI transformation services.
+  // Build enhanced context section
+  const contextSections: string[] = [];
 
-CLIENT BUSINESS INTELLIGENCE:
+  if (enhancedContext?.salesNotes) {
+    contextSections.push(`SALES TEAM NOTES (IMPORTANT - use these insights):\n${enhancedContext.salesNotes}`);
+  }
+
+  if (enhancedContext?.clientGoals?.length) {
+    contextSections.push(`CLIENT'S STATED GOALS:\n${enhancedContext.clientGoals.map(g => `- ${g}`).join('\n')}`);
+  }
+
+  if (enhancedContext?.clientChallenges?.length) {
+    contextSections.push(`SPECIFIC CHALLENGES THEY MENTIONED:\n${enhancedContext.clientChallenges.map(c => `- ${c}`).join('\n')}`);
+  }
+
+  if (enhancedContext?.competitorContext) {
+    contextSections.push(`COMPETITIVE LANDSCAPE:\n${enhancedContext.competitorContext}`);
+  }
+
+  if (enhancedContext?.previousEngagements) {
+    contextSections.push(`PREVIOUS CONVERSATIONS/ENGAGEMENTS:\n${enhancedContext.previousEngagements}`);
+  }
+
+  if (enhancedContext?.stakeholders?.length) {
+    contextSections.push(`KEY STAKEHOLDERS:\n${enhancedContext.stakeholders.map(s => `- ${s}`).join('\n')}`);
+  }
+
+  if (enhancedContext?.successMetrics?.length) {
+    contextSections.push(`HOW THEY'LL MEASURE SUCCESS:\n${enhancedContext.successMetrics.map(m => `- ${m}`).join('\n')}`);
+  }
+
+  if (enhancedContext?.budgetRange) {
+    contextSections.push(`BUDGET EXPECTATIONS: ${enhancedContext.budgetRange}`);
+  }
+
+  if (enhancedContext?.timeline) {
+    contextSections.push(`DESIRED TIMELINE: ${enhancedContext.timeline}`);
+  }
+
+  const enhancedContextBlock = contextSections.length > 0
+    ? `\n═══════════════════════════════════════════════════════════
+ADDITIONAL CONTEXT FROM SALES TEAM
+(Pay close attention - this contains critical client-specific insights)
+═══════════════════════════════════════════════════════════
+
+${contextSections.join('\n\n')}
+
+═══════════════════════════════════════════════════════════\n`
+    : '';
+
+  const prompt = `You are an elite business strategist and AI transformation consultant at Light Brand Consulting. Your proposals are known for being exceptionally thoughtful, tailored, and compelling - they win deals.
+
+BEFORE generating the proposal, THINK DEEPLY about:
+1. What is this business REALLY trying to achieve? What's their deeper motivation?
+2. What specific problems will hurt them most if left unsolved?
+3. How can our services create TRANSFORMATIONAL value, not just incremental improvement?
+4. What unique angle can we take that competitors wouldn't think of?
+5. How do we structure phases so each builds momentum and demonstrates value?
+
+═══════════════════════════════════════════════════════════
+CLIENT BUSINESS INTELLIGENCE
+═══════════════════════════════════════════════════════════
+
+COMPANY PROFILE:
 - Industry: ${bi.industry}
 - Business Model: ${bi.business_model}
 - Target Audience: ${bi.target_audience.primary}
@@ -264,63 +349,95 @@ CLIENT BUSINESS INTELLIGENCE:
 - Value Proposition: ${bi.value_proposition.join(', ')}
 - Competitive Position: ${bi.competitive_positioning}
 
-DIGITAL PRESENCE:
+DIGITAL MATURITY:
 - Content Quality: ${bi.digital_presence.content_quality}
 - Site Structure: ${bi.digital_presence.site_structure}
 - Marketing Stack: ${bi.digital_presence.marketing_stack.join(', ') || 'Limited'}
 
-TECHNICAL ASSESSMENT:
+TECHNICAL LANDSCAPE:
 - Performance: ${bi.technical_assessment.performance}
 - Security: ${bi.technical_assessment.security}
 - Current Integrations: ${bi.technical_assessment.integrations.join(', ') || 'Limited'}
 - Architecture: ${bi.technical_assessment.backend_architecture}
 
-AI READINESS:
-- Score: ${readinessScore}/100
-- Current AI Usage: ${bi.ai_readiness.current_ai_usage.join(', ') || 'None'}
+AI READINESS ASSESSMENT:
+- Readiness Score: ${readinessScore}/100
+- Current AI Usage: ${bi.ai_readiness.current_ai_usage.join(', ') || 'None detected'}
 - Automation Level: ${bi.ai_readiness.automation_level}
 - Integration Readiness: ${bi.ai_readiness.integration_readiness}
 
-PAIN POINTS & OPPORTUNITIES:
+PAIN POINTS & OPPORTUNITIES IDENTIFIED:
 - Pain Points: ${bi.operations_insights.pain_points.join(', ')}
 - Efficiency Opportunities: ${bi.operations_insights.efficiency_opportunities.join(', ')}
 - Customer Intelligence Gaps: ${bi.ai_readiness.customer_intelligence_gaps.join(', ')}
+${enhancedContextBlock}
+═══════════════════════════════════════════════════════════
+SERVICES TO INCLUDE
+═══════════════════════════════════════════════════════════
 
-SELECTED SERVICES:
 ${serviceInfo}
 
-${customRequirements ? `CUSTOM REQUIREMENTS: ${customRequirements}` : ''}
+${customRequirements ? `\nCUSTOM REQUIREMENTS:\n${customRequirements}` : ''}
 
-${websiteStory ? `BUSINESS CONTEXT: ${websiteStory}` : ''}
+${websiteStory ? `\nBUSINESS NARRATIVE:\n${websiteStory}` : ''}
 
-TOTAL INVESTMENT: $${calculatedTotal.toLocaleString()}
+═══════════════════════════════════════════════════════════
+INVESTMENT & CONSTRAINTS
+═══════════════════════════════════════════════════════════
 
-Generate a comprehensive, personalized proposal as JSON with this exact structure:
+Total Investment: $${calculatedTotal.toLocaleString()}
+
+═══════════════════════════════════════════════════════════
+YOUR MISSION
+═══════════════════════════════════════════════════════════
+
+Create a COMPELLING, HIGHLY PERSONALIZED proposal that:
+1. Speaks directly to their specific situation and pain points
+2. Shows you deeply understand their business and industry
+3. Presents a clear, logical progression of phases that builds value
+4. Includes creative, thoughtful deliverables (not generic templates)
+5. Makes the ROI and outcomes feel tangible and achievable
+6. Would make the client think "they really GET us"
+
+Generate a comprehensive proposal as JSON with this exact structure:
 {
-  "project_name": "AI Transformation for [Company Industry/Type]",
-  "project_overview": "2-3 paragraph executive overview of the project, its goals, and expected impact",
-  "project_scope": "Detailed scope of work (2-3 paragraphs) covering what will be delivered",
+  "project_name": "Creative, compelling project name that captures the transformation",
+  "project_overview": "2-3 paragraphs: Paint a picture of the transformation journey. Start with where they are, show the vision of where they'll be, explain how we'll get them there. Be specific to THEIR business.",
+  "project_scope": "2-3 paragraphs: Detail the scope with specificity. Reference their actual tech stack, their actual pain points, their actual goals. Make it clear we understand their situation.",
   "total_timeline": "X-Y months",
-  "executive_summary": "Compelling 2 paragraph executive summary highlighting the opportunity and our approach",
-  "opportunity_analysis": "2-3 paragraph analysis of why AI transformation is critical for this specific business",
-  "expected_outcomes": ["Specific outcome 1", "Specific outcome 2", "Specific outcome 3", "Specific outcome 4"],
+  "executive_summary": "2 compelling paragraphs for executives: Lead with the business opportunity (revenue, efficiency, competitive advantage). Show you understand their industry dynamics. End with confidence in outcomes.",
+  "opportunity_analysis": "2-3 paragraphs: Why is THIS the right time for THEM? Reference industry trends, their competitive position, cost of inaction. Make the case for urgency without being pushy.",
+  "expected_outcomes": [
+    "Specific, measurable outcome tied to their business metrics",
+    "Another outcome that addresses a pain point they mentioned",
+    "Outcome that creates competitive advantage",
+    "Outcome focused on ROI or efficiency gains",
+    "Outcome that enables future growth"
+  ],
   "phases": [
     {
       "phase_number": 1,
-      "phase_name": "Phase name",
-      "description": "Detailed phase description",
+      "phase_name": "Creative phase name that describes the transformation step",
+      "description": "Rich description of what happens in this phase, why it matters, and how it sets up the next phase. Reference their specific situation.",
       "timeline": "X weeks",
       "deliverables": [
-        {"id": "del-1", "name": "Deliverable name", "description": "Brief description"}
+        {
+          "id": "del-1-1",
+          "name": "Specific, tangible deliverable name",
+          "description": "What this deliverable IS and WHY it matters for their business specifically"
+        }
       ],
-      "objectives": ["Objective 1", "Objective 2"],
+      "objectives": [
+        "Clear objective tied to their goals",
+        "Another objective that builds toward transformation"
+      ],
       "amount": 5000
     }
   ],
   "milestones": [
     {
-      "milestone_name": "Milestone name",
-      "description": "Milestone description",
+      "milestone_name": "Clear milestone tied to a tangible outcome",
+      "description": "What they'll have achieved and be able to demonstrate at this point",
       "amount": 2500,
       "phase_number": 1
     }
@@ -328,17 +445,35 @@ Generate a comprehensive, personalized proposal as JSON with this exact structur
   "total_amount": ${calculatedTotal}
 }
 
-IMPORTANT GUIDELINES:
-1. Create 3-5 phases that logically build on each other
-2. Each phase should have 2-4 deliverables
-3. Milestones should typically be 25-50% of phase amounts
-4. Total of all milestone amounts should equal total_amount
-5. Be specific to their industry and business model
-6. Reference their actual pain points and opportunities
-7. Make outcomes measurable where possible
-8. Timeline should be realistic for the scope
+═══════════════════════════════════════════════════════════
+QUALITY STANDARDS (Non-negotiable)
+═══════════════════════════════════════════════════════════
 
-Return ONLY valid JSON, no markdown or explanation.`;
+STRUCTURE:
+- Create 3-5 phases that tell a logical transformation STORY
+- Each phase should feel like a natural chapter that builds on the last
+- Phases should create "wins" along the way to maintain momentum
+- Each phase needs 2-4 specific, tangible deliverables (not generic items)
+- Each deliverable description should explain WHY it matters for THIS client
+
+CONTENT QUALITY:
+- NEVER use generic language like "optimize your business" or "improve efficiency"
+- Always reference their SPECIFIC industry, business model, or pain points
+- Use numbers and metrics where possible (e.g., "reduce processing time by 40%")
+- Write as if you've spent weeks studying their business
+- The client should feel like this proposal was written ONLY for them
+
+FINANCIAL:
+- Milestones should be tied to DEMONSTRABLE value delivery
+- Total of all milestone amounts MUST equal total_amount (${calculatedTotal})
+- Distribute payments fairly across the engagement timeline
+- First milestone should not exceed 30% of total
+
+OUTPUT RULES:
+- Write in clean, professional business language
+- NO HTML, code, URLs, or technical artifacts in ANY text field
+- All text should read as polished, executive-ready prose
+- Return ONLY valid JSON, no markdown code blocks or explanations`;
 
   try {
     const result = await model.generateContent(prompt);
@@ -442,7 +577,25 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateP
     }
 
     const body = await request.json() as GenerateProposalRequest;
-    const { businessIntelligence: rawBI, selectedServices, customRequirements, readinessScore, websiteStory, clientName, clientCompany } = body;
+    const {
+      businessIntelligence: rawBI,
+      selectedServices,
+      customRequirements,
+      readinessScore,
+      websiteStory,
+      clientName,
+      clientCompany,
+      // Enhanced context fields
+      salesNotes,
+      clientGoals,
+      clientChallenges,
+      budgetRange,
+      timeline,
+      competitorContext,
+      previousEngagements,
+      stakeholders,
+      successMetrics,
+    } = body;
 
     // Validate required fields
     if (!selectedServices || selectedServices.length === 0) {
@@ -458,14 +611,28 @@ export async function POST(request: NextRequest): Promise<NextResponse<GenerateP
     // Calculate pricing
     const calculatedTotal = calculatePricing(businessIntelligence, selectedServices);
 
-    // Generate proposal with AI
+    // Build enhanced context object
+    const enhancedContext: EnhancedContext = {
+      salesNotes,
+      clientGoals,
+      clientChallenges,
+      budgetRange,
+      timeline,
+      competitorContext,
+      previousEngagements,
+      stakeholders,
+      successMetrics,
+    };
+
+    // Generate proposal with AI (with enhanced context)
     const proposal = await generateProposalWithAI(
       businessIntelligence,
       selectedServices,
       customRequirements,
       readinessScore,
       websiteStory,
-      calculatedTotal
+      calculatedTotal,
+      enhancedContext
     );
 
     return NextResponse.json({
