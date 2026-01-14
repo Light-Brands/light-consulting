@@ -345,14 +345,11 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                                   {updatingPhaseId === phase.id ? 'Saving...' : 'Visible'}
                                 </span>
                               </label>
-                              <div className="text-right">
-                                <p className="text-text-primary font-bold">
-                                  {formatCurrency(phase.amount)}
-                                </p>
-                                {phase.timeline && (
+                              {phase.timeline && (
+                                <div className="text-right">
                                   <p className="text-text-muted text-sm">{phase.timeline}</p>
-                                )}
-                              </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                           {phase.description && (

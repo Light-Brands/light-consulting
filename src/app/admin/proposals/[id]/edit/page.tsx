@@ -76,10 +76,18 @@ export default function AdminEditProposalPage({ params }: PageProps) {
     },
   ]);
 
+  // Initialize with default 50/50 payment schedule
   const [milestones, setMilestones] = useState<MilestoneFormData[]>([
     {
-      milestone_name: '',
-      description: '',
+      milestone_name: 'Upfront Payment',
+      description: '50% deposit to begin work',
+      amount: '',
+      due_date: '',
+      phase_index: 0,
+    },
+    {
+      milestone_name: 'Final Payment',
+      description: '50% upon project completion and launch',
       amount: '',
       due_date: '',
       phase_index: 0,
@@ -87,15 +95,26 @@ export default function AdminEditProposalPage({ params }: PageProps) {
   ]);
 
   const [agreementText, setAgreementText] = useState('');
+  const [proposalFinalAmount, setProposalFinalAmount] = useState<number | null>(null);
 
   // Fetch existing proposal data
   const fetchProposal = useCallback(async () => {
     try {
+      console.log('🔄 Fetching proposal data...');
       const response = await authFetch(`/api/proposals/${id}`);
       const data = await response.json();
 
       if (data.data) {
         const proposal: ProposalWithDetails = data.data;
+        console.log('✅ Proposal data received:', {
+          id: proposal.id,
+          phases_count: proposal.phases?.length || 0,
+          milestones_count: proposal.milestones?.length || 0,
+          final_amount: proposal.final_amount,
+        });
+        
+        // Store the proposal's final_amount for comparison
+        setProposalFinalAmount(proposal.final_amount);
 
         // Populate form data
         setFormData({
@@ -114,23 +133,38 @@ export default function AdminEditProposalPage({ params }: PageProps) {
         });
 
         // Populate phases
+        console.log('📦 Loading phases from API:', proposal.phases);
         if (proposal.phases && proposal.phases.length > 0) {
-          setPhases(
-            proposal.phases.map((phase) => ({
-              id: phase.id,
-              phase_name: phase.phase_name || '',
-              description: phase.description || '',
-              timeline: phase.timeline || '',
-              amount: phase.amount?.toString() || '',
-              deliverables: phase.deliverables || [],
-              objectives: phase.objectives || [],
-              goals: phase.goals || [],
-              visible_in_portal: phase.visible_in_portal ?? true,
-            }))
-          );
+          const loadedPhases = proposal.phases.map((phase) => ({
+            id: phase.id,
+            phase_name: phase.phase_name || '',
+            description: phase.description || '',
+            timeline: phase.timeline || '',
+            amount: phase.amount?.toString() || '',
+            deliverables: phase.deliverables || [],
+            objectives: phase.objectives || [],
+            goals: phase.goals || [],
+            visible_in_portal: phase.visible_in_portal ?? true,
+          }));
+          console.log('📦 Setting phases in form:', loadedPhases);
+          setPhases(loadedPhases);
+        } else {
+          console.log('⚠️ No phases in proposal - resetting to single empty phase');
+          // Reset to a single empty phase if there are none saved
+          setPhases([{
+            phase_name: '',
+            description: '',
+            timeline: '',
+            amount: '',
+            deliverables: [],
+            objectives: [],
+            goals: [],
+            visible_in_portal: true,
+          }]);
         }
 
         // Populate milestones - map phase_id back to phase_index
+        console.log('🎯 Loading milestones from API:', proposal.milestones);
         if (proposal.milestones && proposal.milestones.length > 0) {
           // Build phase_id to index map
           const phaseIdToIndex: Record<string, number> = {};
@@ -139,17 +173,55 @@ export default function AdminEditProposalPage({ params }: PageProps) {
               phaseIdToIndex[phase.id] = index;
             });
           }
+          console.log('🗺️ Phase ID to Index mapping:', phaseIdToIndex);
 
-          setMilestones(
-            proposal.milestones.map((milestone) => ({
+          const loadedMilestones = proposal.milestones.map((milestone) => {
+            const phase_index = milestone.phase_id ? (phaseIdToIndex[milestone.phase_id] ?? 0) : 0;
+            console.log(`  Milestone "${milestone.milestone_name}": phase_id=${milestone.phase_id} → phase_index=${phase_index}`);
+            return {
               id: milestone.id,
               milestone_name: milestone.milestone_name || '',
               description: milestone.description || '',
               amount: milestone.amount?.toString() || '',
               due_date: milestone.due_date || '',
-              phase_index: milestone.phase_id ? (phaseIdToIndex[milestone.phase_id] ?? 0) : 0,
-            }))
-          );
+              phase_index,
+            };
+          });
+          
+          // If milestones exist but have no amounts, initialize from proposal final_amount
+          const totalMilestoneAmount = loadedMilestones.reduce((sum, m) => sum + (parseFloat(m.amount) || 0), 0);
+          if (totalMilestoneAmount === 0 && proposal.final_amount > 0) {
+            console.log('⚠️ Milestones have no amounts, initializing from proposal final_amount:', proposal.final_amount);
+            const half = (proposal.final_amount / loadedMilestones.length).toFixed(2);
+            loadedMilestones.forEach((m) => {
+              m.amount = half;
+            });
+          }
+          
+          console.log('🎯 Setting milestones in form:', loadedMilestones);
+          setMilestones(loadedMilestones);
+        } else {
+          console.log('⚠️ No milestones in proposal - initializing with default 50/50 split');
+          // Initialize with default 50/50 split based on proposal final_amount
+          const defaultAmount = proposal.final_amount > 0 
+            ? (proposal.final_amount / 2).toFixed(2)
+            : '';
+          setMilestones([
+            {
+              milestone_name: 'Upfront Payment',
+              description: '50% deposit to begin work',
+              amount: defaultAmount,
+              due_date: '',
+              phase_index: 0,
+            },
+            {
+              milestone_name: 'Final Payment',
+              description: '50% upon project completion and launch',
+              amount: defaultAmount,
+              due_date: '',
+              phase_index: 0,
+            },
+          ]);
         }
 
         // Populate agreement
@@ -169,7 +241,8 @@ export default function AdminEditProposalPage({ params }: PageProps) {
   }, [fetchProposal]);
 
   const calculateTotalAmount = () => {
-    return phases.reduce((sum, phase) => sum + (parseFloat(phase.amount) || 0), 0);
+    // Calculate total from payment milestones, not phases
+    return milestones.reduce((sum, milestone) => sum + (parseFloat(milestone.amount) || 0), 0);
   };
 
   const calculateFinalAmount = () => {
@@ -177,6 +250,9 @@ export default function AdminEditProposalPage({ params }: PageProps) {
     const discount = parseFloat(formData.discount_percentage) || 0;
     return total - (total * discount) / 100;
   };
+
+  // Auto-update milestone amounts when they change (50/50 split by default)
+  // This effect is removed since we want manual control over amounts now
 
   const updatePhase = (index: number, field: keyof PhaseFormData, value: PhaseFormData[keyof PhaseFormData]) => {
     const newPhases = [...phases];
@@ -299,57 +375,104 @@ export default function AdminEditProposalPage({ params }: PageProps) {
         portal_password: formData.portal_password || null,
       };
 
+      console.log('Saving proposal:', proposalData);
       const response = await authFetch(`/api/proposals/${id}`, {
         method: 'PUT',
         body: JSON.stringify(proposalData),
       });
 
-      if (response.ok) {
-        // Batch update all phases (replaces existing phases with new set)
-        const phasesPayload = phases
-          .filter((p) => p.phase_name) // Only include phases with names
-          .map((phase, index) => ({
-            phase_number: index + 1,
-            phase_name: phase.phase_name,
-            description: phase.description || null,
-            timeline: phase.timeline || null,
-            deliverables: phase.deliverables.filter((d) => d.name),
-            objectives: phase.objectives.filter(Boolean),
-            goals: phase.goals.filter(Boolean),
-            amount: parseFloat(phase.amount) || 0,
-            sort_order: index,
-            visible_in_portal: phase.visible_in_portal,
-          }));
-
-        await authFetch(`/api/proposals/${id}/phases`, {
-          method: 'PUT',
-          body: JSON.stringify({ phases: phasesPayload }),
-        });
-
-        // Batch update all milestones (replaces existing milestones with new set)
-        const milestonesPayload = milestones
-          .filter((m) => m.milestone_name)
-          .map((milestone, index) => ({
-            milestone_name: milestone.milestone_name,
-            description: milestone.description || null,
-            amount: parseFloat(milestone.amount) || 0,
-            due_date: milestone.due_date || null,
-            sort_order: index,
-            phase_index: milestone.phase_index,
-          }));
-
-        await authFetch(`/api/proposals/${id}/milestones`, {
-          method: 'PUT',
-          body: JSON.stringify({ milestones: milestonesPayload }),
-        });
-
-        router.push(`/admin/proposals/${id}`);
-      } else {
+      if (!response.ok) {
         const result = await response.json();
         console.error('Error updating proposal:', result.error);
+        alert('Failed to update proposal. Please try again.');
+        return;
       }
+
+      // Batch update all phases (replaces existing phases with new set)
+      const phasesPayload = phases
+        .filter((p) => p.phase_name) // Only include phases with names
+        .map((phase, index) => ({
+          phase_number: index + 1,
+          phase_name: phase.phase_name,
+          description: phase.description || null,
+          timeline: phase.timeline || null,
+          deliverables: phase.deliverables.filter((d) => d.name),
+          objectives: phase.objectives.filter(Boolean),
+          goals: phase.goals.filter(Boolean),
+          amount: 0, // Phases no longer have pricing - set to 0
+          sort_order: index,
+          visible_in_portal: phase.visible_in_portal,
+        }));
+
+      console.log('Phases before filter:', phases);
+      console.log('Saving phases:', phasesPayload);
+      
+      if (phasesPayload.length === 0) {
+        console.warn('No phases to save! This might not be intentional.');
+        const confirmed = confirm('Warning: You are about to save this proposal with no phases. This will delete all existing phases. Continue?');
+        if (!confirmed) {
+          setIsSaving(false);
+          return;
+        }
+      }
+      const phasesResponse = await authFetch(`/api/proposals/${id}/phases`, {
+        method: 'PUT',
+        body: JSON.stringify({ phases: phasesPayload }),
+      });
+
+      if (!phasesResponse.ok) {
+        const result = await phasesResponse.json();
+        console.error('Error updating phases:', result.error);
+        alert('Failed to update phases. Please try again.');
+        return;
+      }
+
+      const phasesResult = await phasesResponse.json();
+      console.log('Phases saved successfully:', phasesResult);
+
+      // Batch update all milestones (replaces existing milestones with new set)
+      const milestonesPayload = milestones
+        .filter((m) => m.milestone_name)
+        .map((milestone, index) => ({
+          milestone_name: milestone.milestone_name,
+          description: milestone.description || null,
+          amount: parseFloat(milestone.amount) || 0,
+          due_date: milestone.due_date || null,
+          sort_order: index,
+          phase_index: milestone.phase_index,
+        }));
+
+      console.log('Milestones before filter:', milestones);
+      console.log('Saving milestones:', milestonesPayload);
+      
+      if (milestonesPayload.length === 0) {
+        console.warn('No milestones to save - all will be deleted');
+      }
+      const milestonesResponse = await authFetch(`/api/proposals/${id}/milestones`, {
+        method: 'PUT',
+        body: JSON.stringify({ milestones: milestonesPayload }),
+      });
+
+      if (!milestonesResponse.ok) {
+        const result = await milestonesResponse.json();
+        console.error('Error updating milestones:', result.error);
+        alert('Failed to update milestones. Please try again.');
+        return;
+      }
+
+      const milestonesResult = await milestonesResponse.json();
+      console.log('Milestones saved successfully:', milestonesResult);
+
+      console.log('✅ Proposal saved successfully!');
+      console.log(`  - Phases: ${phasesPayload.length}`);
+      console.log(`  - Milestones: ${milestonesPayload.length}`);
+      console.log(`  - Total Amount: $${calculateTotalAmount()}`);
+      console.log(`  - Final Amount: $${calculateFinalAmount()}`);
+
+      router.push(`/admin/proposals/${id}`);
     } catch (error) {
       console.error('Error saving proposal:', error);
+      alert('An error occurred while saving. Please check the console for details.');
     } finally {
       setIsSaving(false);
     }
@@ -397,7 +520,7 @@ export default function AdminEditProposalPage({ params }: PageProps) {
           <div className="p-4 bg-depth-surface border border-depth-border rounded-xl flex flex-wrap items-center justify-between gap-4 mb-6">
             <div className="flex flex-wrap gap-6">
               <div>
-                <span className="text-text-muted text-sm">Total Amount</span>
+                <span className="text-text-muted text-sm">Total (from Payment Schedule)</span>
                 <p className="text-text-primary font-bold text-xl">{formatCurrency(calculateTotalAmount())}</p>
               </div>
               {parseFloat(formData.discount_percentage) > 0 && (
@@ -411,6 +534,11 @@ export default function AdminEditProposalPage({ params }: PageProps) {
               <div>
                 <span className="text-text-muted text-sm">Final Amount</span>
                 <p className="text-radiance-gold font-bold text-xl">{formatCurrency(calculateFinalAmount())}</p>
+                {proposalFinalAmount !== null && Math.abs(calculateFinalAmount() - proposalFinalAmount) > 0.01 && (
+                  <p className="text-amber-400 text-xs mt-1">
+                    Currently saved: {formatCurrency(proposalFinalAmount)} - Save to update
+                  </p>
+                )}
               </div>
             </div>
             <div className="flex gap-3">
@@ -428,7 +556,7 @@ export default function AdminEditProposalPage({ params }: PageProps) {
             {[
               { key: 'details', label: 'Details' },
               { key: 'phases', label: 'Phases' },
-              { key: 'milestones', label: 'Milestones' },
+              { key: 'milestones', label: 'Payment Schedule' },
               { key: 'agreement', label: 'Agreement' },
             ].map((tab) => (
               <button
@@ -622,10 +750,11 @@ export default function AdminEditProposalPage({ params }: PageProps) {
                       </div>
 
                       <div className="space-y-4">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <Input
                             label="Phase Name"
                             required
+                            placeholder="e.g., Discovery & Planning"
                             value={phase.phase_name}
                             onChange={(e) => updatePhase(phaseIndex, 'phase_name', e.target.value)}
                           />
@@ -635,17 +764,11 @@ export default function AdminEditProposalPage({ params }: PageProps) {
                             value={phase.timeline}
                             onChange={(e) => updatePhase(phaseIndex, 'timeline', e.target.value)}
                           />
-                          <Input
-                            label="Amount"
-                            type="number"
-                            min="0"
-                            value={phase.amount}
-                            onChange={(e) => updatePhase(phaseIndex, 'amount', e.target.value)}
-                          />
                         </div>
 
                         <Textarea
                           label="Description"
+                          placeholder="What will be accomplished in this phase?"
                           rows={3}
                           value={phase.description}
                           onChange={(e) => updatePhase(phaseIndex, 'description', e.target.value)}
@@ -717,11 +840,26 @@ export default function AdminEditProposalPage({ params }: PageProps) {
               {/* Milestones Tab */}
               {activeTab === 'milestones' && (
                 <div className="space-y-6">
+                  <div className="bg-radiance-gold/5 border border-radiance-gold/20 rounded-xl p-4 mb-6">
+                    <div className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-radiance-gold mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div>
+                        <h4 className="text-text-primary font-medium mb-1">Payment Schedule</h4>
+                        <p className="text-text-secondary text-sm">
+                          Define when clients pay throughout the project. Default is 50% upfront and 50% on completion. 
+                          Add more payment milestones if needed (e.g., quarterly payments, per-phase payments).
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
                   {milestones.map((milestone, index) => (
                     <div key={milestone.id || index} className="p-6 bg-depth-elevated border border-depth-border rounded-xl">
                       <div className="flex items-center justify-between mb-4">
-                        <h4 className="text-lg font-semibold text-text-primary">Milestone {index + 1}</h4>
-                        {milestones.length > 1 && (
+                        <h4 className="text-lg font-semibold text-text-primary">Payment #{index + 1}</h4>
+                        {milestones.length > 2 && (
                           <button onClick={() => removeMilestone(index)} className="text-red-400 hover:text-red-300 text-sm">
                             Remove
                           </button>
@@ -730,7 +868,8 @@ export default function AdminEditProposalPage({ params }: PageProps) {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Input
-                          label="Milestone Name"
+                          label="Payment Name"
+                          placeholder="e.g., Upfront Payment, Final Payment"
                           required
                           value={milestone.milestone_name}
                           onChange={(e) => updateMilestone(index, 'milestone_name', e.target.value)}
@@ -739,17 +878,19 @@ export default function AdminEditProposalPage({ params }: PageProps) {
                           label="Amount"
                           type="number"
                           min="0"
+                          step="0.01"
+                          placeholder="0.00"
                           value={milestone.amount}
                           onChange={(e) => updateMilestone(index, 'amount', e.target.value)}
                         />
                         <Input
-                          label="Due Date"
+                          label="Due Date (Optional)"
                           type="date"
                           value={milestone.due_date}
                           onChange={(e) => updateMilestone(index, 'due_date', e.target.value)}
                         />
                         <div>
-                          <label className="block text-text-primary text-sm font-medium mb-2">Related Phase</label>
+                          <label className="block text-text-primary text-sm font-medium mb-2">Related Phase (Optional)</label>
                           <select
                             value={milestone.phase_index}
                             onChange={(e) => updateMilestone(index, 'phase_index', parseInt(e.target.value))}
@@ -764,7 +905,8 @@ export default function AdminEditProposalPage({ params }: PageProps) {
                         </div>
                         <div className="md:col-span-2">
                           <Textarea
-                            label="Description"
+                            label="Description (Optional)"
+                            placeholder="e.g., 50% deposit to begin work"
                             rows={2}
                             value={milestone.description}
                             onChange={(e) => updateMilestone(index, 'description', e.target.value)}
@@ -775,7 +917,7 @@ export default function AdminEditProposalPage({ params }: PageProps) {
                   ))}
 
                   <Button variant="outline" onClick={addMilestone}>
-                    + Add Milestone
+                    + Add Payment Milestone
                   </Button>
                 </div>
               )}

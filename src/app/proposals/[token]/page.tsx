@@ -727,12 +727,6 @@ export default function ProposalPortalPage({ params }: PageProps) {
                               <p className="text-text-muted text-sm mt-2 font-mono">{phase.timeline}</p>
                             )}
                           </div>
-                          <div className="text-right">
-                            <div className="text-xs text-text-muted font-mono mb-1">INVESTMENT</div>
-                            <p className="text-3xl font-bold text-radiance-gold">
-                              {formatCurrency(phase.amount)}
-                            </p>
-                          </div>
                         </div>
 
                         {phase.description && (

@@ -137,10 +137,18 @@ function NewProposalContent() {
     },
   ]);
 
+  // Initialize with default 50/50 payment schedule
   const [milestones, setMilestones] = useState<MilestoneFormData[]>([
     {
-      milestone_name: '',
-      description: '',
+      milestone_name: 'Upfront Payment',
+      description: '50% deposit to begin work',
+      amount: '',
+      due_date: '',
+      phase_index: 0,
+    },
+    {
+      milestone_name: 'Final Payment',
+      description: '50% upon project completion and launch',
       amount: '',
       due_date: '',
       phase_index: 0,
@@ -296,7 +304,8 @@ function NewProposalContent() {
   };
 
   const calculateTotalAmount = () => {
-    return phases.reduce((sum, phase) => sum + (parseFloat(phase.amount) || 0), 0);
+    // Calculate total from payment milestones, not phases
+    return milestones.reduce((sum, milestone) => sum + (parseFloat(milestone.amount) || 0), 0);
   };
 
   const calculateFinalAmount = () => {
@@ -304,6 +313,9 @@ function NewProposalContent() {
     const discount = parseFloat(formData.discount_percentage) || 0;
     return total - (total * discount / 100);
   };
+
+  // Auto-update milestone amounts when they change (50/50 split by default)
+  // This effect is removed since we want manual control over amounts now
 
   const updatePhase = (index: number, field: keyof PhaseFormData, value: PhaseFormData[keyof PhaseFormData]) => {
     const newPhases = [...phases];
@@ -433,7 +445,7 @@ function NewProposalContent() {
             deliverables: p.deliverables.filter((d) => d.name),
             objectives: p.objectives.filter(Boolean),
             goals: p.goals.filter(Boolean),
-            amount: parseFloat(p.amount) || 0,
+            amount: 0, // Phases no longer have pricing - set to 0
             visible_in_portal: p.visible_in_portal,
           })),
         milestones: milestones
@@ -1056,10 +1068,11 @@ function NewProposalContent() {
                           </div>
 
                           <div className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <Input
                                 label="Phase Name"
                                 required
+                                placeholder="e.g., Discovery & Planning"
                                 value={phase.phase_name}
                                 onChange={(e) => updatePhase(phaseIndex, 'phase_name', e.target.value)}
                               />
@@ -1069,17 +1082,11 @@ function NewProposalContent() {
                                 value={phase.timeline}
                                 onChange={(e) => updatePhase(phaseIndex, 'timeline', e.target.value)}
                               />
-                              <Input
-                                label="Amount"
-                                type="number"
-                                min="0"
-                                value={phase.amount}
-                                onChange={(e) => updatePhase(phaseIndex, 'amount', e.target.value)}
-                              />
                             </div>
 
                             <Textarea
                               label="Description"
+                              placeholder="What will be accomplished in this phase?"
                               rows={3}
                               value={phase.description}
                               onChange={(e) => updatePhase(phaseIndex, 'description', e.target.value)}
