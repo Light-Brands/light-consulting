@@ -81,12 +81,12 @@ export const FunnelPage35: React.FC<FunnelPage35Props> = ({ onNavigate }) => {
                 onClick={() => onNavigate('book')}
                 className="shadow-illumination hover:shadow-[0_0_40px_rgba(232,184,74,0.35)] transition-shadow duration-500"
               >
-                Get Summit Tickets
+                Start the AI Readiness Diagnostic
               </Button>
             </div>
 
             <p className="text-text-muted text-sm animate-fade-in delay-500">
-              Limited seats · Expert speakers · Transformational experience
+              5-10 minutes · Strategic clarity · No commitment
             </p>
           </div>
         </Container>
@@ -440,12 +440,12 @@ export const FunnelPage35: React.FC<FunnelPage35Props> = ({ onNavigate }) => {
                 onClick={() => onNavigate('book')}
                 className="shadow-[0_0_30px_rgba(232,184,74,0.25)] hover:shadow-[0_0_50px_rgba(232,184,74,0.4)] transition-all duration-500 relative z-10"
               >
-                Get Your Summit Ticket
+                Start the AI Readiness Diagnostic
               </Button>
             </div>
 
             <p className="text-text-muted text-sm font-mono tracking-wider">
-              <span className="opacity-40">//</span> Limited seats <span className="opacity-40">·</span> Expert speakers <span className="opacity-40">·</span> Transformational experience <span className="opacity-40">//</span>
+              <span className="opacity-40">//</span> 5-10 minutes <span className="opacity-40">·</span> Strategic clarity <span className="opacity-40">·</span> Zero commitment <span className="opacity-40">//</span>
             </p>
           </div>
         </Container>

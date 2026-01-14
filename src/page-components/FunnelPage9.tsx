@@ -80,12 +80,12 @@ export const FunnelPage9: React.FC<FunnelPage9Props> = ({ onNavigate }) => {
                 onClick={() => onNavigate('book')}
                 className="shadow-illumination hover:shadow-[0_0_40px_rgba(232,184,74,0.35)] transition-shadow duration-500"
               >
-                Assess Your Team's AI Readiness
+                Start the AI Readiness Diagnostic
               </Button>
             </div>
 
             <p className="text-text-muted text-sm animate-fade-in delay-500">
-              5 minutes · Identify skill gaps · Free assessment
+              5-10 minutes · Strategic clarity · No commitment
             </p>
           </div>
         </Container>
@@ -496,12 +496,12 @@ export const FunnelPage9: React.FC<FunnelPage9Props> = ({ onNavigate }) => {
                 onClick={() => onNavigate('book')}
                 className="shadow-[0_0_30px_rgba(232,184,74,0.25)] hover:shadow-[0_0_50px_rgba(232,184,74,0.4)] transition-all duration-500 relative z-10"
               >
-                Assess Your Team's AI Readiness
+                Start the AI Readiness Diagnostic
               </Button>
             </div>
 
             <p className="text-text-muted text-sm font-mono tracking-wider">
-              <span className="opacity-40">//</span> Free assessment <span className="opacity-40">·</span> 5 minutes <span className="opacity-40">·</span> Identify skill gaps <span className="opacity-40">//</span>
+              <span className="opacity-40">//</span> 5-10 minutes <span className="opacity-40">·</span> Strategic clarity <span className="opacity-40">·</span> Zero commitment <span className="opacity-40">//</span>
             </p>
           </div>
         </Container>
