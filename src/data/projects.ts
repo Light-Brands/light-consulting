@@ -74,7 +74,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Consulting / Landing site',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '2',
@@ -100,7 +100,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Personal / Healing site',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '3',
@@ -126,7 +126,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Demo / Landing page',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '4',
@@ -204,7 +204,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Community / Ecosystem site',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '7',
@@ -1296,7 +1296,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Real-time backend' },
     origin: 'US',
     project_type: 'Community Platform',
-    preview_enabled: false,
+    preview_enabled: true,
   },
 ];
 
