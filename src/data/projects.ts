@@ -74,7 +74,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Consulting / Landing site',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '2',
@@ -100,7 +100,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Personal / Healing site',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '3',
@@ -126,7 +126,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Demo / Landing page',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '4',
@@ -178,7 +178,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'CY',
     project_type: 'Technical whitepaper site',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '6',
@@ -204,7 +204,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Community / Ecosystem site',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '7',
@@ -230,7 +230,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Not specified' },
     origin: 'US',
     project_type: 'Circular Economy platform',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '9',
@@ -334,7 +334,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js, React components', backend: 'AI/ML APIs, Vercel deployment' },
     origin: 'US',
     project_type: 'AI Platform',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '13',
@@ -412,7 +412,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Audio processing libraries', backend: 'AI music generation' },
     origin: 'US',
     project_type: 'Music AI Platform',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '17',
@@ -438,7 +438,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React dashboard', backend: 'Cryptocurrency APIs' },
     origin: 'US',
     project_type: 'Crypto Dashboard',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '18',
@@ -464,7 +464,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'AI/ML integration', backend: 'Learning management' },
     origin: 'US',
     project_type: 'AI Orchestration Platform',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '19',
@@ -490,7 +490,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Project management tools', backend: 'Automation systems' },
     origin: 'US',
     project_type: 'Business Management / POS',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '20',
@@ -646,7 +646,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Machine learning models', backend: 'Cloud deployment' },
     origin: 'US',
     project_type: 'Analytics Platform',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '26',
@@ -1140,7 +1140,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Communication Platform',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '45',
@@ -1244,7 +1244,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'React/Next.js', backend: 'Not specified' },
     origin: 'EU',
     project_type: 'Yacht Charter Platform',
-    preview_enabled: false,
+    preview_enabled: true,
   },
   {
     id: '49',
@@ -1296,7 +1296,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     tech_stack: { frontend: 'Next.js / React', backend: 'Real-time backend' },
     origin: 'US',
     project_type: 'Community Platform',
-    preview_enabled: false,
+    preview_enabled: true,
   },
 ];
 
