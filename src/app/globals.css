@@ -354,3 +354,180 @@
     }
   }
 }
+
+/* ============================================================================
+ * Prose Styles for Markdown Content
+ * ============================================================================ */
+
+@layer components {
+  .prose {
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+  }
+
+  .prose-invert {
+    color: var(--color-text-secondary);
+  }
+
+  /* Headings */
+  .prose h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+  }
+
+  .prose h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-radiance-gold);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+
+  .prose h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+
+  /* Paragraphs */
+  .prose p {
+    color: var(--color-text-secondary);
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.8;
+    font-size: 1.125rem;
+  }
+
+  .prose p:first-child {
+    margin-top: 0;
+  }
+
+  .prose p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Lists */
+  .prose ul {
+    list-style-type: disc;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    padding-left: 1.75rem;
+  }
+
+  .prose ol {
+    list-style-type: decimal;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    padding-left: 1.75rem;
+  }
+
+  .prose li {
+    color: var(--color-text-secondary);
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+    padding-left: 0.5rem;
+  }
+
+  .prose li::marker {
+    color: var(--color-radiance-gold);
+  }
+
+  .prose ul > li {
+    position: relative;
+  }
+
+  .prose ol > li {
+    position: relative;
+  }
+
+  /* Nested lists */
+  .prose li ul,
+  .prose li ol {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Strong/Bold */
+  .prose strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  /* Emphasis/Italic */
+  .prose em {
+    font-style: italic;
+  }
+
+  /* Links */
+  .prose a {
+    color: var(--color-radiance-gold);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s ease;
+  }
+
+  .prose a:hover {
+    color: var(--color-radiance-amber);
+  }
+
+  /* Blockquotes */
+  .prose blockquote {
+    border-left: 4px solid var(--color-radiance-gold);
+    padding-left: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+
+  /* Code */
+  .prose code {
+    background-color: var(--color-depth-elevated);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.875em;
+    color: var(--color-radiance-gold);
+  }
+
+  .prose pre {
+    background-color: var(--color-depth-elevated);
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .prose pre code {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+  }
+
+  /* Horizontal Rule */
+  .prose hr {
+    border: none;
+    border-top: 1px solid var(--color-depth-border);
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  /* First element in prose should have no top margin */
+  .prose > :first-child {
+    margin-top: 0;
+  }
+
+  /* Last element in prose should have no bottom margin */
+  .prose > :last-child {
+    margin-bottom: 0;
+  }
+}
