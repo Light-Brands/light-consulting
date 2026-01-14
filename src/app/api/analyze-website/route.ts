@@ -63,12 +63,31 @@ interface ScrapedData {
 
 /**
  * Helper function to extract text content from HTML by removing tags
+ * Aggressively cleans HTML to prevent artifacts in AI analysis
  */
 function extractTextContent(html: string): string {
-  // Remove script and style content
-  let text = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
-  text = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
-  text = text.replace(/<noscript[^>]*>[\s\S]*?<\/noscript>/gi, '');
+  // Remove script and style content (including inline)
+  let text = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, ' ');
+  text = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, ' ');
+  text = text.replace(/<noscript[^>]*>[\s\S]*?<\/noscript>/gi, ' ');
+  text = text.replace(/<svg[^>]*>[\s\S]*?<\/svg>/gi, ' ');
+  text = text.replace(/<head[^>]*>[\s\S]*?<\/head>/gi, ' ');
+  text = text.replace(/<footer[^>]*>[\s\S]*?<\/footer>/gi, ' ');
+
+  // Remove JSON-LD structured data
+  text = text.replace(/<script[^>]*type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi, ' ');
+
+  // Remove HTML comments
+  text = text.replace(/<!--[\s\S]*?-->/g, ' ');
+
+  // Remove data attributes and their content patterns
+  text = text.replace(/data-[a-z-]+="[^"]*"/gi, ' ');
+
+  // Remove inline styles
+  text = text.replace(/style="[^"]*"/gi, ' ');
+
+  // Remove class attributes (often contain CSS class names that look like gibberish)
+  text = text.replace(/class="[^"]*"/gi, ' ');
 
   // Remove HTML tags but keep content
   text = text.replace(/<[^>]+>/g, ' ');
@@ -80,10 +99,39 @@ function extractTextContent(html: string): string {
   text = text.replace(/&gt;/g, '>');
   text = text.replace(/&quot;/g, '"');
   text = text.replace(/&#39;/g, "'");
+  text = text.replace(/&#x[a-fA-F0-9]+;/g, ' ');
+  text = text.replace(/&#[0-9]+;/g, ' ');
   text = text.replace(/&[a-zA-Z0-9#]+;/g, ' ');
+
+  // Remove URLs (they clutter the analysis)
+  text = text.replace(/https?:\/\/[^\s]+/g, ' ');
+
+  // Remove CSS-like patterns that slip through
+  text = text.replace(/\{[^}]*\}/g, ' ');
+  text = text.replace(/\[[^\]]*\]/g, ' ');
+
+  // Remove common JavaScript/CSS artifacts
+  text = text.replace(/var\s+\w+\s*=/g, ' ');
+  text = text.replace(/function\s*\([^)]*\)/g, ' ');
+  text = text.replace(/\.\w+\s*\{/g, ' ');
+  text = text.replace(/#\w+\s*\{/g, ' ');
+
+  // Remove hex color codes
+  text = text.replace(/#[a-fA-F0-9]{3,8}\b/g, ' ');
+
+  // Remove repeated special characters
+  text = text.replace(/[_\-=]{3,}/g, ' ');
 
   // Clean up whitespace
   text = text.replace(/\s+/g, ' ').trim();
+
+  // Remove very short "words" that are likely artifacts (less than 2 chars except common words)
+  text = text.split(' ').filter(word => {
+    if (word.length <= 1) {
+      return ['a', 'i', 'I', 'A'].includes(word);
+    }
+    return true;
+  }).join(' ');
 
   return text;
 }
@@ -660,6 +708,14 @@ CRITICAL INSTRUCTIONS:
 3. Be specific and detailed - generic answers are not helpful
 4. If limited data, make reasonable assumptions based on industry patterns
 
+OUTPUT QUALITY RULES (VERY IMPORTANT):
+- Your output must be CLEAN, PROFESSIONAL business language only
+- NEVER include raw HTML tags, CSS classes, JavaScript code, or technical markup in your responses
+- NEVER include URLs, file paths, or code snippets in text fields
+- If you see garbled text, HTML entities (like &amp;), or code-like patterns in the source content, IGNORE them completely
+- Write in clear, natural business English - as if writing for an executive summary
+- All text should read smoothly as professional prose, not contain any web artifacts
+
 Website URL: ${url}
 Domain: ${domain}
 
@@ -928,6 +984,11 @@ Pain Points: ${businessIntelligence.operations_insights.pain_points.join(', ') |
 Business Context:
 ${websiteStory.substring(0, 1500)}
 
+IMPORTANT OUTPUT RULES:
+- Write in clean, professional business language
+- NEVER include HTML, code, URLs, or technical artifacts
+- All text must read as polished executive-level prose
+
 Provide a refined assessment as JSON:
 {
   "score": 65,
@@ -1025,6 +1086,13 @@ Generate a professional, comprehensive markdown report with these sections:
 6. Implementation Roadmap (phased approach)
 7. Expected Outcomes and ROI Potential
 8. Next Steps
+
+CRITICAL OUTPUT RULES:
+- Use professional business language throughout
+- NEVER include raw HTML, CSS, JavaScript, URLs, or any technical code artifacts
+- If any source data contains garbled text or web artifacts, translate it into clean business prose
+- Write as if this report will be presented to a C-suite executive
+- All insights should be actionable and clearly articulated
 
 Use professional language and provide actionable insights. Format with proper markdown headers, bullet points, and emphasis.`;
 
