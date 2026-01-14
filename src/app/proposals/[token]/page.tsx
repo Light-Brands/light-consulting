@@ -297,60 +297,156 @@ export default function ProposalPortalPage({ params }: PageProps) {
   // Passcode gate for protected proposals
   if (needsPasscode) {
     return (
-      <div className="min-h-screen bg-depth-base flex items-center justify-center relative">
+      <div className="min-h-screen bg-depth-base flex flex-col relative overflow-hidden">
         {/* Ambient Background Effects */}
-        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-7xl bg-radial-gradient from-radiance-gold/5 to-transparent blur-[120px] pointer-events-none" />
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-5xl bg-radial-gradient from-radiance-gold/5 to-transparent blur-[150px] pointer-events-none" />
+        <div className="fixed bottom-0 right-0 w-96 h-96 bg-radiance-gold/3 blur-[120px] rounded-full pointer-events-none" />
 
-        <div className="text-center max-w-md mx-auto px-4 relative z-10">
-          <div className="relative inline-block mb-8">
-            <div className="absolute -inset-6 bg-radiance-gold/10 blur-3xl rounded-full" />
-            <div className="relative w-20 h-20 rounded-full bg-radiance-gold/10 border-2 border-radiance-gold/30 flex items-center justify-center">
-              <svg className="w-10 h-10 text-radiance-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
+        {/* Blueprint pattern */}
+        <div
+          className="fixed inset-0 opacity-[0.015] pointer-events-none"
+          style={{
+            backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+            backgroundSize: '32px 32px'
+          }}
+        />
+
+        {/* Header */}
+        <header className="border-b border-depth-border/30 bg-depth-base/50 backdrop-blur-xl relative z-10">
+          <Container size="wide">
+            <div className="flex items-center justify-center py-6">
+              <Link href="/" className="flex items-center group">
+                <img
+                  src="/lb-logo.svg"
+                  alt="Light Brand Consulting"
+                  className="h-8 md:h-10 w-auto transition-opacity group-hover:opacity-80"
+                />
+              </Link>
             </div>
-          </div>
-          <h1 className="text-3xl font-bold text-text-primary mb-4">Protected Proposal</h1>
-          <p className="text-text-secondary mb-8 text-lg leading-relaxed">
-            Please enter the access code to view this proposal.
-          </p>
+          </Container>
+        </header>
 
-          <div className="space-y-4">
-            <input
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              maxLength={4}
-              value={passcode}
-              onChange={(e) => {
-                setPasscode(e.target.value.replace(/\D/g, ''));
-                setPasscodeError(false);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handlePasscodeSubmit();
-                }
-              }}
-              placeholder="Enter 4-digit code"
-              className={`w-full bg-depth-elevated border ${
-                passcodeError ? 'border-red-500' : 'border-depth-border'
-              } rounded-xl px-5 py-4 text-text-primary text-center text-2xl tracking-[0.5em] font-mono placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none transition-colors`}
-              autoFocus
-            />
-            {passcodeError && (
-              <p className="text-red-400 text-sm">Incorrect code. Please try again.</p>
-            )}
-            <Button
-              variant="primary"
-              size="lg"
-              fullWidth
-              onClick={handlePasscodeSubmit}
-              disabled={passcode.length !== 4}
-            >
-              Unlock Proposal
-            </Button>
+        {/* Main Content */}
+        <main className="flex-1 flex items-center justify-center px-4 py-16 relative z-10">
+          <div className="w-full max-w-sm">
+            {/* Card Container */}
+            <div className="relative group">
+              {/* Glow effect */}
+              <div className="absolute -inset-4 bg-radiance-gold/5 blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+              <div className="relative bg-depth-elevated/30 border border-depth-border/50 rounded-3xl p-10 backdrop-blur-sm text-center">
+                {/* Lock Icon */}
+                <div className="mb-8">
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-radiance-gold/10 border border-radiance-gold/20">
+                    <svg className="w-7 h-7 text-radiance-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Title */}
+                <h1 className="text-2xl font-semibold text-text-primary mb-2">
+                  Enter Access Code
+                </h1>
+                <p className="text-text-muted text-sm mb-8">
+                  This proposal is protected
+                </p>
+
+                {/* PIN Input - Individual Boxes */}
+                <div className="flex justify-center gap-3 mb-6">
+                  {[0, 1, 2, 3].map((index) => (
+                    <div
+                      key={index}
+                      className={`w-14 h-14 flex items-center justify-center rounded-xl border-2 transition-all duration-200 ${
+                        passcodeError
+                          ? 'border-red-500/50 bg-red-500/5'
+                          : passcode.length > index
+                          ? 'border-radiance-gold/50 bg-radiance-gold/5'
+                          : 'border-depth-border bg-depth-base/50'
+                      }`}
+                    >
+                      <span className={`text-2xl font-mono ${
+                        passcode.length > index ? 'text-radiance-gold' : 'text-text-muted/30'
+                      }`}>
+                        {passcode[index] || '•'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Hidden Input for actual entry */}
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={4}
+                  value={passcode}
+                  onChange={(e) => {
+                    setPasscode(e.target.value.replace(/\D/g, ''));
+                    setPasscodeError(false);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && passcode.length === 4) {
+                      handlePasscodeSubmit();
+                    }
+                  }}
+                  className="sr-only"
+                  autoFocus
+                  aria-label="Enter 4-digit access code"
+                />
+
+                {/* Clickable overlay to focus input */}
+                <button
+                  onClick={() => {
+                    const input = document.querySelector('input[inputMode="numeric"]') as HTMLInputElement;
+                    input?.focus();
+                  }}
+                  className="absolute inset-0 cursor-text"
+                  aria-hidden="true"
+                />
+
+                {/* Error Message */}
+                {passcodeError && (
+                  <p className="text-red-400 text-sm mb-4 flex items-center justify-center gap-2">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    Invalid code
+                  </p>
+                )}
+
+                {/* Submit Button */}
+                <Button
+                  variant="primary"
+                  fullWidth
+                  onClick={handlePasscodeSubmit}
+                  disabled={passcode.length !== 4}
+                  className="relative z-10"
+                >
+                  Continue
+                </Button>
+              </div>
+            </div>
+
+            {/* Help Text */}
+            <p className="text-center text-text-muted text-xs mt-6">
+              Contact{' '}
+              <a href="mailto:hello@lightbrand.co" className="text-radiance-gold hover:underline">
+                hello@lightbrand.co
+              </a>
+              {' '}if you need assistance
+            </p>
           </div>
-        </div>
+        </main>
+
+        {/* Footer */}
+        <footer className="border-t border-depth-border/20 py-6 relative z-10">
+          <Container size="wide">
+            <p className="text-center text-text-muted text-xs">
+              &copy; {new Date().getFullYear()} Light Brand Consulting
+            </p>
+          </Container>
+        </footer>
       </div>
     );
   }
