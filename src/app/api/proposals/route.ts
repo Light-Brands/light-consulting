@@ -18,6 +18,7 @@ import type {
   OnboardingFormInsert,
   ProposalsApiResponse,
 } from '@/types/proposals';
+import { DEFAULT_PORTAL_SECTIONS } from '@/types/proposals';
 import { CHO_VENTURES_TOKEN } from '@/data/proposals';
 
 // Placeholder data for development
@@ -40,6 +41,8 @@ const placeholderProposals: Proposal[] = [
     final_amount: 5000,
     status: 'sent',
     access_token: CHO_VENTURES_TOKEN,
+    portal_sections: DEFAULT_PORTAL_SECTIONS,
+    portal_password: '8888',
     created_by: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
@@ -114,6 +117,8 @@ export async function POST(request: NextRequest) {
         final_amount,
         status: body.status || 'draft',
         access_token: crypto.randomUUID(),
+        portal_sections: DEFAULT_PORTAL_SECTIONS,
+        portal_password: body.portal_password || null,
         created_by: null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -141,6 +146,7 @@ export async function POST(request: NextRequest) {
       discount_percentage: body.discount_percentage || 0,
       final_amount,
       status: body.status || 'draft',
+      portal_password: body.portal_password || null,
     };
 
     const { data: proposal, error: proposalError } = await supabaseAdmin

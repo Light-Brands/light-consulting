@@ -84,6 +84,7 @@ We identify the single best entry point that delivers immediate value while layi
       onboarding: true,
       dashboard: true,
     },
+    portal_password: '8888',
     created_by: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),

@@ -489,6 +489,49 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                 </div>
               </div>
 
+              {/* Portal Password */}
+              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                <div
+                  className="absolute inset-0 opacity-[0.015] pointer-events-none"
+                  style={{
+                    backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                    backgroundSize: '32px 32px',
+                  }}
+                />
+                <div className="relative z-10 p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-1.5 h-1.5 rounded-full bg-amber-500/50" />
+                    <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
+                      Portal Security
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-text-secondary">Password Protection</span>
+                    {proposal.portal_password ? (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full bg-green-500/10 text-green-400 border border-green-500/30">
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        Enabled
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full bg-gray-500/10 text-gray-400 border border-gray-500/30">
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                        </svg>
+                        Disabled
+                      </span>
+                    )}
+                  </div>
+                  {proposal.portal_password && (
+                    <div className="mt-3 pt-3 border-t border-depth-border">
+                      <span className="text-text-muted text-xs">PIN Code:</span>
+                      <span className="ml-2 text-text-primary font-mono tracking-widest">{proposal.portal_password}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Portal Sections Visibility */}
               <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
                 <div
