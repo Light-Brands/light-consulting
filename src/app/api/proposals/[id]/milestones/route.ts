@@ -127,22 +127,47 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       return NextResponse.json({ data: [], error: null });
     }
 
+    // Fetch phases to map phase_index to phase_id
+    const { data: phases } = await supabaseAdmin
+      .from('proposal_phases')
+      .select('id, phase_number')
+      .eq('proposal_id', proposalId)
+      .order('phase_number');
+
+    // Build a map of phase_number to phase_id
+    const phaseNumberToId: Record<number, string> = {};
+    if (phases) {
+      phases.forEach((phase) => {
+        phaseNumberToId[phase.phase_number] = phase.id;
+      });
+    }
+
     // Insert new milestones
     const milestonesData: MilestoneInsert[] = milestones
-      .filter((m: Partial<Milestone>) => m.milestone_name)
-      .map((m: Partial<Milestone>, index: number) => ({
-        proposal_id: proposalId,
-        phase_id: m.phase_id || null,
-        milestone_name: m.milestone_name || '',
-        description: m.description || null,
-        amount: typeof m.amount === 'string' ? parseFloat(m.amount) || 0 : m.amount || 0,
-        due_date: m.due_date || null,
-        payment_status: m.payment_status || 'pending',
-        milestone_status: m.milestone_status || 'not_started',
-        invoice_number: m.invoice_number || null,
-        payment_link: m.payment_link || null,
-        sort_order: index,
-      }));
+      .filter((m: Partial<Milestone> & { phase_index?: number }) => m.milestone_name)
+      .map((m: Partial<Milestone> & { phase_index?: number }, index: number) => {
+        // Link milestone to phase: use phase_id if provided, otherwise use phase_index to look up
+        let phaseId: string | null = m.phase_id || null;
+        if (!phaseId && m.phase_index !== undefined) {
+          // phase_index is 0-based, phase_number is 1-based
+          const phaseNumber = m.phase_index + 1;
+          phaseId = phaseNumberToId[phaseNumber] || null;
+        }
+
+        return {
+          proposal_id: proposalId,
+          phase_id: phaseId,
+          milestone_name: m.milestone_name || '',
+          description: m.description || null,
+          amount: typeof m.amount === 'string' ? parseFloat(m.amount) || 0 : m.amount || 0,
+          due_date: m.due_date || null,
+          payment_status: m.payment_status || 'pending',
+          milestone_status: m.milestone_status || 'not_started',
+          invoice_number: m.invoice_number || null,
+          payment_link: m.payment_link || null,
+          sort_order: index,
+        };
+      });
 
     if (milestonesData.length === 0) {
       return NextResponse.json({ data: [], error: null });

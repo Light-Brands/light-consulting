@@ -130,8 +130,16 @@ export default function AdminEditProposalPage({ params }: PageProps) {
           );
         }
 
-        // Populate milestones
+        // Populate milestones - map phase_id back to phase_index
         if (proposal.milestones && proposal.milestones.length > 0) {
+          // Build phase_id to index map
+          const phaseIdToIndex: Record<string, number> = {};
+          if (proposal.phases) {
+            proposal.phases.forEach((phase, index) => {
+              phaseIdToIndex[phase.id] = index;
+            });
+          }
+
           setMilestones(
             proposal.milestones.map((milestone) => ({
               id: milestone.id,
@@ -139,7 +147,7 @@ export default function AdminEditProposalPage({ params }: PageProps) {
               description: milestone.description || '',
               amount: milestone.amount?.toString() || '',
               due_date: milestone.due_date || '',
-              phase_index: 0,
+              phase_index: milestone.phase_id ? (phaseIdToIndex[milestone.phase_id] ?? 0) : 0,
             }))
           );
         }
@@ -327,6 +335,7 @@ export default function AdminEditProposalPage({ params }: PageProps) {
             amount: parseFloat(milestone.amount) || 0,
             due_date: milestone.due_date || null,
             sort_order: index,
+            phase_index: milestone.phase_index,
           }));
 
         await authFetch(`/api/proposals/${id}/milestones`, {
