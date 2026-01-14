@@ -9,6 +9,7 @@
 
 import React, { useState, useEffect, use, useMemo } from 'react';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
 import { Container, Button } from '@/components/ui';
 import type { ProposalWithDetails, OnboardingFormField, PortalSections } from '@/types/proposals';
 import { DEFAULT_PORTAL_SECTIONS } from '@/types/proposals';
@@ -503,10 +504,10 @@ export default function ProposalPortalPage({ params }: PageProps) {
                         <span className="w-1.5 h-8 bg-radiance-gold rounded-full" />
                         Project Overview
                       </h2>
-                      <div className="prose prose-invert max-w-none">
-                        <div className="whitespace-pre-wrap text-text-secondary leading-relaxed text-lg">
+                      <div className="prose prose-invert max-w-none prose-headings:text-text-primary prose-h1:text-3xl prose-h1:font-bold prose-h1:mb-6 prose-h2:text-xl prose-h2:font-semibold prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-radiance-gold/90 prose-p:text-text-secondary prose-p:leading-relaxed prose-p:text-lg prose-strong:text-text-primary prose-strong:font-semibold prose-ul:space-y-2 prose-li:text-text-secondary">
+                        <ReactMarkdown>
                           {proposal.project_overview}
-                        </div>
+                        </ReactMarkdown>
                       </div>
                     </div>
                   </div>
@@ -739,10 +740,10 @@ export default function ProposalPortalPage({ params }: PageProps) {
                           backgroundSize: '24px 24px' 
                         }} 
                       />
-                      <div className="prose prose-invert max-w-none relative z-10">
-                        <div className="whitespace-pre-wrap text-text-secondary leading-relaxed">
-                          {proposal.agreement?.agreement_text}
-                        </div>
+                      <div className="prose prose-invert max-w-none relative z-10 prose-headings:text-text-primary prose-h1:text-2xl prose-h1:font-bold prose-h1:mb-6 prose-h2:text-lg prose-h2:font-semibold prose-h2:mt-6 prose-h2:mb-3 prose-p:text-text-secondary prose-p:leading-relaxed prose-ul:space-y-1 prose-li:text-text-secondary">
+                        <ReactMarkdown>
+                          {proposal.agreement?.agreement_text || ''}
+                        </ReactMarkdown>
                       </div>
                     </div>
                   </div>
