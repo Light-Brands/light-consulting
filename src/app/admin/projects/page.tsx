@@ -5,11 +5,12 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/admin';
 import { Container } from '@/components/ui';
 import Button from '@/components/Button';
+import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { Project } from '@/types/database';
 
 export default function AdminProjectsPage() {
@@ -18,11 +19,12 @@ export default function AdminProjectsPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { authFetch } = useAuthFetch();
 
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/projects');
+      const response = await authFetch('/api/projects');
       const data = await response.json();
       setProjects(data.data || []);
     } catch (error) {
@@ -30,18 +32,18 @@ export default function AdminProjectsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [authFetch]);
 
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [fetchProjects]);
 
   const handleDelete = async () => {
     if (!projectToDelete) return;
 
     try {
       setIsDeleting(true);
-      const response = await fetch(`/api/projects/${projectToDelete.id}`, {
+      const response = await authFetch(`/api/projects/${projectToDelete.id}`, {
         method: 'DELETE',
       });
 

@@ -5,10 +5,11 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/admin';
 import { Container } from '@/components/ui';
+import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { Project } from '@/types/database';
 
 interface Stats {
@@ -27,32 +28,33 @@ export default function AdminDashboard() {
   });
   const [recentProjects, setRecentProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { authFetch } = useAuthFetch();
+
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await authFetch('/api/projects');
+      const data = await response.json();
+
+      if (data.data) {
+        const projects = data.data as Project[];
+        setStats({
+          totalProjects: projects.length,
+          publishedProjects: projects.filter((p) => p.status === 'published').length,
+          draftProjects: projects.filter((p) => p.status === 'draft').length,
+          featuredProjects: projects.filter((p) => p.featured).length,
+        });
+        setRecentProjects(projects.slice(0, 5));
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [authFetch]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/api/projects');
-        const data = await response.json();
-
-        if (data.data) {
-          const projects = data.data as Project[];
-          setStats({
-            totalProjects: projects.length,
-            publishedProjects: projects.filter((p) => p.status === 'published').length,
-            draftProjects: projects.filter((p) => p.status === 'draft').length,
-            featuredProjects: projects.filter((p) => p.featured).length,
-          });
-          setRecentProjects(projects.slice(0, 5));
-        }
-      } catch (error) {
-        console.error('Error fetching stats:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const statCards = [
     {

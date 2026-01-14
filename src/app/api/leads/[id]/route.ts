@@ -8,8 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { isAdminAuthenticated } from '@/lib/supabase-server-auth';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 import type { LeadSubmission, LeadSubmissionUpdate, LeadApiResponse } from '@/types/proposals';
 
@@ -25,12 +24,10 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
-    // Check admin authentication
-    const session = await getServerSession(authOptions);
-    const isDevelopment = process.env.NODE_ENV === 'development';
-    const bypassAuth = process.env.DISABLE_ADMIN_AUTH === 'true' || isDevelopment;
+    // Check admin authentication using Supabase
+    const isAuthenticated = await isAdminAuthenticated(request);
 
-    if (!bypassAuth && !session) {
+    if (!isAuthenticated) {
       return NextResponse.json(
         { data: null, error: 'Unauthorized' },
         { status: 401 }
@@ -88,12 +85,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
-    // Check admin authentication
-    const session = await getServerSession(authOptions);
-    const isDevelopment = process.env.NODE_ENV === 'development';
-    const bypassAuth = process.env.DISABLE_ADMIN_AUTH === 'true' || isDevelopment;
+    // Check admin authentication using Supabase
+    const isAuthenticated = await isAdminAuthenticated(request);
 
-    if (!bypassAuth && !session) {
+    if (!isAuthenticated) {
       return NextResponse.json(
         { data: null, error: 'Unauthorized' },
         { status: 401 }
@@ -165,12 +160,10 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
-    // Check admin authentication
-    const session = await getServerSession(authOptions);
-    const isDevelopment = process.env.NODE_ENV === 'development';
-    const bypassAuth = process.env.DISABLE_ADMIN_AUTH === 'true' || isDevelopment;
+    // Check admin authentication using Supabase
+    const isAuthenticated = await isAdminAuthenticated(request);
 
-    if (!bypassAuth && !session) {
+    if (!isAuthenticated) {
       return NextResponse.json(
         { data: null, error: 'Unauthorized' },
         { status: 401 }

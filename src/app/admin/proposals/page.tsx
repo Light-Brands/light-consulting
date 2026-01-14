@@ -5,10 +5,11 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/admin';
 import { Container, Button } from '@/components/ui';
+import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { Proposal, ProposalStatus } from '@/types/proposals';
 
 const STATUS_LABELS: Record<ProposalStatus, string> = {
@@ -36,17 +37,14 @@ export default function AdminProposalsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const { authFetch } = useAuthFetch();
 
-  useEffect(() => {
-    fetchProposals();
-  }, [statusFilter]);
-
-  const fetchProposals = async () => {
+  const fetchProposals = useCallback(async () => {
     try {
       const params = new URLSearchParams();
       if (statusFilter) params.set('status', statusFilter);
 
-      const response = await fetch(`/api/proposals?${params.toString()}`);
+      const response = await authFetch(`/api/proposals?${params.toString()}`);
       const data = await response.json();
 
       if (data.data) {
@@ -57,11 +55,15 @@ export default function AdminProposalsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [authFetch, statusFilter]);
+
+  useEffect(() => {
+    fetchProposals();
+  }, [fetchProposals]);
 
   const handleDelete = async (id: string) => {
     try {
-      const response = await fetch(`/api/proposals/${id}`, {
+      const response = await authFetch(`/api/proposals/${id}`, {
         method: 'DELETE',
       });
 

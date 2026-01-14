@@ -6,8 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { isAdminAuthenticated, verifySupabaseAuth } from '@/lib/supabase-server-auth';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 import type { ProjectUpdate } from '@/types/database';
 import { getProjectById, PORTFOLIO_PROJECTS } from '@/data/projects';
@@ -21,9 +20,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
-    // Check if admin
-    const session = await getServerSession(authOptions);
-    const isAdmin = session?.user?.role === 'admin';
+    // Check if admin using Supabase auth
+    const user = await verifySupabaseAuth(request);
+    const isAdmin = user !== null;
 
     // If Supabase is not configured, return from placeholder data
     if (!isSupabaseConfigured()) {
@@ -79,9 +78,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
-    // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session || session.user?.role !== 'admin') {
+    // Check authentication using Supabase
+    const isAuthenticated = await isAdminAuthenticated(request);
+    if (!isAuthenticated) {
       return NextResponse.json(
         { data: null, error: 'Unauthorized' },
         { status: 401 }
@@ -128,9 +127,9 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
-    // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session || session.user?.role !== 'admin') {
+    // Check authentication using Supabase
+    const isAuthenticated = await isAdminAuthenticated(request);
+    if (!isAuthenticated) {
       return NextResponse.json(
         { data: null, error: 'Unauthorized' },
         { status: 401 }

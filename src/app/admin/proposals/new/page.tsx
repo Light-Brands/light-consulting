@@ -5,12 +5,13 @@
 
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { AdminHeader } from '@/components/admin';
 import { BusinessIntelligenceSummary } from '@/components/admin/BusinessIntelligenceSummary';
 import { Container, Button, Input, Textarea } from '@/components/ui';
+import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { LeadSubmission, Deliverable } from '@/types/proposals';
 import type { BusinessIntelligence } from '@/types/business-intelligence';
 
@@ -82,6 +83,7 @@ function NewProposalContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const leadId = searchParams.get('lead');
+  const { authFetch } = useAuthFetch();
 
   const [lead, setLead] = useState<LeadSubmission | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -132,17 +134,10 @@ function NewProposalContent() {
 
   const [agreementText, setAgreementText] = useState(DEFAULT_AGREEMENT_TEXT);
 
-  // Fetch lead data if lead ID provided
-  useEffect(() => {
-    if (leadId) {
-      fetchLead(leadId);
-    }
-  }, [leadId]);
-
-  const fetchLead = async (id: string) => {
+  const fetchLead = useCallback(async (id: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/leads/${id}`);
+      const response = await authFetch(`/api/leads/${id}`);
       const data = await response.json();
 
       if (data.data) {
@@ -166,7 +161,14 @@ function NewProposalContent() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [authFetch]);
+
+  // Fetch lead data if lead ID provided
+  useEffect(() => {
+    if (leadId) {
+      fetchLead(leadId);
+    }
+  }, [leadId, fetchLead]);
 
   const handleGenerateWithAI = async () => {
     if (!lead || selectedServices.length === 0) {
@@ -177,9 +179,8 @@ function NewProposalContent() {
     setIsGenerating(true);
 
     try {
-      const response = await fetch('/api/generate-proposal', {
+      const response = await authFetch('/api/generate-proposal', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           leadId: lead.id,
           businessIntelligence: lead.business_intelligence || null,
@@ -420,9 +421,8 @@ function NewProposalContent() {
         agreement_text: agreementText,
       };
 
-      const response = await fetch('/api/proposals', {
+      const response = await authFetch('/api/proposals', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(proposalData),
       });
 

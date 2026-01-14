@@ -11,6 +11,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { AdminHeader } from '@/components/admin';
 import { Container } from '@/components/ui';
 import Button from '@/components/Button';
+import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { ProjectInsert } from '@/types/database';
 
 // Available tags
@@ -54,6 +55,7 @@ export default function NewProjectPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const { authFetch } = useAuthFetch();
 
   const {
     register,
@@ -89,11 +91,8 @@ export default function NewProjectPage() {
         industry: data.industry || null,
       };
 
-      const response = await fetch('/api/projects', {
+      const response = await authFetch('/api/projects', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(projectData),
       });
 

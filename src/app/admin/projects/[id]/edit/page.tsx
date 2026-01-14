@@ -5,12 +5,13 @@
 
 'use client';
 
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect, useCallback, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { AdminHeader } from '@/components/admin';
 import { Container } from '@/components/ui';
 import Button from '@/components/Button';
+import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { Project, ProjectUpdate } from '@/types/database';
 
 // Available tags
@@ -61,6 +62,7 @@ export default function EditProjectPage({ params }: PageProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const { authFetch } = useAuthFetch();
 
   const {
     register,
@@ -70,39 +72,39 @@ export default function EditProjectPage({ params }: PageProps) {
   } = useForm<ProjectFormData>();
 
   // Fetch project data
-  useEffect(() => {
-    const fetchProject = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch(`/api/projects/${id}`);
-        const data = await response.json();
+  const fetchProject = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await authFetch(`/api/projects/${id}`);
+      const data = await response.json();
 
-        if (data.error) {
-          throw new Error(data.error);
-        }
-
-        setProject(data.data);
-        setSelectedTags(data.data?.tags || []);
-        reset({
-          title: data.data?.title || '',
-          description: data.data?.description || '',
-          image_url: data.data?.image_url || '',
-          case_study_url: data.data?.case_study_url || '',
-          client_name: data.data?.client_name || '',
-          industry: data.data?.industry || '',
-          featured: data.data?.featured || false,
-          status: data.data?.status || 'draft',
-          sort_order: data.data?.sort_order || 0,
-        });
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load project');
-      } finally {
-        setIsLoading(false);
+      if (data.error) {
+        throw new Error(data.error);
       }
-    };
 
+      setProject(data.data);
+      setSelectedTags(data.data?.tags || []);
+      reset({
+        title: data.data?.title || '',
+        description: data.data?.description || '',
+        image_url: data.data?.image_url || '',
+        case_study_url: data.data?.case_study_url || '',
+        client_name: data.data?.client_name || '',
+        industry: data.data?.industry || '',
+        featured: data.data?.featured || false,
+        status: data.data?.status || 'draft',
+        sort_order: data.data?.sort_order || 0,
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load project');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [authFetch, id, reset]);
+
+  useEffect(() => {
     fetchProject();
-  }, [id, reset]);
+  }, [fetchProject]);
 
   const onSubmit = async (data: ProjectFormData) => {
     try {
@@ -118,11 +120,8 @@ export default function EditProjectPage({ params }: PageProps) {
         industry: data.industry || null,
       };
 
-      const response = await fetch(`/api/projects/${id}`, {
+      const response = await authFetch(`/api/projects/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(projectData),
       });
 
