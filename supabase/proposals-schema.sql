@@ -51,6 +51,8 @@ CREATE TABLE IF NOT EXISTS proposals (
   access_token UUID DEFAULT uuid_generate_v4(), -- Unique token for client portal access
   -- Portal section visibility settings (controls which tabs clients can see)
   portal_sections JSONB DEFAULT '{"proposal": true, "agreement": true, "billing": true, "onboarding": true, "dashboard": true}'::jsonb,
+  -- Optional 4-digit PIN for portal access protection
+  portal_password VARCHAR(4) DEFAULT NULL,
   created_by UUID, -- Admin user ID
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -61,6 +63,10 @@ CREATE TABLE IF NOT EXISTS proposals (
 
 -- Add column to existing table (for migrations)
 -- ALTER TABLE proposals ADD COLUMN IF NOT EXISTS portal_sections JSONB DEFAULT '{"proposal": true, "agreement": true, "billing": true, "onboarding": true, "dashboard": true}'::jsonb;
+-- ALTER TABLE proposals ADD COLUMN IF NOT EXISTS portal_password VARCHAR(4) DEFAULT NULL;
+
+COMMENT ON COLUMN proposals.portal_password IS
+'Optional 4-digit PIN code for client portal access. NULL means no password required.';
 
 COMMENT ON COLUMN proposals.portal_sections IS
 'Controls which portal sections/tabs are visible to clients. Admins can progressively reveal sections.';

@@ -129,6 +129,7 @@ export interface Proposal {
   status: ProposalStatus;
   access_token: string;
   portal_sections: PortalSections;
+  portal_password: string | null;  // Optional 4-digit PIN for portal access
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -154,6 +155,7 @@ export interface ProposalInsert {
   final_amount: number;
   status?: ProposalStatus;
   portal_sections?: PortalSections;
+  portal_password?: string | null;
   created_by?: string | null;
 }
 
@@ -174,6 +176,7 @@ export interface ProposalUpdate {
   final_amount?: number;
   status?: ProposalStatus;
   portal_sections?: PortalSections;
+  portal_password?: string | null;
   sent_at?: string | null;
   viewed_at?: string | null;
   agreement_signed_at?: string | null;

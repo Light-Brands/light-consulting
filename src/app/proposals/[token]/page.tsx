@@ -20,11 +20,6 @@ interface PageProps {
 
 type PortalStep = 'proposal' | 'agreement' | 'billing' | 'onboarding' | 'dashboard';
 
-// Password-protected proposals (token -> required passcode)
-const PROTECTED_PROPOSALS: Record<string, string> = {
-  'cho-ventures-ai-readiness-2026': '8888',
-};
-
 export default function ProposalPortalPage({ params }: PageProps) {
   const { token } = use(params);
   const [proposal, setProposal] = useState<ProposalWithDetails | null>(null);
@@ -50,8 +45,8 @@ export default function ProposalPortalPage({ params }: PageProps) {
   const [newComment, setNewComment] = useState('');
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
-  // Check if this proposal requires a passcode
-  const requiredPasscode = PROTECTED_PROPOSALS[token];
+  // Check if this proposal requires a passcode (from database)
+  const requiredPasscode = proposal?.portal_password;
   const needsPasscode = !!requiredPasscode && !isUnlocked;
 
   // All possible portal steps

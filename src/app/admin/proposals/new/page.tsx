@@ -107,6 +107,7 @@ function NewProposalContent() {
     start_date: '',
     estimated_completion_date: '',
     discount_percentage: '0',
+    portal_password: '',
   });
 
   const [phases, setPhases] = useState<PhaseFormData[]>([
@@ -397,6 +398,7 @@ function NewProposalContent() {
         discount_percentage: parseFloat(formData.discount_percentage) || 0,
         final_amount: calculateFinalAmount(),
         status,
+        portal_password: formData.portal_password || null,
         phases: phases
           .filter((p) => p.phase_name)
           .map((p, i) => ({
@@ -718,6 +720,30 @@ function NewProposalContent() {
                             value={formData.discount_percentage}
                             onChange={(e) => setFormData({ ...formData, discount_percentage: e.target.value })}
                           />
+                        </div>
+                      </div>
+
+                      <div>
+                        <h3 className="text-lg font-semibold text-text-primary mb-4">Portal Access</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-text-primary text-sm font-medium mb-2">
+                              Portal Password (Optional)
+                            </label>
+                            <input
+                              type="text"
+                              inputMode="numeric"
+                              pattern="[0-9]*"
+                              maxLength={4}
+                              value={formData.portal_password}
+                              onChange={(e) => setFormData({ ...formData, portal_password: e.target.value.replace(/\D/g, '').slice(0, 4) })}
+                              placeholder="4-digit PIN"
+                              className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none transition-colors font-mono tracking-widest"
+                            />
+                            <p className="text-text-muted text-xs mt-1">
+                              Leave empty for no password protection
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
