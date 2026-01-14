@@ -1065,22 +1065,74 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnalyzeWe
   const startTime = Date.now();
 
   try {
-    // Check for Gemini API key
+    const body = await request.json();
+    const { websiteUrl, name, email, company, phone, skipAnalysis } = body;
+
+    // Validate required fields (name and email are always required)
+    if (!name || !email) {
+      return NextResponse.json(
+        { success: false, error: 'Name and email are required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid email format' },
+        { status: 400 }
+      );
+    }
+
+    // Handle skip analysis case - create lead without website analysis
+    if (skipAnalysis || !websiteUrl) {
+      const { supabaseAdmin, isSupabaseConfigured } = await import('@/lib/supabase');
+
+      let leadId: string | null = null;
+
+      if (isSupabaseConfigured()) {
+        const leadData = {
+          service: 'booking-direct',
+          name,
+          email,
+          company: company || null,
+          phone: phone || null,
+          website_url: null,
+          status: 'new',
+          intake_data: {
+            source: 'direct-booking',
+            skipped_analysis: true,
+          },
+        };
+
+        const { data, error } = await supabaseAdmin
+          .from('lead_submissions')
+          .insert(leadData as unknown as never)
+          .select('id')
+          .single();
+
+        if (!error && data) {
+          leadId = (data as { id: string }).id;
+        } else if (error) {
+          console.error('Error creating lead submission:', error);
+        }
+      } else {
+        // Mock ID for development
+        leadId = crypto.randomUUID();
+      }
+
+      return NextResponse.json({
+        success: true,
+        leadId: leadId || undefined,
+      });
+    }
+
+    // Check for Gemini API key (only needed for analysis)
     if (!process.env.GOOGLE_GEMINI_API_KEY) {
       return NextResponse.json(
         { success: false, error: 'AI analysis service is not configured' },
         { status: 503 }
-      );
-    }
-
-    const body = await request.json();
-    const { websiteUrl, name, email, company, phone } = body;
-
-    // Validate required fields
-    if (!websiteUrl || !name || !email) {
-      return NextResponse.json(
-        { success: false, error: 'Website URL, name, and email are required' },
-        { status: 400 }
       );
     }
 
@@ -1091,15 +1143,6 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnalyzeWe
     } catch {
       return NextResponse.json(
         { success: false, error: 'Invalid website URL format' },
-        { status: 400 }
-      );
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid email format' },
         { status: 400 }
       );
     }

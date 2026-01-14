@@ -59,12 +59,11 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
     'Your Assessment',
   ];
 
-  const validateStep1 = useCallback((): boolean => {
+  const validateStep1 = useCallback((requireUrl: boolean = true): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.websiteUrl?.trim()) {
-      newErrors.websiteUrl = 'Website URL is required';
-    } else {
+    // URL is optional unless requireUrl is true
+    if (requireUrl && formData.websiteUrl?.trim()) {
       try {
         const testUrl = formData.websiteUrl.startsWith('http')
           ? formData.websiteUrl
@@ -139,6 +138,48 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
     setIsAnalyzing(false);
     updateFormData({ isAnalyzing: false });
   }, [updateFormData]);
+
+  // Skip directly to booking without analysis
+  const handleSkipToBooking = useCallback(async () => {
+    if (!validateStep1(false)) return;
+
+    // Create a lead without website analysis
+    try {
+      const response = await fetch('/api/analyze-website', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          websiteUrl: null,
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          phone: formData.phone,
+          skipAnalysis: true,
+        }),
+      });
+
+      const result = await response.json();
+
+      // Store lead ID and go to step 3 with no analysis data
+      updateFormData({
+        isComplete: true,
+        leadId: result.leadId,
+        websiteAnalysis: undefined,
+        businessIntelligence: undefined,
+      });
+
+      setStep(3);
+    } catch (error) {
+      console.error('Error creating lead:', error);
+      // Still go to booking even if lead creation fails
+      updateFormData({
+        isComplete: true,
+        websiteAnalysis: undefined,
+        businessIntelligence: undefined,
+      });
+      setStep(3);
+    }
+  }, [validateStep1, formData.name, formData.email, formData.company, formData.phone, updateFormData]);
 
   const analyzeWebsite = useCallback(async () => {
     if (!validateStep1()) return;
@@ -247,6 +288,7 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
                   errors={errors}
                   onFieldChange={handleFieldChange}
                   onAnalyze={analyzeWebsite}
+                  onSkipToBooking={handleSkipToBooking}
                   isAnalyzing={isAnalyzing}
                 />
               </div>
@@ -267,16 +309,17 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
             )}
 
             {/* Step 3: Enhanced Readiness Report with Business Intelligence */}
-            {step === 3 && formData.websiteAnalysis && (
+            {step === 3 && (
               <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
                 <ReadinessReport
-                  readinessScore={formData.websiteAnalysis.readinessScore}
-                  readinessBrief={formData.websiteAnalysis.readinessBrief}
-                  capacityGapBrief={formData.websiteAnalysis.capacityGapBrief}
-                  techStack={formData.websiteAnalysis.techStack}
+                  readinessScore={formData.websiteAnalysis?.readinessScore}
+                  readinessBrief={formData.websiteAnalysis?.readinessBrief}
+                  capacityGapBrief={formData.websiteAnalysis?.capacityGapBrief}
+                  techStack={formData.websiteAnalysis?.techStack}
                   businessIntelligence={formData.businessIntelligence}
-                  websiteStory={formData.websiteAnalysis.websiteStory}
+                  websiteStory={formData.websiteAnalysis?.websiteStory}
                   leadId={formData.leadId}
+                  userName={formData.name}
                   onBookCall={(calendlyLink) => {
                     // Handle booking callback
                     console.log('Booking call:', calendlyLink);
