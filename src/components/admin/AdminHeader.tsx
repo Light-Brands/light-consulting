@@ -7,7 +7,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Container } from '@/components/ui';
 import { Heading, Text } from '@/components/ui';
 
@@ -22,13 +22,13 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   subtitle,
   actions,
 }) => {
-  const { data: session } = useSession();
+  const { user } = useAuth();
 
   return (
     <header className="relative bg-depth-surface border-b border-depth-border py-6 md:py-8 overflow-hidden">
       {/* Subtle background glow */}
       <div className="absolute top-1/2 right-0 w-96 h-96 bg-radiance-gold/3 blur-3xl pointer-events-none rounded-full -translate-y-1/2 translate-x-1/4" />
-      
+
       {/* Subtle blueprint pattern */}
       <div
         className="absolute inset-0 opacity-[0.015] pointer-events-none"
@@ -37,7 +37,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           backgroundSize: '32px 32px',
         }}
       />
-      
+
       <Container size="wide" className="relative z-10">
         <div className="flex items-center justify-between">
           <div>
@@ -68,15 +68,15 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
               </svg>
               View Portfolio
             </Link>
-            {session?.user && (
+            {user && (
               <div className="flex items-center gap-3 pl-4 border-l border-depth-border">
                 <div className="w-8 h-8 rounded-lg bg-radiance-gold/20 flex items-center justify-center">
                   <span className="text-radiance-gold text-sm font-semibold">
-                    {session.user.name?.[0] || 'A'}
+                    {user.email?.[0]?.toUpperCase() || 'A'}
                   </span>
                 </div>
-                <span className="text-text-secondary text-sm">
-                  {session.user.name}
+                <span className="text-text-secondary text-sm truncate max-w-[150px]" title={user.email || ''}>
+                  {user.email}
                 </span>
               </div>
             )}
