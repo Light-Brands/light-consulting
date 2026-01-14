@@ -306,8 +306,17 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     if (error) {
       console.error('Error updating proposal:', error);
+      // Return detailed error info for debugging
       return NextResponse.json(
-        { data: null, error: 'Failed to update proposal' },
+        {
+          data: null,
+          error: 'Failed to update proposal',
+          details: {
+            message: error.message,
+            code: error.code,
+            hint: error.hint,
+          }
+        },
         { status: 500 }
       );
     }
@@ -316,7 +325,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   } catch (error) {
     console.error('Error in PUT /api/proposals/[id]:', error);
     return NextResponse.json(
-      { data: null, error: 'Internal server error' },
+      {
+        data: null,
+        error: 'Internal server error',
+        details: error instanceof Error ? { message: error.message } : undefined
+      },
       { status: 500 }
     );
   }
