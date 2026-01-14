@@ -410,51 +410,61 @@ export default function ProposalPortalPage({ params }: PageProps) {
 
         {/* Main Content */}
         <main className="flex-1 flex items-center justify-center px-4 py-16 relative z-10">
-          <div className="w-full max-w-sm">
+          <div className="w-full max-w-md">
             {/* Card Container */}
             <div className="relative group">
-              {/* Glow effect */}
-              <div className="absolute -inset-4 bg-radiance-gold/5 blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              {/* Enhanced glow effect */}
+              <div className="absolute -inset-6 bg-gradient-to-br from-radiance-gold/10 via-radiance-amber/5 to-transparent blur-3xl rounded-3xl opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
 
-              <div className="relative bg-depth-elevated/30 border border-depth-border/50 rounded-3xl p-10 backdrop-blur-sm text-center">
-                {/* Lock Icon */}
-                <div className="mb-8">
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-radiance-gold/10 border border-radiance-gold/20">
-                    <svg className="w-7 h-7 text-radiance-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-                    </svg>
-                  </div>
-                </div>
+              <div className="relative bg-gradient-to-br from-depth-elevated/40 to-depth-surface/30 border border-radiance-gold/20 rounded-3xl p-12 backdrop-blur-md text-center overflow-hidden">
+                {/* Subtle background pattern */}
+                <div
+                  className="absolute inset-0 opacity-[0.02] pointer-events-none"
+                  style={{
+                    backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                    backgroundSize: '24px 24px'
+                  }}
+                />
 
-                {/* Title */}
-                <h1 className="text-2xl font-semibold text-text-primary mb-2">
-                  Enter Access Code
-                </h1>
-                <p className="text-text-muted text-sm mb-8">
-                  This proposal is protected
-                </p>
-
-                {/* PIN Input - Individual Boxes */}
-                <div className="flex justify-center gap-3 mb-6">
-                  {[0, 1, 2, 3].map((index) => (
-                    <div
-                      key={index}
-                      className={`w-14 h-14 flex items-center justify-center rounded-xl border-2 transition-all duration-200 ${
-                        passcodeError
-                          ? 'border-red-500/50 bg-red-500/5'
-                          : passcode.length > index
-                          ? 'border-radiance-gold/50 bg-radiance-gold/5'
-                          : 'border-depth-border bg-depth-base/50'
-                      }`}
-                    >
-                      <span className={`text-2xl font-mono ${
-                        passcode.length > index ? 'text-radiance-gold' : 'text-text-muted/30'
-                      }`}>
-                        {passcode[index] || '•'}
-                      </span>
+                <div className="relative z-10">
+                  {/* Title with better typography */}
+                  <div className="mb-10">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-radiance-gold/10 border border-radiance-gold/20 rounded-full mb-6">
+                      <span className="text-radiance-gold text-xs font-mono uppercase tracking-widest">Secure Access</span>
                     </div>
-                  ))}
-                </div>
+                    <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-3 tracking-tight">
+                      Enter Access Code
+                    </h1>
+                    <p className="text-text-secondary text-base">
+                      This proposal requires a passcode to view
+                    </p>
+                  </div>
+
+                  {/* PIN Input - Enhanced Individual Boxes */}
+                  <div className="flex justify-center gap-4 mb-8">
+                    {[0, 1, 2, 3].map((index) => (
+                      <div
+                        key={index}
+                        className={`w-16 h-16 flex items-center justify-center rounded-2xl border-2 transition-all duration-300 ${
+                          passcodeError
+                            ? 'border-red-500/50 bg-red-500/10 shadow-lg shadow-red-500/10'
+                            : passcode.length > index
+                            ? 'border-radiance-gold/60 bg-radiance-gold/10 shadow-lg shadow-radiance-gold/20 scale-105'
+                            : 'border-depth-border/50 bg-depth-base/50 hover:border-radiance-gold/30'
+                        }`}
+                      >
+                        <span className={`text-3xl font-mono font-semibold ${
+                          passcode.length > index 
+                            ? 'text-radiance-gold' 
+                            : passcodeError
+                            ? 'text-red-400'
+                            : 'text-text-muted/20'
+                        }`}>
+                          {passcode[index] || '•'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
 
                 {/* Hidden Input for actual entry */}
                 <input
@@ -487,37 +497,29 @@ export default function ProposalPortalPage({ params }: PageProps) {
                   aria-hidden="true"
                 />
 
-                {/* Error Message */}
-                {passcodeError && (
-                  <p className="text-red-400 text-sm mb-4 flex items-center justify-center gap-2">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                    Invalid code
-                  </p>
-                )}
+                  {/* Error Message */}
+                  {passcodeError && (
+                    <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center justify-center gap-3 animate-pulse">
+                      <svg className="w-5 h-5 text-red-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      <p className="text-red-400 text-sm font-medium">Invalid access code. Please try again.</p>
+                    </div>
+                  )}
 
-                {/* Submit Button */}
-                <Button
-                  variant="primary"
-                  fullWidth
-                  onClick={handlePasscodeSubmit}
-                  disabled={passcode.length !== 4}
-                  className="relative z-10"
-                >
-                  Continue
-                </Button>
+                  {/* Submit Button */}
+                  <Button
+                    variant="primary"
+                    fullWidth
+                    onClick={handlePasscodeSubmit}
+                    disabled={passcode.length !== 4}
+                    className="relative z-10 text-lg py-6 font-semibold shadow-lg shadow-radiance-gold/20 hover:shadow-radiance-gold/30 transition-all"
+                  >
+                    Access Proposal
+                  </Button>
+                </div>
               </div>
             </div>
-
-            {/* Help Text */}
-            <p className="text-center text-text-muted text-xs mt-6">
-              Contact{' '}
-              <a href="mailto:hello@lightbrand.co" className="text-radiance-gold hover:underline">
-                hello@lightbrand.co
-              </a>
-              {' '}if you need assistance
-            </p>
           </div>
         </main>
 
@@ -631,7 +633,7 @@ export default function ProposalPortalPage({ params }: PageProps) {
         <Container size="wide" className="relative z-10">
           {/* Proposal View */}
           {activeStep === 'proposal' && (
-            <div className="max-w-5xl mx-auto space-y-12">
+            <div className="max-w-7xl mx-auto space-y-12">
               {/* Hero */}
               <div className="text-center mb-16 relative">
                 {/* Decorative glow */}
@@ -850,7 +852,7 @@ export default function ProposalPortalPage({ params }: PageProps) {
 
           {/* Agreement */}
           {activeStep === 'agreement' && (
-            <div className="max-w-5xl mx-auto">
+            <div className="max-w-7xl mx-auto">
               {proposal.agreement?.status === 'signed' ? (
                 <div className="space-y-8">
                   <div className="text-center mb-12">
@@ -981,7 +983,7 @@ export default function ProposalPortalPage({ params }: PageProps) {
 
           {/* Billing */}
           {activeStep === 'billing' && (
-            <div className="max-w-5xl mx-auto space-y-10">
+            <div className="max-w-7xl mx-auto space-y-10">
               <div className="text-center mb-12">
                 <h2 className="text-4xl font-bold text-text-primary mb-4">Billing & Payments</h2>
                 <p className="text-text-secondary text-lg">
@@ -1222,7 +1224,7 @@ export default function ProposalPortalPage({ params }: PageProps) {
 
           {/* Onboarding */}
           {activeStep === 'onboarding' && (
-            <div className="max-w-5xl mx-auto">
+            <div className="max-w-7xl mx-auto">
               {proposal.onboarding_form?.status === 'submitted' ? (
                 <div className="space-y-8">
                   <div className="text-center mb-12">
@@ -1345,7 +1347,7 @@ export default function ProposalPortalPage({ params }: PageProps) {
 
           {/* Dashboard */}
           {activeStep === 'dashboard' && (
-            <div className="max-w-5xl mx-auto space-y-10">
+            <div className="max-w-7xl mx-auto space-y-10">
               <div className="text-center mb-12">
                 <h2 className="text-4xl font-bold text-text-primary mb-4">Project Dashboard</h2>
                 <p className="text-text-secondary text-lg">
