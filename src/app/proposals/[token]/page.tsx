@@ -19,12 +19,22 @@ interface PageProps {
 
 type PortalStep = 'proposal' | 'agreement' | 'billing' | 'onboarding' | 'dashboard';
 
+// Password-protected proposals (token -> required passcode)
+const PROTECTED_PROPOSALS: Record<string, string> = {
+  'cho-ventures-ai-readiness-2026': '8888',
+};
+
 export default function ProposalPortalPage({ params }: PageProps) {
   const { token } = use(params);
   const [proposal, setProposal] = useState<ProposalWithDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeStep, setActiveStep] = useState<PortalStep>('proposal');
+
+  // Password protection state
+  const [passcode, setPasscode] = useState('');
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [passcodeError, setPasscodeError] = useState(false);
 
   // Agreement state
   const [signatureName, setSignatureName] = useState('');
@@ -39,9 +49,50 @@ export default function ProposalPortalPage({ params }: PageProps) {
   const [newComment, setNewComment] = useState('');
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
+  // Check if this proposal requires a passcode
+  const requiredPasscode = PROTECTED_PROPOSALS[token];
+  const needsPasscode = !!requiredPasscode && !isUnlocked;
+
+  // All possible portal steps
+  const allSteps = useMemo(() => [
+    { key: 'proposal', label: 'Proposal' },
+    { key: 'agreement', label: 'Agreement' },
+    { key: 'billing', label: 'Billing' },
+    { key: 'onboarding', label: 'Onboarding' },
+    { key: 'dashboard', label: 'Dashboard' },
+  ], []);
+
+  // Compute portal sections from proposal
+  const portalSections = proposal?.portal_sections || DEFAULT_PORTAL_SECTIONS;
+
+  // Filter steps based on portal section visibility
+  const steps = useMemo(() => {
+    return allSteps.filter(step => portalSections[step.key as keyof PortalSections]);
+  }, [allSteps, portalSections]);
+
+  // Handle passcode submission
+  const handlePasscodeSubmit = () => {
+    if (passcode === requiredPasscode) {
+      setIsUnlocked(true);
+      setPasscodeError(false);
+    } else {
+      setPasscodeError(true);
+    }
+  };
+
   useEffect(() => {
     fetchProposal();
   }, [token]);
+
+  // Ensure activeStep is a visible section, fallback to first visible
+  useEffect(() => {
+    if (proposal && steps.length > 0) {
+      const isActiveStepVisible = steps.some(s => s.key === activeStep);
+      if (!isActiveStepVisible) {
+        setActiveStep(steps[0].key as PortalStep);
+      }
+    }
+  }, [steps, activeStep, proposal]);
 
   const fetchProposal = async () => {
     try {
@@ -247,30 +298,66 @@ export default function ProposalPortalPage({ params }: PageProps) {
     );
   }
 
-  const portalSections = proposal?.portal_sections || DEFAULT_PORTAL_SECTIONS;
+  // Passcode gate for protected proposals
+  if (needsPasscode) {
+    return (
+      <div className="min-h-screen bg-depth-base flex items-center justify-center relative">
+        {/* Ambient Background Effects */}
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-7xl bg-radial-gradient from-radiance-gold/5 to-transparent blur-[120px] pointer-events-none" />
 
-  const allSteps = [
-    { key: 'proposal', label: 'Proposal' },
-    { key: 'agreement', label: 'Agreement' },
-    { key: 'billing', label: 'Billing' },
-    { key: 'onboarding', label: 'Onboarding' },
-    { key: 'dashboard', label: 'Dashboard' },
-  ];
+        <div className="text-center max-w-md mx-auto px-4 relative z-10">
+          <div className="relative inline-block mb-8">
+            <div className="absolute -inset-6 bg-radiance-gold/10 blur-3xl rounded-full" />
+            <div className="relative w-20 h-20 rounded-full bg-radiance-gold/10 border-2 border-radiance-gold/30 flex items-center justify-center">
+              <svg className="w-10 h-10 text-radiance-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+          </div>
+          <h1 className="text-3xl font-bold text-text-primary mb-4">Protected Proposal</h1>
+          <p className="text-text-secondary mb-8 text-lg leading-relaxed">
+            Please enter the access code to view this proposal.
+          </p>
 
-  // Filter steps based on portal section visibility
-  const steps = useMemo(() => {
-    return allSteps.filter(step => portalSections[step.key as keyof PortalSections]);
-  }, [portalSections]);
-
-  // Ensure activeStep is a visible section, fallback to first visible
-  useEffect(() => {
-    if (proposal && steps.length > 0) {
-      const isActiveStepVisible = steps.some(s => s.key === activeStep);
-      if (!isActiveStepVisible) {
-        setActiveStep(steps[0].key as PortalStep);
-      }
-    }
-  }, [steps, activeStep, proposal]);
+          <div className="space-y-4">
+            <input
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              maxLength={4}
+              value={passcode}
+              onChange={(e) => {
+                setPasscode(e.target.value.replace(/\D/g, ''));
+                setPasscodeError(false);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handlePasscodeSubmit();
+                }
+              }}
+              placeholder="Enter 4-digit code"
+              className={`w-full bg-depth-elevated border ${
+                passcodeError ? 'border-red-500' : 'border-depth-border'
+              } rounded-xl px-5 py-4 text-text-primary text-center text-2xl tracking-[0.5em] font-mono placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none transition-colors`}
+              autoFocus
+            />
+            {passcodeError && (
+              <p className="text-red-400 text-sm">Incorrect code. Please try again.</p>
+            )}
+            <Button
+              variant="primary"
+              size="lg"
+              fullWidth
+              onClick={handlePasscodeSubmit}
+              disabled={passcode.length !== 4}
+            >
+              Unlock Proposal
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-depth-base relative">
