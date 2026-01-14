@@ -378,14 +378,12 @@ export default function ProposalPortalPage({ params }: PageProps) {
         />
         <Container size="wide">
           <div className="flex items-center justify-between py-5 relative z-10">
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center shadow-illumination group-hover:shadow-illumination-intense transition-all group-hover:scale-105">
-                <span className="text-depth-base font-bold text-sm">LB</span>
-              </div>
-              <div>
-                <span className="text-text-primary font-semibold block">Light Brand Consulting</span>
-                <span className="text-radiance-gold/80 text-xs font-mono tracking-wider">CLIENT PORTAL</span>
-              </div>
+            <Link href="/" className="flex items-center group">
+              <img
+                src="/lb-logo.svg"
+                alt="Light Brand Consulting"
+                className="h-8 md:h-10 w-auto transition-opacity group-hover:opacity-80"
+              />
             </Link>
             <div className="text-right hidden md:block">
               <p className="text-text-primary font-medium">{proposal.project_name}</p>
