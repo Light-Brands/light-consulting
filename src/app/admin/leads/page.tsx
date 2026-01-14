@@ -5,10 +5,11 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/admin';
 import { Container, Button, Badge } from '@/components/ui';
+import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { LeadSubmission, LeadStatus } from '@/types/proposals';
 
 const SERVICE_LABELS: Record<string, string> = {
@@ -40,18 +41,15 @@ export default function AdminLeadsPage() {
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [serviceFilter, setServiceFilter] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const { authFetch } = useAuthFetch();
 
-  useEffect(() => {
-    fetchLeads();
-  }, [statusFilter, serviceFilter]);
-
-  const fetchLeads = async () => {
+  const fetchLeads = useCallback(async () => {
     try {
       const params = new URLSearchParams();
       if (statusFilter) params.set('status', statusFilter);
       if (serviceFilter) params.set('service', serviceFilter);
 
-      const response = await fetch(`/api/leads?${params.toString()}`);
+      const response = await authFetch(`/api/leads?${params.toString()}`);
       const data = await response.json();
 
       if (data.data) {
@@ -62,11 +60,15 @@ export default function AdminLeadsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [authFetch, statusFilter, serviceFilter]);
+
+  useEffect(() => {
+    fetchLeads();
+  }, [fetchLeads]);
 
   const handleDelete = async (id: string) => {
     try {
-      const response = await fetch(`/api/leads/${id}`, {
+      const response = await authFetch(`/api/leads/${id}`, {
         method: 'DELETE',
       });
 
@@ -81,9 +83,8 @@ export default function AdminLeadsPage() {
 
   const handleStatusChange = async (id: string, newStatus: LeadStatus) => {
     try {
-      const response = await fetch(`/api/leads/${id}`, {
+      const response = await authFetch(`/api/leads/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
       });
 

@@ -5,10 +5,11 @@
 
 'use client';
 
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect, useCallback, use } from 'react';
 import Link from 'next/link';
 import { AdminHeader } from '@/components/admin';
 import { Container, Button } from '@/components/ui';
+import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { ProposalWithDetails, ProposalStatus, ProposalPhase, PortalSections } from '@/types/proposals';
 import { DEFAULT_PORTAL_SECTIONS } from '@/types/proposals';
 
@@ -43,14 +44,11 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
   const [copied, setCopied] = useState(false);
   const [updatingPhaseId, setUpdatingPhaseId] = useState<string | null>(null);
   const [updatingSection, setUpdatingSection] = useState<string | null>(null);
+  const { authFetch } = useAuthFetch();
 
-  useEffect(() => {
-    fetchProposal();
-  }, [id]);
-
-  const fetchProposal = async () => {
+  const fetchProposal = useCallback(async () => {
     try {
-      const response = await fetch(`/api/proposals/${id}`);
+      const response = await authFetch(`/api/proposals/${id}`);
       const data = await response.json();
 
       if (data.data) {
@@ -61,7 +59,11 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [authFetch, id]);
+
+  useEffect(() => {
+    fetchProposal();
+  }, [fetchProposal]);
 
   const handleStatusChange = async (newStatus: ProposalStatus) => {
     if (!proposal) return;
@@ -72,9 +74,8 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
         updates.sent_at = new Date().toISOString();
       }
 
-      const response = await fetch(`/api/proposals/${id}`, {
+      const response = await authFetch(`/api/proposals/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates),
       });
 
@@ -100,9 +101,8 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
 
     setUpdatingPhaseId(phaseId);
     try {
-      const response = await fetch(`/api/proposals/${id}/phases/${phaseId}`, {
+      const response = await authFetch(`/api/proposals/${id}/phases/${phaseId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ visible_in_portal: visible }),
       });
 
@@ -137,9 +137,8 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
       const currentSections = proposal.portal_sections || DEFAULT_PORTAL_SECTIONS;
       const updatedSections = { ...currentSections, [section]: visible };
 
-      const response = await fetch(`/api/proposals/${id}`, {
+      const response = await authFetch(`/api/proposals/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ portal_sections: updatedSections }),
       });
 

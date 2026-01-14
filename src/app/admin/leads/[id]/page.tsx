@@ -5,11 +5,12 @@
 
 'use client';
 
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect, useCallback, use } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AdminHeader } from '@/components/admin';
 import { Container, Button } from '@/components/ui';
+import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { LeadSubmission, LeadStatus } from '@/types/proposals';
 
 const SERVICE_LABELS: Record<string, string> = {
@@ -38,14 +39,11 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [notes, setNotes] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const { authFetch } = useAuthFetch();
 
-  useEffect(() => {
-    fetchLead();
-  }, [id]);
-
-  const fetchLead = async () => {
+  const fetchLead = useCallback(async () => {
     try {
-      const response = await fetch(`/api/leads/${id}`);
+      const response = await authFetch(`/api/leads/${id}`);
       const data = await response.json();
 
       if (data.data) {
@@ -57,15 +55,18 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [authFetch, id]);
+
+  useEffect(() => {
+    fetchLead();
+  }, [fetchLead]);
 
   const handleStatusChange = async (newStatus: LeadStatus) => {
     if (!lead) return;
 
     try {
-      const response = await fetch(`/api/leads/${id}`, {
+      const response = await authFetch(`/api/leads/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
       });
 
@@ -83,9 +84,8 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
 
     setIsSaving(true);
     try {
-      const response = await fetch(`/api/leads/${id}`, {
+      const response = await authFetch(`/api/leads/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notes }),
       });
 
