@@ -163,7 +163,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create phases if provided
+    // Create phases if provided and capture their IDs for milestone linking
+    let createdPhases: { id: string; phase_number: number }[] = [];
     if (phases && Array.isArray(phases) && phases.length > 0) {
       const phasesData: ProposalPhaseInsert[] = phases.map((phase: ProposalPhaseInsert, index: number) => ({
         proposal_id: proposal.id,
@@ -181,28 +182,53 @@ export async function POST(request: NextRequest) {
         visible_in_portal: phase.visible_in_portal !== undefined ? phase.visible_in_portal : true,
       }));
 
-      const { error: phasesError } = await supabaseAdmin
+      const { data: phasesResult, error: phasesError } = await supabaseAdmin
         .from('proposal_phases')
-        .insert(phasesData);
+        .insert(phasesData)
+        .select('id, phase_number');
 
       if (phasesError) {
         console.error('Error creating phases:', phasesError);
+        // Clean up the proposal since phases failed
+        await supabaseAdmin.from('proposals').delete().eq('id', proposal.id);
+        return NextResponse.json(
+          { data: null, error: 'Failed to create proposal phases' },
+          { status: 500 }
+        );
       }
+
+      createdPhases = phasesResult || [];
     }
 
-    // Create milestones if provided
+    // Create milestones if provided, linking to phases by phase_number
     if (milestones && Array.isArray(milestones) && milestones.length > 0) {
-      const milestonesData: MilestoneInsert[] = milestones.map((milestone: MilestoneInsert, index: number) => ({
-        proposal_id: proposal.id,
-        phase_id: milestone.phase_id || null,
-        milestone_name: milestone.milestone_name,
-        description: milestone.description || null,
-        amount: milestone.amount,
-        due_date: milestone.due_date || null,
-        payment_status: 'pending',
-        milestone_status: 'not_started',
-        sort_order: index,
-      }));
+      // Build a map of phase_number to phase_id for linking
+      const phaseNumberToId: Record<number, string> = {};
+      createdPhases.forEach((phase) => {
+        phaseNumberToId[phase.phase_number] = phase.id;
+      });
+
+      const milestonesData: MilestoneInsert[] = milestones.map((milestone: MilestoneInsert & { phase_index?: number }, index: number) => {
+        // Link milestone to phase: use phase_id if provided, otherwise use phase_index to look up
+        let phaseId: string | null = milestone.phase_id || null;
+        if (!phaseId && milestone.phase_index !== undefined) {
+          // phase_index is 0-based, phase_number is 1-based
+          const phaseNumber = milestone.phase_index + 1;
+          phaseId = phaseNumberToId[phaseNumber] || null;
+        }
+
+        return {
+          proposal_id: proposal.id,
+          phase_id: phaseId,
+          milestone_name: milestone.milestone_name,
+          description: milestone.description || null,
+          amount: milestone.amount,
+          due_date: milestone.due_date || null,
+          payment_status: 'pending' as const,
+          milestone_status: 'not_started' as const,
+          sort_order: index,
+        };
+      });
 
       const { error: milestonesError } = await supabaseAdmin
         .from('milestones')
@@ -210,6 +236,8 @@ export async function POST(request: NextRequest) {
 
       if (milestonesError) {
         console.error('Error creating milestones:', milestonesError);
+        // Don't delete the proposal - phases were created successfully
+        // Just log and continue, milestones can be added later
       }
     }
 

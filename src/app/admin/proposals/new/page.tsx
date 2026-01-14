@@ -443,6 +443,7 @@ function NewProposalContent() {
             description: m.description || null,
             amount: parseFloat(m.amount) || 0,
             due_date: m.due_date || null,
+            phase_index: m.phase_index,
           })),
         agreement_text: agreementText,
       };
