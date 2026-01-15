@@ -450,15 +450,15 @@ export default function ProposalPortalPage({ params }: PageProps) {
                             ? 'border-red-500/50 bg-red-500/10 shadow-lg shadow-red-500/10'
                             : passcode.length > index
                             ? 'border-radiance-gold/60 bg-radiance-gold/10 shadow-lg shadow-radiance-gold/20 scale-105'
-                            : 'border-depth-border/50 bg-depth-base/50 hover:border-radiance-gold/30'
+                            : 'border-radiance-gold/50 bg-radiance-gold/5 shadow-md shadow-radiance-gold/15 hover:border-radiance-gold/70 hover:bg-radiance-gold/10'
                         }`}
                       >
                         <span className={`text-3xl font-mono font-semibold ${
-                          passcode.length > index 
-                            ? 'text-radiance-gold' 
+                          passcode.length > index
+                            ? 'text-radiance-gold'
                             : passcodeError
                             ? 'text-red-400'
-                            : 'text-text-muted/20'
+                            : 'text-radiance-gold/30'
                         }`}>
                           {passcode[index] || '•'}
                         </span>
