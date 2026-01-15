@@ -346,13 +346,13 @@ const getTierColor = (tier: string) => {
   }
 };
 
-// Password for accessing the gallery (can be configured via env variable)
-const GALLERY_PASSWORD = process.env.NEXT_PUBLIC_FUNNEL_GALLERY_PASSWORD || 'lightbrand2024';
+// 4-digit access code for the gallery (similar to proposal portal)
+const GALLERY_ACCESS_CODE = '8888';
 
 export const FunnelGallery: React.FC<FunnelGalleryProps> = ({ onNavigate }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [passcode, setPasscode] = useState('');
+  const [passcodeError, setPasscodeError] = useState(false);
   const [activeTier, setActiveTier] = useState('all');
   const [filteredFunnels, setFilteredFunnels] = useState(FUNNELS);
   const [copiedId, setCopiedId] = useState<number | null>(null);
@@ -374,14 +374,14 @@ export const FunnelGallery: React.FC<FunnelGalleryProps> = ({ onNavigate }) => {
     }
   }, [activeTier]);
 
-  const handlePasswordSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === GALLERY_PASSWORD) {
+  const handlePasscodeSubmit = () => {
+    if (passcode === GALLERY_ACCESS_CODE) {
       setIsAuthenticated(true);
       sessionStorage.setItem('funnel-gallery-auth', 'true');
-      setError('');
+      setPasscodeError(false);
     } else {
-      setError('Invalid password. Please try again.');
+      setPasscodeError(true);
+      setPasscode('');
     }
   };
 
@@ -396,18 +396,30 @@ export const FunnelGallery: React.FC<FunnelGalleryProps> = ({ onNavigate }) => {
     }
   };
 
-  // Password protection screen
+  // Access code protection screen (similar to proposal portal)
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-depth-base">
+      <div className="min-h-screen flex items-center justify-center bg-depth-base relative overflow-hidden">
+        {/* Ambient background effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-radiance-gold/5 rounded-full blur-3xl" />
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md px-6"
+          className="w-full max-w-md px-6 relative z-10"
         >
-          <div className="bg-depth-elevated border border-depth-border rounded-2xl p-8 shadow-xl">
+          <div className="bg-depth-elevated border-2 border-radiance-gold/30 rounded-2xl p-8 shadow-xl shadow-radiance-gold/10">
+            {/* Secure Access Badge */}
+            <div className="flex justify-center mb-6">
+              <span className="px-3 py-1 bg-radiance-gold/10 text-radiance-gold text-xs font-medium rounded-full border border-radiance-gold/30">
+                Secure Access
+              </span>
+            </div>
+
             {/* Lock icon */}
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-radiance-gold/10 flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-radiance-gold/10 flex items-center justify-center border border-radiance-gold/30">
               <svg
                 className="w-8 h-8 text-radiance-gold"
                 fill="none"
@@ -426,41 +438,85 @@ export const FunnelGallery: React.FC<FunnelGalleryProps> = ({ onNavigate }) => {
             <h2 className="text-2xl font-bold text-text-primary text-center mb-2">
               Funnel Gallery
             </h2>
-            <p className="text-text-secondary text-center mb-6">
-              Enter the password to access the funnel gallery
+            <p className="text-text-secondary text-center mb-8">
+              Enter the 4-digit access code
             </p>
 
-            <form onSubmit={handlePasswordSubmit} className="space-y-4">
-              <div>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter password"
-                  className="w-full px-4 py-3 bg-depth-surface border border-depth-border rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-radiance-gold/50 focus:border-radiance-gold/50"
-                  autoFocus
-                />
-              </div>
-
-              {error && (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-red-400 text-sm text-center"
+            {/* PIN Input - Individual Boxes */}
+            <div className="flex justify-center gap-4 mb-8">
+              {[0, 1, 2, 3].map((index) => (
+                <div
+                  key={index}
+                  className={`w-16 h-16 flex items-center justify-center rounded-2xl border-2 transition-all duration-300 ${
+                    passcodeError
+                      ? 'border-red-500/50 bg-red-500/10'
+                      : passcode.length > index
+                      ? 'border-radiance-gold bg-radiance-gold/10 shadow-lg shadow-radiance-gold/20 scale-105'
+                      : 'border-radiance-gold/50 bg-radiance-gold/5'
+                  }`}
                 >
-                  {error}
-                </motion.p>
-              )}
+                  {passcode.length > index && (
+                    <div className="w-3 h-3 bg-radiance-gold rounded-full" />
+                  )}
+                </div>
+              ))}
+            </div>
 
-              <Button
-                type="submit"
-                variant="primary"
-                size="lg"
-                className="w-full"
+            {/* Hidden input for actual entry */}
+            <input
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              maxLength={4}
+              value={passcode}
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^0-9]/g, '');
+                setPasscode(value);
+                setPasscodeError(false);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && passcode.length === 4) {
+                  handlePasscodeSubmit();
+                }
+              }}
+              className="sr-only"
+              autoFocus
+            />
+
+            {/* Clickable overlay to focus input */}
+            <div
+              className="absolute inset-0 cursor-text"
+              onClick={() => {
+                const input = document.querySelector('input[inputMode="numeric"]') as HTMLInputElement;
+                input?.focus();
+              }}
+            />
+
+            {/* Error message */}
+            {passcodeError && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-red-400 text-sm text-center mb-6 animate-pulse"
               >
-                Access Gallery
-              </Button>
-            </form>
+                Incorrect access code. Please try again.
+              </motion.p>
+            )}
+
+            <Button
+              type="button"
+              variant="primary"
+              size="lg"
+              className="w-full relative z-20"
+              onClick={handlePasscodeSubmit}
+              disabled={passcode.length !== 4}
+            >
+              Access Gallery
+            </Button>
+
+            <p className="text-text-muted text-xs text-center mt-4">
+              Click anywhere and enter the code
+            </p>
           </div>
         </motion.div>
       </div>
