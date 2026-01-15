@@ -27,6 +27,7 @@ export type PageKey =
   | 'services/blueprint'
   | 'services/story'
   | 'about'
+  | 'portfolio'
   | 'book'
   | 'insights'
   | 'insights/labor-arbitrage'
@@ -158,4 +159,19 @@ export interface InsightPost {
 export interface IconProps {
   className?: string;
   size?: number;
+}
+
+// ============================================================================
+// Portfolio Types
+// ============================================================================
+
+export interface PortfolioProject {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  siteUrl: string;
+  tags: string[];
+  category: string;
+  featured: boolean;
 }

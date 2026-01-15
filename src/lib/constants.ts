@@ -2,7 +2,7 @@
  * Light Brand Consulting - Constants & Data
  */
 
-import { Service, Testimonial, NavItem, IntakeQuestion } from '../types';
+import { Service, Testimonial, NavItem, IntakeQuestion, PortfolioProject } from '../types';
 
 // ============================================================================
 // Navigation
@@ -11,6 +11,7 @@ import { Service, Testimonial, NavItem, IntakeQuestion } from '../types';
 export const NAV_ITEMS: NavItem[] = [
   { key: 'home', label: 'Home', href: '/' },
   { key: 'services', label: 'Services', href: '/services' },
+  { key: 'portfolio', label: 'Portfolio', href: '/portfolio' },
   { key: 'about', label: 'About', href: '/about' },
   { key: 'insights', label: 'Insights', href: '/insights' },
   { key: 'contact', label: 'Contact', href: '/contact' },
@@ -232,6 +233,142 @@ export const TESTIMONIALS: Testimonial[] = [
     companyUrl: 'https://www.growthmastery.ai',
     avatar: '/images/avatars/avatar-joseph-mcveen.jpg',
     avatarPrompt: 'Professional headshot portrait of a confident male entrepreneur in his 30s-40s, founder of an AI growth company. Warm, genuine expression with an approachable smile. Smart business casual attire. Warm, natural lighting creating depth. Background in warm earth tones or soft charcoal, slightly blurred. He conveys both innovation and authenticity. High-quality editorial portrait photography style. Sharp focus, natural but polished look.',
+  },
+];
+
+// ============================================================================
+// Portfolio Projects
+// ============================================================================
+
+export const PORTFOLIO_CATEGORIES = {
+  'ai-technology': 'AI & Technology',
+  'healthcare-wellness': 'Healthcare & Wellness',
+  'hospitality': 'Hospitality',
+  'real-estate-energy': 'Real Estate & Energy',
+  'community-social': 'Community & Social',
+  'creative-professional': 'Creative & Professional',
+} as const;
+
+export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
+  {
+    id: '1',
+    title: 'Growth Mastery AI',
+    description: 'AI-powered business growth and analytics platform with growth analytics, AI recommendations, and business insights.',
+    imageUrl: '/images/portfolio/growth-mastery-ai.jpg',
+    siteUrl: 'https://growthmastery.ai/',
+    tags: ['Business Intelligence', 'AI', 'Analytics'],
+    category: 'ai-technology',
+    featured: true,
+  },
+  {
+    id: '2',
+    title: 'Light Field Institute',
+    description: 'Digital ecosystem bridging intuitive wisdom and consciousness education with aura readings, energy sessions, and courses.',
+    imageUrl: '/images/portfolio/light-field-institute.jpg',
+    siteUrl: 'https://www.lightfield.institute/',
+    tags: ['Biofield Research', 'Consciousness', 'Education'],
+    category: 'healthcare-wellness',
+    featured: true,
+  },
+  {
+    id: '3',
+    title: 'AI Tools Platform',
+    description: 'Comprehensive AI tools platform offering ML capabilities with full-stack development and AI integration.',
+    imageUrl: '/images/portfolio/ai-tools.jpg',
+    siteUrl: 'https://aitools-theta.vercel.app/',
+    tags: ['AI', 'Machine Learning', 'SaaS'],
+    category: 'ai-technology',
+    featured: true,
+  },
+  {
+    id: '4',
+    title: 'The Planetary Party',
+    description: 'Global web of bioregional networks for celebration and regenerative action with protocols, tools, and Flow Funds.',
+    imageUrl: '/images/portfolio/planetary-party.jpg',
+    siteUrl: 'https://planetary-party.vercel.app/',
+    tags: ['Regenerative', 'Bioregional', 'Community'],
+    category: 'community-social',
+    featured: true,
+  },
+  {
+    id: '5',
+    title: 'Genius AI',
+    description: 'AI-powered learning and knowledge platform with AI tutoring, knowledge base, and interactive learning modules.',
+    imageUrl: '/images/portfolio/genius-ai.jpg',
+    siteUrl: 'https://geniusai8.vercel.app/',
+    tags: ['AI', 'Education', 'Learning'],
+    category: 'ai-technology',
+    featured: true,
+  },
+  {
+    id: '6',
+    title: 'MelodyGram AI',
+    description: 'AI-powered music creation and analysis platform with music generation, audio analysis, and creative tools.',
+    imageUrl: '/images/portfolio/melodygram-ai.jpg',
+    siteUrl: 'https://melodygram.vercel.app/',
+    tags: ['Music AI', 'Audio Processing', 'Creative Tools'],
+    category: 'ai-technology',
+    featured: true,
+  },
+  {
+    id: '7',
+    title: 'Downtown Park',
+    description: 'Premium urban development project with modern residential spaces, 3D visualizations, and virtual tours.',
+    imageUrl: '/images/portfolio/downtown-park.jpg',
+    siteUrl: 'https://www.downtown-park.com/',
+    tags: ['Real Estate', 'Property', '3D Visualization'],
+    category: 'real-estate-energy',
+    featured: false,
+  },
+  {
+    id: '8',
+    title: 'Iboga Life',
+    description: 'Personal healing site focused on sacred healing experiences with Iboga, featuring practitioner bio and retreat details.',
+    imageUrl: '/images/portfolio/iboga-life.jpg',
+    siteUrl: 'https://iboga-life.vercel.app/',
+    tags: ['Healing', 'Plant Medicine', 'Retreats'],
+    category: 'healthcare-wellness',
+    featured: false,
+  },
+  {
+    id: '9',
+    title: 'Mindflow Vision',
+    description: 'Technical whitepaper site presenting the Mindflow vision with clean, professional technical documentation.',
+    imageUrl: '/images/portfolio/mindflow-vision.jpg',
+    siteUrl: 'https://mindflow-vision.vercel.app/',
+    tags: ['Technical', 'Whitepaper', 'Documentation'],
+    category: 'ai-technology',
+    featured: false,
+  },
+  {
+    id: '10',
+    title: 'Love Token',
+    description: 'World\'s first Love Economy experiment with meditation, intention, and credit circulation metrics.',
+    imageUrl: '/images/portfolio/love-token.jpg',
+    siteUrl: 'https://love-token.vercel.app/',
+    tags: ['Circular Economy', 'Meditation', 'Social'],
+    category: 'community-social',
+    featured: false,
+  },
+  {
+    id: '11',
+    title: 'Anemi Pool Reservation',
+    description: 'Advanced pool and amenity reservation system for luxury hotels with real-time availability.',
+    imageUrl: '/images/portfolio/anemi-pool.jpg',
+    siteUrl: 'https://pool.anemihotel.com/',
+    tags: ['Hotel Management', 'Reservations', 'Real-time'],
+    category: 'hospitality',
+    featured: false,
+  },
+  {
+    id: '12',
+    title: 'Skyzor Productions',
+    description: 'Professional video production company showcasing commercial content with video portfolio integration.',
+    imageUrl: '/images/portfolio/skyzor-productions.jpg',
+    siteUrl: 'https://www.skyzorproductions.com/',
+    tags: ['Video Production', 'Portfolio', 'Media'],
+    category: 'creative-professional',
+    featured: false,
   },
 ];
 

@@ -10,6 +10,7 @@ import {
   ServicesPage,
   ServiceDetailPage,
   AboutPage,
+  PortfolioPage,
   BookPage,
   ContactPage,
   InsightsPage,
@@ -74,6 +75,8 @@ const App: React.FC = () => {
         return <HomePage onNavigate={handleNavigate} />;
       case 'services':
         return <ServicesPage onNavigate={handleNavigate} />;
+      case 'portfolio':
+        return <PortfolioPage onNavigate={handleNavigate} />;
       case 'about':
         return <AboutPage onNavigate={handleNavigate} />;
       case 'book':
