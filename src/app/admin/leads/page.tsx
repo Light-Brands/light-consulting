@@ -127,25 +127,27 @@ export default function AdminLeadsPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
         <Container size="wide" className="relative z-10">
-          {/* Stats Row - Scrollable at all sizes */}
-          <div className="flex gap-2 md:gap-3 mb-4 md:mb-8 overflow-x-auto pb-2 -mx-4 px-4 no-scrollbar">
-            {[
-              { label: 'Total', value: stats.total, color: 'text-radiance-gold' },
-              { label: 'New', value: stats.new, color: 'text-blue-400' },
-              { label: 'Contacted', value: stats.contacted, color: 'text-amber-400' },
-              { label: 'Proposal Sent', value: stats.proposal_sent, color: 'text-purple-400' },
-              { label: 'Converted', value: stats.converted, color: 'text-green-400' },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="flex-shrink-0 bg-depth-surface border border-depth-border rounded-lg md:rounded-xl px-3 py-2 md:px-4 md:py-3 min-w-[80px] md:min-w-[120px]"
-              >
-                <p className={`font-bold ${stat.color} text-lg md:text-2xl`}>
-                  {isLoading ? '-' : stat.value}
-                </p>
-                <p className="text-[10px] md:text-sm text-text-muted whitespace-nowrap">{stat.label}</p>
-              </div>
-            ))}
+          {/* Stats Row - Scrollable horizontally */}
+          <div className="mb-4 md:mb-8 overflow-hidden">
+            <div className="flex gap-2 md:gap-3 overflow-x-auto no-scrollbar">
+              {[
+                { label: 'Total', value: stats.total, color: 'text-radiance-gold' },
+                { label: 'New', value: stats.new, color: 'text-blue-400' },
+                { label: 'Contacted', value: stats.contacted, color: 'text-amber-400' },
+                { label: 'Proposal Sent', value: stats.proposal_sent, color: 'text-purple-400' },
+                { label: 'Converted', value: stats.converted, color: 'text-green-400' },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="flex-shrink-0 bg-depth-surface border border-depth-border rounded-lg md:rounded-xl px-3 py-2 md:px-4 md:py-3 min-w-[80px] md:min-w-[120px]"
+                >
+                  <p className={`font-bold ${stat.color} text-lg md:text-2xl`}>
+                    {isLoading ? '-' : stat.value}
+                  </p>
+                  <p className="text-[10px] md:text-sm text-text-muted whitespace-nowrap">{stat.label}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Filters */}
