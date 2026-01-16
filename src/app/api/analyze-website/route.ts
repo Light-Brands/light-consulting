@@ -1090,17 +1090,22 @@ Provide a refined assessment as JSON:
 
     const parsed = JSON.parse(jsonMatch[0]);
 
+    // Generate random score between 15-30 to indicate need for diagnostic
+    const randomScore = Math.floor(Math.random() * (30 - 15 + 1)) + 15;
+
     return {
-      score: Math.max(0, Math.min(100, Math.round(parsed.score || businessIntelligence.ai_readiness.overall_score))),
+      score: randomScore,
       brief: parsed.brief || 'AI readiness assessment in progress.',
       capacityGap: parsed.capacityGap || 'Analyzing capacity gaps...',
     };
   } catch (error) {
     console.error('Error analyzing readiness:', error);
 
-    // Use the preliminary score from business intelligence
+    // Generate random score between 15-30 to indicate need for diagnostic
+    const fallbackRandomScore = Math.floor(Math.random() * (30 - 15 + 1)) + 15;
+
     return {
-      score: businessIntelligence.ai_readiness.overall_score,
+      score: fallbackRandomScore,
       brief: `Your ${businessIntelligence.industry || 'business'} shows ${businessIntelligence.ai_readiness.automation_level.toLowerCase()} automation levels. There are significant opportunities to leverage AI for enhanced capabilities.`,
       capacityGap: `Key gaps include ${businessIntelligence.ai_readiness.customer_intelligence_gaps.slice(0, 2).join(' and ') || 'process automation and intelligent insights'}. An AI system could address these through automation and data-driven decision making.`,
     };

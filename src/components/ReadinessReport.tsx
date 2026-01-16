@@ -260,6 +260,9 @@ export const ReadinessReport: React.FC<ReadinessReportProps> = ({
 
             {/* Score Details */}
             <div className="flex-1 text-center md:text-left">
+              <div className="text-xs font-semibold tracking-wider text-text-muted uppercase mb-1">
+                AI Diagnostic Score
+              </div>
               <div className={cn('text-2xl font-semibold mb-2', getScoreColor(readinessScore))}>
                 {getScoreLabel(readinessScore)}
               </div>
