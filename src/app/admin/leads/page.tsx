@@ -127,55 +127,23 @@ export default function AdminLeadsPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
         <Container size="wide" className="relative z-10">
-          {/* Stats Grid - Mobile: Compact horizontal row */}
-          <div className="md:hidden flex gap-1.5 mb-4 overflow-x-auto pb-1 -mx-4 px-4">
+          {/* Stats Row - Scrollable at all sizes */}
+          <div className="flex gap-2 md:gap-3 mb-4 md:mb-8 overflow-x-auto pb-2 -mx-4 px-4 no-scrollbar">
             {[
               { label: 'Total', value: stats.total, color: 'text-radiance-gold' },
               { label: 'New', value: stats.new, color: 'text-blue-400' },
               { label: 'Contacted', value: stats.contacted, color: 'text-amber-400' },
-              { label: 'Sent', value: stats.proposal_sent, color: 'text-purple-400' },
+              { label: 'Proposal Sent', value: stats.proposal_sent, color: 'text-purple-400' },
               { label: 'Converted', value: stats.converted, color: 'text-green-400' },
             ].map((stat) => (
               <div
                 key={stat.label}
-                className="flex-shrink-0 bg-depth-surface border border-depth-border rounded-lg px-2.5 py-1.5 min-w-0"
+                className="flex-shrink-0 bg-depth-surface border border-depth-border rounded-lg md:rounded-xl px-3 py-2 md:px-4 md:py-3 min-w-[80px] md:min-w-[120px]"
               >
-                <div className="flex items-center gap-1.5">
-                  <span className={`text-sm font-bold ${stat.color}`}>
-                    {isLoading ? '-' : stat.value}
-                  </span>
-                  <span className="text-[10px] text-text-muted whitespace-nowrap">{stat.label}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Stats Grid - Desktop: Full cards */}
-          <div className="hidden md:grid md:grid-cols-5 gap-4 mb-8">
-            {[
-              { label: 'Total Leads', value: stats.total, color: 'radiance-gold' },
-              { label: 'New', value: stats.new, color: 'blue-500' },
-              { label: 'Contacted', value: stats.contacted, color: 'amber-500' },
-              { label: 'Proposal Sent', value: stats.proposal_sent, color: 'purple-500' },
-              { label: 'Converted', value: stats.converted, color: 'green-500' },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="relative bg-depth-surface border border-depth-border rounded-xl p-4 overflow-hidden"
-              >
-                <div
-                  className="absolute inset-0 opacity-[0.02] pointer-events-none"
-                  style={{
-                    backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
-                    backgroundSize: '24px 24px',
-                  }}
-                />
-                <div className="relative z-10">
-                  <p className="text-2xl font-bold text-text-primary">
-                    {isLoading ? '-' : stat.value}
-                  </p>
-                  <p className="text-text-muted text-sm">{stat.label}</p>
-                </div>
+                <p className={`font-bold ${stat.color} text-lg md:text-2xl`}>
+                  {isLoading ? '-' : stat.value}
+                </p>
+                <p className="text-[10px] md:text-sm text-text-muted whitespace-nowrap">{stat.label}</p>
               </div>
             ))}
           </div>
