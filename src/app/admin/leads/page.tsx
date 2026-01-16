@@ -113,6 +113,7 @@ export default function AdminLeadsPage() {
     contacted: leads.filter((l) => l.status === 'contacted').length,
     proposal_sent: leads.filter((l) => l.status === 'proposal_sent').length,
     converted: leads.filter((l) => l.status === 'converted').length,
+    archived: leads.filter((l) => l.status === 'archived').length,
   };
 
   return (
@@ -128,13 +129,14 @@ export default function AdminLeadsPage() {
 
         <Container size="wide" className="relative z-10">
           {/* Stats Row - Grid layout that fits on screen */}
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 md:gap-3 mb-4 md:mb-8">
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3 mb-4 md:mb-8">
             {[
               { label: 'Total', value: stats.total, color: 'text-radiance-gold' },
               { label: 'New', value: stats.new, color: 'text-blue-400' },
               { label: 'Contacted', value: stats.contacted, color: 'text-amber-400' },
               { label: 'Sent', value: stats.proposal_sent, color: 'text-purple-400' },
               { label: 'Converted', value: stats.converted, color: 'text-green-400' },
+              { label: 'Archived', value: stats.archived, color: 'text-gray-400' },
             ].map((stat) => (
               <div
                 key={stat.label}
