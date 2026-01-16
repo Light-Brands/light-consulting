@@ -4,7 +4,7 @@
 
 ## Overview
 
-Light Consulting is a modern, single-page application built with React and Vite. It showcases AI consulting services with a sophisticated dark theme featuring the "Illumination Palette" — light emerging from depth.
+Light Consulting is a modern, single-page application built with React and Vite. It showcases AI consulting services with a sophisticated dark theme featuring the "Illumination Palette": light emerging from depth.
 
 ## Tech Stack
 
@@ -25,6 +25,9 @@ Light Consulting is a modern, single-page application built with React and Vite.
 ```bash
 # Install dependencies
 npm install
+
+# Install Playwright browsers (required for /book page website analysis)
+npx playwright install chromium
 
 # Start development server
 npm run dev
@@ -83,10 +86,10 @@ light-consulting/
 
 The app uses the **Illumination Palette**:
 
-- **Radiance Scale** (Primary) — Gold, amber warmth
-- **Clarity Scale** (Secondary) — Cream, soft light
-- **Wisdom Scale** (AI Features) — Violet intelligence
-- **Depth Scale** (Background) — Professional darkness
+- **Radiance Scale** (Primary): Gold, amber warmth
+- **Clarity Scale** (Secondary): Cream, soft light
+- **Wisdom Scale** (AI Features): Violet intelligence
+- **Depth Scale** (Background): Professional darkness
 
 ## Deployment
 
@@ -94,14 +97,33 @@ This project is configured for deployment on Vercel. Simply connect your GitHub 
 
 ### Environment Variables
 
-If connecting to Supabase (optional):
+Create a `.env.local` file in the root directory with the following variables (see `env.example` for a complete template):
 
+**Required:**
 ```env
-VITE_SUPABASE_URL=your-supabase-url
-VITE_SUPABASE_ANON_KEY=your-anon-key
+# Google Gemini API Key (Required for AI analysis features)
+# Get your API key from: https://aistudio.google.com/app/apikey
+GOOGLE_GEMINI_API_KEY=your-gemini-api-key-here
 ```
+
+**Optional (for Supabase integration):**
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+```
+
+**Quick Setup:**
+```bash
+# Copy the example file
+cp env.example .env.local
+
+# Then edit .env.local with your actual values
+```
+
+**Note:** The `/book` page requires `GOOGLE_GEMINI_API_KEY` to analyze websites. Without it, you'll see a 503 error: "AI analysis service is not configured".
 
 ## License
 
-Private — All rights reserved.
+Private - All rights reserved.
 

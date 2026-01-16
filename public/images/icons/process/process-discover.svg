@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" fill="none">
+  <!-- Discover: Magnifying glass with radar/exploration rings -->
+  <defs>
+    <linearGradient id="discoverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8B84A"/>
+      <stop offset="100%" stop-color="#D4944C"/>
+    </linearGradient>
+  </defs>
+  <!-- Radar/exploration rings -->
+  <circle cx="50" cy="50" r="40" stroke="url(#discoverGrad)" stroke-width="2" fill="none" opacity="0.3"/>
+  <circle cx="50" cy="50" r="28" stroke="#E8B84A" stroke-width="2" fill="none" opacity="0.5"/>
+  <circle cx="50" cy="50" r="16" stroke="#E8B84A" stroke-width="2" fill="none" opacity="0.7"/>
+  <!-- Center discovery point -->
+  <circle cx="50" cy="50" r="6" fill="#E8B84A"/>
+  <!-- Magnifying glass -->
+  <circle cx="72" cy="72" r="20" stroke="url(#discoverGrad)" stroke-width="4" fill="none"/>
+  <!-- Magnifying lens highlight -->
+  <path d="M62 62C66 58 78 58 82 62" stroke="#E8B84A" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  <!-- Magnifying handle -->
+  <path d="M86 86L108 108" stroke="#E8B84A" stroke-width="6" stroke-linecap="round"/>
+  <!-- Discovery sparkles -->
+  <circle cx="72" cy="72" r="3" fill="#E8B84A" opacity="0.8"/>
+  <!-- Radar sweep line -->
+  <path d="M50 50L75 25" stroke="#E8B84A" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <!-- Exploration dots -->
+  <circle cx="30" cy="35" r="3" fill="#E8B84A" opacity="0.5"/>
+  <circle cx="65" cy="30" r="2" fill="#E8B84A" opacity="0.4"/>
+  <circle cx="25" cy="60" r="2" fill="#E8B84A" opacity="0.4"/>
+</svg>

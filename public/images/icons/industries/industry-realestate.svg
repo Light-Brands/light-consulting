@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <!-- Real Estate: House with key and location pin -->
+  <defs>
+    <linearGradient id="realGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8B84A"/>
+      <stop offset="100%" stop-color="#D4944C"/>
+    </linearGradient>
+  </defs>
+  <!-- House -->
+  <path d="M8 28L32 8L56 28" stroke="url(#realGrad)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M14 26V50H50V26" stroke="#E8B84A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Door -->
+  <rect x="26" y="34" width="12" height="16" rx="1" stroke="#E8B84A" stroke-width="2" fill="none"/>
+  <circle cx="35" cy="42" r="1.5" fill="#E8B84A"/>
+  <!-- Window -->
+  <rect x="16" y="32" width="8" height="8" rx="1" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <path d="M20 32V40M16 36H24" stroke="#E8B84A" stroke-width="1"/>
+  <!-- Chimney -->
+  <rect x="42" y="14" width="6" height="10" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <!-- Key floating -->
+  <circle cx="54" cy="44" r="4" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <path d="M54 48V56" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M54 52H57M54 55H56" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Location pin accent -->
+  <path d="M8 44C8 40 10 38 12 38C14 38 16 40 16 44C16 48 12 52 12 52C12 52 8 48 8 44Z" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <circle cx="12" cy="44" r="1.5" fill="#E8B84A"/>
+</svg>

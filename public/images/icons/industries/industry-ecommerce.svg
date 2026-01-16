@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <!-- E-commerce: Shopping cart with sparkle and tag -->
+  <defs>
+    <linearGradient id="ecomGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8B84A"/>
+      <stop offset="100%" stop-color="#D4944C"/>
+    </linearGradient>
+  </defs>
+  <!-- Shopping cart -->
+  <path d="M8 12H14L18 40H48L54 18H20" stroke="url(#ecomGrad)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Cart wheels -->
+  <circle cx="22" cy="48" r="4" stroke="#E8B84A" stroke-width="2" fill="none"/>
+  <circle cx="44" cy="48" r="4" stroke="#E8B84A" stroke-width="2" fill="none"/>
+  <!-- Item in cart -->
+  <rect x="26" y="24" width="14" height="10" rx="2" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <!-- Sparkle/deal star -->
+  <path d="M50 8L52 12L56 12L53 15L54 19L50 17L46 19L47 15L44 12L48 12Z" fill="#E8B84A"/>
+  <!-- Price tag -->
+  <circle cx="12" cy="50" r="5" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <circle cx="12" cy="50" r="1.5" fill="#E8B84A"/>
+</svg>

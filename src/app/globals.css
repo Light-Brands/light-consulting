@@ -1,0 +1,533 @@
+/**
+ * Light Brand Consulting - Global Styles
+ * The Illumination Palette: Light emerging from depth
+ */
+
+/* Tailwind CSS v4 Import */
+@import "tailwindcss";
+
+/* ============================================================================
+ * Tailwind Theme Configuration (v4)
+ * ============================================================================ */
+
+@theme {
+  /* Color Palette */
+  --color-radiance-gold: #E8B84A;
+  --color-radiance-amber: #D4944C;
+  --color-radiance-warm: #C67D4E;
+  
+  --color-clarity-cream: #FDF6E3;
+  --color-clarity-soft: #F5E6C8;
+  --color-clarity-muted: #D9C9A5;
+  
+  --color-wisdom-violet: #8B7EC8;
+  --color-wisdom-soft: #A599D4;
+  --color-wisdom-muted: #7A6BA8;
+  
+  --color-depth-base: #0F0E0D;
+  --color-depth-elevated: #151413;
+  --color-depth-surface: #1C1A18;
+  --color-depth-border: #2A2724;
+  
+  --color-text-primary: #F8F5F0;
+  --color-text-secondary: #E5E0D8;
+  --color-text-muted: #A8A299;
+  
+  --color-success: #5CB85C;
+  --color-warning: #F0A030;
+  --color-error: #E85A5A;
+  --color-info: #5DADE2;
+
+  /* Font Families */
+  --font-family-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-family-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ============================================================================
+ * Additional CSS Custom Properties (for non-Tailwind usage)
+ * ============================================================================ */
+
+:root {
+  --font-display: var(--font-family-display);
+  --font-heading: var(--font-family-heading);
+  --font-body: var(--font-family-body);
+}
+
+/* ============================================================================
+ * Base Resets
+ * ============================================================================ */
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    /* Note: scroll-behavior: smooth removed to prevent unwanted scrolling on form focus events.
+       Smooth scrolling is handled via JavaScript where needed (scrollToTop, scrollToElement). */
+  }
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-depth-base);
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Typography Hierarchy */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  p {
+    font-family: var(--font-body);
+    line-height: 1.7;
+  }
+
+  /* Scrollbar Styles */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-depth-base);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-depth-border);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-radiance-gold);
+  }
+
+  /* Selection Styles */
+  ::selection {
+    background: var(--color-radiance-gold);
+    color: var(--color-depth-base);
+  }
+
+  ::-moz-selection {
+    background: var(--color-radiance-gold);
+    color: var(--color-depth-base);
+  }
+
+  /* Focus Styles */
+  :focus-visible {
+    outline: 2px solid var(--color-radiance-gold);
+    outline-offset: 2px;
+  }
+
+  /* Form Input Overrides */
+  input, textarea, select {
+    font-family: var(--font-body);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.6;
+  }
+
+  /* Autofill styling */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--color-text-primary);
+    -webkit-box-shadow: 0 0 0px 1000px var(--color-depth-surface) inset;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+}
+
+/* ============================================================================
+ * Gradient Utilities
+ * ============================================================================ */
+
+@layer utilities {
+  .gradient-illumination {
+    background: linear-gradient(135deg, var(--color-radiance-gold) 0%, var(--color-radiance-amber) 100%);
+  }
+
+  .gradient-dawn {
+    background: linear-gradient(180deg, var(--color-depth-base) 0%, var(--color-depth-surface) 50%, var(--color-depth-border) 100%);
+  }
+
+  .gradient-clarity-fade {
+    background: linear-gradient(180deg, rgba(253, 246, 227, 0.12) 0%, transparent 100%);
+  }
+
+  .gradient-wisdom-glow {
+    background: radial-gradient(ellipse at center, rgba(139, 126, 200, 0.15) 0%, transparent 70%);
+  }
+
+  .gradient-capacity-bridge {
+    background: linear-gradient(90deg, var(--color-text-muted) 0%, var(--color-radiance-gold) 50%, var(--color-clarity-cream) 100%);
+  }
+
+  /* Text gradients */
+  .text-gradient-illumination {
+    background: linear-gradient(135deg, var(--color-radiance-gold) 0%, var(--color-radiance-amber) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glow Effects */
+  .glow-illumination {
+    box-shadow: 0 0 30px rgba(232, 184, 74, 0.25);
+  }
+
+  .glow-illumination-intense {
+    box-shadow: 0 0 40px rgba(232, 184, 74, 0.35);
+  }
+
+  .glow-wisdom {
+    box-shadow: 0 0 30px rgba(139, 126, 200, 0.2);
+  }
+
+  .glow-clarity {
+    box-shadow: 0 0 20px rgba(253, 246, 227, 0.15);
+  }
+
+  /* Animations */
+  @keyframes illuminate-pulse {
+    0%, 100% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+  }
+
+  .animate-illuminate {
+    animation: illuminate-pulse 4s infinite ease-in-out;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-float {
+    animation: float 6s infinite ease-in-out;
+  }
+
+  /* Floating particles animation */
+  @keyframes floatParticles {
+    0%, 100% {
+      transform: translate(0, 0);
+      opacity: 0.3;
+    }
+    50% {
+      transform: translate(20px, -20px);
+      opacity: 0.6;
+    }
+  }
+
+  /* Gradient text animation */
+  @keyframes gradient {
+    0%, 100% {
+      background-position: 0% center;
+    }
+    50% {
+      background-position: 100% center;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.6s ease-out forwards;
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.8s ease-out forwards;
+  }
+
+  /* Staggered animation delays */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+
+  /* Shimmer animation for progress bar */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(400%);
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  /* Utility Classes */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Container utilities */
+  .container-narrow {
+    max-width: 768px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .container-wide {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .container-wide {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-wide {
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
+    }
+  }
+
+  /* Section spacing */
+  .section-spacing {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  @media (min-width: 768px) {
+    .section-spacing {
+      padding-top: 8rem;
+      padding-bottom: 8rem;
+    }
+  }
+}
+
+/* ============================================================================
+ * Prose Styles for Markdown Content
+ * ============================================================================ */
+
+@layer components {
+  .prose {
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+  }
+
+  .prose-invert {
+    color: var(--color-text-secondary);
+  }
+
+  /* Headings */
+  .prose h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+  }
+
+  .prose h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-radiance-gold);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+
+  .prose h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+
+  /* Paragraphs */
+  .prose p {
+    color: var(--color-text-secondary);
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.8;
+    font-size: 1.125rem;
+  }
+
+  .prose p:first-child {
+    margin-top: 0;
+  }
+
+  .prose p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Lists */
+  .prose ul {
+    list-style-type: disc;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    padding-left: 1.75rem;
+  }
+
+  .prose ol {
+    list-style-type: decimal;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    padding-left: 1.75rem;
+  }
+
+  .prose li {
+    color: var(--color-text-secondary);
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+    padding-left: 0.5rem;
+  }
+
+  .prose li::marker {
+    color: var(--color-radiance-gold);
+  }
+
+  .prose ul > li {
+    position: relative;
+  }
+
+  .prose ol > li {
+    position: relative;
+  }
+
+  /* Nested lists */
+  .prose li ul,
+  .prose li ol {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Strong/Bold */
+  .prose strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  /* Emphasis/Italic */
+  .prose em {
+    font-style: italic;
+  }
+
+  /* Links */
+  .prose a {
+    color: var(--color-radiance-gold);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s ease;
+  }
+
+  .prose a:hover {
+    color: var(--color-radiance-amber);
+  }
+
+  /* Blockquotes */
+  .prose blockquote {
+    border-left: 4px solid var(--color-radiance-gold);
+    padding-left: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+
+  /* Code */
+  .prose code {
+    background-color: var(--color-depth-elevated);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.875em;
+    color: var(--color-radiance-gold);
+  }
+
+  .prose pre {
+    background-color: var(--color-depth-elevated);
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .prose pre code {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+  }
+
+  /* Horizontal Rule */
+  .prose hr {
+    border: none;
+    border-top: 1px solid var(--color-depth-border);
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  /* First element in prose should have no top margin */
+  .prose > :first-child {
+    margin-top: 0;
+  }
+
+  /* Last element in prose should have no bottom margin */
+  .prose > :last-child {
+    margin-bottom: 0;
+  }
+}

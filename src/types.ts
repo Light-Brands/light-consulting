@@ -22,10 +22,54 @@ export interface BaseComponentProps {
 
 export type PageKey =
   | 'home'
+  | 'funnel'
+  | 'funnel1'
+  | 'funnel2'
+  | 'funnel3'
+  | 'funnel4'
+  | 'funnel5'
+  | 'funnel6'
+  | 'funnel7'
+  | 'funnel8'
+  | 'funnel9'
+  | 'funnel10'
+  | 'funnel11'
+  | 'funnel12'
+  | 'funnel13'
+  | 'funnel14'
+  | 'funnel15'
+  | 'funnel16'
+  | 'funnel17'
+  | 'funnel18'
+  | 'funnel19'
+  | 'funnel20'
+  | 'funnel21'
+  | 'funnel22'
+  | 'funnel23'
+  | 'funnel24'
+  | 'funnel25'
+  | 'funnel26'
+  | 'funnel27'
+  | 'funnel28'
+  | 'funnel29'
+  | 'funnel30'
+  | 'funnel31'
+  | 'funnel32'
+  | 'funnel33'
+  | 'funnel34'
+  | 'funnel35'
+  | 'funnel36'
+  | 'funnel-gallery'
   | 'services'
+  | 'services/diagnostic'
+  | 'services/command-center'
+  | 'services/authority-engine'
+  | 'services/ascension'
   | 'services/illumination'
   | 'services/blueprint'
   | 'services/story'
+  | 'services/strategy'
+  | 'services/heroes'
   | 'about'
   | 'portfolio'
   | 'book'
@@ -99,13 +143,58 @@ export interface NewsletterFormData {
 // ============================================================================
 
 export interface BookingFormData {
-  service?: 'illumination' | 'blueprint' | 'story';
+  service?: 'diagnostic' | 'command-center' | 'authority-engine' | 'ascension';
   name?: string;
   email?: string;
   company?: string;
   phone?: string;
   intake?: Record<string, string>;
   slot?: Date;
+}
+
+// AI-powered booking form data
+export interface AIReport {
+  context: string;
+  challenges: string[];
+  opportunities: string[];
+  valueProposition: string;
+  nextSteps: string[];
+}
+
+export interface WebsiteAnalysis {
+  techStack: {
+    platform?: string;
+    cms?: string;
+    frameworks?: string[];
+    hosting?: string;
+    analytics?: string[];
+    marketing_tools?: string[];
+    ecommerce?: string[];
+    security?: string[];
+    performance?: string[];
+    other?: string[];
+  };
+  websiteStory: string;
+  readinessScore: number;
+  readinessBrief: string;
+  capacityGapBrief: string;
+  // Enhanced business intelligence (optional for backwards compatibility)
+  businessIntelligence?: import('./types/business-intelligence').BusinessIntelligence;
+  fullReadinessReport?: string;
+}
+
+export interface AIBookingFormData {
+  document?: File | null;
+  websiteUrl?: string;
+  name?: string;
+  email?: string;
+  company?: string;
+  phone?: string;
+  aiReport?: AIReport;
+  websiteAnalysis?: WebsiteAnalysis;
+  isAnalyzing?: boolean;
+  isComplete?: boolean;
+  leadId?: string;
 }
 
 export interface IntakeQuestion {

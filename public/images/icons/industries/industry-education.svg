@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <!-- Education: Graduation cap with open book and lightbulb -->
+  <defs>
+    <linearGradient id="eduGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8B84A"/>
+      <stop offset="100%" stop-color="#D4944C"/>
+    </linearGradient>
+  </defs>
+  <!-- Graduation cap -->
+  <path d="M32 8L8 20L32 32L56 20L32 8Z" stroke="url(#eduGrad)" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+  <path d="M16 24V36C16 36 24 42 32 42C40 42 48 36 48 36V24" stroke="#E8B84A" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Tassel -->
+  <path d="M52 20V32" stroke="#E8B84A" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="52" cy="34" r="2" fill="#E8B84A"/>
+  <path d="M52 36V42" stroke="#E8B84A" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Open book at bottom -->
+  <path d="M20 50C20 48 24 46 32 46C40 46 44 48 44 50" stroke="#E8B84A" stroke-width="1.5" fill="none"/>
+  <path d="M32 46V56" stroke="#E8B84A" stroke-width="1.5"/>
+  <path d="M20 50V56C20 56 24 54 32 54" stroke="#E8B84A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M44 50V56C44 56 40 54 32 54" stroke="#E8B84A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- Knowledge sparkle -->
+  <circle cx="10" cy="36" r="2" fill="#E8B84A"/>
+  <path d="M10 32V34M10 38V40M6 36H8M12 36H14" stroke="#E8B84A" stroke-width="1" stroke-linecap="round"/>
+</svg>
