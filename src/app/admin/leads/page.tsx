@@ -127,9 +127,9 @@ export default function AdminLeadsPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
         <Container size="wide" className="relative z-10">
-          {/* Stats Row - Scrollable horizontally */}
-          <div className="mb-4 md:mb-8 overflow-hidden">
-            <div className="flex gap-2 md:gap-3 overflow-x-auto no-scrollbar">
+          {/* Stats Row - Scrollable horizontally with contained scroll */}
+          <div className="mb-4 md:mb-8">
+            <div className="flex gap-2 md:gap-3 overflow-x-auto overscroll-x-contain touch-pan-x no-scrollbar">
               {[
                 { label: 'Total', value: stats.total, color: 'text-radiance-gold' },
                 { label: 'New', value: stats.new, color: 'text-blue-400' },
