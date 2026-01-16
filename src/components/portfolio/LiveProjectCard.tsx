@@ -21,6 +21,19 @@ interface LiveProjectCardProps {
 // Timeout for detecting CORS/loading failures (5 seconds for better UX)
 const PREVIEW_LOAD_TIMEOUT = 5000;
 
+// Helper function to check if a URL is a Vercel domain
+// Vercel domains should never show live previews (use static images instead)
+const isVercelDomain = (url: string | undefined | null): boolean => {
+  if (!url) return false;
+  try {
+    const hostname = new URL(url).hostname;
+    return hostname.endsWith('.vercel.app');
+  } catch {
+    // If URL parsing fails, check for the pattern in the string
+    return url.includes('.vercel.app');
+  }
+};
+
 export const LiveProjectCard: React.FC<LiveProjectCardProps> = ({ 
   project, 
   index = 0,
@@ -37,7 +50,8 @@ export const LiveProjectCard: React.FC<LiveProjectCardProps> = ({
   const [scale, setScale] = useState(0.5);
   
   // Check if preview should be enabled (defaults to true)
-  const previewEnabled = project.preview_enabled !== false;
+  // Always disable live preview for Vercel domains - use static images instead
+  const previewEnabled = project.preview_enabled !== false && !isVercelDomain(project.case_study_url);
 
   const calculateScale = useCallback(() => {
     // Try to get width from article element first (more reliable)
