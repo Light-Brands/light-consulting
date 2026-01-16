@@ -125,7 +125,6 @@ export default function AdminProjectsPage() {
                 backgroundSize: '32px 32px',
               }}
             />
-          <div className="overflow-x-auto">
             <div className="relative z-10">
               <div className="p-6 border-b border-depth-border">
                 <div className="flex items-center gap-2 mb-2">
@@ -241,7 +240,7 @@ export default function AdminProjectsPage() {
                   </div>
 
                   {/* Desktop Table View */}
-                  <div className="hidden md:block">
+                  <div className="hidden md:block overflow-x-auto">
                     <table className="w-full">
                       <thead className="bg-depth-elevated">
                         <tr>
@@ -367,7 +366,6 @@ export default function AdminProjectsPage() {
                 </>
               )}
             </div>
-          </div>
           </div>
 
             {/* Delete Modal */}
