@@ -169,9 +169,12 @@ export default function AdminProjectsPage() {
                           <div className="flex-1 min-w-0">
                             <Link
                               href={`/admin/projects/${project.id}/edit`}
-                              className="font-medium text-text-primary hover:text-radiance-gold transition-colors block truncate"
+                              className="font-medium text-text-primary hover:text-radiance-gold transition-colors block break-words"
+                              title={project.title}
                             >
-                              {project.title}
+                              {project.title.length > 100
+                                ? `${project.title.slice(0, 100)}...`
+                                : project.title}
                             </Link>
                             <p className="text-sm text-text-muted truncate">{project.industry || 'No industry'}</p>
                             <div className="flex items-center gap-2 mt-1">
