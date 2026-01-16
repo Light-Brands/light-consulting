@@ -174,4 +174,5 @@ export interface PortfolioProject {
   tags: string[];
   category: string;
   featured: boolean;
+  previewEnabled?: boolean; // Try live iframe preview first (some sites block this via X-Frame-Options)
 }

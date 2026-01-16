@@ -2,10 +2,11 @@
  * Portfolio Page
  * Light Brand Consulting
  *
- * Displays portfolio projects with image fallbacks for stable previews
+ * Displays portfolio projects with live previews where possible,
+ * falling back to screenshots or branded placeholders when blocked.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Card, Tag } from '../components';
 import { PORTFOLIO_PROJECTS, PORTFOLIO_CATEGORIES, IMAGE_CONFIG } from '../lib/constants';
 import { PageKey, PortfolioProject } from '../types';
@@ -14,10 +15,15 @@ interface PortfolioPageProps {
   onNavigate: (page: PageKey) => void;
 }
 
-// Project Card with image fallback
+// Preview states for the card
+type PreviewState = 'loading' | 'iframe' | 'image' | 'placeholder';
+
+// Project Card with live preview + fallback chain
 const ProjectCard: React.FC<{ project: PortfolioProject }> = ({ project }) => {
-  const [imageError, setImageError] = useState(false);
+  const [previewState, setPreviewState] = useState<PreviewState>('loading');
   const [imageLoaded, setImageLoaded] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Generate initials from project title for fallback
   const getInitials = (title: string) => {
@@ -29,40 +35,127 @@ const ProjectCard: React.FC<{ project: PortfolioProject }> = ({ project }) => {
       .toUpperCase();
   };
 
+  // Determine if we should try live preview
+  const shouldTryLivePreview = project.previewEnabled !== false;
+
+  useEffect(() => {
+    if (!shouldTryLivePreview) {
+      // Skip straight to image if preview is disabled
+      setPreviewState('image');
+      return;
+    }
+
+    // Set a timeout to detect if iframe failed to load
+    // X-Frame-Options blocked iframes don't fire error events,
+    // so we use a timeout-based approach
+    timeoutRef.current = setTimeout(() => {
+      // If still loading after 5 seconds, assume iframe was blocked
+      if (previewState === 'loading') {
+        console.log(`[Portfolio] Live preview timeout for ${project.title}, falling back to image`);
+        setPreviewState('image');
+      }
+    }, 5000);
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [shouldTryLivePreview, project.title]);
+
+  // Handle successful iframe load
+  const handleIframeLoad = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    // Check if iframe actually loaded content (not blocked)
+    // Note: We can't access cross-origin iframe content, so we assume success
+    // if the load event fires
+    setPreviewState('iframe');
+  };
+
+  // Handle iframe error
+  const handleIframeError = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    console.log(`[Portfolio] Iframe error for ${project.title}, falling back to image`);
+    setPreviewState('image');
+  };
+
+  // Handle image load success
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+    if (previewState === 'image' || previewState === 'loading') {
+      setPreviewState('image');
+    }
+  };
+
+  // Handle image error - fall back to placeholder
+  const handleImageError = () => {
+    console.log(`[Portfolio] Image failed for ${project.title}, showing placeholder`);
+    setPreviewState('placeholder');
+  };
+
   return (
     <Card
       elevation="elevated"
       className="group overflow-hidden hover:ring-1 hover:ring-radiance-gold/30 transition-all duration-300"
     >
-      {/* Image/Preview Section */}
+      {/* Preview Section */}
       <div className="relative aspect-video overflow-hidden bg-depth-elevated">
-        {/* Loading skeleton */}
-        {!imageLoaded && !imageError && (
-          <div className="absolute inset-0 bg-depth-elevated animate-pulse flex items-center justify-center">
-            <div className="w-12 h-12 rounded-full bg-radiance-gold/10 flex items-center justify-center">
-              <span className="text-radiance-gold/50 font-bold text-lg">
-                {getInitials(project.title)}
-              </span>
+        {/* Loading skeleton - shown while determining preview method */}
+        {previewState === 'loading' && (
+          <div className="absolute inset-0 bg-depth-elevated flex items-center justify-center z-10">
+            <div className="text-center">
+              <div className="w-12 h-12 rounded-full bg-radiance-gold/10 flex items-center justify-center mx-auto mb-2 animate-pulse">
+                <span className="text-radiance-gold/50 font-bold text-lg">
+                  {getInitials(project.title)}
+                </span>
+              </div>
+              <p className="text-text-muted text-xs">Loading preview...</p>
             </div>
           </div>
         )}
 
-        {/* Project screenshot image */}
-        {!imageError ? (
+        {/* Live iframe preview - attempted first if enabled */}
+        {shouldTryLivePreview && previewState !== 'placeholder' && (
+          <iframe
+            ref={iframeRef}
+            src={project.siteUrl}
+            title={`${project.title} live preview`}
+            className={`absolute inset-0 w-full h-full border-0 transition-opacity duration-500 ${
+              previewState === 'iframe' ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              pointerEvents: 'none',
+              transform: 'scale(0.5)',
+              transformOrigin: 'top left',
+              width: '200%',
+              height: '200%',
+            }}
+            loading="lazy"
+            sandbox="allow-scripts allow-same-origin"
+            onLoad={handleIframeLoad}
+            onError={handleIframeError}
+          />
+        )}
+
+        {/* Screenshot image fallback */}
+        {(previewState === 'image' || (previewState === 'loading' && !shouldTryLivePreview)) && (
           <img
             src={project.imageUrl}
             alt={`${project.title} screenshot`}
-            className={`w-full h-full object-cover object-top transition-all duration-500 group-hover:scale-105 ${
+            className={`absolute inset-0 w-full h-full object-cover object-top transition-all duration-500 group-hover:scale-105 ${
               imageLoaded ? 'opacity-100' : 'opacity-0'
             }`}
-            onLoad={() => setImageLoaded(true)}
-            onError={() => {
-              setImageError(true);
-              setImageLoaded(true);
-            }}
+            onLoad={handleImageLoad}
+            onError={handleImageError}
           />
-        ) : (
-          /* Fallback placeholder when image fails */
+        )}
+
+        {/* Branded placeholder - final fallback */}
+        {previewState === 'placeholder' && (
           <div className="absolute inset-0 bg-gradient-to-br from-depth-elevated to-depth-base flex items-center justify-center">
             <div className="text-center">
               <div className="w-20 h-20 rounded-full bg-radiance-gold/20 flex items-center justify-center mx-auto mb-3">
@@ -75,8 +168,18 @@ const ProjectCard: React.FC<{ project: PortfolioProject }> = ({ project }) => {
           </div>
         )}
 
+        {/* Live preview indicator badge */}
+        {previewState === 'iframe' && (
+          <div className="absolute top-3 right-3 z-20">
+            <span className="px-2 py-1 text-xs bg-green-500/90 text-white rounded-full flex items-center gap-1">
+              <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+              Live
+            </span>
+          </div>
+        )}
+
         {/* Hover overlay with visit button */}
-        <div className="absolute inset-0 bg-depth-base/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+        <div className="absolute inset-0 bg-depth-base/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-30">
           <a
             href={project.siteUrl}
             target="_blank"
@@ -92,7 +195,7 @@ const ProjectCard: React.FC<{ project: PortfolioProject }> = ({ project }) => {
 
         {/* Featured badge */}
         {project.featured && (
-          <div className="absolute top-3 left-3">
+          <div className="absolute top-3 left-3 z-20">
             <Tag variant="premium" className="text-xs">Featured</Tag>
           </div>
         )}
