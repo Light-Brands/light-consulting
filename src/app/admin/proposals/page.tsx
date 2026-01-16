@@ -197,7 +197,7 @@ export default function AdminProposalsPage() {
             />
 
             <div className="relative z-10">
-              <div className="p-6 border-b border-depth-border">
+              <div className="p-4 md:p-6 border-b border-depth-border">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
                   <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
@@ -210,9 +210,9 @@ export default function AdminProposalsPage() {
               </div>
 
               {isLoading ? (
-                <div className="p-6 text-center text-text-muted">Loading...</div>
+                <div className="p-4 md:p-6 text-center text-text-muted">Loading...</div>
               ) : proposals.length === 0 ? (
-                <div className="p-6 text-center text-text-muted">
+                <div className="p-4 md:p-6 text-center text-text-muted">
                   No proposals found.{' '}
                   <Link
                     href="/admin/proposals/new"
@@ -226,43 +226,38 @@ export default function AdminProposalsPage() {
                   {/* Mobile Card View */}
                   <div className="md:hidden divide-y divide-depth-border">
                     {proposals.map((proposal) => (
-                      <div key={proposal.id} className="p-4">
+                      <div key={proposal.id} className="p-3">
                         {/* Header: Project + Amount */}
                         <div className="flex items-start justify-between mb-2">
-                          <div className="flex-1 min-w-0">
+                          <div className="flex-1 min-w-0 pr-2">
                             <Link
                               href={`/admin/proposals/${proposal.id}`}
-                              className="font-medium text-text-primary hover:text-radiance-gold transition-colors block truncate"
+                              className="font-medium text-text-primary hover:text-radiance-gold transition-colors block truncate text-sm"
                             >
                               {proposal.project_name}
                             </Link>
-                            <p className="text-sm text-text-muted truncate">
+                            <p className="text-xs text-text-muted truncate">
                               {proposal.client_name}
                               {proposal.client_company && ` - ${proposal.client_company}`}
                             </p>
                           </div>
-                          <div className="text-right ml-3">
-                            <p className="font-semibold text-text-primary">
+                          <div className="text-right flex-shrink-0">
+                            <p className="font-semibold text-text-primary text-sm">
                               {formatCurrency(proposal.final_amount)}
                             </p>
-                            {proposal.discount_percentage > 0 && (
-                              <p className="text-xs text-text-muted line-through">
-                                {formatCurrency(proposal.total_amount)}
-                              </p>
-                            )}
                           </div>
                         </div>
 
                         {/* Status + Date */}
-                        <div className="flex items-center gap-3 mb-3">
+                        <div className="flex items-center gap-2 mb-3">
                           <span
-                            className={`px-3 py-1 text-xs rounded-full font-medium ${
+                            className={`px-2 py-0.5 text-xs rounded-full font-medium ${
                               STATUS_COLORS[proposal.status]
                             }`}
                           >
                             {STATUS_LABELS[proposal.status]}
                           </span>
-                          <span className="text-xs text-text-muted">
+                          <span className="text-xs text-text-muted truncate">
                             {proposal.sent_at ? `Sent ${formatDate(proposal.sent_at)}` : 'Not sent'}
                           </span>
                         </div>
@@ -271,7 +266,7 @@ export default function AdminProposalsPage() {
                         <div className="flex items-center gap-2">
                           <Link
                             href={`/admin/proposals/${proposal.id}`}
-                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-depth-elevated hover:bg-depth-border text-text-secondary rounded-lg transition-colors text-sm"
+                            className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 bg-depth-elevated hover:bg-depth-border text-text-secondary rounded-lg transition-colors text-sm"
                           >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -281,24 +276,16 @@ export default function AdminProposalsPage() {
                           </Link>
                           <button
                             onClick={() => copyAccessLink(proposal.access_token)}
-                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-radiance-gold/10 hover:bg-radiance-gold/20 text-radiance-gold rounded-lg transition-colors text-sm"
+                            className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 bg-radiance-gold/10 hover:bg-radiance-gold/20 text-radiance-gold rounded-lg transition-colors text-sm"
                           >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                             </svg>
                             Copy Link
                           </button>
-                          <Link
-                            href={`/admin/proposals/${proposal.id}/edit`}
-                            className="p-2 text-text-muted hover:text-text-primary hover:bg-depth-elevated rounded-lg transition-colors"
-                          >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                          </Link>
                           <button
                             onClick={() => setDeleteId(proposal.id)}
-                            className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                            className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0"
                           >
                             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
