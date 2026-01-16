@@ -130,8 +130,32 @@ export default function AdminProposalsPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
         <Container size="wide" className="relative z-10">
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-2 md:gap-4 mb-4 md:mb-8">
+          {/* Stats Grid - Mobile: Compact horizontal row */}
+          <div className="md:hidden flex gap-1.5 mb-4 overflow-x-auto pb-1 -mx-4 px-4">
+            {[
+              { label: 'Total', value: stats.total, color: 'text-radiance-gold' },
+              { label: 'Drafts', value: stats.draft, color: 'text-gray-400' },
+              { label: 'Sent', value: stats.sent, color: 'text-blue-400' },
+              { label: 'Active', value: stats.active, color: 'text-green-400' },
+              { label: 'Done', value: stats.completed, color: 'text-amber-400' },
+              { label: 'Value', value: formatCurrency(stats.totalValue), color: 'text-radiance-gold', isValue: true },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                className="flex-shrink-0 bg-depth-surface border border-depth-border rounded-lg px-2.5 py-1.5 min-w-0"
+              >
+                <div className="flex items-center gap-1.5">
+                  <span className={`font-bold ${stat.color} ${stat.isValue ? 'text-xs' : 'text-sm'}`}>
+                    {isLoading ? '-' : stat.value}
+                  </span>
+                  <span className="text-[10px] text-text-muted whitespace-nowrap">{stat.label}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Stats Grid - Desktop: Full cards */}
+          <div className="hidden md:grid md:grid-cols-6 gap-4 mb-8">
             {[
               { label: 'Total', value: stats.total },
               { label: 'Drafts', value: stats.draft },
@@ -142,9 +166,7 @@ export default function AdminProposalsPage() {
             ].map((stat) => (
               <div
                 key={stat.label}
-                className={`relative bg-depth-surface border border-depth-border rounded-lg md:rounded-xl p-3 md:p-4 overflow-hidden ${
-                  stat.isLarge ? 'col-span-2 md:col-span-1' : ''
-                }`}
+                className="relative bg-depth-surface border border-depth-border rounded-xl p-4 overflow-hidden"
               >
                 <div
                   className="absolute inset-0 opacity-[0.02] pointer-events-none"
@@ -154,10 +176,10 @@ export default function AdminProposalsPage() {
                   }}
                 />
                 <div className="relative z-10">
-                  <p className={`font-bold text-text-primary ${stat.isLarge ? 'text-base md:text-lg' : 'text-xl md:text-2xl'}`}>
+                  <p className={`font-bold text-text-primary ${stat.isLarge ? 'text-lg' : 'text-2xl'}`}>
                     {isLoading ? '-' : stat.value}
                   </p>
-                  <p className="text-text-muted text-xs md:text-sm">{stat.label}</p>
+                  <p className="text-text-muted text-sm">{stat.label}</p>
                 </div>
               </div>
             ))}

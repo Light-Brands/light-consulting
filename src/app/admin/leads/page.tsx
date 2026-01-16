@@ -127,8 +127,31 @@ export default function AdminLeadsPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
         <Container size="wide" className="relative z-10">
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4 mb-4 md:mb-8">
+          {/* Stats Grid - Mobile: Compact horizontal row */}
+          <div className="md:hidden flex gap-1.5 mb-4 overflow-x-auto pb-1 -mx-4 px-4">
+            {[
+              { label: 'Total', value: stats.total, color: 'text-radiance-gold' },
+              { label: 'New', value: stats.new, color: 'text-blue-400' },
+              { label: 'Contacted', value: stats.contacted, color: 'text-amber-400' },
+              { label: 'Sent', value: stats.proposal_sent, color: 'text-purple-400' },
+              { label: 'Converted', value: stats.converted, color: 'text-green-400' },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                className="flex-shrink-0 bg-depth-surface border border-depth-border rounded-lg px-2.5 py-1.5 min-w-0"
+              >
+                <div className="flex items-center gap-1.5">
+                  <span className={`text-sm font-bold ${stat.color}`}>
+                    {isLoading ? '-' : stat.value}
+                  </span>
+                  <span className="text-[10px] text-text-muted whitespace-nowrap">{stat.label}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Stats Grid - Desktop: Full cards */}
+          <div className="hidden md:grid md:grid-cols-5 gap-4 mb-8">
             {[
               { label: 'Total Leads', value: stats.total, color: 'radiance-gold' },
               { label: 'New', value: stats.new, color: 'blue-500' },
@@ -138,7 +161,7 @@ export default function AdminLeadsPage() {
             ].map((stat) => (
               <div
                 key={stat.label}
-                className="relative bg-depth-surface border border-depth-border rounded-lg md:rounded-xl p-3 md:p-4 overflow-hidden"
+                className="relative bg-depth-surface border border-depth-border rounded-xl p-4 overflow-hidden"
               >
                 <div
                   className="absolute inset-0 opacity-[0.02] pointer-events-none"
@@ -148,10 +171,10 @@ export default function AdminLeadsPage() {
                   }}
                 />
                 <div className="relative z-10">
-                  <p className="text-xl md:text-2xl font-bold text-text-primary">
+                  <p className="text-2xl font-bold text-text-primary">
                     {isLoading ? '-' : stat.value}
                   </p>
-                  <p className="text-text-muted text-xs md:text-sm">{stat.label}</p>
+                  <p className="text-text-muted text-sm">{stat.label}</p>
                 </div>
               </div>
             ))}
