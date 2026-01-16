@@ -256,9 +256,11 @@ export default function AdminDashboard() {
                         </svg>
                       )}
                     </div>
-                    <div>
-                      <p className="font-medium text-text-primary">
-                        {project.title}
+                    <div className="min-w-0 overflow-hidden">
+                      <p className="font-medium text-text-primary break-words">
+                        {project.title.length > 100
+                          ? `${project.title.slice(0, 100)}...`
+                          : project.title}
                       </p>
                       <p className="text-sm text-text-muted">
                         {project.industry || 'No industry'}

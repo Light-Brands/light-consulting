@@ -239,9 +239,12 @@ export default function AdminLeadsPage() {
                           <div className="flex-1 min-w-0">
                             <Link
                               href={`/admin/leads/${lead.id}`}
-                              className="font-medium text-text-primary hover:text-radiance-gold transition-colors block truncate"
+                              className="font-medium text-text-primary hover:text-radiance-gold transition-colors block break-words"
+                              title={lead.name}
                             >
-                              {lead.name}
+                              {lead.name.length > 100
+                                ? `${lead.name.slice(0, 100)}...`
+                                : lead.name}
                             </Link>
                             <p className="text-sm text-text-muted truncate">{lead.email}</p>
                             {lead.company && (
