@@ -125,13 +125,13 @@ export default function AdminProposalsPage() {
         }
       />
 
-      <div className="py-8 md:py-12 relative overflow-hidden">
+      <div className="py-4 md:py-12 relative overflow-hidden">
         {/* Background atmosphere */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
         <Container size="wide" className="relative z-10">
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-2 md:gap-4 mb-4 md:mb-8">
             {[
               { label: 'Total', value: stats.total },
               { label: 'Drafts', value: stats.draft },
@@ -142,7 +142,7 @@ export default function AdminProposalsPage() {
             ].map((stat) => (
               <div
                 key={stat.label}
-                className={`relative bg-depth-surface border border-depth-border rounded-xl p-4 overflow-hidden ${
+                className={`relative bg-depth-surface border border-depth-border rounded-lg md:rounded-xl p-3 md:p-4 overflow-hidden ${
                   stat.isLarge ? 'col-span-2 md:col-span-1' : ''
                 }`}
               >
@@ -154,10 +154,10 @@ export default function AdminProposalsPage() {
                   }}
                 />
                 <div className="relative z-10">
-                  <p className={`font-bold text-text-primary ${stat.isLarge ? 'text-lg' : 'text-2xl'}`}>
+                  <p className={`font-bold text-text-primary ${stat.isLarge ? 'text-base md:text-lg' : 'text-xl md:text-2xl'}`}>
                     {isLoading ? '-' : stat.value}
                   </p>
-                  <p className="text-text-muted text-sm">{stat.label}</p>
+                  <p className="text-text-muted text-xs md:text-sm">{stat.label}</p>
                 </div>
               </div>
             ))}
@@ -222,114 +222,203 @@ export default function AdminProposalsPage() {
                   </Link>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-depth-elevated">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                          Project / Client
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                          Amount
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                          Status
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                          Sent
-                        </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-depth-border">
-                      {proposals.map((proposal) => (
-                        <tr
-                          key={proposal.id}
-                          className="hover:bg-depth-elevated transition-colors"
-                        >
-                          <td className="px-6 py-4">
-                            <div>
-                              <p className="font-medium text-text-primary">
-                                {proposal.project_name}
-                              </p>
-                              <p className="text-sm text-text-muted">
-                                {proposal.client_name}
-                                {proposal.client_company && ` - ${proposal.client_company}`}
-                              </p>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div>
-                              <p className="font-medium text-text-primary">
-                                {formatCurrency(proposal.final_amount)}
-                              </p>
-                              {proposal.discount_percentage > 0 && (
-                                <p className="text-sm text-text-muted line-through">
-                                  {formatCurrency(proposal.total_amount)}
-                                </p>
-                              )}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <span
-                              className={`px-3 py-1 text-xs rounded-full font-medium ${
-                                STATUS_COLORS[proposal.status]
-                              }`}
+                <>
+                  {/* Mobile Card View */}
+                  <div className="md:hidden divide-y divide-depth-border">
+                    {proposals.map((proposal) => (
+                      <div key={proposal.id} className="p-4">
+                        {/* Header: Project + Amount */}
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex-1 min-w-0">
+                            <Link
+                              href={`/admin/proposals/${proposal.id}`}
+                              className="font-medium text-text-primary hover:text-radiance-gold transition-colors block truncate"
                             >
-                              {STATUS_LABELS[proposal.status]}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 text-sm text-text-muted">
-                            {formatDate(proposal.sent_at)}
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex items-center justify-end gap-2">
-                              <button
-                                onClick={() => copyAccessLink(proposal.access_token)}
-                                className="p-2 text-text-muted hover:text-radiance-gold hover:bg-radiance-gold/10 rounded-lg transition-colors"
-                                title="Copy client link"
-                              >
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                </svg>
-                              </button>
-                              <Link
-                                href={`/admin/proposals/${proposal.id}`}
-                                className="p-2 text-text-muted hover:text-radiance-gold hover:bg-radiance-gold/10 rounded-lg transition-colors"
-                                title="View"
-                              >
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                              </Link>
-                              <Link
-                                href={`/admin/proposals/${proposal.id}/edit`}
-                                className="p-2 text-text-muted hover:text-text-primary hover:bg-depth-elevated rounded-lg transition-colors"
-                                title="Edit"
-                              >
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                              </Link>
-                              <button
-                                onClick={() => setDeleteId(proposal.id)}
-                                className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                                title="Delete"
-                              >
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                              </button>
-                            </div>
-                          </td>
+                              {proposal.project_name}
+                            </Link>
+                            <p className="text-sm text-text-muted truncate">
+                              {proposal.client_name}
+                              {proposal.client_company && ` - ${proposal.client_company}`}
+                            </p>
+                          </div>
+                          <div className="text-right ml-3">
+                            <p className="font-semibold text-text-primary">
+                              {formatCurrency(proposal.final_amount)}
+                            </p>
+                            {proposal.discount_percentage > 0 && (
+                              <p className="text-xs text-text-muted line-through">
+                                {formatCurrency(proposal.total_amount)}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Status + Date */}
+                        <div className="flex items-center gap-3 mb-3">
+                          <span
+                            className={`px-3 py-1 text-xs rounded-full font-medium ${
+                              STATUS_COLORS[proposal.status]
+                            }`}
+                          >
+                            {STATUS_LABELS[proposal.status]}
+                          </span>
+                          <span className="text-xs text-text-muted">
+                            {proposal.sent_at ? `Sent ${formatDate(proposal.sent_at)}` : 'Not sent'}
+                          </span>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex items-center gap-2">
+                          <Link
+                            href={`/admin/proposals/${proposal.id}`}
+                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-depth-elevated hover:bg-depth-border text-text-secondary rounded-lg transition-colors text-sm"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            View
+                          </Link>
+                          <button
+                            onClick={() => copyAccessLink(proposal.access_token)}
+                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-radiance-gold/10 hover:bg-radiance-gold/20 text-radiance-gold rounded-lg transition-colors text-sm"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                            Copy Link
+                          </button>
+                          <Link
+                            href={`/admin/proposals/${proposal.id}/edit`}
+                            className="p-2 text-text-muted hover:text-text-primary hover:bg-depth-elevated rounded-lg transition-colors"
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </Link>
+                          <button
+                            onClick={() => setDeleteId(proposal.id)}
+                            className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Desktop Table View */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-depth-elevated">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                            Project / Client
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                            Amount
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                            Status
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                            Sent
+                          </th>
+                          <th className="px-6 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider">
+                            Actions
+                          </th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody className="divide-y divide-depth-border">
+                        {proposals.map((proposal) => (
+                          <tr
+                            key={proposal.id}
+                            className="hover:bg-depth-elevated transition-colors"
+                          >
+                            <td className="px-6 py-4">
+                              <div>
+                                <p className="font-medium text-text-primary">
+                                  {proposal.project_name}
+                                </p>
+                                <p className="text-sm text-text-muted">
+                                  {proposal.client_name}
+                                  {proposal.client_company && ` - ${proposal.client_company}`}
+                                </p>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div>
+                                <p className="font-medium text-text-primary">
+                                  {formatCurrency(proposal.final_amount)}
+                                </p>
+                                {proposal.discount_percentage > 0 && (
+                                  <p className="text-sm text-text-muted line-through">
+                                    {formatCurrency(proposal.total_amount)}
+                                  </p>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <span
+                                className={`px-3 py-1 text-xs rounded-full font-medium ${
+                                  STATUS_COLORS[proposal.status]
+                                }`}
+                              >
+                                {STATUS_LABELS[proposal.status]}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-sm text-text-muted">
+                              {formatDate(proposal.sent_at)}
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex items-center justify-end gap-2">
+                                <button
+                                  onClick={() => copyAccessLink(proposal.access_token)}
+                                  className="p-2 text-text-muted hover:text-radiance-gold hover:bg-radiance-gold/10 rounded-lg transition-colors"
+                                  title="Copy client link"
+                                >
+                                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                  </svg>
+                                </button>
+                                <Link
+                                  href={`/admin/proposals/${proposal.id}`}
+                                  className="p-2 text-text-muted hover:text-radiance-gold hover:bg-radiance-gold/10 rounded-lg transition-colors"
+                                  title="View"
+                                >
+                                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                  </svg>
+                                </Link>
+                                <Link
+                                  href={`/admin/proposals/${proposal.id}/edit`}
+                                  className="p-2 text-text-muted hover:text-text-primary hover:bg-depth-elevated rounded-lg transition-colors"
+                                  title="Edit"
+                                >
+                                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                  </svg>
+                                </Link>
+                                <button
+                                  onClick={() => setDeleteId(proposal.id)}
+                                  className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                  title="Delete"
+                                >
+                                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                  </svg>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
               )}
             </div>
           </div>

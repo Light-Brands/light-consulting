@@ -153,6 +153,11 @@
  * ============================================================================ */
 
 @layer utilities {
+  /* Safe area for mobile devices with notches/home indicators */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
   .gradient-illumination {
     background: linear-gradient(135deg, var(--color-radiance-gold) 0%, var(--color-radiance-amber) 100%);
   }
