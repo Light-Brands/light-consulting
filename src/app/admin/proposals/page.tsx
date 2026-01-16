@@ -130,9 +130,9 @@ export default function AdminProposalsPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
         <Container size="wide" className="relative z-10">
-          {/* Stats Row - Scrollable horizontally with contained scroll */}
-          <div className="mb-4 md:mb-8">
-            <div className="flex gap-2 md:gap-3 overflow-x-auto overscroll-x-contain touch-pan-x no-scrollbar">
+          {/* Stats Row - Scrollable horizontally with edge-to-edge mobile scroll */}
+          <div className="mb-4 md:mb-8 -mx-6 md:mx-0">
+            <div className="flex gap-2 md:gap-3 overflow-x-auto overscroll-x-contain touch-pan-x no-scrollbar px-6 md:px-0">
               {[
                 { label: 'Total', value: stats.total, color: 'text-radiance-gold' },
                 { label: 'Drafts', value: stats.draft, color: 'text-gray-400' },
