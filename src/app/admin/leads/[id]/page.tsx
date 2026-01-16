@@ -306,7 +306,7 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
                       </div>
                       <div className="flex items-center justify-between">
                         <h2 className="text-lg font-semibold text-text-primary">
-                          AI Readiness Assessment
+                          AI Diagnostic Score
                         </h2>
                         <div className="text-right">
                           <div className="text-3xl font-bold text-radiance-gold">
