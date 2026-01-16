@@ -115,7 +115,7 @@ export default function AdminProposalsPage() {
         subtitle="Manage client proposals"
         action={
           <Link href="/admin/proposals/new">
-            <Button variant="primary">
+            <Button variant="primary" size="sm">
               <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
