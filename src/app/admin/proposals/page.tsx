@@ -144,10 +144,10 @@ export default function AdminProposalsPage() {
                 key={stat.label}
                 className="bg-depth-surface border border-depth-border rounded-lg md:rounded-xl px-2 py-2 md:px-4 md:py-3 text-center"
               >
-                <p className={`font-bold ${stat.color} ${stat.isValue ? 'text-xs md:text-lg' : 'text-base md:text-2xl'}`}>
+                <p className={`font-bold ${stat.color} ${stat.isValue ? 'text-sm md:text-lg' : 'text-lg md:text-2xl'}`}>
                   {isLoading ? '-' : stat.value}
                 </p>
-                <p className="text-[9px] md:text-sm text-text-muted truncate">{stat.label}</p>
+                <p className="text-[10px] md:text-sm text-text-muted truncate">{stat.label}</p>
               </div>
             ))}
           </div>

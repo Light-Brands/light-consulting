@@ -128,7 +128,7 @@ export default function AdminLeadsPage() {
 
         <Container size="wide" className="relative z-10">
           {/* Stats Row - Grid layout that fits on screen */}
-          <div className="grid grid-cols-5 gap-2 md:gap-3 mb-4 md:mb-8">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 md:gap-3 mb-4 md:mb-8">
             {[
               { label: 'Total', value: stats.total, color: 'text-radiance-gold' },
               { label: 'New', value: stats.new, color: 'text-blue-400' },
@@ -140,10 +140,10 @@ export default function AdminLeadsPage() {
                 key={stat.label}
                 className="bg-depth-surface border border-depth-border rounded-lg md:rounded-xl px-2 py-2 md:px-4 md:py-3 text-center"
               >
-                <p className={`font-bold ${stat.color} text-base md:text-2xl`}>
+                <p className={`font-bold ${stat.color} text-lg md:text-2xl`}>
                   {isLoading ? '-' : stat.value}
                 </p>
-                <p className="text-[9px] md:text-sm text-text-muted truncate">{stat.label}</p>
+                <p className="text-[10px] md:text-sm text-text-muted truncate">{stat.label}</p>
               </div>
             ))}
           </div>
