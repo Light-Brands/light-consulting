@@ -69,6 +69,16 @@ export default function AdminProjectsPage() {
     });
   };
 
+  // Calculate stats for indicators
+  const stats = {
+    total: projects.length,
+    published: projects.filter((p) => p.status === 'published').length,
+    draft: projects.filter((p) => p.status === 'draft').length,
+    featured: projects.filter((p) => p.featured).length,
+    industries: new Set(projects.map((p) => p.industry).filter(Boolean)).size,
+    tags: new Set(projects.flatMap((p) => p.tags || [])).size,
+  };
+
   return (
     <div className="min-h-screen">
       <AdminHeader
@@ -86,11 +96,33 @@ export default function AdminProjectsPage() {
         }
       />
 
-      <div className="py-8 md:py-12 relative overflow-hidden">
+      <div className="py-4 md:py-12 relative overflow-hidden">
         {/* Background atmosphere */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
-        
+
         <Container size="wide" className="relative z-10">
+          {/* Stats Row - Grid layout matching leads/proposals style */}
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3 mb-4 md:mb-8">
+            {[
+              { label: 'Total', value: stats.total, color: 'text-radiance-gold' },
+              { label: 'Published', value: stats.published, color: 'text-green-400' },
+              { label: 'Draft', value: stats.draft, color: 'text-amber-400' },
+              { label: 'Featured', value: stats.featured, color: 'text-purple-400' },
+              { label: 'Industries', value: stats.industries, color: 'text-blue-400' },
+              { label: 'Tags', value: stats.tags, color: 'text-gray-400' },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                className="bg-depth-surface border border-depth-border rounded-lg md:rounded-xl px-2 py-2 md:px-4 md:py-3 text-center"
+              >
+                <p className={`font-bold ${stat.color} text-lg md:text-2xl`}>
+                  {isLoading ? '-' : stat.value}
+                </p>
+                <p className="text-[10px] md:text-sm text-text-muted truncate">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+
           {/* Projects Table */}
           <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
             {/* Subtle pattern */}
