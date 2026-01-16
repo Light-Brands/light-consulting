@@ -213,7 +213,7 @@ export default function AdminProposalsPage() {
               ) : (
                 <>
                   {/* Mobile Card View */}
-                  <div className="md:hidden divide-y divide-depth-border">
+                  <div className="md:hidden divide-y divide-depth-border overflow-hidden">
                     {proposals.map((proposal) => (
                       <div key={proposal.id} className="p-3 overflow-hidden">
                         {/* Header: Project + Amount */}
