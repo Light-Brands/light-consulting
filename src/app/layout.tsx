@@ -2,11 +2,24 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { ConditionalLayout } from "@/components/ConditionalLayout";
+import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 
 export const metadata: Metadata = {
   title: "Light Brand Consulting | AI Business Transformation",
   description: "Transform your business into an AI super intelligence. Illuminate the path between where you are and where AI can take you.",
   keywords: "AI consulting, business transformation, AI strategy, AI acceleration",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Light Brand",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+  },
 };
 
 export default function RootLayout({
@@ -17,6 +30,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
+        {/* PWA Meta Tags */}
+        <meta name="theme-color" content="#0F0E0D" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
+
+        {/* Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
@@ -25,6 +46,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans bg-depth-base text-text-primary antialiased selection:bg-radiance-gold selection:text-depth-base">
+        <ServiceWorkerRegistration />
         <ConditionalLayout>{children}</ConditionalLayout>
       </body>
     </html>
