@@ -122,13 +122,13 @@ export default function AdminLeadsPage() {
         subtitle="Manage leads from the booking page"
       />
 
-      <div className="py-8 md:py-12 relative overflow-hidden">
+      <div className="py-4 md:py-12 relative overflow-hidden">
         {/* Background atmosphere */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
         <Container size="wide" className="relative z-10">
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4 mb-4 md:mb-8">
             {[
               { label: 'Total Leads', value: stats.total, color: 'radiance-gold' },
               { label: 'New', value: stats.new, color: 'blue-500' },
@@ -138,7 +138,7 @@ export default function AdminLeadsPage() {
             ].map((stat) => (
               <div
                 key={stat.label}
-                className="relative bg-depth-surface border border-depth-border rounded-xl p-4 overflow-hidden"
+                className="relative bg-depth-surface border border-depth-border rounded-lg md:rounded-xl p-3 md:p-4 overflow-hidden"
               >
                 <div
                   className="absolute inset-0 opacity-[0.02] pointer-events-none"
@@ -148,10 +148,10 @@ export default function AdminLeadsPage() {
                   }}
                 />
                 <div className="relative z-10">
-                  <p className="text-2xl font-bold text-text-primary">
+                  <p className="text-xl md:text-2xl font-bold text-text-primary">
                     {isLoading ? '-' : stat.value}
                   </p>
-                  <p className="text-text-muted text-sm">{stat.label}</p>
+                  <p className="text-text-muted text-xs md:text-sm">{stat.label}</p>
                 </div>
               </div>
             ))}
@@ -226,131 +226,216 @@ export default function AdminLeadsPage() {
                   No leads found. Leads will appear here when customers submit the booking form.
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-depth-elevated">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                          Contact
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                          Website
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                          Readiness
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                          Status
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                          Date
-                        </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-depth-border">
-                      {leads.map((lead) => (
-                        <tr
-                          key={lead.id}
-                          className="hover:bg-depth-elevated transition-colors"
-                        >
-                          <td className="px-6 py-4">
-                            <div>
-                              <p className="font-medium text-text-primary">
-                                {lead.name}
-                              </p>
-                              <p className="text-sm text-text-muted">{lead.email}</p>
-                              {lead.company && (
-                                <p className="text-sm text-text-muted">
-                                  {lead.company}
-                                </p>
-                              )}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            {lead.website_url ? (
-                              <a
-                                href={lead.website_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-radiance-gold hover:text-radiance-amber transition-colors text-sm break-all max-w-xs truncate block"
-                                title={lead.website_url}
-                              >
-                                {lead.website_url.replace(/^https?:\/\//, '')}
-                              </a>
-                            ) : (
-                              <span className="text-text-muted text-sm">—</span>
-                            )}
-                          </td>
-                          <td className="px-6 py-4">
-                            {lead.readiness_score !== null ? (
-                              <div className="flex items-center gap-2">
-                                <span className="text-lg font-semibold text-radiance-gold">
-                                  {lead.readiness_score}
-                                </span>
-                                <span className="text-xs text-text-muted">/100</span>
-                              </div>
-                            ) : (
-                              <span className="text-text-muted text-sm">—</span>
-                            )}
-                          </td>
-                          <td className="px-6 py-4">
-                            <select
-                              value={lead.status}
-                              onChange={(e) =>
-                                handleStatusChange(lead.id, e.target.value as LeadStatus)
-                              }
-                              className="bg-depth-base border border-depth-border rounded-lg px-3 py-1.5 text-sm text-text-primary focus:border-radiance-gold focus:outline-none"
+                <>
+                  {/* Mobile Card View */}
+                  <div className="md:hidden divide-y divide-depth-border">
+                    {leads.map((lead) => (
+                      <div key={lead.id} className="p-4">
+                        {/* Header: Name + Status */}
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1 min-w-0">
+                            <Link
+                              href={`/admin/leads/${lead.id}`}
+                              className="font-medium text-text-primary hover:text-radiance-gold transition-colors block truncate"
                             >
-                              {Object.entries(STATUS_LABELS).map(([value, label]) => (
-                                <option key={value} value={value}>
-                                  {label}
-                                </option>
-                              ))}
-                            </select>
-                          </td>
-                          <td className="px-6 py-4 text-sm text-text-muted">
-                            {formatDate(lead.created_at)}
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                            <div className="flex items-center justify-end gap-2">
-                              <Link
-                                href={`/admin/leads/${lead.id}`}
-                                className="p-2 text-text-muted hover:text-radiance-gold hover:bg-radiance-gold/10 rounded-lg transition-colors"
-                                title="View"
-                              >
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                              </Link>
-                              <Link
-                                href={`/admin/proposals/new?lead=${lead.id}`}
-                                className="p-2 text-text-muted hover:text-wisdom-violet hover:bg-wisdom-violet/10 rounded-lg transition-colors"
-                                title="Create Proposal"
-                              >
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                              </Link>
-                              <button
-                                onClick={() => setDeleteId(lead.id)}
-                                className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                                title="Delete"
-                              >
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                              </button>
+                              {lead.name}
+                            </Link>
+                            <p className="text-sm text-text-muted truncate">{lead.email}</p>
+                            {lead.company && (
+                              <p className="text-sm text-text-muted truncate">{lead.company}</p>
+                            )}
+                          </div>
+                          {lead.readiness_score !== null && (
+                            <div className="flex items-center gap-1 ml-3 bg-radiance-gold/10 px-2 py-1 rounded-lg">
+                              <span className="text-sm font-semibold text-radiance-gold">
+                                {lead.readiness_score}
+                              </span>
+                              <span className="text-[10px] text-text-muted">/100</span>
                             </div>
-                          </td>
+                          )}
+                        </div>
+
+                        {/* Status dropdown + Date */}
+                        <div className="flex items-center gap-3 mb-3">
+                          <select
+                            value={lead.status}
+                            onChange={(e) =>
+                              handleStatusChange(lead.id, e.target.value as LeadStatus)
+                            }
+                            className="flex-1 bg-depth-base border border-depth-border rounded-lg px-3 py-2 text-sm text-text-primary focus:border-radiance-gold focus:outline-none"
+                          >
+                            {Object.entries(STATUS_LABELS).map(([value, label]) => (
+                              <option key={value} value={value}>
+                                {label}
+                              </option>
+                            ))}
+                          </select>
+                          <span className="text-xs text-text-muted whitespace-nowrap">
+                            {formatDate(lead.created_at)}
+                          </span>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex items-center gap-2">
+                          <Link
+                            href={`/admin/leads/${lead.id}`}
+                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-depth-elevated hover:bg-depth-border text-text-secondary rounded-lg transition-colors text-sm"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            View
+                          </Link>
+                          <Link
+                            href={`/admin/proposals/new?lead=${lead.id}`}
+                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-wisdom-violet/10 hover:bg-wisdom-violet/20 text-wisdom-violet rounded-lg transition-colors text-sm"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                            </svg>
+                            Proposal
+                          </Link>
+                          <button
+                            onClick={() => setDeleteId(lead.id)}
+                            className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Desktop Table View */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-depth-elevated">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                            Contact
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                            Website
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                            Readiness
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                            Status
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                            Date
+                          </th>
+                          <th className="px-6 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider">
+                            Actions
+                          </th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody className="divide-y divide-depth-border">
+                        {leads.map((lead) => (
+                          <tr
+                            key={lead.id}
+                            className="hover:bg-depth-elevated transition-colors"
+                          >
+                            <td className="px-6 py-4">
+                              <div>
+                                <p className="font-medium text-text-primary">
+                                  {lead.name}
+                                </p>
+                                <p className="text-sm text-text-muted">{lead.email}</p>
+                                {lead.company && (
+                                  <p className="text-sm text-text-muted">
+                                    {lead.company}
+                                  </p>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              {lead.website_url ? (
+                                <a
+                                  href={lead.website_url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-radiance-gold hover:text-radiance-amber transition-colors text-sm break-all max-w-xs truncate block"
+                                  title={lead.website_url}
+                                >
+                                  {lead.website_url.replace(/^https?:\/\//, '')}
+                                </a>
+                              ) : (
+                                <span className="text-text-muted text-sm">—</span>
+                              )}
+                            </td>
+                            <td className="px-6 py-4">
+                              {lead.readiness_score !== null ? (
+                                <div className="flex items-center gap-2">
+                                  <span className="text-lg font-semibold text-radiance-gold">
+                                    {lead.readiness_score}
+                                  </span>
+                                  <span className="text-xs text-text-muted">/100</span>
+                                </div>
+                              ) : (
+                                <span className="text-text-muted text-sm">—</span>
+                              )}
+                            </td>
+                            <td className="px-6 py-4">
+                              <select
+                                value={lead.status}
+                                onChange={(e) =>
+                                  handleStatusChange(lead.id, e.target.value as LeadStatus)
+                                }
+                                className="bg-depth-base border border-depth-border rounded-lg px-3 py-1.5 text-sm text-text-primary focus:border-radiance-gold focus:outline-none"
+                              >
+                                {Object.entries(STATUS_LABELS).map(([value, label]) => (
+                                  <option key={value} value={value}>
+                                    {label}
+                                  </option>
+                                ))}
+                              </select>
+                            </td>
+                            <td className="px-6 py-4 text-sm text-text-muted">
+                              {formatDate(lead.created_at)}
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                              <div className="flex items-center justify-end gap-2">
+                                <Link
+                                  href={`/admin/leads/${lead.id}`}
+                                  className="p-2 text-text-muted hover:text-radiance-gold hover:bg-radiance-gold/10 rounded-lg transition-colors"
+                                  title="View"
+                                >
+                                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                  </svg>
+                                </Link>
+                                <Link
+                                  href={`/admin/proposals/new?lead=${lead.id}`}
+                                  className="p-2 text-text-muted hover:text-wisdom-violet hover:bg-wisdom-violet/10 rounded-lg transition-colors"
+                                  title="Create Proposal"
+                                >
+                                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                  </svg>
+                                </Link>
+                                <button
+                                  onClick={() => setDeleteId(lead.id)}
+                                  className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                  title="Delete"
+                                >
+                                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                  </svg>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
               )}
             </div>
           </div>

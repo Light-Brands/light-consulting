@@ -106,21 +106,53 @@ export default function AdminDashboard() {
         subtitle="Welcome to Light Brand Consulting Admin"
       />
 
-      <div className="py-8 md:py-12 relative overflow-hidden">
+      <div className="py-4 md:py-12 relative overflow-hidden">
         {/* Background atmosphere */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
         
         <Container size="wide" className="relative z-10">
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Mobile Quick Actions - Only visible on mobile */}
+          <div className="md:hidden grid grid-cols-2 gap-3 mb-6">
+            <Link
+              href="/admin/leads"
+              className="flex items-center gap-3 p-4 bg-depth-surface border border-depth-border rounded-xl hover:border-radiance-gold/30 transition-colors"
+            >
+              <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-medium text-text-primary text-sm">Leads</p>
+                <p className="text-xs text-text-muted">View all leads</p>
+              </div>
+            </Link>
+            <Link
+              href="/admin/proposals"
+              className="flex items-center gap-3 p-4 bg-depth-surface border border-depth-border rounded-xl hover:border-radiance-gold/30 transition-colors"
+            >
+              <div className="p-2 rounded-lg bg-wisdom-violet/10 text-wisdom-violet">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-medium text-text-primary text-sm">Proposals</p>
+                <p className="text-xs text-text-muted">View all proposals</p>
+              </div>
+            </Link>
+          </div>
+
+          {/* Stats Grid - 2 cols on mobile, 4 on desktop */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
           {statCards.map((stat) => (
             <div
               key={stat.label}
-              className="relative bg-depth-surface border border-depth-border rounded-2xl p-6 overflow-hidden group hover:border-radiance-gold/30 transition-all duration-500"
+              className="relative bg-depth-surface border border-depth-border rounded-xl md:rounded-2xl p-4 md:p-6 overflow-hidden group hover:border-radiance-gold/30 transition-all duration-500"
             >
               {/* Subtle glow on hover */}
               <div className="absolute inset-0 bg-radial-gradient from-radiance-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-              
+
               {/* Subtle pattern */}
               <div
                 className="absolute inset-0 opacity-[0.02] pointer-events-none"
@@ -129,20 +161,22 @@ export default function AdminDashboard() {
                   backgroundSize: '24px 24px',
                 }}
               />
-              
+
               <div className="relative z-10">
-                <div className="flex items-center justify-between mb-4">
-                  <div className={`p-3 rounded-lg bg-${stat.color}/10 text-${stat.color} group-hover:scale-110 transition-transform duration-300`}>
-                    {stat.icon}
+                <div className="flex items-center justify-between mb-2 md:mb-4">
+                  <div className={`p-2 md:p-3 rounded-lg bg-${stat.color}/10 text-${stat.color} group-hover:scale-110 transition-transform duration-300`}>
+                    <div className="w-4 h-4 md:w-6 md:h-6 [&>svg]:w-full [&>svg]:h-full">
+                      {stat.icon}
+                    </div>
                   </div>
-                  <div className="text-[8px] font-mono text-text-muted uppercase tracking-wider">
+                  <div className="hidden md:block text-[8px] font-mono text-text-muted uppercase tracking-wider">
                     {stat.label.toUpperCase().replace(' ', '_')}
                   </div>
                 </div>
-                <p className="text-3xl font-bold text-text-primary mb-1 group-hover:text-radiance-gold transition-colors">
+                <p className="text-2xl md:text-3xl font-bold text-text-primary mb-0.5 md:mb-1 group-hover:text-radiance-gold transition-colors">
                   {isLoading ? '-' : stat.value}
                 </p>
-                <p className="text-text-muted text-sm">{stat.label}</p>
+                <p className="text-text-muted text-xs md:text-sm">{stat.label}</p>
               </div>
             </div>
           ))}

@@ -10,7 +10,7 @@
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
-import { AdminSidebar } from '@/components/admin';
+import { AdminSidebar, MobileAdminNav } from '@/components/admin';
 
 function AdminContent({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -68,8 +68,11 @@ function AdminContent({ children }: { children: React.ReactNode }) {
   if (!isConfigured) {
     return (
       <div className="flex min-h-screen bg-depth-base">
-        <AdminSidebar />
-        <main className="flex-1 min-h-screen">
+        {/* Sidebar - hidden on mobile */}
+        <div className="hidden md:block">
+          <AdminSidebar />
+        </div>
+        <main className="flex-1 min-h-screen pb-20 md:pb-0">
           {/* Development warning banner */}
           <div className="bg-yellow-500/10 border-b border-yellow-500/30 px-4 py-2">
             <p className="text-yellow-500 text-sm text-center">
@@ -78,14 +81,21 @@ function AdminContent({ children }: { children: React.ReactNode }) {
           </div>
           {children}
         </main>
+        {/* Mobile bottom navigation */}
+        <MobileAdminNav />
       </div>
     );
   }
 
   return (
     <div className="flex min-h-screen bg-depth-base">
-      <AdminSidebar />
-      <main className="flex-1 min-h-screen">{children}</main>
+      {/* Sidebar - hidden on mobile */}
+      <div className="hidden md:block">
+        <AdminSidebar />
+      </div>
+      <main className="flex-1 min-h-screen pb-20 md:pb-0">{children}</main>
+      {/* Mobile bottom navigation */}
+      <MobileAdminNav />
     </div>
   );
 }
