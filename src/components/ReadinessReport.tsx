@@ -48,8 +48,11 @@ export const ReadinessReport: React.FC<ReadinessReportProps> = ({
   onBookCall,
 }) => {
   const [isBooking, setIsBooking] = useState(false);
+  const [bookingError, setBookingError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'business' | 'technical' | 'opportunities'>('overview');
-  const calendlyUrl = process.env.NEXT_PUBLIC_BOOKING_URL || 'https://calendly.com/your-link';
+
+  // Strategic session price
+  const SESSION_PRICE = 500;
 
   // Check if we have analysis data
   const hasAnalysis = readinessScore !== undefined && readinessScore !== null;
@@ -72,27 +75,42 @@ export const ReadinessReport: React.FC<ReadinessReportProps> = ({
     return 'from-amber-500/20 to-amber-600/5';
   };
 
-  const handleBookCall = async () => {
-    setIsBooking(true);
-    try {
-      const calendlyWindow = window.open(calendlyUrl, '_blank', 'width=800,height=600');
+  const handleBookSession = async () => {
+    if (!leadId) {
+      setBookingError('Unable to process booking. Please try again.');
+      return;
+    }
 
-      if (calendlyWindow && leadId) {
-        await fetch('/api/book-call', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            leadId,
-            calendlyLink: calendlyUrl,
-          }),
-        });
+    setIsBooking(true);
+    setBookingError(null);
+
+    try {
+      const response = await fetch('/api/stripe/create-session-booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lead_id: leadId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (data.already_paid) {
+          // Redirect to success page if already paid
+          window.location.href = `/book/success?lead_id=${leadId}&payment=success`;
+          return;
+        }
+        throw new Error(data.error || 'Failed to create checkout session');
       }
 
-      if (onBookCall) {
-        onBookCall(calendlyUrl);
+      // Redirect to Stripe checkout
+      if (data.checkout_url) {
+        window.location.href = data.checkout_url;
       }
     } catch (error) {
-      console.error('Error booking call:', error);
+      console.error('Error booking session:', error);
+      setBookingError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
       setIsBooking(false);
     }
@@ -112,17 +130,17 @@ export const ReadinessReport: React.FC<ReadinessReportProps> = ({
             </svg>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-            {userName ? `Thanks, ${userName}!` : 'Book Your Strategy Call'}
+            {userName ? `Thanks, ${userName}!` : 'Book Your Strategic Session'}
           </h1>
           <p className="text-text-secondary text-lg max-w-2xl mx-auto">
-            Let's discuss how AI can transform your business. Book a call with our team to explore personalized solutions for your unique challenges.
+            Let's discuss how AI can transform your business. Book your 90-minute strategic session for personalized recommendations and an actionable AI roadmap.
           </p>
         </div>
 
         {/* What to Expect Card */}
         <div className="bg-depth-surface border border-depth-border rounded-2xl p-8">
           <h2 className="text-xl font-semibold text-text-primary mb-6 text-center">
-            What to Expect from Your Strategy Call
+            What's Included in Your Strategic Session
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
@@ -165,22 +183,25 @@ export const ReadinessReport: React.FC<ReadinessReportProps> = ({
         <div className="bg-gradient-to-br from-radiance-gold/10 to-radiance-amber/5 border border-radiance-gold/20 rounded-2xl p-8 text-center">
           <div className="mb-6">
             <h3 className="text-2xl font-semibold text-text-primary mb-3">
-              Ready to Get Started?
+              Ready to Transform Your Business?
             </h3>
             <p className="text-text-secondary max-w-xl mx-auto">
-              Schedule your free strategy call and discover how AI can help your business grow smarter, faster, and more efficiently.
+              Book your 90-minute strategic session to receive personalized AI implementation strategies and a complete roadmap for your business.
             </p>
           </div>
+          {bookingError && (
+            <p className="text-red-400 text-sm mb-4">{bookingError}</p>
+          )}
           <Button
-            onClick={handleBookCall}
+            onClick={handleBookSession}
             isLoading={isBooking}
             size="lg"
             className="px-10"
           >
-            Book Your Strategy Call
+            Book Strategic Session - $500
           </Button>
           <p className="mt-4 text-sm text-text-muted">
-            30-minute call • No commitment required • Custom recommendations
+            90-minute deep-dive session • Personalized AI roadmap • Expert consultation
           </p>
         </div>
 
@@ -717,20 +738,46 @@ export const ReadinessReport: React.FC<ReadinessReportProps> = ({
             Ready to Unlock Your AI Potential?
           </h3>
           <p className="text-text-secondary max-w-xl mx-auto">
-            Book a call to receive your complete AI Readiness Diagnostic Report, detailed Capacity Gap Analysis,
-            and explore personalized AI transformation strategies for your business.
+            Book your strategic session to receive your complete AI Readiness Diagnostic Report, detailed Capacity Gap Analysis,
+            and personalized AI transformation strategies for your business.
           </p>
         </div>
+
+        {/* Value Proposition */}
+        <div className="flex flex-wrap justify-center gap-4 mb-6">
+          <div className="flex items-center gap-2 text-sm text-text-secondary">
+            <svg className="w-4 h-4 text-radiance-gold" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            <span>90-minute deep-dive session</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-text-secondary">
+            <svg className="w-4 h-4 text-radiance-gold" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            <span>Complete readiness report</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-text-secondary">
+            <svg className="w-4 h-4 text-radiance-gold" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+            <span>Custom AI roadmap</span>
+          </div>
+        </div>
+
+        {bookingError && (
+          <p className="text-red-400 text-sm mb-4">{bookingError}</p>
+        )}
         <Button
-          onClick={handleBookCall}
+          onClick={handleBookSession}
           isLoading={isBooking}
           size="lg"
           className="px-10"
         >
-          Book Your Strategy Call
+          Book Strategic Session - $500
         </Button>
         <p className="mt-4 text-sm text-text-muted">
-          30-minute call • No commitment required • Custom recommendations
+          Secure payment via Stripe • Schedule after purchase
         </p>
       </div>
     </div>
