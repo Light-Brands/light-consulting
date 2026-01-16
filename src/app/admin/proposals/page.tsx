@@ -215,13 +215,14 @@ export default function AdminProposalsPage() {
                   {/* Mobile Card View */}
                   <div className="md:hidden divide-y divide-depth-border">
                     {proposals.map((proposal) => (
-                      <div key={proposal.id} className="p-3">
+                      <div key={proposal.id} className="p-3 overflow-hidden">
                         {/* Header: Project + Amount */}
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex-1 min-w-0 pr-2">
+                        <div className="flex items-start justify-between gap-3 mb-2">
+                          <div className="flex-1 min-w-0 overflow-hidden">
                             <Link
                               href={`/admin/proposals/${proposal.id}`}
                               className="font-medium text-text-primary hover:text-radiance-gold transition-colors block truncate text-sm"
+                              title={proposal.project_name}
                             >
                               {proposal.project_name}
                             </Link>
@@ -230,7 +231,7 @@ export default function AdminProposalsPage() {
                               {proposal.client_company && ` - ${proposal.client_company}`}
                             </p>
                           </div>
-                          <div className="text-right flex-shrink-0">
+                          <div className="text-right flex-shrink-0 whitespace-nowrap">
                             <p className="font-semibold text-text-primary text-sm">
                               {formatCurrency(proposal.final_amount)}
                             </p>
