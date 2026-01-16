@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import Link from 'next/link';
 import { PageKey } from '../types';
 
 interface FooterProps {
@@ -27,11 +28,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           {/* Logo and Copyright */}
           <div className="flex items-center gap-3">
-            <img
-              src="/lb-logo.svg"
-              alt="Light Brand Consulting"
-              className="h-6 w-auto"
-            />
+            <Link href="/admin" className="hover:opacity-80 transition-opacity">
+              <img
+                src="/lb-logo.svg"
+                alt="Light Brand Consulting"
+                className="h-6 w-auto"
+              />
+            </Link>
             <span className="text-xs text-text-muted">
               &copy; {currentYear} Light Brand Consulting
             </span>
