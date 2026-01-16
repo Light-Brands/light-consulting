@@ -61,14 +61,6 @@ export default function AdminProjectsPage() {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
   // Calculate stats for indicators
   const stats = {
     total: projects.length,
@@ -221,9 +213,6 @@ export default function AdminProjectsPage() {
                           </div>
                         )}
 
-                        {/* Date */}
-                        <p className="text-xs text-text-muted mb-3">{formatDate(project.created_at)}</p>
-
                         {/* Actions */}
                         <div className="flex items-center gap-2">
                           <Link
@@ -270,9 +259,6 @@ export default function AdminProjectsPage() {
                           </th>
                           <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
                             Status
-                          </th>
-                          <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
-                            Created At
                           </th>
                           <th className="px-6 py-4 text-right text-xs font-semibold text-text-muted uppercase tracking-wider">
                             Actions
@@ -347,9 +333,6 @@ export default function AdminProjectsPage() {
                                   Featured
                                 </span>
                               )}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-text-muted text-sm">
-                              {formatDate(project.created_at)}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right">
                               <div className="flex items-center justify-end gap-2">
