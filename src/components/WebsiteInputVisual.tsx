@@ -227,8 +227,13 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
                 onClick={onSkipToBooking}
                 className="w-full"
               >
-                {hasUrl ? 'Skip Analysis & Book Directly' : 'Book a Strategy Call'}
+                {hasUrl ? 'Skip Analysis & Book Session' : 'Book Strategic Session - $500'}
               </Button>
+              {!hasUrl && (
+                <p className="mt-2 text-xs text-text-muted text-center">
+                  90-minute deep-dive consultation
+                </p>
+              )}
             </div>
           )}
 
@@ -240,7 +245,7 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
           )}
           {isContactReady && !hasUrl && (
             <p className="mt-2 text-sm text-text-muted text-center">
-              Add your website URL for a personalized AI readiness analysis, or book directly
+              Add your website URL for a personalized AI readiness analysis
             </p>
           )}
           {hasUrl && !isUrlReady && isContactReady && (

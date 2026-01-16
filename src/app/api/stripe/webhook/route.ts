@@ -87,11 +87,56 @@ export async function POST(request: NextRequest) {
 }
 
 /**
+ * Handle strategic session booking payment
+ */
+async function handleStrategicSessionPayment(session: Stripe.Checkout.Session) {
+  console.log('Processing strategic session payment:', session.id);
+
+  const leadId = session.metadata?.lead_id;
+
+  if (!leadId) {
+    console.error('No lead_id in session metadata for strategic session');
+    return;
+  }
+
+  if (!isSupabaseConfigured()) {
+    console.log('Supabase not configured, skipping database update');
+    return;
+  }
+
+  // Update lead with payment information
+  const { error } = await supabaseAdmin
+    .from('lead_submissions')
+    .update({
+      session_paid: true,
+      session_paid_at: new Date().toISOString(),
+      session_payment_id: session.payment_intent as string,
+      status: 'session_booked',
+    })
+    .eq('id', leadId);
+
+  if (error) {
+    console.error('Error updating lead session payment status:', error);
+    return;
+  }
+
+  console.log(`Strategic session paid for lead ${leadId}`);
+}
+
+/**
  * Handle successful checkout session completion
  */
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
   console.log('Processing checkout.session.completed:', session.id);
 
+  // Check if this is a strategic session booking
+  const sessionType = session.metadata?.session_type;
+  if (sessionType === 'strategic_session') {
+    await handleStrategicSessionPayment(session);
+    return;
+  }
+
+  // Otherwise, handle as milestone payment
   const milestoneId = session.metadata?.milestone_id;
   const proposalId = session.metadata?.proposal_id;
 

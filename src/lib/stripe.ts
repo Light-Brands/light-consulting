@@ -112,6 +112,83 @@ export async function createMilestoneCheckoutSession(
   }
 }
 
+// Types for strategic session checkout
+export interface CreateSessionBookingParams {
+  leadId: string;
+  clientEmail: string;
+  clientName: string;
+  companyName?: string;
+  successUrl: string;
+  cancelUrl: string;
+}
+
+// Strategic Session configuration
+export const STRATEGIC_SESSION_PRICE = 500; // $500
+export const STRATEGIC_SESSION_DURATION = 90; // 90 minutes
+
+// Create a checkout session for strategic session booking
+export async function createSessionBookingCheckout(
+  params: CreateSessionBookingParams
+): Promise<Stripe.Checkout.Session | null> {
+  if (!stripe) {
+    console.error('Stripe is not configured');
+    return null;
+  }
+
+  const {
+    leadId,
+    clientEmail,
+    clientName,
+    companyName,
+    successUrl,
+    cancelUrl,
+  } = params;
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: '90-Minute Strategic Session',
+              description: 'Deep-dive AI strategy session with personalized recommendations for your business',
+              metadata: {
+                lead_id: leadId,
+                session_type: 'strategic_session',
+              },
+            },
+            unit_amount: STRATEGIC_SESSION_PRICE * 100, // Convert to cents
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      customer_email: clientEmail,
+      metadata: {
+        lead_id: leadId,
+        session_type: 'strategic_session',
+        client_name: clientName,
+        company_name: companyName || '',
+      },
+      payment_intent_data: {
+        metadata: {
+          lead_id: leadId,
+          session_type: 'strategic_session',
+        },
+      },
+    });
+
+    return session;
+  } catch (error) {
+    console.error('Error creating strategic session checkout:', error);
+    throw error;
+  }
+}
+
 // Verify and construct webhook event
 export function constructWebhookEvent(
   payload: string | Buffer,
