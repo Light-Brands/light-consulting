@@ -121,6 +121,16 @@ export default function AdminLeadsPage() {
       <AdminHeader
         title="Lead Submissions"
         subtitle="Manage leads from the booking page"
+        actions={
+          <Link href="/admin/leads/new">
+            <Button variant="primary" size="sm">
+              <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Add Lead
+            </Button>
+          </Link>
+        }
       />
 
       <div className="py-4 md:py-12 relative overflow-hidden">
