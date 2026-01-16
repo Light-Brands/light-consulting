@@ -221,10 +221,12 @@ export default function AdminProposalsPage() {
                           <div className="flex-1 min-w-0 overflow-hidden">
                             <Link
                               href={`/admin/proposals/${proposal.id}`}
-                              className="font-medium text-text-primary hover:text-radiance-gold transition-colors block truncate text-sm"
+                              className="font-medium text-text-primary hover:text-radiance-gold transition-colors block break-words text-sm"
                               title={proposal.project_name}
                             >
-                              {proposal.project_name}
+                              {proposal.project_name.length > 100
+                                ? `${proposal.project_name.slice(0, 100)}...`
+                                : proposal.project_name}
                             </Link>
                             <p className="text-xs text-text-muted truncate">
                               {proposal.client_name}
