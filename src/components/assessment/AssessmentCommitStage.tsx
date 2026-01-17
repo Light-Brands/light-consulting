@@ -83,11 +83,13 @@ export const AssessmentCommitStage: React.FC<AssessmentCommitStageProps> = ({
           Secure Your Assessment
         </h2>
         <p className="text-sm sm:text-base text-text-secondary max-w-xl mx-auto leading-relaxed">
-          Complete payment to begin intake. Your call is scheduled for{' '}
-          {formData.bookedSlot
-            ? new Date(formData.bookedSlot).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-            : 'your selected date'
-          }.
+          Complete payment to begin intake.{' '}
+          {formData.bookingPending
+            ? 'Your call time will be confirmed shortly.'
+            : formData.bookedSlot
+              ? `Your call is scheduled for ${new Date(formData.bookedSlot).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}.`
+              : 'Your call is scheduled.'
+          }
         </p>
       </div>
 

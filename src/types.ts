@@ -298,6 +298,7 @@ export interface AssessmentFormData {
   bookingId?: string;
   bookedSlot?: Date;
   bookingConfirmed?: boolean;
+  bookingPending?: boolean; // True when webhook data not yet received
 
   // Stage 4: VSL / Educate tracking
   vslStartedAt?: Date;
