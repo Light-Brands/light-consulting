@@ -1,113 +1,120 @@
 /**
  * Assessment Checkout API Route
- * POST /api/assessment/checkout
+ * Light Brand Consulting
  *
- * Creates a Stripe checkout session for the $5,000 AI Go/No-Go Assessment
+ * POST /api/assessment/checkout - Create a checkout session for AI Go/No-Go Assessment ($5,000)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
-import { stripe, isStripeConfigured } from '@/lib/stripe';
-import { ASSESSMENT_CONFIG } from '@/lib/constants';
-import type { AssessmentSubmissionUpdate } from '@/types/database';
+import {
+  createAssessmentCheckout,
+  isStripeConfigured,
+  ASSESSMENT_PRICE,
+} from '@/lib/stripe';
 
-interface CheckoutRequest {
-  assessmentId?: string;
-  email: string;
-  name: string;
-  company?: string;
+interface CreateAssessmentCheckoutRequest {
+  assessment_id: string;
 }
 
+/**
+ * POST /api/assessment/checkout
+ * Creates a Stripe checkout session for the $5,000 AI Go/No-Go Assessment
+ * Requires a valid assessment_id from the assessment submission
+ */
 export async function POST(request: NextRequest) {
   try {
     // Check if Stripe is configured
-    if (!isStripeConfigured() || !stripe) {
-      // Return mock response for development
+    if (!isStripeConfigured()) {
+      return NextResponse.json(
+        { error: 'Payment system is not configured' },
+        { status: 503 }
+      );
+    }
+
+    const body: CreateAssessmentCheckoutRequest = await request.json();
+    const { assessment_id } = body;
+
+    if (!assessment_id) {
+      return NextResponse.json(
+        { error: 'Missing required field: assessment_id' },
+        { status: 400 }
+      );
+    }
+
+    // Get assessment details from database
+    if (!isSupabaseConfigured()) {
+      // Mock response for development
       return NextResponse.json({
-        checkout_url: '/assessment?stage=intake&payment=success&session_id=mock-session-' + Date.now(),
-        session_id: 'mock-session-' + Date.now(),
-        amount: ASSESSMENT_CONFIG.price,
-        development_mode: true,
+        checkout_url: 'https://checkout.stripe.com/mock-session',
+        session_id: 'mock_session_id',
+        amount: ASSESSMENT_PRICE,
       });
     }
 
-    const body: CheckoutRequest = await request.json();
-    const { assessmentId, email, name, company } = body;
+    // Get assessment by ID
+    const { data: assessment, error: assessmentError } = await supabaseAdmin
+      .from('assessment_submissions')
+      .select('id, name, email, company, payment_completed, payment_session_id')
+      .eq('id', assessment_id)
+      .single() as { data: { id: string; name: string; email: string; company?: string; payment_completed: boolean; payment_session_id?: string } | null; error: unknown };
 
-    // Validate required fields
-    if (!email?.trim()) {
+    if (assessmentError || !assessment) {
       return NextResponse.json(
-        { error: 'Email is required' },
+        { error: 'Assessment not found' },
+        { status: 404 }
+      );
+    }
+
+    // Check if assessment is already paid
+    if (assessment.payment_completed) {
+      return NextResponse.json(
+        { error: 'Assessment has already been paid', already_paid: true },
         { status: 400 }
       );
     }
 
     // Build success and cancel URLs
     const baseUrl = request.headers.get('origin') || process.env.NEXTAUTH_URL || 'http://localhost:3000';
-    const successUrl = `${baseUrl}/assessment?stage=intake&payment=success&session_id={CHECKOUT_SESSION_ID}${assessmentId ? `&id=${assessmentId}` : ''}`;
-    const cancelUrl = `${baseUrl}/assessment?stage=commit&payment=cancelled${assessmentId ? `&id=${assessmentId}` : ''}`;
+    const successUrl = `${baseUrl}/assessment?stage=intake&id=${assessment_id}&payment=success`;
+    const cancelUrl = `${baseUrl}/assessment?stage=commit&id=${assessment_id}&payment=cancelled`;
 
-    // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: ASSESSMENT_CONFIG.name,
-              description: ASSESSMENT_CONFIG.tagline,
-              metadata: {
-                assessment_id: assessmentId || '',
-                type: 'ai_go_no_go_assessment',
-              },
-            },
-            unit_amount: ASSESSMENT_CONFIG.price * 100, // Convert to cents
-          },
-          quantity: 1,
-        },
-      ],
-      mode: 'payment',
-      success_url: successUrl,
-      cancel_url: cancelUrl,
-      customer_email: email,
-      metadata: {
-        assessment_id: assessmentId || '',
-        type: 'ai_go_no_go_assessment',
-        client_name: name,
-        company_name: company || '',
-      },
-      payment_intent_data: {
-        metadata: {
-          assessment_id: assessmentId || '',
-          type: 'ai_go_no_go_assessment',
-        },
-      },
+    // Create new checkout session
+    const session = await createAssessmentCheckout({
+      assessmentId: assessment_id,
+      clientEmail: assessment.email,
+      clientName: assessment.name,
+      companyName: assessment.company,
+      successUrl,
+      cancelUrl,
     });
 
-    // Update assessment with checkout session info if Supabase is configured
-    if (isSupabaseConfigured() && assessmentId) {
-      const updateData: AssessmentSubmissionUpdate = {
-        payment_session_id: session.id,
-        stage: 'commit',
-        updated_at: new Date().toISOString(),
-      };
-
-      await supabaseAdmin
-        .from('assessment_submissions')
-        .update(updateData as never)
-        .eq('id', assessmentId);
+    if (!session) {
+      return NextResponse.json(
+        { error: 'Failed to create checkout session' },
+        { status: 500 }
+      );
     }
+
+    // Update assessment with checkout session info
+    await supabaseAdmin
+      .from('assessment_submissions')
+      .update({
+        payment_session_id: session.id,
+        payment_checkout_url: session.url,
+        updated_at: new Date().toISOString(),
+      } as never)
+      .eq('id', assessment_id);
 
     return NextResponse.json({
       checkout_url: session.url,
       session_id: session.id,
-      amount: ASSESSMENT_CONFIG.price,
+      amount: ASSESSMENT_PRICE,
     });
   } catch (error) {
     console.error('Error creating assessment checkout:', error);
     return NextResponse.json(
-      { error: 'Failed to create checkout session' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

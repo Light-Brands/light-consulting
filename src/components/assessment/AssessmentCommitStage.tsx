@@ -26,6 +26,11 @@ export const AssessmentCommitStage: React.FC<AssessmentCommitStageProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const handlePayment = async () => {
+    if (!formData.assessmentId) {
+      setError('Assessment ID not found. Please refresh and try again.');
+      return;
+    }
+
     setIsProcessing(true);
     setError(null);
 
@@ -34,10 +39,7 @@ export const AssessmentCommitStage: React.FC<AssessmentCommitStageProps> = ({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          assessmentId: formData.assessmentId,
-          email: formData.email,
-          name: formData.name,
-          company: formData.company,
+          assessment_id: formData.assessmentId,
         }),
       });
 
@@ -47,7 +49,12 @@ export const AssessmentCommitStage: React.FC<AssessmentCommitStageProps> = ({
         // Redirect to Stripe checkout
         window.location.href = result.checkout_url;
       } else if (result.error) {
-        setError(result.error);
+        if (result.already_paid) {
+          // Payment already completed, proceed to intake
+          onPaymentComplete(formData.assessmentId);
+        } else {
+          setError(result.error);
+        }
       }
     } catch (err) {
       console.error('Payment error:', err);

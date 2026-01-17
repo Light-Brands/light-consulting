@@ -189,6 +189,82 @@ export async function createSessionBookingCheckout(
   }
 }
 
+// Types for AI Go/No-Go Assessment checkout
+export interface CreateAssessmentCheckoutParams {
+  assessmentId: string;
+  clientEmail: string;
+  clientName: string;
+  companyName?: string;
+  successUrl: string;
+  cancelUrl: string;
+}
+
+// AI Go/No-Go Assessment configuration
+export const ASSESSMENT_PRICE = 5000; // $5,000
+
+// Create a checkout session for AI Go/No-Go Assessment
+export async function createAssessmentCheckout(
+  params: CreateAssessmentCheckoutParams
+): Promise<Stripe.Checkout.Session | null> {
+  if (!stripe) {
+    console.error('Stripe is not configured');
+    return null;
+  }
+
+  const {
+    assessmentId,
+    clientEmail,
+    clientName,
+    companyName,
+    successUrl,
+    cancelUrl,
+  } = params;
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'AI Go/No-Go Assessment™',
+              description: 'A clear yes/no decision on whether AI makes sense for your business right now.',
+              metadata: {
+                assessment_id: assessmentId,
+                type: 'ai_go_no_go_assessment',
+              },
+            },
+            unit_amount: ASSESSMENT_PRICE * 100, // Convert to cents
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      customer_email: clientEmail,
+      metadata: {
+        assessment_id: assessmentId,
+        type: 'ai_go_no_go_assessment',
+        client_name: clientName,
+        company_name: companyName || '',
+      },
+      payment_intent_data: {
+        metadata: {
+          assessment_id: assessmentId,
+          type: 'ai_go_no_go_assessment',
+        },
+      },
+    });
+
+    return session;
+  } catch (error) {
+    console.error('Error creating assessment checkout:', error);
+    throw error;
+  }
+}
+
 // Verify and construct webhook event
 export function constructWebhookEvent(
   payload: string | Buffer,

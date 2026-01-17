@@ -124,6 +124,44 @@ async function handleStrategicSessionPayment(session: Stripe.Checkout.Session) {
 }
 
 /**
+ * Handle AI Go/No-Go Assessment payment
+ */
+async function handleAssessmentPayment(session: Stripe.Checkout.Session) {
+  console.log('Processing assessment payment:', session.id);
+
+  const assessmentId = session.metadata?.assessment_id;
+
+  if (!assessmentId) {
+    console.error('No assessment_id in session metadata for assessment');
+    return;
+  }
+
+  if (!isSupabaseConfigured()) {
+    console.log('Supabase not configured, skipping database update');
+    return;
+  }
+
+  // Update assessment with payment information
+  const { error } = await supabaseAdmin
+    .from('assessment_submissions')
+    .update({
+      payment_completed: true,
+      payment_completed_at: new Date().toISOString(),
+      payment_intent_id: session.payment_intent as string,
+      stage: 'intake', // Move to intake stage after payment
+      updated_at: new Date().toISOString(),
+    } as never)
+    .eq('id', assessmentId);
+
+  if (error) {
+    console.error('Error updating assessment payment status:', error);
+    return;
+  }
+
+  console.log(`Assessment ${assessmentId} payment completed - moving to intake stage`);
+}
+
+/**
  * Handle successful checkout session completion
  */
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
@@ -133,6 +171,13 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
   const sessionType = session.metadata?.session_type;
   if (sessionType === 'strategic_session') {
     await handleStrategicSessionPayment(session);
+    return;
+  }
+
+  // Check if this is an AI Go/No-Go Assessment payment
+  const paymentType = session.metadata?.type;
+  if (paymentType === 'ai_go_no_go_assessment') {
+    await handleAssessmentPayment(session);
     return;
   }
 
@@ -188,9 +233,32 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
 async function handleCheckoutSessionExpired(session: Stripe.Checkout.Session) {
   console.log('Processing checkout.session.expired:', session.id);
 
-  const milestoneId = session.metadata?.milestone_id;
+  if (!isSupabaseConfigured()) {
+    return;
+  }
 
-  if (!milestoneId || !isSupabaseConfigured()) {
+  // Check if this is an assessment checkout
+  const paymentType = session.metadata?.type;
+  if (paymentType === 'ai_go_no_go_assessment') {
+    const assessmentId = session.metadata?.assessment_id;
+    if (assessmentId) {
+      // Clear the expired checkout session info to allow a new one to be created
+      await supabaseAdmin
+        .from('assessment_submissions')
+        .update({
+          payment_session_id: null,
+          payment_checkout_url: null,
+          updated_at: new Date().toISOString(),
+        } as never)
+        .eq('id', assessmentId)
+        .eq('payment_session_id', session.id); // Only clear if it matches
+    }
+    return;
+  }
+
+  // Handle milestone checkout expiration
+  const milestoneId = session.metadata?.milestone_id;
+  if (!milestoneId) {
     return;
   }
 
