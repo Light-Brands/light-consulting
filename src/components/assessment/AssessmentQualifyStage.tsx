@@ -2,6 +2,8 @@
  * Assessment Qualify Stage
  * Self-qualification landing with disqualification messaging
  * Mobile-optimized for touch interactions
+ *
+ * NOTE: Pricing is NOT shown here - it's revealed in the VSL (Educate stage)
  */
 
 'use client';
@@ -28,15 +30,12 @@ export const AssessmentQualifyStage: React.FC<AssessmentQualifyStageProps> = ({
 }) => {
   return (
     <div className="space-y-6 md:space-y-8">
-      {/* Header - Mobile optimized with larger touch-friendly text */}
+      {/* Header - No pricing shown */}
       <div className="text-center space-y-3 md:space-y-4 px-2">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-text-primary leading-tight">
           {ASSESSMENT_CONFIG.name}
         </h1>
-        <p className="text-lg sm:text-xl text-radiance-gold font-medium">
-          ${ASSESSMENT_CONFIG.price.toLocaleString()} Fixed Fee
-        </p>
-        <p className="text-sm sm:text-base text-text-secondary max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base md:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">
           {ASSESSMENT_CONFIG.tagline}
         </p>
         <p className="text-xs sm:text-sm text-text-muted italic">
@@ -161,13 +160,13 @@ export const AssessmentQualifyStage: React.FC<AssessmentQualifyStageProps> = ({
           </div>
         </div>
 
-        {/* Qualification Checkboxes - Touch-optimized */}
+        {/* Qualification Checkboxes - Touch-optimized (No pricing checkboxes) */}
         <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
           <h4 className="text-sm font-semibold text-text-secondary uppercase tracking-wide">
             Confirm your eligibility
           </h4>
 
-          {/* Decision Maker - Large touch target */}
+          {/* Decision Maker - Large touch target (No $ amount mentioned) */}
           <label className={`flex items-start gap-3 sm:gap-4 cursor-pointer p-4 rounded-xl border transition-colors active:scale-[0.99] ${
             formData.isDecisionMaker
               ? 'border-radiance-gold/50 bg-radiance-gold/5'
@@ -184,35 +183,11 @@ export const AssessmentQualifyStage: React.FC<AssessmentQualifyStageProps> = ({
               />
             </div>
             <span className="text-sm sm:text-base text-text-secondary leading-relaxed">
-              I am a <strong className="text-text-primary">decision-maker</strong> with authority to invest $5,000 without requiring additional approval.
+              I am a <strong className="text-text-primary">decision-maker</strong> with authority to make investment decisions for my business.
             </span>
           </label>
           {errors.isDecisionMaker && (
             <p className="text-sm text-red-400 ml-10">{errors.isDecisionMaker}</p>
-          )}
-
-          {/* Fixed Pricing - Large touch target */}
-          <label className={`flex items-start gap-3 sm:gap-4 cursor-pointer p-4 rounded-xl border transition-colors active:scale-[0.99] ${
-            formData.acceptsFixedPricing
-              ? 'border-radiance-gold/50 bg-radiance-gold/5'
-              : errors.acceptsFixedPricing
-                ? 'border-red-400/50'
-                : 'border-depth-border'
-          }`}>
-            <div className="flex-shrink-0 pt-0.5">
-              <input
-                type="checkbox"
-                checked={formData.acceptsFixedPricing || false}
-                onChange={(e) => onFieldChange('acceptsFixedPricing', e.target.checked)}
-                className="w-6 h-6 rounded border-depth-border bg-depth-base text-radiance-gold focus:ring-radiance-gold/50 cursor-pointer"
-              />
-            </div>
-            <span className="text-sm sm:text-base text-text-secondary leading-relaxed">
-              I understand and accept the <strong className="text-text-primary">fixed $5,000 fee</strong>. No discounts. No payment plans.
-            </span>
-          </label>
-          {errors.acceptsFixedPricing && (
-            <p className="text-sm text-red-400 ml-10">{errors.acceptsFixedPricing}</p>
           )}
 
           {/* Open to Negative Verdict - Large touch target */}
@@ -247,11 +222,11 @@ export const AssessmentQualifyStage: React.FC<AssessmentQualifyStageProps> = ({
           className="w-full min-h-[52px] text-base sm:text-lg"
           size="lg"
         >
-          {isLoading ? 'Processing...' : 'Continue to Schedule Call'}
+          {isLoading ? 'Processing...' : 'Continue to Learn More'}
         </Button>
 
         <p className="text-center text-text-muted text-xs sm:text-sm mt-4 leading-relaxed">
-          After scheduling, you&apos;ll watch a short video that explains exactly what to expect.
+          Next, you&apos;ll watch a short video that explains the assessment process and investment.
         </p>
       </div>
     </div>

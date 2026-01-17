@@ -256,13 +256,10 @@ export interface IconProps {
 // ============================================================================
 
 export type AssessmentStage =
-  | 'qualify'      // Landing/self-qualification
-  | 'book'         // Calendar booking
-  | 'educate'      // VSL video viewing
-  | 'confirm'      // Booking confirmation
-  | 'commit'       // Payment ($5,000)
-  | 'intake'       // Questionnaire + Loom
-  | 'status';      // Assessment status/confirmation
+  | 'qualify'      // Landing/self-qualification (no pricing)
+  | 'educate'      // VSL video viewing (pricing revealed)
+  | 'book'         // Calendar booking (after VSL)
+  | 'status';      // Confirmation/next steps
 
 export type AssessmentVerdict = 'GO' | 'CONDITIONAL_GO' | 'NO_GO' | null;
 
@@ -272,6 +269,10 @@ export interface AssessmentFormData {
   email?: string;
   company?: string;
   phone?: string;
+
+  // Lead tracking
+  leadId?: string;
+  source?: string; // e.g., 'assessment', 'funnel-1', 'direct'
 
   // Qualification
   isDecisionMaker?: boolean;
@@ -288,17 +289,7 @@ export interface AssessmentFormData {
   bookedSlot?: Date;
   bookingConfirmed?: boolean;
 
-  // Payment
-  paymentSessionId?: string;
-  paymentCompleted?: boolean;
-  paymentCompletedAt?: Date;
-
-  // Intake
-  intakeResponses?: Record<string, string>;
-  loomVideoUrl?: string;
-  intakeSubmittedAt?: Date;
-
-  // Assessment
+  // Assessment (for future use if needed)
   assessmentId?: string;
   verdict?: AssessmentVerdict;
   verdictDeliveredAt?: Date;

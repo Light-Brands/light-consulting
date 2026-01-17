@@ -2,42 +2,39 @@
  * AI Go/No-Go Assessment Page
  * Light Brand Consulting
  *
- * Multi-stage assessment funnel based on the 10-stage strategy:
- * 1. Qualify - Self-qualification with disqualification messaging
- * 2. Book - Calendar booking (without pricing)
- * 3. Educate - VSL video (mandatory completion)
- * 4. Confirm - Booking confirmation
- * 5. Commit - Payment ($5,000)
- * 6. Intake - Questionnaire + Loom requirement
- * 7. Status - Assessment status/confirmation
+ * Simplified assessment funnel:
+ * 1. Qualify - Self-qualification (no pricing shown)
+ * 2. Educate - VSL video (pricing revealed here)
+ * 3. Book - Calendar booking (after VSL, price-aware)
+ * 4. Status - Confirmation
+ *
+ * Creates a lead with source tracking when user completes qualification.
  */
 
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { Container, Section, Button } from '../components/ui';
+import { Container, Section } from '../components/ui';
 import { BookProgressVisual } from '../components';
 import { AssessmentStage, AssessmentFormData, PageKey } from '../types';
-import { ASSESSMENT_CONFIG, ASSESSMENT_INTAKE_QUESTIONS, ASSESSMENT_DISQUALIFIERS } from '../lib/constants';
+import { ASSESSMENT_CONFIG } from '../lib/constants';
 import { isValidEmail } from '../lib/utils';
 
 // Import assessment stage components
 import { AssessmentQualifyStage } from '../components/assessment/AssessmentQualifyStage';
 import { AssessmentBookStage } from '../components/assessment/AssessmentBookStage';
 import { AssessmentEducateStage } from '../components/assessment/AssessmentEducateStage';
-import { AssessmentConfirmStage } from '../components/assessment/AssessmentConfirmStage';
-import { AssessmentCommitStage } from '../components/assessment/AssessmentCommitStage';
-import { AssessmentIntakeStage } from '../components/assessment/AssessmentIntakeStage';
 import { AssessmentStatusStage } from '../components/assessment/AssessmentStatusStage';
 
 interface AssessmentPageProps {
   onNavigate: (page: PageKey) => void;
   initialStage?: AssessmentStage;
-  assessmentId?: string;
+  leadId?: string;
+  source?: string; // Track where the lead came from
 }
 
-// Map stages to step numbers for progress display
-const STAGE_ORDER: AssessmentStage[] = ['qualify', 'book', 'educate', 'confirm', 'commit', 'intake', 'status'];
+// New simplified stage order
+const STAGE_ORDER: AssessmentStage[] = ['qualify', 'educate', 'book', 'status'];
 
 const getStepNumber = (stage: AssessmentStage): number => {
   return STAGE_ORDER.indexOf(stage) + 1;
@@ -46,11 +43,13 @@ const getStepNumber = (stage: AssessmentStage): number => {
 export const AssessmentPage: React.FC<AssessmentPageProps> = ({
   onNavigate,
   initialStage = 'qualify',
-  assessmentId,
+  leadId,
+  source = 'assessment', // Default source is the assessment funnel
 }) => {
   const [stage, setStage] = useState<AssessmentStage>(initialStage);
   const [formData, setFormData] = useState<AssessmentFormData>({
-    assessmentId,
+    leadId,
+    source,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -62,11 +61,11 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
   useEffect(() => {
     const url = new URL(window.location.href);
     url.searchParams.set('stage', stage);
-    if (formData.assessmentId) {
-      url.searchParams.set('id', formData.assessmentId);
+    if (formData.leadId) {
+      url.searchParams.set('lead_id', formData.leadId);
     }
     window.history.replaceState({}, '', url.toString());
-  }, [stage, formData.assessmentId]);
+  }, [stage, formData.leadId]);
 
   // Update form data
   const updateFormData = useCallback((updates: Partial<AssessmentFormData>) => {
@@ -89,7 +88,7 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
     updateFormData({ [field]: value });
   }, [updateFormData]);
 
-  // Validate qualification stage
+  // Validate qualification stage (simplified - no pricing acceptance required yet)
   const validateQualify = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};
 
@@ -103,9 +102,6 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
     }
     if (!formData.isDecisionMaker) {
       newErrors.isDecisionMaker = 'You must confirm you are a decision-maker';
-    }
-    if (!formData.acceptsFixedPricing) {
-      newErrors.acceptsFixedPricing = 'You must accept the fixed pricing';
     }
     if (!formData.openToNegativeVerdict) {
       newErrors.openToNegativeVerdict = 'You must accept that a "no" is a valid outcome';
@@ -124,11 +120,11 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
       return;
     }
 
-    // Create/update assessment submission
+    // Create lead when completing qualification
     if (stage === 'qualify') {
       setIsLoading(true);
       try {
-        const response = await fetch('/api/assessment/create', {
+        const response = await fetch('/api/assessment/lead', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -136,16 +132,17 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
             email: formData.email,
             company: formData.company,
             phone: formData.phone,
+            source: formData.source || 'assessment',
           }),
         });
 
         const result = await response.json();
-        if (result.success && result.assessmentId) {
-          updateFormData({ assessmentId: result.assessmentId });
+        if (result.success && result.leadId) {
+          updateFormData({ leadId: result.leadId });
         }
       } catch (error) {
-        console.error('Error creating assessment:', error);
-        // Continue anyway for now
+        console.error('Error creating lead:', error);
+        // Continue anyway - lead creation shouldn't block the flow
       }
       setIsLoading(false);
     }
@@ -164,66 +161,44 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
     }
   }, [stage]);
 
-  // Handle VSL completion
+  // Handle VSL completion - pricing is now revealed, proceed to booking
   const handleVSLComplete = useCallback((watchPercentage: number) => {
     updateFormData({
       vslCompletedAt: new Date(),
       vslWatchPercentage: watchPercentage,
     });
-    // Automatically proceed if VSL requirement is met
+    // Proceed to booking stage after VSL is complete
     if (watchPercentage >= ASSESSMENT_CONFIG.vsl.minimumWatchPercentage) {
-      setStage('confirm');
+      setStage('book');
     }
   }, [updateFormData]);
 
-  // Handle booking complete
+  // Handle booking complete - this is the final action
   const handleBookingComplete = useCallback((bookingId: string, bookedSlot: Date) => {
     updateFormData({
       bookingId,
       bookedSlot,
       bookingConfirmed: true,
     });
-  }, [updateFormData]);
 
-  // Handle payment complete
-  const handlePaymentComplete = useCallback((sessionId: string) => {
-    updateFormData({
-      paymentSessionId: sessionId,
-      paymentCompleted: true,
-      paymentCompletedAt: new Date(),
-    });
-    setStage('intake');
-  }, [updateFormData]);
-
-  // Handle intake submission
-  const handleIntakeSubmit = useCallback(async (responses: Record<string, string>, loomUrl: string) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch('/api/assessment/intake', {
-        method: 'POST',
+    // Update lead with booking info
+    if (formData.leadId) {
+      fetch('/api/assessment/lead', {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          assessmentId: formData.assessmentId,
-          intakeResponses: responses,
-          loomVideoUrl: loomUrl,
+          leadId: formData.leadId,
+          bookingId,
+          bookedSlot: bookedSlot.toISOString(),
+          vslCompleted: true,
+          vslWatchPercentage: formData.vslWatchPercentage,
         }),
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        updateFormData({
-          intakeResponses: responses,
-          loomVideoUrl: loomUrl,
-          intakeSubmittedAt: new Date(),
-        });
-        setStage('status');
-      }
-    } catch (error) {
-      console.error('Error submitting intake:', error);
-      setErrors({ intake: 'Failed to submit intake. Please try again.' });
+      }).catch(console.error);
     }
-    setIsLoading(false);
-  }, [formData.assessmentId, updateFormData]);
+
+    // Move to status/confirmation
+    setStage('status');
+  }, [updateFormData, formData.leadId, formData.vslWatchPercentage]);
 
   return (
     <div className="min-h-screen pt-20 sm:pt-24 md:pt-32">
@@ -241,7 +216,7 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
 
           {/* Stage Content */}
           <div className="relative min-h-[400px] sm:min-h-[500px]">
-            {/* Qualify Stage */}
+            {/* Qualify Stage - No pricing shown */}
             {stage === 'qualify' && (
               <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
                 <AssessmentQualifyStage
@@ -254,19 +229,7 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
               </div>
             )}
 
-            {/* Book Stage */}
-            {stage === 'book' && (
-              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
-                <AssessmentBookStage
-                  formData={formData}
-                  onBookingComplete={handleBookingComplete}
-                  onContinue={handleNextStage}
-                  onBack={handleBack}
-                />
-              </div>
-            )}
-
-            {/* Educate Stage (VSL) */}
+            {/* Educate Stage (VSL) - Pricing revealed here */}
             {stage === 'educate' && (
               <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
                 <AssessmentEducateStage
@@ -277,42 +240,19 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
               </div>
             )}
 
-            {/* Confirm Stage */}
-            {stage === 'confirm' && (
+            {/* Book Stage - After VSL, user is price-aware */}
+            {stage === 'book' && (
               <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
-                <AssessmentConfirmStage
+                <AssessmentBookStage
                   formData={formData}
-                  onContinue={handleNextStage}
+                  onBookingComplete={handleBookingComplete}
+                  onContinue={() => setStage('status')}
                   onBack={handleBack}
                 />
               </div>
             )}
 
-            {/* Commit Stage (Payment) */}
-            {stage === 'commit' && (
-              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
-                <AssessmentCommitStage
-                  formData={formData}
-                  onPaymentComplete={handlePaymentComplete}
-                  onBack={handleBack}
-                />
-              </div>
-            )}
-
-            {/* Intake Stage */}
-            {stage === 'intake' && (
-              <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
-                <AssessmentIntakeStage
-                  formData={formData}
-                  questions={ASSESSMENT_INTAKE_QUESTIONS}
-                  onSubmit={handleIntakeSubmit}
-                  isLoading={isLoading}
-                  error={errors.intake}
-                />
-              </div>
-            )}
-
-            {/* Status Stage */}
+            {/* Status Stage - Confirmation */}
             {stage === 'status' && (
               <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
                 <AssessmentStatusStage

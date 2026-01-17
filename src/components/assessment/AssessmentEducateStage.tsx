@@ -1,6 +1,7 @@
 /**
  * Assessment Educate Stage
  * VSL video viewing with mandatory completion tracking
+ * THIS IS WHERE PRICING IS REVEALED - $5,000 investment
  * Mobile-optimized with larger touch targets
  */
 
@@ -72,10 +73,10 @@ export const AssessmentEducateStage: React.FC<AssessmentEducateStageProps> = ({
       {/* Header */}
       <div className="text-center space-y-2 sm:space-y-3 px-2">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-text-primary leading-tight">
-          Watch Before Your Call
+          Learn About the Assessment
         </h2>
         <p className="text-sm sm:text-base text-text-secondary max-w-xl mx-auto leading-relaxed">
-          This video explains exactly what the AI Go/No-Go Assessment delivers.
+          This video explains exactly what the AI Go/No-Go Assessment delivers, the investment required, and what to expect on your call.
           <strong className="text-text-primary block sm:inline mt-1 sm:mt-0"> You must watch at least {requiredPercentage}% to continue.</strong>
         </p>
       </div>
@@ -165,23 +166,30 @@ export const AssessmentEducateStage: React.FC<AssessmentEducateStageProps> = ({
             <div>
               <p className="text-text-secondary text-xs sm:text-sm leading-relaxed">
                 <strong className="text-text-primary">Keep watching:</strong> You need to watch at least {requiredPercentage}% of this video before you can proceed.
-                This ensures you fully understand what you&apos;re committing to.
+                This ensures you understand the assessment process and investment.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Success Message */}
+      {/* Success Message - Pricing revealed */}
       {canProceed && (
-        <div className="bg-growth-emerald/5 border border-growth-emerald/20 rounded-xl p-3 sm:p-4">
+        <div className="bg-growth-emerald/5 border border-growth-emerald/20 rounded-xl p-4 sm:p-5">
           <div className="flex items-start gap-2 sm:gap-3">
             <span className="text-growth-emerald text-lg sm:text-xl flex-shrink-0">&#10003;</span>
-            <div>
-              <p className="text-text-secondary text-xs sm:text-sm leading-relaxed">
+            <div className="space-y-2">
+              <p className="text-text-secondary text-sm sm:text-base leading-relaxed">
                 <strong className="text-text-primary">Video complete!</strong> You now understand what the AI Go/No-Go Assessment delivers.
-                Tap below to confirm your booking and proceed to payment.
               </p>
+              <div className="bg-depth-base/50 rounded-lg p-3 sm:p-4 mt-2">
+                <p className="text-radiance-gold text-lg sm:text-xl font-bold">
+                  Investment: ${ASSESSMENT_CONFIG.price.toLocaleString()}
+                </p>
+                <p className="text-text-muted text-xs sm:text-sm mt-1">
+                  You&apos;re now ready to schedule your assessment call. The investment will be discussed on the call.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -203,7 +211,7 @@ export const AssessmentEducateStage: React.FC<AssessmentEducateStageProps> = ({
             disabled={!canProceed}
             className={`min-h-[44px] text-sm sm:text-base flex-1 sm:flex-initial max-w-[200px] sm:max-w-none ${!canProceed ? 'opacity-50' : ''}`}
           >
-            {canProceed ? 'Continue' : `${requiredPercentage - Math.round(watchProgress)}% more`}
+            {canProceed ? 'Schedule Your Call' : `${requiredPercentage - Math.round(watchProgress)}% more`}
           </Button>
         </div>
       </div>
