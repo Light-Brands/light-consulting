@@ -226,8 +226,8 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
   }, [formData.assessmentId, updateFormData]);
 
   return (
-    <div className="min-h-screen pt-24 md:pt-32">
-      <Section spacing="lg" className="relative overflow-hidden">
+    <div className="min-h-screen pt-20 sm:pt-24 md:pt-32">
+      <Section spacing="lg" className="relative overflow-hidden px-4 sm:px-6">
         {/* Background atmosphere */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
@@ -240,7 +240,7 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
           />
 
           {/* Stage Content */}
-          <div className="relative min-h-[500px]">
+          <div className="relative min-h-[400px] sm:min-h-[500px]">
             {/* Qualify Stage */}
             {stage === 'qualify' && (
               <div className="opacity-0 animate-fade-in" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>

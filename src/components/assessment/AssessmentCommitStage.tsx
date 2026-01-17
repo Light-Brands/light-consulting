@@ -1,6 +1,7 @@
 /**
  * Assessment Commit Stage
  * Payment gateway for $5,000 assessment fee
+ * Mobile-optimized with prominent CTA
  */
 
 'use client';
@@ -68,116 +69,123 @@ export const AssessmentCommitStage: React.FC<AssessmentCommitStageProps> = ({
   }, [onPaymentComplete]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="text-center space-y-3">
-        <h2 className="text-2xl md:text-3xl font-bold text-text-primary">
+      <div className="text-center space-y-2 sm:space-y-3 px-2">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-text-primary leading-tight">
           Secure Your Assessment
         </h2>
-        <p className="text-text-secondary max-w-xl mx-auto">
-          Complete your payment to begin the intake process. Your verdict call is confirmed for {formData.bookedSlot ? new Date(formData.bookedSlot).toLocaleDateString() : 'your scheduled date'}.
+        <p className="text-sm sm:text-base text-text-secondary max-w-xl mx-auto leading-relaxed">
+          Complete payment to begin intake. Your call is scheduled for{' '}
+          {formData.bookedSlot
+            ? new Date(formData.bookedSlot).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+            : 'your selected date'
+          }.
         </p>
       </div>
 
       {/* Payment Card */}
-      <div className="bg-depth-surface border border-depth-border rounded-xl p-6 md:p-8">
-        {/* Price Display */}
-        <div className="text-center pb-6 border-b border-depth-border mb-6">
-          <p className="text-text-muted text-sm uppercase tracking-wide mb-2">Investment</p>
-          <p className="text-4xl md:text-5xl font-bold text-radiance-gold">
+      <div className="bg-depth-surface border border-depth-border rounded-xl p-4 sm:p-6 md:p-8">
+        {/* Price Display - Prominent on mobile */}
+        <div className="text-center pb-5 sm:pb-6 border-b border-depth-border mb-5 sm:mb-6">
+          <p className="text-text-muted text-xs sm:text-sm uppercase tracking-wide mb-1.5 sm:mb-2">Investment</p>
+          <p className="text-3xl sm:text-4xl md:text-5xl font-bold text-radiance-gold">
             ${ASSESSMENT_CONFIG.price.toLocaleString()}
           </p>
-          <p className="text-text-muted text-sm mt-2">One-time payment. No hidden fees.</p>
+          <p className="text-text-muted text-xs sm:text-sm mt-1.5 sm:mt-2">One-time payment. No hidden fees.</p>
         </div>
 
-        {/* What's Included */}
-        <div className="space-y-3 mb-6">
-          <h4 className="text-sm font-semibold text-text-secondary uppercase tracking-wide">
+        {/* What's Included - Compact grid on mobile */}
+        <div className="space-y-2.5 sm:space-y-3 mb-5 sm:mb-6">
+          <h4 className="text-xs sm:text-sm font-semibold text-text-secondary uppercase tracking-wide">
             Includes
           </h4>
-          <ul className="space-y-2">
-            <li className="flex items-center gap-2 text-text-secondary">
-              <span className="text-radiance-gold">&#10003;</span>
-              Complete AI readiness evaluation
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <li className="flex items-center gap-2 text-xs sm:text-sm text-text-secondary">
+              <span className="text-radiance-gold flex-shrink-0">&#10003;</span>
+              <span>AI readiness evaluation</span>
             </li>
-            <li className="flex items-center gap-2 text-text-secondary">
-              <span className="text-radiance-gold">&#10003;</span>
-              Structured async intake review
+            <li className="flex items-center gap-2 text-xs sm:text-sm text-text-secondary">
+              <span className="text-radiance-gold flex-shrink-0">&#10003;</span>
+              <span>Async intake review</span>
             </li>
-            <li className="flex items-center gap-2 text-text-secondary">
-              <span className="text-radiance-gold">&#10003;</span>
-              Live verdict delivery call
+            <li className="flex items-center gap-2 text-xs sm:text-sm text-text-secondary">
+              <span className="text-radiance-gold flex-shrink-0">&#10003;</span>
+              <span>Live verdict call</span>
             </li>
-            <li className="flex items-center gap-2 text-text-secondary">
-              <span className="text-radiance-gold">&#10003;</span>
-              One-page assessment report
+            <li className="flex items-center gap-2 text-xs sm:text-sm text-text-secondary">
+              <span className="text-radiance-gold flex-shrink-0">&#10003;</span>
+              <span>Assessment report</span>
             </li>
           </ul>
         </div>
 
         {/* Error Display */}
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 mb-6">
-            <p className="text-red-400 text-sm">{error}</p>
+          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
+            <p className="text-red-400 text-xs sm:text-sm">{error}</p>
           </div>
         )}
 
-        {/* Payment Button */}
+        {/* Payment Button - Large touch target */}
         <Button
           onClick={handlePayment}
           disabled={isProcessing}
-          className="w-full"
+          className="w-full min-h-[52px] text-base sm:text-lg"
           size="lg"
         >
           {isProcessing ? (
-            <span className="flex items-center gap-2">
-              <div className="w-4 h-4 border-2 border-depth-base/30 border-t-depth-base rounded-full animate-spin" />
-              Processing...
+            <span className="flex items-center justify-center gap-2">
+              <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-depth-base/30 border-t-depth-base rounded-full animate-spin" />
+              <span>Processing...</span>
             </span>
           ) : (
-            `Pay $${ASSESSMENT_CONFIG.price.toLocaleString()} Now`
+            `Pay $${ASSESSMENT_CONFIG.price.toLocaleString()}`
           )}
         </Button>
 
         {/* Security Notice */}
-        <div className="flex items-center justify-center gap-2 mt-4 text-text-muted text-sm">
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+        <div className="flex items-center justify-center gap-1.5 sm:gap-2 mt-3 sm:mt-4 text-text-muted text-xs sm:text-sm">
+          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
           </svg>
           <span>Secured by Stripe</span>
         </div>
       </div>
 
-      {/* Refund Policy */}
-      <div className="bg-depth-surface/50 border border-depth-border rounded-xl p-4">
-        <div className="flex items-start gap-3">
-          <span className="text-text-muted text-xl">&#9432;</span>
-          <div className="text-sm text-text-muted">
+      {/* Refund Policy - Compact on mobile */}
+      <div className="bg-depth-surface/50 border border-depth-border rounded-xl p-3 sm:p-4">
+        <div className="flex items-start gap-2 sm:gap-3">
+          <span className="text-text-muted text-lg sm:text-xl flex-shrink-0">&#9432;</span>
+          <div className="text-xs sm:text-sm text-text-muted leading-relaxed">
             <p>
-              <strong className="text-text-secondary">Refund Policy:</strong> This assessment is a judgment-based service.
-              A "NO-GO" verdict is a successful outcome that protects you from wasted AI investment.
-              No refunds are issued based on verdict outcome.
+              <strong className="text-text-secondary">Refund Policy:</strong> This is a judgment-based service.
+              A &quot;NO-GO&quot; verdict protects you from wasted AI investment. No refunds based on verdict outcome.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Back Button */}
-      <div className="flex items-center justify-between pt-4 border-t border-depth-border">
-        <Button
-          variant="ghost"
-          onClick={onBack}
-        >
-          &#8592; Back
-        </Button>
+      {/* Navigation - Sticky on mobile */}
+      <div className="sticky bottom-0 bg-depth-base/95 backdrop-blur-sm -mx-4 px-4 py-3 sm:relative sm:mx-0 sm:px-0 sm:py-0 sm:bg-transparent sm:backdrop-blur-none border-t sm:border-t border-depth-border">
+        <div className="flex items-center justify-between gap-3">
+          <Button
+            variant="ghost"
+            onClick={onBack}
+            className="min-h-[44px] text-sm sm:text-base"
+          >
+            <span className="mr-1">&#8592;</span> Back
+          </Button>
 
-        {/* Dev Skip Button */}
-        <Button
-          variant="outline"
-          onClick={() => onPaymentComplete('dev-session-' + Date.now())}
-        >
-          Skip (Dev Only)
-        </Button>
+          {/* Dev Skip Button */}
+          <Button
+            variant="outline"
+            onClick={() => onPaymentComplete('dev-session-' + Date.now())}
+            className="min-h-[44px] text-sm sm:text-base"
+          >
+            Skip (Dev)
+          </Button>
+        </div>
       </div>
     </div>
   );
