@@ -64,7 +64,11 @@ export async function POST(request: NextRequest) {
     console.log('[LeadConnector Webhook] Received:', JSON.stringify(payload, null, 2));
 
     // Extract appointment ID (GHL uses various field names)
-    const appointmentId = payload.id || payload.appointmentId || `ghl-${Date.now()}`;
+    // Filter out string "null" which LeadConnector sometimes sends for unresolved variables
+    const rawAppointmentId = payload.id || payload.appointmentId;
+    const appointmentId = rawAppointmentId && rawAppointmentId !== 'null' && rawAppointmentId !== 'undefined'
+      ? rawAppointmentId
+      : `ghl-${Date.now()}`;
 
     // Extract start time from various possible fields
     // Filter out string "null" which LeadConnector sometimes sends
