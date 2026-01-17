@@ -73,9 +73,19 @@ export async function POST(request: NextRequest) {
     // Extract start time from various possible fields
     // Filter out string "null" which LeadConnector sometimes sends
     const rawStartTime = payload.startTime || payload.selectedSlot || payload.slot;
-    const startTime = rawStartTime && rawStartTime !== 'null' && rawStartTime !== 'undefined'
-      ? rawStartTime
-      : null;
+    let startTime: string | null = null;
+
+    if (rawStartTime && rawStartTime !== 'null' && rawStartTime !== 'undefined') {
+      // Try to parse and convert to ISO format
+      // GHL sometimes sends human-readable dates like "Monday, January 19, 2026 8:00 AM"
+      const parsedDate = new Date(rawStartTime);
+      if (!isNaN(parsedDate.getTime())) {
+        startTime = parsedDate.toISOString();
+      } else {
+        // If parsing fails, store the raw value
+        startTime = rawStartTime;
+      }
+    }
 
     // Extract contact email (could be nested or at root level)
     const email = (
@@ -155,11 +165,22 @@ export async function POST(request: NextRequest) {
       console.error('[LeadConnector Webhook] Error finding lead:', findError);
     }
 
+    // Parse endTime to ISO format as well
+    let endTimeISO: string | null = null;
+    if (payload.endTime && payload.endTime !== 'null' && payload.endTime !== 'undefined') {
+      const parsedEndDate = new Date(payload.endTime);
+      if (!isNaN(parsedEndDate.getTime())) {
+        endTimeISO = parsedEndDate.toISOString();
+      } else {
+        endTimeISO = payload.endTime;
+      }
+    }
+
     // Build booking data object
     const bookingData = {
       booking_id: appointmentId,
       booked_slot: startTime,
-      booked_slot_end: payload.endTime || null,
+      booked_slot_end: endTimeISO,
       booked_at: new Date().toISOString(),
       booking_source: 'leadconnector_webhook',
       booking_status: payload.status || 'booked',
