@@ -101,6 +101,32 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
     const leadIdParam = url.searchParams.get('lead_id');
     const assessmentIdParam = url.searchParams.get('assessment_id');
     const paymentStatus = url.searchParams.get('payment');
+    const bookingComplete = url.searchParams.get('booking_complete');
+
+    // Handle booking complete callback from LeadConnector
+    if (bookingComplete === 'true') {
+      // Generate a booking ID (in production, LeadConnector may pass this)
+      const bookingId = url.searchParams.get('booking_id') || 'ghl-booking-' + Date.now();
+      // Parse booked slot if provided, otherwise use a placeholder
+      const bookedSlotParam = url.searchParams.get('booked_slot');
+      const bookedSlot = bookedSlotParam ? new Date(bookedSlotParam) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+      setFormData((prev) => ({
+        ...prev,
+        bookingId,
+        bookedSlot,
+        bookingConfirmed: true,
+        ...(leadIdParam ? { leadId: leadIdParam } : {}),
+      }));
+      setStage('educate');
+
+      // Clean up URL params
+      url.searchParams.delete('booking_complete');
+      url.searchParams.delete('booking_id');
+      url.searchParams.delete('booked_slot');
+      window.history.replaceState({}, '', url.toString());
+      return;
+    }
 
     if (stageParam && STAGE_ORDER.includes(stageParam)) {
       setStage(stageParam);

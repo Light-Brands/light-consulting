@@ -1,15 +1,16 @@
 /**
- * Assessment Book Stage
+ * Assessment Book Stage (Stage 3)
  * Calendar booking without pricing disclosure
- * Mobile-optimized with taller calendar embed
+ * Links out to LeadConnector for better booking experience
+ * Redirects back to Educate stage after booking complete
  */
 
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '../ui';
 import { AssessmentFormData } from '@/types';
-import { ASSESSMENT_CONFIG } from '@/lib/constants';
+import { ASSESSMENT_FUNNEL_CONFIG, BOOK_STAGE_CONTENT } from '@/lib/constants';
 
 interface AssessmentBookStageProps {
   formData: AssessmentFormData;
@@ -24,92 +25,120 @@ export const AssessmentBookStage: React.FC<AssessmentBookStageProps> = ({
   onContinue,
   onBack,
 }) => {
-  const [isCalendarLoaded, setIsCalendarLoaded] = useState(false);
+  // Build the booking URL with redirect back to funnel
+  const buildBookingUrl = () => {
+    // Get the base URL for redirect
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
 
-  // Handle LeadConnector/GHL booking event
-  const handleBookingEvent = (e: MessageEvent) => {
-    // LeadConnector sends various message types
-    // Check for booking confirmation events
-    if (e.data && typeof e.data === 'object') {
-      // GHL booking widget events
-      if (e.data.type === 'booking_confirmed' || e.data.event === 'booking_confirmed') {
-        const bookingId = e.data.bookingId || e.data.id || 'ghl-booking-' + Date.now();
-        const startTime = e.data.startTime || e.data.selected_slot || Date.now();
-        onBookingComplete(bookingId, new Date(startTime));
-        onContinue();
-      }
-      // Alternative event format
-      if (e.data.eventName === 'bookingConfirmed' || e.data.action === 'bookingSuccess') {
-        const bookingId = e.data.bookingId || e.data.appointmentId || 'ghl-booking-' + Date.now();
-        const startTime = e.data.startTime || e.data.appointmentTime || Date.now();
-        onBookingComplete(bookingId, new Date(startTime));
-        onContinue();
-      }
-    }
+    // Build redirect URL to come back to educate stage with booking info
+    const redirectUrl = `${baseUrl}/assessment-funnel?stage=educate&booking_complete=true${
+      formData.leadId ? `&lead_id=${formData.leadId}` : ''
+    }`;
+
+    // LeadConnector calendar URL with redirect
+    // The calendar URL format: base_url + ?redirect_url=encoded_url
+    const calendarBaseUrl = ASSESSMENT_FUNNEL_CONFIG.calendar.url;
+
+    // Check if it's a widget URL that needs conversion to booking page URL
+    // Widget: https://api.leadconnectorhq.com/widget/booking/ID
+    // Page: https://api.leadconnectorhq.com/widget/booking/ID?redirect_url=URL
+    const bookingUrl = `${calendarBaseUrl}?redirect_url=${encodeURIComponent(redirectUrl)}`;
+
+    return bookingUrl;
   };
 
-  // Listen for booking messages from LeadConnector widget
-  React.useEffect(() => {
-    window.addEventListener('message', handleBookingEvent);
-    return () => window.removeEventListener('message', handleBookingEvent);
-  }, [onBookingComplete, onContinue]);
+  const handleBookNow = () => {
+    const bookingUrl = buildBookingUrl();
+    // Open in same window for seamless experience
+    window.location.href = bookingUrl;
+  };
 
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div className="text-center space-y-2 sm:space-y-3 px-2">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-text-primary leading-tight">
-          Schedule Your Assessment Call
+          {BOOK_STAGE_CONTENT.headline}
         </h2>
         <p className="text-sm sm:text-base text-text-secondary max-w-xl mx-auto leading-relaxed">
-          Select a time for your AI Go/No-Go Assessment verdict call. This is where you&apos;ll receive your decision.
+          {BOOK_STAGE_CONTENT.subheadline}
         </p>
       </div>
 
-      {/* Calendar Embed Container - Taller on mobile for better usability */}
-      <div className="bg-depth-surface border border-depth-border rounded-xl overflow-hidden">
-        {/* Taller aspect ratio on mobile (3/4) vs desktop (4/3) */}
-        <div className="aspect-[3/4] sm:aspect-[4/3] md:aspect-[4/3] relative min-h-[400px] sm:min-h-[500px]">
-          {!isCalendarLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center bg-depth-base">
-              <div className="text-center space-y-4 px-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 border-2 border-radiance-gold/30 border-t-radiance-gold rounded-full animate-spin mx-auto" />
-                <p className="text-text-muted text-sm sm:text-base">Loading calendar...</p>
-              </div>
-            </div>
-          )}
+      {/* Booking CTA Card */}
+      <div className="bg-depth-surface border border-radiance-gold/30 rounded-xl p-6 sm:p-8 md:p-10">
+        <div className="text-center space-y-6">
+          {/* Calendar Icon */}
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-radiance-gold/10 flex items-center justify-center mx-auto">
+            <span className="text-radiance-gold text-4xl sm:text-5xl">&#128197;</span>
+          </div>
 
-          {/* LeadConnector/GHL Calendar Widget */}
-          <iframe
-            src={ASSESSMENT_CONFIG.calendar.url}
-            width="100%"
-            height="100%"
-            frameBorder="0"
-            className="absolute inset-0"
-            onLoad={() => setIsCalendarLoaded(true)}
-            title="Schedule Assessment Call"
-            allow="payment"
-          />
+          <div className="space-y-2">
+            <h3 className="text-lg sm:text-xl font-semibold text-text-primary">
+              Select Your Preferred Time
+            </h3>
+            <p className="text-text-muted text-sm sm:text-base max-w-md mx-auto">
+              You&apos;ll be taken to our scheduling page to choose a time that works for you.
+            </p>
+          </div>
+
+          {/* Main CTA */}
+          <Button
+            onClick={handleBookNow}
+            size="lg"
+            className="w-full sm:w-auto min-h-[56px] text-base sm:text-lg px-8 sm:px-12"
+          >
+            <span className="mr-2">&#128197;</span>
+            Open Calendar &amp; Book Now
+          </Button>
+
+          <p className="text-text-muted text-xs sm:text-sm">
+            After booking, you&apos;ll return here to continue.
+          </p>
         </div>
       </div>
 
-      {/* Info Box - Collapsible info on mobile */}
-      <div className="bg-radiance-gold/5 border border-radiance-gold/20 rounded-xl p-3 sm:p-4">
-        <div className="flex items-start gap-2 sm:gap-3">
+      {/* What Happens Next */}
+      <div className="bg-radiance-gold/5 border border-radiance-gold/20 rounded-xl p-4 sm:p-5">
+        <div className="flex items-start gap-3">
           <span className="text-radiance-gold text-lg sm:text-xl flex-shrink-0">&#9432;</span>
-          <div className="space-y-1 min-w-0">
-            <p className="text-text-secondary text-xs sm:text-sm">
-              <strong className="text-text-primary">What happens next:</strong>
+          <div className="space-y-2">
+            <p className="text-text-primary font-medium text-sm sm:text-base">
+              {BOOK_STAGE_CONTENT.note}
             </p>
-            <ol className="text-text-muted text-xs sm:text-sm space-y-0.5 sm:space-y-1 list-decimal list-inside">
-              <li>Watch a mandatory video explaining the process</li>
-              <li>Confirm your booking after watching</li>
-              <li>Complete payment to secure your spot</li>
-              <li>Fill out your intake questionnaire</li>
+            <ol className="text-text-muted text-xs sm:text-sm space-y-1 list-decimal list-inside">
+              <li>Book your call on our scheduling page</li>
+              <li>Watch a mandatory video explaining the assessment</li>
+              <li>Confirm your understanding and proceed to payment</li>
+              <li>Complete your intake questionnaire</li>
             </ol>
           </div>
         </div>
       </div>
+
+      {/* Pre-filled Info Display */}
+      {(formData.name || formData.email) && (
+        <div className="bg-depth-surface/50 border border-depth-border rounded-xl p-4 sm:p-5">
+          <p className="text-text-muted text-xs uppercase tracking-wide mb-3">Your Information</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {formData.name && (
+              <div>
+                <p className="text-text-muted text-xs">Name</p>
+                <p className="text-text-primary font-medium text-sm">{formData.name}</p>
+              </div>
+            )}
+            {formData.email && (
+              <div>
+                <p className="text-text-muted text-xs">Email</p>
+                <p className="text-text-primary font-medium text-sm break-all">{formData.email}</p>
+              </div>
+            )}
+          </div>
+          <p className="text-text-muted text-xs mt-3">
+            This information will be pre-filled on the booking page.
+          </p>
+        </div>
+      )}
 
       {/* Navigation - Sticky on mobile */}
       <div className="sticky bottom-0 bg-depth-base/95 backdrop-blur-sm -mx-4 px-4 py-3 sm:relative sm:mx-0 sm:px-0 sm:py-0 sm:bg-transparent sm:backdrop-blur-none border-t sm:border-t border-depth-border">
