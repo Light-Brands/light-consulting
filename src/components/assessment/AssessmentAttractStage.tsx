@@ -153,10 +153,10 @@ export const AssessmentAttractStage: React.FC<AssessmentAttractStageProps> = ({
       {/* Trust Indicators */}
       <div className="text-center space-y-2">
         <p className="text-text-muted text-xs sm:text-sm">
-          A $5,000 assessment that delivers judgment, not opinions.
+          A fixed-fee assessment that delivers judgment, not opinions.
         </p>
         <p className="text-text-muted text-xs">
-          Pricing details revealed after you watch the required video.
+          Investment details revealed after you watch the required video.
         </p>
       </div>
     </div>

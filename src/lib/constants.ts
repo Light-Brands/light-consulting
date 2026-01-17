@@ -803,8 +803,7 @@ export const ASSESSMENT_CONFIG = {
 
   // VSL Configuration
   vsl: {
-    // Placeholder URL - replace with actual VSL
-    url: 'https://www.youtube.com/embed/placeholder',
+    url: 'https://www.youtube.com/embed/I1J2Z_Fgado',
     minimumWatchPercentage: 90, // Must watch 90% to proceed
     estimatedDuration: '15 minutes',
   },
@@ -881,7 +880,7 @@ export const ASSESSMENT_FUNNEL_CONFIG = {
 
   // VSL Configuration - Pricing revealed here
   vsl: {
-    url: 'https://www.youtube.com/embed/placeholder',
+    url: 'https://www.youtube.com/embed/I1J2Z_Fgado',
     minimumWatchPercentage: 90,
     estimatedDuration: '15 minutes',
     unwatchedConsequence: 'Call auto-cancelled',
@@ -977,7 +976,7 @@ export const ATTRACT_STAGE_CONTENT = {
 
   // Positioning statement
   positioning: {
-    what: 'A $5,000 fixed-fee assessment that delivers a binary decision.',
+    what: 'A fixed-fee assessment that delivers a binary decision.',
     not: 'This is not consulting. Not implementation. Not a sales pitch.',
     outcome: 'You leave with judgment: GO, NO-GO, or NOT YET.',
   },
@@ -993,19 +992,19 @@ export const QUALIFY_STAGE_CONTENT = {
     {
       id: 'isDecisionMaker',
       label: 'Decision-Maker Authority',
-      description: 'I can independently authorize a $5,000 investment without committee approval.',
+      description: 'I can independently authorize business investments without committee approval.',
       required: true,
     },
     {
-      id: 'priceAcceptance',
+      id: 'paidAssessment',
       label: 'Investment Readiness',
-      description: 'I understand this is a paid assessment (price revealed after the video).',
+      description: 'I understand this is a paid assessment (investment details revealed in the video).',
       required: true,
     },
     {
       id: 'acceptsNegativeVerdict',
       label: 'Verdict Acceptance',
-      description: 'I accept that "NO-GO" is a valid, valuable outcome that protects my investment.',
+      description: 'I accept that "NO-GO" is a valid, valuable outcome that protects my business.',
       required: true,
     },
   ],
