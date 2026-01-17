@@ -404,6 +404,27 @@ export const LiveProjectCard: React.FC<LiveProjectCardProps> = ({
           </div>
         )}
 
+        {/* Mobile View Project Button */}
+        <Link
+          href={`/portfolio/${project.id}`}
+          className="md:hidden flex items-center justify-center gap-2 w-full py-3 mb-4 bg-radiance-gold text-depth-base font-semibold rounded-lg hover:bg-radiance-amber transition-colors"
+        >
+          <span>View Project</span>
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M17 8l4 4m0 0l-4 4m4-4H3"
+            />
+          </svg>
+        </Link>
+
         {/* Footer */}
         <div className="flex items-center justify-between pt-4 border-t border-depth-border/50">
           {/* Client */}
@@ -413,10 +434,10 @@ export const LiveProjectCard: React.FC<LiveProjectCardProps> = ({
             </p>
           )}
 
-          {/* View Details Link */}
+          {/* View Details Link - Desktop only */}
           <Link
             href={`/portfolio/${project.id}`}
-            className="inline-flex items-center gap-2 text-radiance-gold text-sm font-semibold hover:text-radiance-amber transition-colors group/link"
+            className="hidden md:inline-flex items-center gap-2 text-radiance-gold text-sm font-semibold hover:text-radiance-amber transition-colors group/link"
           >
             <span>Details</span>
             <svg
