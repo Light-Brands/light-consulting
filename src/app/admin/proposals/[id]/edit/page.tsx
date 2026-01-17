@@ -502,67 +502,69 @@ export default function AdminEditProposalPage({ params }: PageProps) {
     <div className="min-h-screen">
       <AdminHeader title="Edit Proposal" subtitle={formData.project_name || 'Update proposal details'} />
 
-      <div className="py-8 md:py-12 relative overflow-hidden">
+      <div className="py-4 sm:py-8 md:py-12 relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
         <Container size="wide" className="relative z-10">
           <Link
             href={`/admin/proposals/${id}`}
-            className="inline-flex items-center gap-2 text-text-muted hover:text-text-primary mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-text-muted hover:text-text-primary mb-4 sm:mb-6 transition-colors text-sm"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Back to Proposal
+            Back
           </Link>
 
           {/* Pricing Summary */}
-          <div className="p-4 bg-depth-surface border border-depth-border rounded-xl flex flex-wrap items-center justify-between gap-4 mb-6">
-            <div className="flex flex-wrap gap-6">
-              <div>
-                <span className="text-text-muted text-sm">Total (from Payment Schedule)</span>
-                <p className="text-text-primary font-bold text-xl">{formatCurrency(calculateTotalAmount())}</p>
-              </div>
-              {parseFloat(formData.discount_percentage) > 0 && (
+          <div className="p-3 sm:p-4 bg-depth-surface border border-depth-border rounded-xl mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex flex-wrap gap-4 sm:gap-6">
                 <div>
-                  <span className="text-text-muted text-sm">Discount ({formData.discount_percentage}%)</span>
-                  <p className="text-red-400 font-bold text-xl">
-                    -{formatCurrency((calculateTotalAmount() * parseFloat(formData.discount_percentage)) / 100)}
-                  </p>
+                  <span className="text-text-muted text-xs sm:text-sm">Total</span>
+                  <p className="text-text-primary font-bold text-lg sm:text-xl">{formatCurrency(calculateTotalAmount())}</p>
                 </div>
-              )}
-              <div>
-                <span className="text-text-muted text-sm">Final Amount</span>
-                <p className="text-radiance-gold font-bold text-xl">{formatCurrency(calculateFinalAmount())}</p>
-                {proposalFinalAmount !== null && Math.abs(calculateFinalAmount() - proposalFinalAmount) > 0.01 && (
-                  <p className="text-amber-400 text-xs mt-1">
-                    Currently saved: {formatCurrency(proposalFinalAmount)} - Save to update
-                  </p>
+                {parseFloat(formData.discount_percentage) > 0 && (
+                  <div>
+                    <span className="text-text-muted text-xs sm:text-sm">Discount ({formData.discount_percentage}%)</span>
+                    <p className="text-red-400 font-bold text-lg sm:text-xl">
+                      -{formatCurrency((calculateTotalAmount() * parseFloat(formData.discount_percentage)) / 100)}
+                    </p>
+                  </div>
                 )}
+                <div>
+                  <span className="text-text-muted text-xs sm:text-sm">Final</span>
+                  <p className="text-radiance-gold font-bold text-lg sm:text-xl">{formatCurrency(calculateFinalAmount())}</p>
+                  {proposalFinalAmount !== null && Math.abs(calculateFinalAmount() - proposalFinalAmount) > 0.01 && (
+                    <p className="text-amber-400 text-xs mt-1">
+                      Saved: {formatCurrency(proposalFinalAmount)}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="flex gap-3">
-              <Link href={`/admin/proposals/${id}`}>
-                <Button variant="ghost">Cancel</Button>
-              </Link>
-              <Button variant="primary" onClick={handleSave} isLoading={isSaving}>
-                Save Changes
-              </Button>
+              <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
+                <Link href={`/admin/proposals/${id}`} className="flex-1 sm:flex-none">
+                  <Button variant="ghost" className="w-full sm:w-auto text-sm">Cancel</Button>
+                </Link>
+                <Button variant="primary" onClick={handleSave} isLoading={isSaving} className="flex-1 sm:flex-none text-sm">
+                  Save
+                </Button>
+              </div>
             </div>
           </div>
 
           {/* Tabs */}
-          <div className="flex border-b border-depth-border mb-6">
+          <div className="flex overflow-x-auto border-b border-depth-border mb-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
             {[
               { key: 'details', label: 'Details' },
               { key: 'phases', label: 'Phases' },
-              { key: 'milestones', label: 'Payment Schedule' },
+              { key: 'milestones', label: 'Payments' },
               { key: 'agreement', label: 'Agreement' },
             ].map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key as typeof activeTab)}
-                className={`px-6 py-3 text-sm font-medium border-b-2 -mb-px transition-colors ${
+                className={`px-3 sm:px-6 py-3 text-xs sm:text-sm font-medium border-b-2 -mb-px transition-colors whitespace-nowrap flex-shrink-0 ${
                   activeTab === tab.key
                     ? 'text-radiance-gold border-radiance-gold'
                     : 'text-text-muted border-transparent hover:text-text-primary'
@@ -574,7 +576,7 @@ export default function AdminEditProposalPage({ params }: PageProps) {
           </div>
 
           {/* Tab Content */}
-          <div className="bg-depth-surface border border-depth-border rounded-2xl p-6 overflow-hidden relative">
+          <div className="bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl p-4 sm:p-6 overflow-hidden relative">
             <div
               className="absolute inset-0 opacity-[0.015] pointer-events-none"
               style={{
@@ -586,10 +588,10 @@ export default function AdminEditProposalPage({ params }: PageProps) {
             <div className="relative z-10">
               {/* Details Tab */}
               {activeTab === 'details' && (
-                <div className="space-y-8">
+                <div className="space-y-6 sm:space-y-8">
                   <div>
-                    <h3 className="text-lg font-semibold text-text-primary mb-4">Client Information</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-3 sm:mb-4">Client Information</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <Input
                         label="Client Name"
                         required
@@ -618,8 +620,8 @@ export default function AdminEditProposalPage({ params }: PageProps) {
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-semibold text-text-primary mb-4">Project Information</h3>
-                    <div className="space-y-4">
+                    <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-3 sm:mb-4">Project Information</h3>
+                    <div className="space-y-3 sm:space-y-4">
                       <Input
                         label="Project Name"
                         required
@@ -644,8 +646,8 @@ export default function AdminEditProposalPage({ params }: PageProps) {
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-semibold text-text-primary mb-4">Timeline & Pricing</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-3 sm:mb-4">Timeline & Pricing</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                       <Input
                         label="Total Timeline"
                         placeholder="e.g., 6-9 months"
@@ -676,8 +678,8 @@ export default function AdminEditProposalPage({ params }: PageProps) {
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-semibold text-text-primary mb-4">Portal Access</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-3 sm:mb-4">Portal Access</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                       <div>
                         <label className="block text-text-primary text-sm font-medium mb-2">
                           Portal Password (Optional)
@@ -707,13 +709,13 @@ export default function AdminEditProposalPage({ params }: PageProps) {
                   {phases.map((phase, phaseIndex) => (
                     <div
                       key={phase.id || phaseIndex}
-                      className={`p-6 bg-depth-elevated border border-depth-border rounded-xl transition-opacity ${
+                      className={`p-4 sm:p-6 bg-depth-elevated border border-depth-border rounded-xl transition-opacity ${
                         !phase.visible_in_portal ? 'opacity-60' : ''
                       }`}
                     >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <h4 className="text-lg font-semibold text-text-primary">Phase {phaseIndex + 1}</h4>
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                          <h4 className="text-base sm:text-lg font-semibold text-text-primary">Phase {phaseIndex + 1}</h4>
                           {!phase.visible_in_portal && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full bg-gray-500/10 text-gray-400">
                               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -724,11 +726,11 @@ export default function AdminEditProposalPage({ params }: PageProps) {
                                   d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
                                 />
                               </svg>
-                              Hidden from client
+                              Hidden
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3 sm:gap-4">
                           <label className="flex items-center gap-2 cursor-pointer">
                             <input
                               type="checkbox"
@@ -736,14 +738,14 @@ export default function AdminEditProposalPage({ params }: PageProps) {
                               onChange={(e) => updatePhase(phaseIndex, 'visible_in_portal', e.target.checked)}
                               className="w-4 h-4 rounded border-depth-border bg-depth-base text-radiance-gold focus:ring-radiance-gold focus:ring-offset-0"
                             />
-                            <span className="text-sm text-text-muted">Visible in Portal</span>
+                            <span className="text-xs sm:text-sm text-text-muted">Visible</span>
                           </label>
                           {phases.length > 1 && (
                             <button
                               onClick={() => removePhase(phaseIndex)}
-                              className="text-red-400 hover:text-red-300 text-sm"
+                              className="text-red-400 hover:text-red-300 text-xs sm:text-sm"
                             >
-                              Remove Phase
+                              Remove
                             </button>
                           )}
                         </div>
@@ -840,33 +842,32 @@ export default function AdminEditProposalPage({ params }: PageProps) {
               {/* Milestones Tab */}
               {activeTab === 'milestones' && (
                 <div className="space-y-6">
-                  <div className="bg-radiance-gold/5 border border-radiance-gold/20 rounded-xl p-4 mb-6">
-                    <div className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-radiance-gold mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="bg-radiance-gold/5 border border-radiance-gold/20 rounded-xl p-3 sm:p-4 mb-6">
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5 text-radiance-gold mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <div>
-                        <h4 className="text-text-primary font-medium mb-1">Payment Schedule</h4>
-                        <p className="text-text-secondary text-sm">
-                          Define when clients pay throughout the project. Default is 50% upfront and 50% on completion. 
-                          Add more payment milestones if needed (e.g., quarterly payments, per-phase payments).
+                        <h4 className="text-text-primary font-medium text-sm sm:text-base mb-1">Payment Schedule</h4>
+                        <p className="text-text-secondary text-xs sm:text-sm">
+                          Define when clients pay. Default is 50% upfront and 50% on completion.
                         </p>
                       </div>
                     </div>
                   </div>
 
                   {milestones.map((milestone, index) => (
-                    <div key={milestone.id || index} className="p-6 bg-depth-elevated border border-depth-border rounded-xl">
+                    <div key={milestone.id || index} className="p-4 sm:p-6 bg-depth-elevated border border-depth-border rounded-xl">
                       <div className="flex items-center justify-between mb-4">
-                        <h4 className="text-lg font-semibold text-text-primary">Payment #{index + 1}</h4>
+                        <h4 className="text-base sm:text-lg font-semibold text-text-primary">Payment #{index + 1}</h4>
                         {milestones.length > 2 && (
-                          <button onClick={() => removeMilestone(index)} className="text-red-400 hover:text-red-300 text-sm">
+                          <button onClick={() => removeMilestone(index)} className="text-red-400 hover:text-red-300 text-xs sm:text-sm">
                             Remove
                           </button>
                         )}
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <Input
                           label="Payment Name"
                           placeholder="e.g., Upfront Payment, Final Payment"
@@ -903,7 +904,7 @@ export default function AdminEditProposalPage({ params }: PageProps) {
                             ))}
                           </select>
                         </div>
-                        <div className="md:col-span-2">
+                        <div className="sm:col-span-2">
                           <Textarea
                             label="Description (Optional)"
                             placeholder="e.g., 50% deposit to begin work"
@@ -925,11 +926,16 @@ export default function AdminEditProposalPage({ params }: PageProps) {
               {/* Agreement Tab */}
               {activeTab === 'agreement' && (
                 <div>
-                  <h3 className="text-lg font-semibold text-text-primary mb-4">Agreement Terms</h3>
-                  <p className="text-text-muted text-sm mb-4">
-                    This agreement will be presented to the client for signing. Supports markdown formatting.
+                  <h3 className="text-base sm:text-lg font-semibold text-text-primary mb-2 sm:mb-4">Agreement Terms</h3>
+                  <p className="text-text-muted text-xs sm:text-sm mb-3 sm:mb-4">
+                    This agreement will be presented to the client for signing. Supports markdown.
                   </p>
-                  <Textarea rows={20} value={agreementText} onChange={(e) => setAgreementText(e.target.value)} />
+                  <Textarea
+                    rows={12}
+                    value={agreementText}
+                    onChange={(e) => setAgreementText(e.target.value)}
+                    className="min-h-[300px] sm:min-h-[400px]"
+                  />
                 </div>
               )}
             </div>
