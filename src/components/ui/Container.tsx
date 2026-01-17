@@ -45,7 +45,7 @@ export const Container: React.FC<ContainerProps> = ({
   return (
     <Component
       className={cn(
-        'mx-auto px-6',
+        'mx-auto px-4 sm:px-6',
         sizeStyles[size],
         className
       )}

@@ -81,6 +81,8 @@
     touch-action: pan-x pan-y;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
+    /* Prevent horizontal overflow on mobile */
+    overflow-x: hidden;
   }
 
   /* Typography Hierarchy */
