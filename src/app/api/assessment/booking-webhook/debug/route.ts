@@ -31,12 +31,19 @@ export function logWebhookForDebug(payload: unknown, result: unknown) {
 }
 
 export async function GET(request: NextRequest) {
-  // Only allow in development
+  // Allow in production with secret query param for debugging
   if (process.env.NODE_ENV === 'production') {
-    const authHeader = request.headers.get('authorization');
-    if (authHeader !== `Bearer ${process.env.DEBUG_SECRET}`) {
+    const { searchParams } = new URL(request.url);
+    const secret = searchParams.get('secret');
+    // Allow access with query param secret or env var
+    // Use a simple secret: "lc-debug-2024" or custom DEBUG_SECRET env var
+    const validSecret = process.env.DEBUG_SECRET || 'lc-debug-2024';
+    if (secret !== validSecret) {
       return NextResponse.json(
-        { error: 'Debug endpoint disabled in production' },
+        {
+          error: 'Debug endpoint requires secret parameter',
+          hint: 'Add ?secret=YOUR_SECRET to the URL',
+        },
         { status: 403 }
       );
     }
