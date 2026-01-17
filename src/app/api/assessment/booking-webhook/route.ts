@@ -67,7 +67,11 @@ export async function POST(request: NextRequest) {
     const appointmentId = payload.id || payload.appointmentId || `ghl-${Date.now()}`;
 
     // Extract start time from various possible fields
-    const startTime = payload.startTime || payload.selectedSlot || payload.slot;
+    // Filter out string "null" which LeadConnector sometimes sends
+    const rawStartTime = payload.startTime || payload.selectedSlot || payload.slot;
+    const startTime = rawStartTime && rawStartTime !== 'null' && rawStartTime !== 'undefined'
+      ? rawStartTime
+      : null;
 
     // Extract contact email (could be nested or at root level)
     const email = (
@@ -187,7 +191,7 @@ export async function POST(request: NextRequest) {
         .from('lead_submissions')
         .update({
           intake_data: updatedIntakeData,
-          status: 'booked',
+          status: 'new', // Valid statuses: new, contacted, proposal_sent, converted, archived
           booked_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })
@@ -233,7 +237,7 @@ export async function POST(request: NextRequest) {
           email,
           name: contactName || email.split('@')[0],
           phone: phone || null,
-          status: 'booked',
+          status: 'new', // Valid statuses: new, contacted, proposal_sent, converted, archived
           booked_at: new Date().toISOString(),
           intake_data: {
             source: 'leadconnector_direct_booking',
