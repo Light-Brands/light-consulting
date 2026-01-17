@@ -785,21 +785,21 @@ export const FOUNDER_FAMILIES: FounderFamily[] = [
 // ============================================================================
 
 export const ASSESSMENT_CONFIG = {
-  price: 5000, // $5,000 fixed fee
+  price: 5000, // $5,000 investment (revealed after VSL)
   name: 'AI Go/No-Go Assessment™',
   tagline: 'A clear yes/no decision on whether AI makes sense for your business right now.',
   description: 'We sell judgment, not AI. A "no" verdict constitutes successful completion.',
 
-  // Stage labels for progress indicator
+  // Stage labels for progress indicator (simplified flow)
   stageLabels: {
     qualify: 'Qualify',
-    book: 'Book',
     educate: 'Learn',
-    confirm: 'Confirm',
-    commit: 'Commit',
-    intake: 'Intake',
-    status: 'Status',
+    book: 'Book',
+    status: 'Confirmed',
   } as const,
+
+  // Lead source identifier for tracking
+  leadSource: 'assessment',
 
   // VSL Configuration
   vsl: {
@@ -972,14 +972,14 @@ export const ASSESSMENT_DISQUALIFIERS = {
     'Implementation seekers wanting immediate builds',
     '"How-to" buyers expecting step-by-step guides',
     'Businesses without real traction to scale',
-    'Those seeking discounts or payment plans',
+    'Those not serious about AI transformation',
   ],
   idealFor: [
-    'Decision-makers who can authorize $5K independently',
-    'Leaders who accept fixed pricing without negotiation',
+    'Decision-makers ready to take action',
     'Founders open to hearing "no" as a valid outcome',
     'Businesses with real traction seeking clarity',
-    'Those who value judgment over implementation',
+    'Those who value expert judgment over opinions',
+    'Leaders committed to making the right decision',
   ],
 };
 
