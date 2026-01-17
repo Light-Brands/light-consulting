@@ -150,6 +150,21 @@ export interface ProjectUpdate {
   featured?: boolean;
   status?: 'draft' | 'published';
   sort_order?: number;
+  // Enhanced fields for project detail pages
+  brand_id?: string | null;
+  gallery_images?: string[];
+  services?: string[];
+  key_features?: string[];
+  challenge?: string | null;
+  solution?: string | null;
+  results?: string[];
+  tech_stack?: {
+    frontend?: string;
+    backend?: string;
+  };
+  origin?: string | null;
+  project_type?: string | null;
+  preview_enabled?: boolean;
 }
 
 // API Response types
