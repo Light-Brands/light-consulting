@@ -201,7 +201,7 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
   }, [updateFormData, formData.leadId, formData.vslWatchPercentage]);
 
   return (
-    <div className="min-h-screen pt-20 sm:pt-24 md:pt-32">
+    <div className="min-h-screen pt-4 sm:pt-6">
       <Section spacing="lg" className="relative overflow-hidden px-4 sm:px-6">
         {/* Background atmosphere */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
