@@ -353,7 +353,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                             </div>
                           </div>
                           {phase.description && (
-                            <p className="text-text-secondary mb-4 break-words">{phase.description}</p>
+                            <p className="text-text-secondary mb-4 break-words whitespace-pre-wrap">{phase.description}</p>
                           )}
                           {phase.deliverables && phase.deliverables.length > 0 && (
                             <div className="mb-3">
@@ -414,7 +414,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                               {milestone.milestone_name}
                             </h4>
                             {milestone.description && (
-                              <p className="text-text-muted text-xs sm:text-sm">{milestone.description}</p>
+                              <p className="text-text-muted text-xs sm:text-sm whitespace-pre-wrap">{milestone.description}</p>
                             )}
                             {milestone.due_date && (
                               <p className="text-text-muted text-xs sm:text-sm">
