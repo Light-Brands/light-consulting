@@ -119,26 +119,26 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
       window.history.replaceState({}, '', url.toString());
 
       // Try to fetch actual booking data from our database (populated by webhook)
+      // Use email for lookup since it's the most reliable identifier
       const lookupEmail = emailParam || formData.email;
-      const lookupLeadId = leadIdParam || formData.leadId;
 
-      if (lookupEmail || lookupLeadId) {
+      if (lookupEmail) {
         const params = new URLSearchParams();
-        if (lookupLeadId) params.set('lead_id', lookupLeadId);
-        else if (lookupEmail) params.set('email', lookupEmail);
+        params.set('email', lookupEmail);
 
         fetch(`/api/assessment/booking?${params.toString()}`)
           .then((res) => res.json())
           .then((result) => {
-            if (result.success && result.booking) {
+            if (result.success && result.booking && result.booking.bookedSlot) {
               // Use actual booking data from webhook
               setFormData((prev) => ({
                 ...prev,
                 bookingId: result.booking.bookingId,
-                bookedSlot: result.booking.bookedSlot ? new Date(result.booking.bookedSlot) : undefined,
+                bookedSlot: new Date(result.booking.bookedSlot),
                 bookingConfirmed: true,
+                bookingPending: false, // Clear pending flag - we have the data
                 ...(result.booking.leadId ? { leadId: result.booking.leadId } : {}),
-                ...(lookupEmail ? { email: lookupEmail } : {}),
+                email: lookupEmail,
               }));
             } else {
               // Fallback: booking not yet in database (webhook may be delayed)
@@ -147,8 +147,7 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
                 ...prev,
                 bookingConfirmed: true,
                 bookingPending: true, // Flag to show "confirming booking" message
-                ...(leadIdParam ? { leadId: leadIdParam } : {}),
-                ...(lookupEmail ? { email: lookupEmail } : {}),
+                email: lookupEmail,
               }));
             }
             setStage('educate');
@@ -160,17 +159,16 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
               ...prev,
               bookingConfirmed: true,
               bookingPending: true,
-              ...(leadIdParam ? { leadId: leadIdParam } : {}),
+              email: lookupEmail,
             }));
             setStage('educate');
           });
       } else {
-        // No email/leadId to look up - proceed without booking details
+        // No email to look up - proceed without booking details
         setFormData((prev) => ({
           ...prev,
           bookingConfirmed: true,
           bookingPending: true,
-          ...(leadIdParam ? { leadId: leadIdParam } : {}),
         }));
         setStage('educate');
       }
