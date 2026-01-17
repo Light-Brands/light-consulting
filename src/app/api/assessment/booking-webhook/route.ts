@@ -195,11 +195,21 @@ export async function POST(request: NextRequest) {
 
       if (updateError) {
         console.error('[LeadConnector Webhook] Error updating lead:', updateError);
-        return NextResponse.json({
+        const errorResult = {
           success: false,
           error: 'Failed to update lead',
           received: true,
-        });
+          debug: {
+            errorCode: updateError.code,
+            errorMessage: updateError.message,
+            errorDetails: updateError.details,
+            errorHint: updateError.hint,
+            leadId: existingLead.id,
+            extractedData: { appointmentId, email, startTime },
+          },
+        };
+        logWebhookForDebug(payload, errorResult);
+        return NextResponse.json(errorResult);
       }
 
       console.log(`[LeadConnector Webhook] Updated lead ${existingLead.id} with booking ${appointmentId}`);
@@ -241,11 +251,20 @@ export async function POST(request: NextRequest) {
 
       if (createError) {
         console.error('[LeadConnector Webhook] Error creating lead:', createError);
-        return NextResponse.json({
+        const errorResult = {
           success: false,
           error: 'Failed to create lead',
           received: true,
-        });
+          debug: {
+            errorCode: createError.code,
+            errorMessage: createError.message,
+            errorDetails: createError.details,
+            errorHint: createError.hint,
+            extractedData: { appointmentId, email, contactName, phone, startTime },
+          },
+        };
+        logWebhookForDebug(payload, errorResult);
+        return NextResponse.json(errorResult);
       }
 
       console.log(`[LeadConnector Webhook] Created new lead ${newLead.id} with booking ${appointmentId}`);
