@@ -22,6 +22,7 @@ export interface BaseComponentProps {
 
 export type PageKey =
   | 'home'
+  | 'assessment-funnel'
   | 'funnel'
   | 'funnel1'
   | 'funnel2'
@@ -255,6 +256,20 @@ export interface IconProps {
 // AI Go/No-Go Assessment Types
 // ============================================================================
 
+// Full 10-stage assessment funnel based on AI Go/No-Go Assessment Strategy
+export type AssessmentFunnelStage =
+  | 'attract'      // 1. Entry landing - filter for founders with structural pain
+  | 'qualify'      // 2. Self-qualification - decision-maker status, accepts negative verdict
+  | 'book'         // 3. Calendar booking - scheduled WITHOUT pricing disclosed
+  | 'educate'      // 4. VSL video - mandatory watch reveals scope and cost
+  | 'confirm'      // 5. Call confirmation - only if video completed
+  | 'commit'       // 6. Payment - collected before intake begins
+  | 'intake'       // 7. Questionnaire + Loom video - async structured intake
+  | 'deliver'      // 8. Verdict call - 30-minute call with 3 reasoning points
+  | 'document'     // 9. Report delivery - single-page with scores and implications
+  | 'exit';        // 10. Clean closure - no follow-ups unless client-initiated
+
+// Legacy 4-stage type for backwards compatibility
 export type AssessmentStage =
   | 'qualify'      // Landing/self-qualification (no pricing)
   | 'educate'      // VSL video viewing (pricing revealed)
@@ -274,25 +289,55 @@ export interface AssessmentFormData {
   leadId?: string;
   source?: string; // e.g., 'assessment', 'funnel-1', 'direct'
 
-  // Qualification
+  // Stage 2: Qualification
   isDecisionMaker?: boolean;
   acceptsFixedPricing?: boolean;
   openToNegativeVerdict?: boolean;
 
-  // VSL tracking
-  vslStartedAt?: Date;
-  vslCompletedAt?: Date;
-  vslWatchPercentage?: number;
-
-  // Booking
+  // Stage 3: Booking (before VSL)
   bookingId?: string;
   bookedSlot?: Date;
   bookingConfirmed?: boolean;
 
-  // Assessment (for future use if needed)
+  // Stage 4: VSL / Educate tracking
+  vslStartedAt?: Date;
+  vslCompletedAt?: Date;
+  vslWatchPercentage?: number;
+  priceAcknowledged?: boolean; // User saw and acknowledged the $5,000 price
+
+  // Stage 5: Confirm (after VSL)
+  callConfirmed?: boolean;
+  callConfirmedAt?: Date;
+
+  // Stage 6: Commit (Payment)
   assessmentId?: string;
+  paymentSessionId?: string;
+  paymentCompleted?: boolean;
+  paymentCompletedAt?: Date;
+
+  // Stage 7: Intake
+  intakeResponses?: Record<string, string>;
+  loomVideoUrl?: string;
+  intakeSubmittedAt?: Date;
+
+  // Stage 8: Deliver (Verdict)
   verdict?: AssessmentVerdict;
   verdictDeliveredAt?: Date;
+  verdictReasons?: string[]; // Exactly 3 reasoning points
+
+  // Stage 9: Document (Report)
+  reportUrl?: string;
+  reportDeliveredAt?: Date;
+  verdictScores?: {
+    decisionConcentration: number; // 1-10
+    founderDependency: number; // 1-10
+    decisionCodification: number; // 1-10
+    leverageReadiness: number; // 1-10
+  };
+
+  // Stage 10: Exit
+  exitCompletedAt?: Date;
+  followUpRequested?: boolean;
 }
 
 export interface AssessmentIntakeQuestion {
