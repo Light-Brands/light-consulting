@@ -25,7 +25,7 @@ import {
   ASSESSMENT_FUNNEL_CONFIG,
   ASSESSMENT_INTAKE_QUESTIONS,
 } from '../lib/constants';
-import { isValidEmail } from '../lib/utils';
+import { isValidEmail, scrollToTop } from '../lib/utils';
 
 // Import all assessment stage components
 import { AssessmentAttractStage } from '../components/assessment/AssessmentAttractStage';
@@ -93,6 +93,11 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
     }
     window.history.replaceState({}, '', url.toString());
   }, [stage, formData.leadId, formData.assessmentId]);
+
+  // Auto-scroll to top when stage changes
+  useEffect(() => {
+    scrollToTop();
+  }, [stage]);
 
   // Parse URL params on mount to resume flow
   useEffect(() => {

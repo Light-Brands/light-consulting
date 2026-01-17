@@ -18,7 +18,7 @@ import { Container, Section } from '../components/ui';
 import { BookProgressVisual } from '../components';
 import { AssessmentStage, AssessmentFormData, PageKey } from '../types';
 import { ASSESSMENT_CONFIG } from '../lib/constants';
-import { isValidEmail } from '../lib/utils';
+import { isValidEmail, scrollToTop } from '../lib/utils';
 
 // Import assessment stage components
 import { AssessmentQualifyStage } from '../components/assessment/AssessmentQualifyStage';
@@ -66,6 +66,11 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
     }
     window.history.replaceState({}, '', url.toString());
   }, [stage, formData.leadId]);
+
+  // Auto-scroll to top when stage changes
+  useEffect(() => {
+    scrollToTop();
+  }, [stage]);
 
   // Update form data
   const updateFormData = useCallback((updates: Partial<AssessmentFormData>) => {
