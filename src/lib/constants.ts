@@ -780,6 +780,209 @@ export const FOUNDER_FAMILIES: FounderFamily[] = [
 // Image Configuration & AI Generation Prompts
 // ============================================================================
 
+// ============================================================================
+// AI Go/No-Go Assessment Configuration
+// ============================================================================
+
+export const ASSESSMENT_CONFIG = {
+  price: 5000, // $5,000 fixed fee
+  name: 'AI Go/No-Go Assessment™',
+  tagline: 'A clear yes/no decision on whether AI makes sense for your business right now.',
+  description: 'We sell judgment, not AI. A "no" verdict constitutes successful completion.',
+
+  // Stage labels for progress indicator
+  stageLabels: {
+    qualify: 'Qualify',
+    book: 'Book',
+    educate: 'Learn',
+    confirm: 'Confirm',
+    commit: 'Commit',
+    intake: 'Intake',
+    status: 'Status',
+  } as const,
+
+  // VSL Configuration
+  vsl: {
+    // Placeholder URL - replace with actual VSL
+    url: 'https://www.youtube.com/embed/placeholder',
+    minimumWatchPercentage: 90, // Must watch 90% to proceed
+    estimatedDuration: '15 minutes',
+  },
+
+  // Calendar Configuration (LeadConnector/GHL)
+  calendar: {
+    // Group calendar with assessment agents
+    url: 'https://api.leadconnectorhq.com/widget/booking/Wk1pAr8Wz4PNCUjrVJtZ',
+    provider: 'leadconnector',
+  },
+
+  // Verdicts
+  verdicts: {
+    GO: {
+      label: 'GO',
+      description: 'AI makes sense for your business right now. Proceed with confidence.',
+      color: 'growth-emerald',
+    },
+    CONDITIONAL_GO: {
+      label: 'CONDITIONAL GO',
+      description: 'AI could work, but specific conditions must be met first.',
+      color: 'radiance-gold',
+    },
+    NO_GO: {
+      label: 'NO-GO',
+      description: 'AI is not the right move for your business at this time. This is a successful outcome.',
+      color: 'text-muted',
+    },
+  },
+};
+
+// Assessment intake questions - based on verdict dimensions
+export const ASSESSMENT_INTAKE_QUESTIONS = [
+  {
+    id: 'business_overview',
+    question: 'Describe your business in 2-3 sentences. What do you do and who do you serve?',
+    type: 'textarea' as const,
+    required: true,
+    helpText: 'Be specific about your core offering and target market.',
+  },
+  {
+    id: 'decision_codification',
+    question: 'What are the top 3 decisions you make repeatedly in your business?',
+    type: 'textarea' as const,
+    required: true,
+    helpText: 'Think about decisions that happen daily or weekly that follow patterns.',
+  },
+  {
+    id: 'founder_concentration',
+    question: 'What percentage of critical business decisions currently require your personal involvement?',
+    type: 'select' as const,
+    options: [
+      'Less than 25% - My team handles most things',
+      '25-50% - I\'m involved in key decisions',
+      '50-75% - Most important decisions go through me',
+      '75-90% - Very little happens without my input',
+      '90%+ - I am the bottleneck for nearly everything',
+    ],
+    required: true,
+    helpText: 'Be honest. This is about understanding founder dependence.',
+  },
+  {
+    id: 'operational_structure',
+    question: 'Describe your current operational systems. What tools, processes, or workflows are already in place?',
+    type: 'textarea' as const,
+    required: true,
+    helpText: 'Include CRM, project management, automation, documentation, etc.',
+  },
+  {
+    id: 'documentation_level',
+    question: 'How well-documented are your business processes and standard operating procedures?',
+    type: 'select' as const,
+    options: [
+      'Not documented - Everything is in my head',
+      'Minimally documented - Some notes and checklists exist',
+      'Partially documented - Key processes are written down',
+      'Well documented - Most processes have SOPs',
+      'Fully documented - Comprehensive documentation with regular updates',
+    ],
+    required: true,
+    helpText: 'Documentation level indicates AI readiness. AI needs structured processes to amplify.',
+  },
+  {
+    id: 'scalability_readiness',
+    question: 'If you had to 3x your output next month without hiring, what would break first?',
+    type: 'textarea' as const,
+    required: true,
+    helpText: 'This reveals your actual constraints and bottlenecks.',
+  },
+  {
+    id: 'ai_current_usage',
+    question: 'What AI tools or systems are you currently using, if any?',
+    type: 'textarea' as const,
+    required: false,
+    helpText: 'ChatGPT, Notion AI, automation tools, etc. "None" is a valid answer.',
+  },
+  {
+    id: 'ai_expectations',
+    question: 'What do you hope AI will do for your business?',
+    type: 'textarea' as const,
+    required: true,
+    helpText: 'Be specific about outcomes, not tools.',
+  },
+  {
+    id: 'biggest_constraint',
+    question: 'What is the single biggest constraint holding your business back right now?',
+    type: 'textarea' as const,
+    required: true,
+    helpText: 'Time, systems, people, capital, market, etc.',
+  },
+  {
+    id: 'team_structure',
+    question: 'Describe your team structure.',
+    type: 'select' as const,
+    options: [
+      'Solo operator',
+      '1-3 team members',
+      '4-10 team members',
+      '11-25 team members',
+      '25+ team members',
+    ],
+    required: true,
+  },
+  {
+    id: 'revenue_range',
+    question: 'What is your approximate annual revenue?',
+    type: 'select' as const,
+    options: [
+      'Pre-revenue / Under $100K',
+      '$100K - $500K',
+      '$500K - $1M',
+      '$1M - $5M',
+      '$5M - $10M',
+      '$10M+',
+    ],
+    required: true,
+    helpText: 'This helps us understand your operational complexity.',
+  },
+  {
+    id: 'timeline',
+    question: 'When do you need clarity on AI decisions?',
+    type: 'select' as const,
+    options: [
+      'Immediately - I need to decide now',
+      'This month',
+      'This quarter',
+      'Exploring for strategic planning',
+    ],
+    required: true,
+  },
+  {
+    id: 'additional_context',
+    question: 'Is there anything else we should know before your assessment?',
+    type: 'textarea' as const,
+    required: false,
+    helpText: 'Any context that helps us understand your unique situation.',
+  },
+];
+
+// Disqualification criteria messaging
+export const ASSESSMENT_DISQUALIFIERS = {
+  notFor: [
+    'AI beginners looking for tool tutorials',
+    'Tool shoppers seeking the latest AI products',
+    'Implementation seekers wanting immediate builds',
+    '"How-to" buyers expecting step-by-step guides',
+    'Businesses without real traction to scale',
+    'Those seeking discounts or payment plans',
+  ],
+  idealFor: [
+    'Decision-makers who can authorize $5K independently',
+    'Leaders who accept fixed pricing without negotiation',
+    'Founders open to hearing "no" as a valid outcome',
+    'Businesses with real traction seeking clarity',
+    'Those who value judgment over implementation',
+  ],
+};
+
 export const IMAGE_CONFIG = {
   // Hero Backgrounds
   heroes: {
