@@ -15,58 +15,58 @@
 -- Using branded placeholder until proper images are added.
 -- ============================================================================
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'Aesthetics Gym' AND (image_url = '/images/portfolio/aesthetics-gym.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'GVG Enterprises' AND (image_url = '/images/portfolio/gvg-enterprises.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'IDEAL Protein' AND (image_url = '/images/portfolio/ideal-protein.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'PandaPay' AND (image_url = '/images/portfolio/pandapay.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = '9mm Beyond Energy' AND (image_url = '/images/portfolio/9mm-beyond-energy.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'Dimes Energy' AND (image_url = '/images/portfolio/dimes-energy.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'Quantum Energy' AND (image_url = '/images/portfolio/quantum-energy.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'Creative TRND + SEO TWIST' AND (image_url = '/images/portfolio/creative-trnd-seo-twist.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'Ottawa International Jazz Festival' AND (image_url = '/images/portfolio/ottawa-jazz-festival.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'World Vision — 30-Hour Famine' AND (image_url = '/images/portfolio/world-vision-famine.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'New Renaissance' AND (image_url = '/images/portfolio/new-renaissance.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'Carlington Booch' AND (image_url = '/images/portfolio/carlington-booch.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'Ashes to Rubies' AND (image_url = '/images/portfolio/ashes-to-rubies.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'Shifter Magazine' AND (image_url = '/images/portfolio/shifter-magazine.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'TALK' AND (image_url = '/images/portfolio/talk-artist.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'Shaneen Megji' AND (image_url = '/images/portfolio/shaneen-megji.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'Performance Window Cleaning' AND (image_url = '/images/portfolio/performance-window-cleaning.jpg' OR image_url IS NULL);
 
-UPDATE projects SET image_url = '/images/portfolio/light-brand-consulting.jpg'
+UPDATE projects SET image_url = '/images/portfolio/placeholder-lb.svg'
 WHERE title = 'We Scale It' AND (image_url = '/images/portfolio/we-scale-it.jpg' OR image_url IS NULL);
 
 -- ============================================================================
@@ -84,7 +84,7 @@ UPDATE projects SET
   brand_id = 'creative-professional',
   services = ARRAY['Business Development Strategy', 'International Expansion', 'Market Penetration Planning', 'Scalable Business Architecture'],
   key_features = ARRAY['Global expansion planning', 'Medical clinic partnerships', 'Distribution network development', 'Long-term market strategy'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Not applicable", "backend": "Business consulting"}'::jsonb,
   preview_enabled = false
 WHERE title = 'GVG Enterprises';
@@ -99,7 +99,7 @@ UPDATE projects SET
   brand_id = 'healthcare-wellness',
   services = ARRAY['Executive Leadership', 'International Operations', 'Strategic Business Development', 'Valuation Growth Initiatives'],
   key_features = ARRAY['Multi-country operations management', 'Medical partner network expansion', 'Investment deal support', 'Strategic growth initiatives'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Not applicable", "backend": "Enterprise operations"}'::jsonb,
   preview_enabled = false
 WHERE title = 'IDEAL Protein';
@@ -114,7 +114,7 @@ UPDATE projects SET
   brand_id = 'ai-technology',
   services = ARRAY['Company Building', 'Merchant Acquisition', 'Payment Infrastructure', 'Portfolio Management', 'Exit Strategy'],
   key_features = ARRAY['National payment processing', 'Interac integration', 'Credit card processing', 'Merchant portfolio development'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Payment systems", "backend": "Financial infrastructure"}'::jsonb,
   preview_enabled = false
 WHERE title = 'PandaPay';
@@ -129,7 +129,7 @@ UPDATE projects SET
   brand_id = 'healthcare-wellness',
   services = ARRAY['Strategic Advisory', 'Fundraising', 'Corporate Structure Development', 'Growth Strategy'],
   key_features = ARRAY['Investment capital raising', 'Legal structure development', 'Financial architecture', 'Expansion strategy'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Not applicable", "backend": "Strategic consulting"}'::jsonb,
   preview_enabled = false
 WHERE title = '9mm Beyond Energy';
@@ -144,7 +144,7 @@ UPDATE projects SET
   brand_id = 'real-estate-energy',
   services = ARRAY['Investment Strategy', 'Capital Expansion', 'Investor Relations', 'Corporate Structure'],
   key_features = ARRAY['Drilling operations funding', 'Investor positioning', 'Financial planning', 'Corporate structure advisory'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Not applicable", "backend": "Investment consulting"}'::jsonb,
   preview_enabled = false
 WHERE title = 'Dimes Energy';
@@ -159,7 +159,7 @@ UPDATE projects SET
   brand_id = 'real-estate-energy',
   services = ARRAY['Investment Strategy', 'Investor Relations', 'Strategic Introductions', 'Early-Stage Structuring'],
   key_features = ARRAY['Capital positioning', 'Investor introductions', 'Growth round preparation', 'Strategic investment advisory'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Not applicable", "backend": "Investment consulting"}'::jsonb,
   preview_enabled = false
 WHERE title = 'Quantum Energy';
@@ -174,7 +174,7 @@ UPDATE projects SET
   brand_id = 'creative-professional',
   services = ARRAY['M&A Advisory', 'Capital Raise', 'Organizational Integration', 'Scaling Strategy'],
   key_features = ARRAY['Merger facilitation', 'Post-merger capital raise', 'Corporate architecture', 'Integration planning'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Not applicable", "backend": "M&A consulting"}'::jsonb,
   preview_enabled = false
 WHERE title = 'Creative TRND + SEO TWIST';
@@ -194,7 +194,7 @@ UPDATE projects SET
   brand_id = 'community-social',
   services = ARRAY['Fundraising Strategy', 'Donor Engagement', 'Campaign Management'],
   key_features = ARRAY['Multi-million dollar fundraising', 'Donor cultivation', 'Event sponsorship', 'Cultural programming support'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Not applicable", "backend": "Nonprofit consulting"}'::jsonb,
   preview_enabled = false
 WHERE title = 'Ottawa International Jazz Festival';
@@ -209,7 +209,7 @@ UPDATE projects SET
   brand_id = 'community-social',
   services = ARRAY['National Campaign Leadership', 'Youth Mobilization', 'Fundraising Management'],
   key_features = ARRAY['National campaign coordination', 'Youth leader development', 'Large-scale fundraising', 'Community mobilization'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Not applicable", "backend": "Nonprofit consulting"}'::jsonb,
   preview_enabled = false
 WHERE title = 'World Vision — 30-Hour Famine';
@@ -224,7 +224,7 @@ UPDATE projects SET
   brand_id = 'community-social',
   services = ARRAY['Movement Building', 'Leadership Development', 'Community Organizing', 'Program Development'],
   key_features = ARRAY['250+ weekly participants', '8-year sustained operation', 'Cross-Canada expansion', 'Entrepreneurship support'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Not applicable", "backend": "Nonprofit leadership"}'::jsonb,
   preview_enabled = false
 WHERE title = 'New Renaissance';
@@ -239,7 +239,7 @@ UPDATE projects SET
   brand_id = 'community-social',
   services = ARRAY['Brand Development', 'E-commerce Build', 'Business Foundation', 'Social Enterprise Strategy'],
   key_features = ARRAY['Mission-driven brand', '100% revenue to recovery programs', 'E-commerce platform', 'Social impact model'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "E-commerce platform", "backend": "Business systems"}'::jsonb,
   preview_enabled = false
 WHERE title = 'Carlington Booch';
@@ -254,7 +254,7 @@ UPDATE projects SET
   brand_id = 'healthcare-wellness',
   services = ARRAY['Program Development', 'Curriculum Design', 'Recovery Framework', 'Reintegration Strategy'],
   key_features = ARRAY['LifeLab recovery program', 'Dignity-centered approach', 'Identity transformation', 'Reintegration support'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Not applicable", "backend": "Program development"}'::jsonb,
   preview_enabled = false
 WHERE title = 'Ashes to Rubies';
@@ -269,7 +269,7 @@ UPDATE projects SET
   brand_id = 'creative-professional',
   services = ARRAY['Media Platform Development', 'Editorial Leadership', 'Brand Building', 'Creative Talent Development'],
   key_features = ARRAY['Major event coverage', 'Artist platform', 'Editorial excellence', 'Successful exit'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Media platform", "backend": "Publishing systems"}'::jsonb,
   preview_enabled = false
 WHERE title = 'Shifter Magazine';
@@ -284,7 +284,7 @@ UPDATE projects SET
   brand_id = 'creative-professional',
   services = ARRAY['Brand Strategy', 'Creative Direction', 'Artist Positioning', 'Growth Strategy'],
   key_features = ARRAY['Juno Award winner', 'International stadium tours', 'Brand development', 'Rapid growth support'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Not applicable", "backend": "Artist consulting"}'::jsonb,
   preview_enabled = false
 WHERE title = 'TALK';
@@ -299,7 +299,7 @@ UPDATE projects SET
   brand_id = 'creative-professional',
   services = ARRAY['Personal Brand Development', 'Offer Creation', 'Business Launch', 'Positioning Strategy'],
   key_features = ARRAY['Complete brand build', 'Flagship offer development', 'Coaching business launch', 'Sustainable growth strategy'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Not applicable", "backend": "Brand consulting"}'::jsonb,
   preview_enabled = false
 WHERE title = 'Shaneen Megji';
@@ -314,7 +314,7 @@ UPDATE projects SET
   brand_id = 'creative-professional',
   services = ARRAY['Business Development', 'Brand Building', 'Growth Strategy', 'Systems Development'],
   key_features = ARRAY['Ground-up business build', 'Young founder mentorship', '$3M annual revenue', 'Scalable systems'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Not applicable", "backend": "Business consulting"}'::jsonb,
   preview_enabled = false
 WHERE title = 'Performance Window Cleaning';
@@ -329,7 +329,7 @@ UPDATE projects SET
   brand_id = 'creative-professional',
   services = ARRAY['Business Model Redesign', 'Revenue Strategy', 'Market Positioning', 'Growth Consulting'],
   key_features = ARRAY['Complete business model redesign', '$50K/month revenue', 'French market focus', 'Scalable solutions'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Not applicable", "backend": "Business consulting"}'::jsonb,
   preview_enabled = false
 WHERE title = 'We Scale It';
@@ -344,7 +344,7 @@ UPDATE projects SET
   brand_id = 'ai-technology',
   services = ARRAY['AI Diagnostics', 'Business-Specific AI Engines', 'Founder Leverage Systems'],
   key_features = ARRAY['AI Readiness Assessment', 'Newsletter integration', 'Testimonials section', 'Efficiency metrics dashboard'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Next.js / React", "backend": "Not specified"}'::jsonb,
   preview_enabled = false
 WHERE title = 'Light Brand Consulting' AND brand_id IS NULL;
@@ -804,7 +804,7 @@ UPDATE projects SET
   brand_id = 'healthcare-wellness',
   services = ARRAY['Website development', 'Brand identity', 'Membership system'],
   key_features = ARRAY['Two location showcase (Gold & Arc)', 'Equipment showcase (Panatta, Pure Kraft, Gym 80)', 'Membership plans', 'Testimonials section', 'Recovery facilities', 'Interactive gallery'],
-  gallery_images = ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  gallery_images = ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   tech_stack = '{"frontend": "Next.js / React", "backend": "Not specified"}'::jsonb,
   preview_enabled = false
 WHERE title = 'Aesthetics Gym' AND brand_id IS NULL;
@@ -828,7 +828,7 @@ INSERT INTO projects (title, description, image_url, tags, case_study_url, clien
 SELECT
   'Aesthetics Gym',
   'Premium fitness collective in Paphos, Cyprus featuring two elite facilities (Gold Downtown & Arc Uptown) equipped with world-class Panatta, Pure Kraft, and Gym 80 equipment. Creating environments where athletic potential is realized through precision hypertrophy, functional capacity, recovery systems, and exceptional culture.',
-  '/images/portfolio/light-brand-consulting.jpg',
+  '/images/portfolio/placeholder-lb.svg',
   ARRAY['Fitness', 'Premium Gym', 'Athletic Performance', 'Recovery', 'Next.js', 'React'],
   'https://www.aestheticsgym.com/',
   'Aesthetics',
@@ -842,7 +842,7 @@ SELECT
   'Positioning a premium fitness brand with two distinct locations while showcasing elite equipment and creating an aspirational yet accessible brand identity.',
   'Developed a sophisticated website that highlights both facilities, showcases world-class equipment, and communicates the premium fitness experience through compelling design and member testimonials.',
   ARRAY['Strong brand positioning in Paphos fitness market', 'Clear differentiation between Gold and Arc locations', 'Enhanced member acquisition through premium positioning', 'Showcased elite equipment selection'],
-  ARRAY['/images/portfolio/light-brand-consulting.jpg', '/images/portfolio/light-brand-consulting-2.jpg', '/images/portfolio/light-brand-consulting-3.jpg'],
+  ARRAY['/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg', '/images/portfolio/placeholder-lb.svg'],
   '{"frontend": "Next.js / React", "backend": "Not specified"}'::jsonb,
   'EU',
   'Premium Fitness Website',
