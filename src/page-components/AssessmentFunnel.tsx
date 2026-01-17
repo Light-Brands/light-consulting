@@ -129,15 +129,16 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
         fetch(`/api/assessment/booking?${params.toString()}`)
           .then((res) => res.json())
           .then((result) => {
-            if (result.success && result.booking) {
+            if (result.success && result.booking && result.booking.bookedSlot) {
               // Use actual booking data from webhook
               setFormData((prev) => ({
                 ...prev,
                 bookingId: result.booking.bookingId,
-                bookedSlot: result.booking.bookedSlot ? new Date(result.booking.bookedSlot) : undefined,
+                bookedSlot: new Date(result.booking.bookedSlot),
                 bookingConfirmed: true,
+                bookingPending: false, // Clear pending flag - we have the data
                 ...(result.booking.leadId ? { leadId: result.booking.leadId } : {}),
-                ...(lookupEmail ? { email: lookupEmail } : {}),
+                email: lookupEmail,
               }));
             } else {
               // Fallback: booking not yet in database (webhook may be delayed)
