@@ -867,6 +867,20 @@ export const ASSESSMENT_INTAKE_QUESTIONS = [
     helpText: 'Include CRM, project management, automation, documentation, etc.',
   },
   {
+    id: 'documentation_level',
+    question: 'How well-documented are your business processes and standard operating procedures?',
+    type: 'select' as const,
+    options: [
+      'Not documented - Everything is in my head',
+      'Minimally documented - Some notes and checklists exist',
+      'Partially documented - Key processes are written down',
+      'Well documented - Most processes have SOPs',
+      'Fully documented - Comprehensive documentation with regular updates',
+    ],
+    required: true,
+    helpText: 'Documentation level indicates AI readiness. AI needs structured processes to amplify.',
+  },
+  {
     id: 'scalability_readiness',
     question: 'If you had to 3x your output next month without hiring, what would break first?',
     type: 'textarea' as const,
