@@ -155,6 +155,10 @@ export async function GET(request: Request) {
   </div>
 
   <script>
+    // Get secret from URL to pass to debug endpoint
+    const urlParams = new URLSearchParams(window.location.search);
+    const secret = urlParams.get('secret') || '';
+
     // Set default start time to 7 days from now
     const defaultStart = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     document.getElementById('startTime').value = defaultStart.toISOString().slice(0, 16);
@@ -239,7 +243,8 @@ export async function GET(request: Request) {
       resultDiv.textContent = 'Loading...';
 
       try {
-        const response = await fetch('/api/assessment/booking-webhook/debug');
+        const debugUrl = '/api/assessment/booking-webhook/debug' + (secret ? '?secret=' + encodeURIComponent(secret) : '');
+        const response = await fetch(debugUrl);
         const result = await response.json();
         resultDiv.textContent = JSON.stringify(result, null, 2);
         resultDiv.className = 'result';
