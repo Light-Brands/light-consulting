@@ -9,13 +9,21 @@
 
 import { NextResponse } from 'next/server';
 
-export async function GET() {
-  // Only allow in development
+export async function GET(request: Request) {
+  // Allow in production with secret query param for debugging
   if (process.env.NODE_ENV === 'production') {
-    return NextResponse.json(
-      { error: 'Test page disabled in production' },
-      { status: 403 }
-    );
+    const { searchParams } = new URL(request.url);
+    const secret = searchParams.get('secret');
+    const validSecret = process.env.DEBUG_SECRET || 'lc-debug-2024';
+    if (secret !== validSecret) {
+      return NextResponse.json(
+        {
+          error: 'Test page requires secret parameter',
+          hint: 'Add ?secret=YOUR_SECRET to the URL',
+        },
+        { status: 403 }
+      );
+    }
   }
 
   const html = `
