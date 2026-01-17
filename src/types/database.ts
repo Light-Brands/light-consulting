@@ -28,6 +28,79 @@ import type {
   ProposalCommentInsert,
 } from './proposals';
 
+// Assessment Types
+export type AssessmentStage = 'qualify' | 'book' | 'educate' | 'confirm' | 'commit' | 'intake' | 'status';
+export type AssessmentVerdict = 'GO' | 'CONDITIONAL_GO' | 'NO_GO';
+
+export interface AssessmentSubmission {
+  id: string;
+  email: string;
+  name: string;
+  company: string | null;
+  phone: string | null;
+  stage: AssessmentStage;
+  vsl_completed: boolean;
+  vsl_watch_percentage: number | null;
+  booking_id: string | null;
+  booked_slot: string | null;
+  payment_session_id: string | null;
+  payment_completed: boolean;
+  payment_completed_at: string | null;
+  intake_responses: Record<string, string> | null;
+  loom_video_url: string | null;
+  intake_submitted_at: string | null;
+  verdict: AssessmentVerdict | null;
+  verdict_delivered_at: string | null;
+  verdict_report_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AssessmentSubmissionInsert {
+  email: string;
+  name: string;
+  company?: string | null;
+  phone?: string | null;
+  stage?: AssessmentStage;
+  vsl_completed?: boolean;
+  vsl_watch_percentage?: number | null;
+  booking_id?: string | null;
+  booked_slot?: string | null;
+  payment_session_id?: string | null;
+  payment_completed?: boolean;
+  payment_completed_at?: string | null;
+  intake_responses?: Record<string, string> | null;
+  loom_video_url?: string | null;
+  intake_submitted_at?: string | null;
+  verdict?: AssessmentVerdict | null;
+  verdict_delivered_at?: string | null;
+  verdict_report_url?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface AssessmentSubmissionUpdate {
+  email?: string;
+  name?: string;
+  company?: string | null;
+  phone?: string | null;
+  stage?: AssessmentStage;
+  vsl_completed?: boolean;
+  vsl_watch_percentage?: number | null;
+  booking_id?: string | null;
+  booked_slot?: string | null;
+  payment_session_id?: string | null;
+  payment_completed?: boolean;
+  payment_completed_at?: string | null;
+  intake_responses?: Record<string, string> | null;
+  loom_video_url?: string | null;
+  intake_submitted_at?: string | null;
+  verdict?: AssessmentVerdict | null;
+  verdict_delivered_at?: string | null;
+  verdict_report_url?: string | null;
+  updated_at?: string;
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -75,6 +148,11 @@ export interface Database {
         Row: ProposalComment;
         Insert: ProposalCommentInsert;
         Update: never; // Comments are not typically edited
+      };
+      assessment_submissions: {
+        Row: AssessmentSubmission;
+        Insert: AssessmentSubmissionInsert;
+        Update: AssessmentSubmissionUpdate;
       };
     };
   };

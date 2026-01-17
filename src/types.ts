@@ -75,7 +75,8 @@ export type PageKey =
   | 'book'
   | 'insights'
   | 'insights/labor-arbitrage'
-  | 'contact';
+  | 'contact'
+  | 'assessment';
 
 export interface NavItem {
   key: PageKey;
@@ -248,4 +249,97 @@ export interface InsightPost {
 export interface IconProps {
   className?: string;
   size?: number;
+}
+
+// ============================================================================
+// AI Go/No-Go Assessment Types
+// ============================================================================
+
+export type AssessmentStage =
+  | 'qualify'      // Landing/self-qualification
+  | 'book'         // Calendar booking
+  | 'educate'      // VSL video viewing
+  | 'confirm'      // Booking confirmation
+  | 'commit'       // Payment ($5,000)
+  | 'intake'       // Questionnaire + Loom
+  | 'status';      // Assessment status/confirmation
+
+export type AssessmentVerdict = 'GO' | 'CONDITIONAL_GO' | 'NO_GO' | null;
+
+export interface AssessmentFormData {
+  // Contact info
+  name?: string;
+  email?: string;
+  company?: string;
+  phone?: string;
+
+  // Qualification
+  isDecisionMaker?: boolean;
+  acceptsFixedPricing?: boolean;
+  openToNegativeVerdict?: boolean;
+
+  // VSL tracking
+  vslStartedAt?: Date;
+  vslCompletedAt?: Date;
+  vslWatchPercentage?: number;
+
+  // Booking
+  bookingId?: string;
+  bookedSlot?: Date;
+  bookingConfirmed?: boolean;
+
+  // Payment
+  paymentSessionId?: string;
+  paymentCompleted?: boolean;
+  paymentCompletedAt?: Date;
+
+  // Intake
+  intakeResponses?: Record<string, string>;
+  loomVideoUrl?: string;
+  intakeSubmittedAt?: Date;
+
+  // Assessment
+  assessmentId?: string;
+  verdict?: AssessmentVerdict;
+  verdictDeliveredAt?: Date;
+}
+
+export interface AssessmentIntakeQuestion {
+  id: string;
+  question: string;
+  type: 'text' | 'textarea' | 'select' | 'checkbox';
+  options?: string[];
+  required: boolean;
+  helpText?: string;
+}
+
+export interface AssessmentSubmission {
+  id: string;
+  email: string;
+  name: string;
+  company?: string;
+  phone?: string;
+
+  // Funnel tracking
+  stage: AssessmentStage;
+  vsl_completed: boolean;
+  vsl_watch_percentage?: number;
+  booking_id?: string;
+  booked_slot?: string;
+  payment_session_id?: string;
+  payment_completed: boolean;
+  payment_completed_at?: string;
+
+  // Intake
+  intake_responses?: Record<string, string>;
+  loom_video_url?: string;
+  intake_submitted_at?: string;
+
+  // Verdict
+  verdict?: AssessmentVerdict;
+  verdict_delivered_at?: string;
+  verdict_report_url?: string;
+
+  created_at: string;
+  updated_at: string;
 }
