@@ -836,6 +836,312 @@ export const ASSESSMENT_CONFIG = {
   },
 };
 
+// ============================================================================
+// AI Go/No-Go Assessment Funnel Configuration (10-Stage Full Flow)
+// Based on AI-GO-NO-GO-ASSESSMENT-STRATEGY.md
+// ============================================================================
+
+export const ASSESSMENT_FUNNEL_CONFIG = {
+  price: 5000, // $5,000 fixed-fee assessment (revealed in Stage 4: Educate)
+  name: 'AI Go/No-Go Assessment™',
+  tagline: 'A binary decision: does AI make strategic sense for your business right now?',
+  corePhilosophy: 'We sell judgment, not AI.',
+  successStatement: 'A "NO" verdict is a successful outcome, not a sales failure.',
+
+  // 10-Stage Funnel Order
+  stageOrder: [
+    'attract',
+    'qualify',
+    'book',
+    'educate',
+    'confirm',
+    'commit',
+    'intake',
+    'deliver',
+    'document',
+    'exit',
+  ] as const,
+
+  // Stage Labels for Progress Indicator
+  stageLabels: {
+    attract: 'Start',
+    qualify: 'Qualify',
+    book: 'Schedule',
+    educate: 'Learn',
+    confirm: 'Confirm',
+    commit: 'Invest',
+    intake: 'Prepare',
+    deliver: 'Verdict',
+    document: 'Report',
+    exit: 'Complete',
+  } as const,
+
+  // Lead source identifier for tracking
+  leadSource: 'assessment-funnel',
+
+  // VSL Configuration - Pricing revealed here
+  vsl: {
+    url: 'https://www.youtube.com/embed/placeholder',
+    minimumWatchPercentage: 90,
+    estimatedDuration: '15 minutes',
+    unwatchedConsequence: 'Call auto-cancelled',
+  },
+
+  // Calendar Configuration
+  calendar: {
+    url: 'https://api.leadconnectorhq.com/widget/booking/Wk1pAr8Wz4PNCUjrVJtZ',
+    provider: 'leadconnector',
+  },
+
+  // Verdict Definitions
+  verdicts: {
+    GO: {
+      label: 'GO',
+      description: 'AI makes strategic sense for your business right now.',
+      color: 'growth-emerald',
+      implication: 'Proceed with confidence. Your business has the structure to benefit from AI.',
+    },
+    NO_GO: {
+      label: 'NO-GO',
+      description: 'AI is not the right move for your business at this time.',
+      color: 'text-muted',
+      implication: 'This is a successful outcome. We protected you from wasted investment.',
+    },
+    NOT_YET: {
+      label: 'NOT YET',
+      description: 'AI could work, but specific conditions must be met first.',
+      color: 'radiance-gold',
+      implication: 'Address the identified gaps, then revisit. We\'ll tell you exactly what needs to change.',
+    },
+  },
+
+  // Four Scored Dimensions for Assessment
+  scoringDimensions: {
+    decisionConcentration: {
+      label: 'Decision Concentration',
+      question: 'How distributed is decision-making authority?',
+      description: 'Measures whether decisions flow through one person or are spread across the organization.',
+    },
+    founderDependency: {
+      label: 'Founder Dependency',
+      question: 'Can operations function without the founder?',
+      description: 'Assesses how much the business relies on the founder for day-to-day operations.',
+    },
+    decisionCodification: {
+      label: 'Decision Codification',
+      question: 'Are processes documented and repeatable?',
+      description: 'Evaluates whether business processes are written down and systematized.',
+    },
+    leverageReadiness: {
+      label: 'Leverage Readiness',
+      question: 'Can AI meaningfully multiply existing capacity?',
+      description: 'Determines if the business structure allows AI to amplify, not just automate.',
+    },
+  },
+};
+
+// ============================================================================
+// Assessment Funnel Stage Content
+// ============================================================================
+
+// Stage 1: Attract - Entry Landing Content
+export const ATTRACT_STAGE_CONTENT = {
+  headline: 'Is AI Right for Your Business?',
+  subheadline: 'Get a definitive yes, no, or not-yet verdict from experts who sell judgment, not AI.',
+
+  // Approved creative angles from strategy
+  hooks: [
+    'You\'ve tried AI tools. You\'re still the bottleneck.',
+    'AI amplifies structure — or chaos. Which do you have?',
+    'Sometimes the smartest AI decision is non-adoption.',
+    'Before you build AI systems, find out if you should.',
+  ],
+
+  // Repel messaging - filter out poor fits
+  notForYou: [
+    'Looking for AI tool tutorials or how-to guides',
+    'Seeking the latest AI products to try',
+    'Wanting immediate implementation or builds',
+    'Expecting a free audit or consultation',
+    'Shopping for AI consulting services',
+  ],
+
+  // Attract messaging - draw in ideal clients
+  forYou: [
+    'You have real business traction but feel capped by your systems',
+    'You know AI will reshape your industry but don\'t know where to start',
+    'You want an honest answer, even if it\'s "not yet" or "no"',
+    'You\'re ready to invest in expert judgment, not opinions',
+    'You\'re the decision-maker who can act on clarity',
+  ],
+
+  // Positioning statement
+  positioning: {
+    what: 'A $5,000 fixed-fee assessment that delivers a binary decision.',
+    not: 'This is not consulting. Not implementation. Not a sales pitch.',
+    outcome: 'You leave with judgment: GO, NO-GO, or NOT YET.',
+  },
+};
+
+// Stage 2: Qualify - Self-Qualification Criteria
+export const QUALIFY_STAGE_CONTENT = {
+  headline: 'Confirm Your Eligibility',
+  subheadline: 'This assessment has strict qualification criteria. All three must be true.',
+
+  // All three required - failure on any = disqualification
+  qualificationCriteria: [
+    {
+      id: 'isDecisionMaker',
+      label: 'Decision-Maker Authority',
+      description: 'I can independently authorize a $5,000 investment without committee approval.',
+      required: true,
+    },
+    {
+      id: 'priceAcceptance',
+      label: 'Investment Readiness',
+      description: 'I understand this is a paid assessment (price revealed after the video).',
+      required: true,
+    },
+    {
+      id: 'acceptsNegativeVerdict',
+      label: 'Verdict Acceptance',
+      description: 'I accept that "NO-GO" is a valid, valuable outcome that protects my investment.',
+      required: true,
+    },
+  ],
+
+  disqualificationMessage: 'This assessment isn\'t right for everyone. If any criteria doesn\'t fit, we\'d be doing you a disservice to proceed.',
+};
+
+// Stage 3: Book - Calendar Booking Content (NO PRICING)
+export const BOOK_STAGE_CONTENT = {
+  headline: 'Schedule Your Assessment Call',
+  subheadline: 'Select a time for your verdict call. No pricing is discussed until you watch the required video.',
+  note: 'Next: You\'ll watch a short video that explains the full process and investment.',
+};
+
+// Stage 4: Educate - VSL Content (PRICING REVEALED)
+export const EDUCATE_STAGE_CONTENT = {
+  headline: 'Understand the Assessment',
+  subheadline: 'This video explains exactly what you\'re investing in and what to expect.',
+  requirement: 'You must watch at least 90% to proceed. This ensures you understand before committing.',
+  priceReveal: {
+    headline: 'The Investment',
+    amount: '$5,000',
+    description: 'Fixed fee. No tiers. No discounts. No hidden costs.',
+    includes: [
+      'Complete AI readiness evaluation',
+      'Structured intake review',
+      '30-minute verdict call with exactly 3 reasoning points',
+      'Single-page assessment report with scores',
+    ],
+  },
+  warning: 'If you don\'t complete this video, your scheduled call will be automatically cancelled.',
+};
+
+// Stage 5: Confirm - VSL Completion Confirmation
+export const CONFIRM_STAGE_CONTENT = {
+  headline: 'Confirm Your Understanding',
+  subheadline: 'You\'ve watched the video. Confirm you understand and accept the terms before proceeding to payment.',
+  confirmations: [
+    'I understand the assessment costs $5,000.',
+    'I understand a "NO-GO" verdict is still a successful outcome.',
+    'I understand this is judgment, not implementation.',
+    'I\'m ready to proceed to payment.',
+  ],
+  callDetails: {
+    label: 'Your Scheduled Call',
+    note: 'This time is held but not confirmed until payment is complete.',
+  },
+};
+
+// Stage 6: Commit - Payment Content
+export const COMMIT_STAGE_CONTENT = {
+  headline: 'Secure Your Assessment',
+  subheadline: 'Complete payment to begin intake. Your call is held for you.',
+  investmentLabel: 'Assessment Investment',
+  includes: [
+    'AI readiness evaluation across 4 dimensions',
+    'Async intake review by assessment team',
+    '30-minute live verdict call',
+    'Single-page assessment report',
+  ],
+  refundPolicy: 'This is a judgment-based service. A "NO-GO" verdict protects you from wasted AI investment. No refunds based on verdict outcome.',
+  securityNote: 'Secured by Stripe',
+};
+
+// Stage 7: Intake - Questionnaire Content
+export const INTAKE_STAGE_CONTENT = {
+  headline: 'Complete Your Intake',
+  subheadline: 'Your responses directly inform your assessment. Answer thoroughly and honestly.',
+  requirement: 'All required questions must be answered. Incomplete intake pauses your assessment indefinitely.',
+  loomRequirement: {
+    headline: 'Required: Loom Video Walkthrough',
+    description: 'Record a 5-10 minute video walking through your business operations.',
+    includes: [
+      'Show your current tools and systems',
+      'Explain your key workflows',
+      'Demonstrate pain points and bottlenecks',
+      'Describe where you are vs. where you want to be',
+    ],
+    warning: 'No Loom = No assessment. This is non-negotiable.',
+  },
+};
+
+// Stage 8: Deliver - Verdict Call Content
+export const DELIVER_STAGE_CONTENT = {
+  headline: 'Your Verdict Call',
+  subheadline: 'This is the 30-minute call where you receive your verdict with exactly 3 reasoning points.',
+  format: {
+    duration: '30 minutes',
+    structure: [
+      'Brief review of your intake (5 minutes)',
+      'Verdict delivery with 3 specific reasons (15 minutes)',
+      'Q&A on the verdict only (10 minutes)',
+    ],
+  },
+  boundaries: {
+    included: ['Clear verdict (GO, NO-GO, or NOT YET)', 'Exactly 3 reasoning points', 'Answers to verdict-related questions'],
+    notIncluded: ['AI consulting or advice', 'Tool recommendations', 'Implementation planning', 'Next-step proposals'],
+  },
+  scopePhrase: '"That\'s intentionally outside this assessment\'s scope."',
+};
+
+// Stage 9: Document - Report Content
+export const DOCUMENT_STAGE_CONTENT = {
+  headline: 'Your Assessment Report',
+  subheadline: 'A single-page document with your scores, verdict, and implications.',
+  reportIncludes: [
+    'Your verdict: GO, NO-GO, or NOT YET',
+    'Scores across all 4 dimensions (1-10)',
+    'The 3 specific reasoning points from your call',
+    'Implications of your verdict',
+  ],
+  note: 'This report is yours to keep. It stands alone without Light Brand.',
+};
+
+// Stage 10: Exit - Clean Closure Content
+export const EXIT_STAGE_CONTENT = {
+  headline: 'Assessment Complete',
+  subheadline: 'Your assessment is finished. The decision is now yours.',
+  closureStatement: 'We don\'t follow up unless you initiate. This is intentional.',
+  verdictOutcomes: {
+    GO: {
+      message: 'Your business is ready for AI. If you choose to explore further with Light Brand, you can reach out.',
+      cta: null, // No proactive CTA
+    },
+    NO_GO: {
+      message: 'AI isn\'t right for your business now. This verdict protected you from wasted investment.',
+      cta: null,
+    },
+    NOT_YET: {
+      message: 'Address the identified gaps, then consider revisiting. We\'ve told you exactly what needs to change.',
+      cta: null,
+    },
+  },
+  contactNote: 'Questions about your report? assessment@lightbrand.consulting',
+};
+
 // Assessment intake questions - based on verdict dimensions
 export const ASSESSMENT_INTAKE_QUESTIONS = [
   {
