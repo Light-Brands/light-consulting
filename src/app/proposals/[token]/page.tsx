@@ -732,9 +732,11 @@ export default function ProposalPortalPage({ params }: PageProps) {
                         </div>
 
                         {phase.description && (
-                          <p className="text-text-secondary mb-8 text-lg leading-relaxed border-l-2 border-radiance-gold/20 pl-6 py-2">
-                            {phase.description}
-                          </p>
+                          <div className="text-text-secondary mb-8 text-lg leading-relaxed border-l-2 border-radiance-gold/20 pl-6 py-2 prose prose-invert max-w-none prose-p:text-text-secondary prose-p:leading-relaxed prose-p:text-lg prose-p:my-2 prose-ul:my-2 prose-ul:space-y-1 prose-li:text-text-secondary prose-strong:text-text-primary">
+                            <ReactMarkdown>
+                              {phase.description}
+                            </ReactMarkdown>
+                          </div>
                         )}
 
                         {phase.deliverables && phase.deliverables.length > 0 && (
@@ -1101,7 +1103,7 @@ export default function ProposalPortalPage({ params }: PageProps) {
                           <div>
                             <h3 className="font-bold text-text-primary text-lg mb-2">{milestone.milestone_name}</h3>
                             {milestone.description && (
-                              <p className="text-text-secondary mb-2 leading-relaxed">{milestone.description}</p>
+                              <div className="text-text-secondary mb-2 leading-relaxed whitespace-pre-wrap">{milestone.description}</div>
                             )}
                             {milestone.due_date && (
                               <p className="text-text-muted text-sm font-mono">
