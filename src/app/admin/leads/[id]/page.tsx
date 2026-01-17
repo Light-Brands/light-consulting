@@ -135,13 +135,13 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       <AdminHeader
         title={lead.name}
         subtitle={`Lead from ${SERVICE_LABELS[lead.service] || lead.service}`}
       />
 
-      <div className="py-8 md:py-12 relative overflow-hidden">
+      <div className="py-4 sm:py-8 md:py-12 relative overflow-hidden">
         {/* Background atmosphere */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
@@ -149,7 +149,7 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
           {/* Back Link */}
           <Link
             href="/admin/leads"
-            className="inline-flex items-center gap-2 text-text-muted hover:text-text-primary mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-text-muted hover:text-text-primary mb-4 sm:mb-6 transition-colors text-sm"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -157,11 +157,11 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
             Back to Leads
           </Link>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               {/* Contact Information */}
-              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-[0.015] pointer-events-none"
                   style={{
@@ -170,18 +170,18 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
                   }}
                 />
                 <div className="relative z-10">
-                  <div className="p-6 border-b border-depth-border">
+                  <div className="p-4 sm:p-6 border-b border-depth-border">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
                       <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
                         Lead::Contact_Info
                       </span>
                     </div>
-                    <h2 className="text-lg font-semibold text-text-primary">
+                    <h2 className="text-base sm:text-lg font-semibold text-text-primary">
                       Contact Information
                     </h2>
                   </div>
-                  <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
                       <label className="text-text-muted text-sm block mb-1">Name</label>
                       <p className="text-text-primary font-medium">{lead.name}</p>
@@ -218,7 +218,7 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
 
               {/* Website & Tech Stack */}
               {lead.website_url && (
-                <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                   <div
                     className="absolute inset-0 opacity-[0.015] pointer-events-none"
                     style={{
@@ -227,18 +227,18 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
                     }}
                   />
                   <div className="relative z-10">
-                    <div className="p-6 border-b border-depth-border">
+                    <div className="p-4 sm:p-6 border-b border-depth-border">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
                         <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
                           Diagnostic::Website_Analysis
                         </span>
                       </div>
-                      <h2 className="text-lg font-semibold text-text-primary">
+                      <h2 className="text-base sm:text-lg font-semibold text-text-primary">
                         Website & Technology Stack
                       </h2>
                     </div>
-                    <div className="p-6 space-y-4">
+                    <div className="p-4 sm:p-6 space-y-4">
                       <div>
                         <label className="text-text-muted text-sm block mb-1">Website URL</label>
                         <a
@@ -288,7 +288,7 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
 
               {/* AI Readiness Assessment */}
               {lead.readiness_score !== null && (
-                <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                   <div
                     className="absolute inset-0 opacity-[0.015] pointer-events-none"
                     style={{
@@ -297,7 +297,7 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
                     }}
                   />
                   <div className="relative z-10">
-                    <div className="p-6 border-b border-depth-border">
+                    <div className="p-4 sm:p-6 border-b border-depth-border">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-wisdom-violet/50" />
                         <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
@@ -305,18 +305,18 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <h2 className="text-lg font-semibold text-text-primary">
+                        <h2 className="text-base sm:text-lg font-semibold text-text-primary">
                           AI Diagnostic Score
                         </h2>
                         <div className="text-right">
-                          <div className="text-3xl font-bold text-radiance-gold">
+                          <div className="text-2xl sm:text-3xl font-bold text-radiance-gold">
                             {lead.readiness_score}
                           </div>
                           <div className="text-xs text-text-muted">/ 100</div>
                         </div>
                       </div>
                     </div>
-                    <div className="p-6 space-y-4">
+                    <div className="p-4 sm:p-6 space-y-4">
                       {lead.readiness_brief && (
                         <div>
                           <label className="text-text-muted text-sm block mb-1">Readiness Brief</label>
@@ -336,7 +336,7 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
 
               {/* Full Readiness Report */}
               {lead.full_readiness_report && (
-                <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                   <div
                     className="absolute inset-0 opacity-[0.015] pointer-events-none"
                     style={{
@@ -345,18 +345,18 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
                     }}
                   />
                   <div className="relative z-10">
-                    <div className="p-6 border-b border-depth-border">
+                    <div className="p-4 sm:p-6 border-b border-depth-border">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
                         <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
                           Diagnostic::Full_Report
                         </span>
                       </div>
-                      <h2 className="text-lg font-semibold text-text-primary">
+                      <h2 className="text-base sm:text-lg font-semibold text-text-primary">
                         Full AI Readiness Report
                       </h2>
                     </div>
-                    <div className="p-6">
+                    <div className="p-4 sm:p-6">
                       <div className="prose prose-invert max-w-none">
                         <div className="text-text-primary whitespace-pre-wrap text-sm">
                           {lead.full_readiness_report}
@@ -369,7 +369,7 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
 
               {/* System Demo Links */}
               {lead.system_demo_links && Array.isArray(lead.system_demo_links) && lead.system_demo_links.length > 0 && (
-                <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                   <div
                     className="absolute inset-0 opacity-[0.015] pointer-events-none"
                     style={{
@@ -378,18 +378,18 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
                     }}
                   />
                   <div className="relative z-10">
-                    <div className="p-6 border-b border-depth-border">
+                    <div className="p-4 sm:p-6 border-b border-depth-border">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-wisdom-violet/50" />
                         <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
                           Diagnostic::System_Demos
                         </span>
                       </div>
-                      <h2 className="text-lg font-semibold text-text-primary">
+                      <h2 className="text-base sm:text-lg font-semibold text-text-primary">
                         System Demo Links
                       </h2>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 sm:p-6 space-y-3">
                       {lead.system_demo_links.map((demo: { name: string; url: string }, index: number) => (
                         <a
                           key={index}
@@ -409,7 +409,7 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
 
               {/* Booking Information */}
               {lead.booking_calendly_link && (
-                <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                   <div
                     className="absolute inset-0 opacity-[0.015] pointer-events-none"
                     style={{
@@ -418,18 +418,18 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
                     }}
                   />
                   <div className="relative z-10">
-                    <div className="p-6 border-b border-depth-border">
+                    <div className="p-4 sm:p-6 border-b border-depth-border">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
                         <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
                           Booking::Call_Scheduled
                         </span>
                       </div>
-                      <h2 className="text-lg font-semibold text-text-primary">
+                      <h2 className="text-base sm:text-lg font-semibold text-text-primary">
                         Booking Information
                       </h2>
                     </div>
-                    <div className="p-6 space-y-3">
+                    <div className="p-4 sm:p-6 space-y-3">
                       <a
                         href={lead.booking_calendly_link}
                         target="_blank"
@@ -451,7 +451,7 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
 
               {/* Intake Responses */}
               {lead.intake_data && Object.keys(lead.intake_data).length > 0 && (
-                <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                   <div
                     className="absolute inset-0 opacity-[0.015] pointer-events-none"
                     style={{
@@ -460,18 +460,18 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
                     }}
                   />
                   <div className="relative z-10">
-                    <div className="p-6 border-b border-depth-border">
+                    <div className="p-4 sm:p-6 border-b border-depth-border">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-wisdom-violet/50" />
                         <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
                           Lead::Intake_Responses
                         </span>
                       </div>
-                      <h2 className="text-lg font-semibold text-text-primary">
+                      <h2 className="text-base sm:text-lg font-semibold text-text-primary">
                         Intake Responses
                       </h2>
                     </div>
-                    <div className="p-6 space-y-6">
+                    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                       {Object.entries(lead.intake_data).map(([question, answer]) => (
                         <div key={question}>
                           <label className="text-text-muted text-sm block mb-1 capitalize">
@@ -486,7 +486,7 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
               )}
 
               {/* Notes */}
-              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-[0.015] pointer-events-none"
                   style={{
@@ -495,18 +495,18 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
                   }}
                 />
                 <div className="relative z-10">
-                  <div className="p-6 border-b border-depth-border">
+                  <div className="p-4 sm:p-6 border-b border-depth-border">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
                       <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
                         Lead::Internal_Notes
                       </span>
                     </div>
-                    <h2 className="text-lg font-semibold text-text-primary">
+                    <h2 className="text-base sm:text-lg font-semibold text-text-primary">
                       Internal Notes
                     </h2>
                   </div>
-                  <div className="p-6">
+                  <div className="p-4 sm:p-6">
                     <textarea
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
@@ -529,9 +529,9 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Status Card */}
-              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-[0.015] pointer-events-none"
                   style={{
@@ -539,7 +539,7 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
                     backgroundSize: '32px 32px',
                   }}
                 />
-                <div className="relative z-10 p-6">
+                <div className="relative z-10 p-4 sm:p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
                     <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
@@ -561,7 +561,7 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
               </div>
 
               {/* Service Card */}
-              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-[0.015] pointer-events-none"
                   style={{
@@ -569,21 +569,21 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
                     backgroundSize: '32px 32px',
                   }}
                 />
-                <div className="relative z-10 p-6">
+                <div className="relative z-10 p-4 sm:p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <div className="w-1.5 h-1.5 rounded-full bg-wisdom-violet/50" />
                     <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
                       Service Interest
                     </span>
                   </div>
-                  <p className="text-text-primary font-semibold text-lg">
+                  <p className="text-text-primary font-semibold text-base sm:text-lg">
                     {SERVICE_LABELS[lead.service] || lead.service}
                   </p>
                 </div>
               </div>
 
               {/* Timestamps */}
-              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-[0.015] pointer-events-none"
                   style={{
@@ -591,7 +591,7 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
                     backgroundSize: '32px 32px',
                   }}
                 />
-                <div className="relative z-10 p-6 space-y-4">
+                <div className="relative z-10 p-4 sm:p-6 space-y-4">
                   <div>
                     <label className="text-text-muted text-sm block mb-1">Created</label>
                     <p className="text-text-primary">{formatDate(lead.created_at)}</p>
@@ -604,7 +604,7 @@ export default function AdminLeadDetailPage({ params }: PageProps) {
               </div>
 
               {/* Actions */}
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 <Link href={`/admin/proposals/new?lead=${lead.id}`} className="block">
                   <Button variant="primary" fullWidth>
                     Create Proposal
