@@ -803,8 +803,7 @@ export const ASSESSMENT_CONFIG = {
 
   // VSL Configuration
   vsl: {
-    // Placeholder URL - replace with actual VSL
-    url: 'https://www.youtube.com/embed/placeholder',
+    url: 'https://www.youtube.com/embed/I1J2Z_Fgado',
     minimumWatchPercentage: 90, // Must watch 90% to proceed
     estimatedDuration: '15 minutes',
   },
@@ -881,7 +880,7 @@ export const ASSESSMENT_FUNNEL_CONFIG = {
 
   // VSL Configuration - Pricing revealed here
   vsl: {
-    url: 'https://www.youtube.com/embed/placeholder',
+    url: 'https://www.youtube.com/embed/I1J2Z_Fgado',
     minimumWatchPercentage: 90,
     estimatedDuration: '15 minutes',
     unwatchedConsequence: 'Call auto-cancelled',
