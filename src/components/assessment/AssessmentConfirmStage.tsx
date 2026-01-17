@@ -33,8 +33,9 @@ export const AssessmentConfirmStage: React.FC<AssessmentConfirmStageProps> = ({
     setConfirmations((prev) => ({ ...prev, [index]: checked }));
   };
 
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return 'Not scheduled';
+  const formatDate = (date: Date | undefined, isPending?: boolean) => {
+    if (isPending) return 'Confirming your booking...';
+    if (!date) return 'Scheduled';
     return new Intl.DateTimeFormat('en-US', {
       weekday: 'short',
       month: 'short',
@@ -66,7 +67,7 @@ export const AssessmentConfirmStage: React.FC<AssessmentConfirmStageProps> = ({
             {CONFIRM_STAGE_CONTENT.callDetails.label}
           </p>
           <p className="text-xl sm:text-2xl font-bold text-text-primary">
-            {formatDate(formData.bookedSlot)}
+            {formatDate(formData.bookedSlot, formData.bookingPending)}
           </p>
           <p className="text-text-muted text-xs sm:text-sm">
             {CONFIRM_STAGE_CONTENT.callDetails.note}

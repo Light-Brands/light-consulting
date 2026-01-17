@@ -31,18 +31,42 @@ export const AssessmentBookStage: React.FC<AssessmentBookStageProps> = ({
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
 
     // Build redirect URL to come back to educate stage with booking info
-    const redirectUrl = `${baseUrl}/assessment-funnel?stage=educate&booking_complete=true${
-      formData.leadId ? `&lead_id=${formData.leadId}` : ''
-    }`;
+    // Include email so we can look up booking details from webhook data
+    const redirectParams = new URLSearchParams({
+      stage: 'educate',
+      booking_complete: 'true',
+    });
+
+    if (formData.leadId) {
+      redirectParams.set('lead_id', formData.leadId);
+    }
+    if (formData.email) {
+      redirectParams.set('email', formData.email);
+    }
+
+    const redirectUrl = `${baseUrl}/assessment-funnel?${redirectParams.toString()}`;
 
     // LeadConnector calendar URL with redirect
     // The calendar URL format: base_url + ?redirect_url=encoded_url
     const calendarBaseUrl = ASSESSMENT_FUNNEL_CONFIG.calendar.url;
 
-    // Check if it's a widget URL that needs conversion to booking page URL
-    // Widget: https://api.leadconnectorhq.com/widget/booking/ID
-    // Page: https://api.leadconnectorhq.com/widget/booking/ID?redirect_url=URL
-    const bookingUrl = `${calendarBaseUrl}?redirect_url=${encodeURIComponent(redirectUrl)}`;
+    // Build booking URL with redirect and pre-fill user info
+    // LeadConnector supports pre-filling name, email, phone via URL params
+    const bookingParams = new URLSearchParams();
+    bookingParams.set('redirect_url', redirectUrl);
+
+    // Pre-fill contact info if available (LeadConnector will use these)
+    if (formData.name) {
+      bookingParams.set('name', formData.name);
+    }
+    if (formData.email) {
+      bookingParams.set('email', formData.email);
+    }
+    if (formData.phone) {
+      bookingParams.set('phone', formData.phone);
+    }
+
+    const bookingUrl = `${calendarBaseUrl}?${bookingParams.toString()}`;
 
     return bookingUrl;
   };

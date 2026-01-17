@@ -107,29 +107,73 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
     const assessmentIdParam = url.searchParams.get('assessment_id');
     const paymentStatus = url.searchParams.get('payment');
     const bookingComplete = url.searchParams.get('booking_complete');
+    const emailParam = url.searchParams.get('email');
 
     // Handle booking complete callback from LeadConnector
     if (bookingComplete === 'true') {
-      // Generate a booking ID (in production, LeadConnector may pass this)
-      const bookingId = url.searchParams.get('booking_id') || 'ghl-booking-' + Date.now();
-      // Parse booked slot if provided, otherwise use a placeholder
-      const bookedSlotParam = url.searchParams.get('booked_slot');
-      const bookedSlot = bookedSlotParam ? new Date(bookedSlotParam) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-
-      setFormData((prev) => ({
-        ...prev,
-        bookingId,
-        bookedSlot,
-        bookingConfirmed: true,
-        ...(leadIdParam ? { leadId: leadIdParam } : {}),
-      }));
-      setStage('educate');
-
-      // Clean up URL params
+      // Clean up URL params immediately
       url.searchParams.delete('booking_complete');
       url.searchParams.delete('booking_id');
       url.searchParams.delete('booked_slot');
+      url.searchParams.delete('email');
       window.history.replaceState({}, '', url.toString());
+
+      // Try to fetch actual booking data from our database (populated by webhook)
+      const lookupEmail = emailParam || formData.email;
+      const lookupLeadId = leadIdParam || formData.leadId;
+
+      if (lookupEmail || lookupLeadId) {
+        const params = new URLSearchParams();
+        if (lookupLeadId) params.set('lead_id', lookupLeadId);
+        else if (lookupEmail) params.set('email', lookupEmail);
+
+        fetch(`/api/assessment/booking?${params.toString()}`)
+          .then((res) => res.json())
+          .then((result) => {
+            if (result.success && result.booking) {
+              // Use actual booking data from webhook
+              setFormData((prev) => ({
+                ...prev,
+                bookingId: result.booking.bookingId,
+                bookedSlot: result.booking.bookedSlot ? new Date(result.booking.bookedSlot) : undefined,
+                bookingConfirmed: true,
+                ...(result.booking.leadId ? { leadId: result.booking.leadId } : {}),
+                ...(lookupEmail ? { email: lookupEmail } : {}),
+              }));
+            } else {
+              // Fallback: booking not yet in database (webhook may be delayed)
+              // Set a flag to indicate we need to fetch booking data later
+              setFormData((prev) => ({
+                ...prev,
+                bookingConfirmed: true,
+                bookingPending: true, // Flag to show "confirming booking" message
+                ...(leadIdParam ? { leadId: leadIdParam } : {}),
+                ...(lookupEmail ? { email: lookupEmail } : {}),
+              }));
+            }
+            setStage('educate');
+          })
+          .catch((err) => {
+            console.error('Error fetching booking data:', err);
+            // Fallback to pending state
+            setFormData((prev) => ({
+              ...prev,
+              bookingConfirmed: true,
+              bookingPending: true,
+              ...(leadIdParam ? { leadId: leadIdParam } : {}),
+            }));
+            setStage('educate');
+          });
+      } else {
+        // No email/leadId to look up - proceed without booking details
+        setFormData((prev) => ({
+          ...prev,
+          bookingConfirmed: true,
+          bookingPending: true,
+          ...(leadIdParam ? { leadId: leadIdParam } : {}),
+        }));
+        setStage('educate');
+      }
       return;
     }
 
