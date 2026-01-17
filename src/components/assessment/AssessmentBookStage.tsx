@@ -9,6 +9,7 @@
 import React, { useState } from 'react';
 import { Button } from '../ui';
 import { AssessmentFormData } from '@/types';
+import { ASSESSMENT_CONFIG } from '@/lib/constants';
 
 interface AssessmentBookStageProps {
   formData: AssessmentFormData;
@@ -25,23 +26,33 @@ export const AssessmentBookStage: React.FC<AssessmentBookStageProps> = ({
 }) => {
   const [isCalendarLoaded, setIsCalendarLoaded] = useState(false);
 
-  // Handle Calendly event
-  const handleCalendlyEvent = (e: MessageEvent) => {
-    if (e.data.event && e.data.event === 'calendly.event_scheduled') {
-      const payload = e.data.payload;
-      onBookingComplete(
-        payload.event?.uri || 'mock-booking-id',
-        new Date(payload.event?.start_time || Date.now())
-      );
-      onContinue();
+  // Handle LeadConnector/GHL booking event
+  const handleBookingEvent = (e: MessageEvent) => {
+    // LeadConnector sends various message types
+    // Check for booking confirmation events
+    if (e.data && typeof e.data === 'object') {
+      // GHL booking widget events
+      if (e.data.type === 'booking_confirmed' || e.data.event === 'booking_confirmed') {
+        const bookingId = e.data.bookingId || e.data.id || 'ghl-booking-' + Date.now();
+        const startTime = e.data.startTime || e.data.selected_slot || Date.now();
+        onBookingComplete(bookingId, new Date(startTime));
+        onContinue();
+      }
+      // Alternative event format
+      if (e.data.eventName === 'bookingConfirmed' || e.data.action === 'bookingSuccess') {
+        const bookingId = e.data.bookingId || e.data.appointmentId || 'ghl-booking-' + Date.now();
+        const startTime = e.data.startTime || e.data.appointmentTime || Date.now();
+        onBookingComplete(bookingId, new Date(startTime));
+        onContinue();
+      }
     }
   };
 
-  // Listen for Calendly messages
+  // Listen for booking messages from LeadConnector widget
   React.useEffect(() => {
-    window.addEventListener('message', handleCalendlyEvent);
-    return () => window.removeEventListener('message', handleCalendlyEvent);
-  }, []);
+    window.addEventListener('message', handleBookingEvent);
+    return () => window.removeEventListener('message', handleBookingEvent);
+  }, [onBookingComplete, onContinue]);
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -68,15 +79,16 @@ export const AssessmentBookStage: React.FC<AssessmentBookStageProps> = ({
             </div>
           )}
 
-          {/* Calendly Embed - Replace URL with actual Calendly link */}
+          {/* LeadConnector/GHL Calendar Widget */}
           <iframe
-            src="https://calendly.com/light-brand/assessment?hide_landing_page_details=1&hide_gdpr_banner=1"
+            src={ASSESSMENT_CONFIG.calendar.url}
             width="100%"
             height="100%"
             frameBorder="0"
             className="absolute inset-0"
             onLoad={() => setIsCalendarLoaded(true)}
             title="Schedule Assessment Call"
+            allow="payment"
           />
         </div>
       </div>

@@ -809,6 +809,13 @@ export const ASSESSMENT_CONFIG = {
     estimatedDuration: '15 minutes',
   },
 
+  // Calendar Configuration (LeadConnector/GHL)
+  calendar: {
+    // Group calendar with assessment agents
+    url: 'https://api.leadconnectorhq.com/widget/booking/Wk1pAr8Wz4PNCUjrVJtZ',
+    provider: 'leadconnector',
+  },
+
   // Verdicts
   verdicts: {
     GO: {
