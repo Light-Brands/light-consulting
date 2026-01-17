@@ -499,7 +499,7 @@ export default function AdminEditProposalPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       <AdminHeader title="Edit Proposal" subtitle={formData.project_name || 'Update proposal details'} />
 
       <div className="py-4 sm:py-8 md:py-12 relative overflow-hidden">
@@ -780,15 +780,17 @@ export default function AdminEditProposalPage({ params }: PageProps) {
                           <label className="block text-text-primary text-sm font-medium mb-2">Deliverables</label>
                           <div className="space-y-2">
                             {phase.deliverables.map((deliverable, dIndex) => (
-                              <div key={deliverable.id} className="flex gap-2">
-                                <Input
-                                  value={deliverable.name}
-                                  onChange={(e) => updateDeliverable(phaseIndex, dIndex, e.target.value)}
-                                  placeholder="Deliverable name"
-                                />
+                              <div key={deliverable.id} className="flex gap-2 items-start">
+                                <div className="flex-1 min-w-0">
+                                  <Input
+                                    value={deliverable.name}
+                                    onChange={(e) => updateDeliverable(phaseIndex, dIndex, e.target.value)}
+                                    placeholder="Deliverable name"
+                                  />
+                                </div>
                                 <button
                                   onClick={() => removeDeliverable(phaseIndex, dIndex)}
-                                  className="px-3 text-red-400 hover:text-red-300"
+                                  className="px-3 py-3 text-red-400 hover:text-red-300 flex-shrink-0"
                                 >
                                   ×
                                 </button>
@@ -807,15 +809,17 @@ export default function AdminEditProposalPage({ params }: PageProps) {
                           <label className="block text-text-primary text-sm font-medium mb-2">Objectives</label>
                           <div className="space-y-2">
                             {phase.objectives.map((objective, oIndex) => (
-                              <div key={oIndex} className="flex gap-2">
-                                <Input
-                                  value={objective}
-                                  onChange={(e) => updateListItem(phaseIndex, 'objectives', oIndex, e.target.value)}
-                                  placeholder="Objective"
-                                />
+                              <div key={oIndex} className="flex gap-2 items-start">
+                                <div className="flex-1 min-w-0">
+                                  <Input
+                                    value={objective}
+                                    onChange={(e) => updateListItem(phaseIndex, 'objectives', oIndex, e.target.value)}
+                                    placeholder="Objective"
+                                  />
+                                </div>
                                 <button
                                   onClick={() => removeListItem(phaseIndex, 'objectives', oIndex)}
-                                  className="px-3 text-red-400 hover:text-red-300"
+                                  className="px-3 py-3 text-red-400 hover:text-red-300 flex-shrink-0"
                                 >
                                   ×
                                 </button>

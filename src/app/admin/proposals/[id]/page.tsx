@@ -206,7 +206,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       <AdminHeader
         title={proposal.project_name}
         subtitle={`For ${proposal.client_name}`}
