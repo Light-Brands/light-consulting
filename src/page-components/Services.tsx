@@ -205,7 +205,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
             <Heading level="h2" className="mb-4">
               Most agencies skip the clarity step.
             </Heading>
-            <Text variant="large" className="text-radiance-gold font-medium text-center block mx-auto">
+            <Text variant="large" align="center" className="text-radiance-gold font-medium">
               That's why they build the wrong things.
             </Text>
           </div>
