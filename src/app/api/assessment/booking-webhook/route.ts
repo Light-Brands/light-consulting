@@ -18,6 +18,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
+import { logWebhookForDebug } from './debug/route';
 
 // LeadConnector webhook payload structure
 interface LeadConnectorAppointmentWebhook {
@@ -88,33 +89,48 @@ export async function POST(request: NextRequest) {
 
     if (!email) {
       console.error('[LeadConnector Webhook] No email in payload:', payload);
-      // Still return 200 to acknowledge receipt (webhooks should not retry on bad data)
-      return NextResponse.json({
+      const result = {
         success: false,
         error: 'No email provided in webhook payload',
         received: true,
-      });
+      };
+      logWebhookForDebug(payload, result);
+      return NextResponse.json(result);
     }
 
     if (!startTime) {
       console.error('[LeadConnector Webhook] No start time in payload:', payload);
-      return NextResponse.json({
+      const result = {
         success: false,
         error: 'No start time provided in webhook payload',
         received: true,
-      });
+      };
+      logWebhookForDebug(payload, result);
+      return NextResponse.json(result);
     }
 
     // If Supabase is not configured, return success (for development)
     if (!isSupabaseConfigured()) {
       console.log('[LeadConnector Webhook] Supabase not configured, skipping database update');
-      return NextResponse.json({
+      const result = {
         success: true,
         message: 'Webhook received (development mode)',
         appointmentId,
         email,
         startTime,
-      });
+        extractedData: {
+          appointmentId,
+          email,
+          contactName,
+          phone,
+          startTime,
+          endTime: payload.endTime,
+          status: payload.status,
+          timezone: payload.timezone,
+        },
+      };
+      logWebhookForDebug(payload, result);
+      return NextResponse.json(result);
     }
 
     // Find lead by email and update with booking details
@@ -188,13 +204,16 @@ export async function POST(request: NextRequest) {
 
       console.log(`[LeadConnector Webhook] Updated lead ${existingLead.id} with booking ${appointmentId}`);
 
-      return NextResponse.json({
+      const result = {
         success: true,
         message: 'Booking saved to existing lead',
         leadId: existingLead.id,
         appointmentId,
         startTime,
-      });
+        bookingData,
+      };
+      logWebhookForDebug(payload, result);
+      return NextResponse.json(result);
     } else {
       // Create new lead with booking info (user booked before starting funnel)
       const { data: newLead, error: createError } = await supabaseAdmin
@@ -231,22 +250,28 @@ export async function POST(request: NextRequest) {
 
       console.log(`[LeadConnector Webhook] Created new lead ${newLead.id} with booking ${appointmentId}`);
 
-      return NextResponse.json({
+      const result = {
         success: true,
         message: 'Booking saved to new lead',
         leadId: newLead.id,
         appointmentId,
         startTime,
-      });
+        bookingData,
+      };
+      logWebhookForDebug(payload, result);
+      return NextResponse.json(result);
     }
   } catch (error) {
     console.error('[LeadConnector Webhook] Error processing webhook:', error);
     // Return 200 to prevent webhook retries on parsing errors
-    return NextResponse.json({
+    const result = {
       success: false,
       error: 'Failed to process webhook',
       received: true,
-    });
+      errorDetails: error instanceof Error ? error.message : 'Unknown error',
+    };
+    logWebhookForDebug({ parseError: true }, result);
+    return NextResponse.json(result);
   }
 }
 
