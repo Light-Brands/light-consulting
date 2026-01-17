@@ -879,10 +879,12 @@ export const ASSESSMENT_FUNNEL_CONFIG = {
   leadSource: 'assessment-funnel',
 
   // VSL Configuration - Pricing revealed here
+  // Note: Duration is dynamically determined from the YouTube API.
+  // If you change the video URL, the duration will automatically update.
   vsl: {
     url: 'https://www.youtube.com/embed/I1J2Z_Fgado',
     minimumWatchPercentage: 90,
-    estimatedDuration: '15 minutes',
+    estimatedDuration: '15 minutes', // Fallback only - actual duration fetched from YouTube API
     unwatchedConsequence: 'Call auto-cancelled',
   },
 
