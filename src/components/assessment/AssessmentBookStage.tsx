@@ -51,13 +51,24 @@ export const AssessmentBookStage: React.FC<AssessmentBookStageProps> = ({
     const calendarBaseUrl = ASSESSMENT_FUNNEL_CONFIG.calendar.url;
 
     // Build booking URL with redirect and pre-fill user info
-    // LeadConnector supports pre-filling name, email, phone via URL params
+    // LeadConnector supports pre-filling contact info via URL params
     const bookingParams = new URLSearchParams();
     bookingParams.set('redirect_url', redirectUrl);
 
     // Pre-fill contact info if available (LeadConnector will use these)
     if (formData.name) {
+      // Split name into first and last name for LeadConnector
+      const nameParts = formData.name.trim().split(/\s+/);
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      // Pass both formats for compatibility
       bookingParams.set('name', formData.name);
+      bookingParams.set('first_name', firstName);
+      bookingParams.set('last_name', lastName);
+      // Also try camelCase variants
+      bookingParams.set('firstName', firstName);
+      bookingParams.set('lastName', lastName);
     }
     if (formData.email) {
       bookingParams.set('email', formData.email);
