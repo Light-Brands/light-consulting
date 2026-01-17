@@ -242,7 +242,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               {/* Overview */}
-              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-[0.015] pointer-events-none"
                   style={{
@@ -264,8 +264,8 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                   </div>
                   <div className="p-4 sm:p-6">
                     {proposal.project_overview ? (
-                      <div className="prose prose-invert max-w-none">
-                        <div className="whitespace-pre-wrap text-text-secondary">
+                      <div className="prose prose-invert max-w-none overflow-hidden">
+                        <div className="whitespace-pre-wrap text-text-secondary break-words">
                           {proposal.project_overview}
                         </div>
                       </div>
@@ -277,7 +277,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
               </div>
 
               {/* Phases */}
-              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-[0.015] pointer-events-none"
                   style={{
@@ -353,12 +353,12 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                             </div>
                           </div>
                           {phase.description && (
-                            <p className="text-text-secondary mb-4">{phase.description}</p>
+                            <p className="text-text-secondary mb-4 break-words">{phase.description}</p>
                           )}
                           {phase.deliverables && phase.deliverables.length > 0 && (
                             <div className="mb-3">
                               <h4 className="text-text-muted text-sm font-medium mb-2">Deliverables</h4>
-                              <ul className="list-disc list-inside text-text-secondary">
+                              <ul className="list-disc list-inside text-text-secondary break-words">
                                 {phase.deliverables.map((d) => (
                                   <li key={d.id}>{d.name}</li>
                                 ))}
@@ -368,7 +368,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                           {phase.objectives && phase.objectives.length > 0 && (
                             <div>
                               <h4 className="text-text-muted text-sm font-medium mb-2">Objectives</h4>
-                              <ul className="list-disc list-inside text-text-secondary">
+                              <ul className="list-disc list-inside text-text-secondary break-words">
                                 {phase.objectives.map((obj, i) => (
                                   <li key={i}>{obj}</li>
                                 ))}
@@ -385,7 +385,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
               </div>
 
               {/* Milestones */}
-              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-[0.015] pointer-events-none"
                   style={{
@@ -451,7 +451,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
             {/* Sidebar */}
             <div className="space-y-4 sm:space-y-6">
               {/* Status & Actions */}
-              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-[0.015] pointer-events-none"
                   style={{
@@ -487,7 +487,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
               </div>
 
               {/* Portal Password */}
-              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-[0.015] pointer-events-none"
                   style={{
@@ -530,7 +530,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
               </div>
 
               {/* Portal Sections Visibility */}
-              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-[0.015] pointer-events-none"
                   style={{
@@ -578,7 +578,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
               </div>
 
               {/* Client Info */}
-              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-[0.015] pointer-events-none"
                   style={{
@@ -604,7 +604,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
               </div>
 
               {/* Pricing */}
-              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-[0.015] pointer-events-none"
                   style={{
@@ -636,7 +636,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
               </div>
 
               {/* Timeline */}
-              <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-[0.015] pointer-events-none"
                   style={{
@@ -679,7 +679,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
 
               {/* Agreement Status */}
               {proposal.agreement && (
-                <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
                   <div
                     className="absolute inset-0 opacity-[0.015] pointer-events-none"
                     style={{
