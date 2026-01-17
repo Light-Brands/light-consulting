@@ -211,18 +211,18 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
         title={proposal.project_name}
         subtitle={`For ${proposal.client_name}`}
         action={
-          <div className="flex gap-3">
-            <Button variant="outline" onClick={copyAccessLink}>
-              {copied ? 'Copied!' : 'Copy Client Link'}
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <Button variant="outline" onClick={copyAccessLink} className="text-sm">
+              {copied ? 'Copied!' : 'Copy Link'}
             </Button>
             <Link href={`/admin/proposals/${id}/edit`}>
-              <Button variant="primary">Edit Proposal</Button>
+              <Button variant="primary" className="text-sm w-full sm:w-auto">Edit</Button>
             </Link>
           </div>
         }
       />
 
-      <div className="py-8 md:py-12 relative overflow-hidden">
+      <div className="py-4 sm:py-8 md:py-12 relative overflow-hidden">
         {/* Background atmosphere */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
@@ -230,17 +230,17 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
           {/* Back Link */}
           <Link
             href="/admin/proposals"
-            className="inline-flex items-center gap-2 text-text-muted hover:text-text-primary mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-text-muted hover:text-text-primary mb-4 sm:mb-6 transition-colors text-sm"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Back to Proposals
+            Back
           </Link>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               {/* Overview */}
               <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
                 <div
@@ -251,18 +251,18 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                   }}
                 />
                 <div className="relative z-10">
-                  <div className="p-6 border-b border-depth-border">
-                    <div className="flex items-center gap-2 mb-2">
+                  <div className="p-4 sm:p-6 border-b border-depth-border">
+                    <div className="flex items-center gap-2 mb-1 sm:mb-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
                       <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
                         Proposal::Overview
                       </span>
                     </div>
-                    <h2 className="text-lg font-semibold text-text-primary">
+                    <h2 className="text-base sm:text-lg font-semibold text-text-primary">
                       Project Overview
                     </h2>
                   </div>
-                  <div className="p-6">
+                  <div className="p-4 sm:p-6">
                     {proposal.project_overview ? (
                       <div className="prose prose-invert max-w-none">
                         <div className="whitespace-pre-wrap text-text-secondary">
@@ -286,19 +286,19 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                   }}
                 />
                 <div className="relative z-10">
-                  <div className="p-6 border-b border-depth-border">
-                    <div className="flex items-center gap-2 mb-2">
+                  <div className="p-4 sm:p-6 border-b border-depth-border">
+                    <div className="flex items-center gap-2 mb-1 sm:mb-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-wisdom-violet/50" />
                       <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
                         Proposal::Phases
                       </span>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <h2 className="text-lg font-semibold text-text-primary">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4">
+                      <h2 className="text-base sm:text-lg font-semibold text-text-primary">
                         Project Phases ({proposal.phases.length})
                       </h2>
-                      <span className="text-sm text-text-muted">
-                        <span className="text-radiance-gold font-medium">{visiblePhasesCount}</span> of {totalPhasesCount} visible to client
+                      <span className="text-xs sm:text-sm text-text-muted">
+                        <span className="text-radiance-gold font-medium">{visiblePhasesCount}</span> of {totalPhasesCount} visible
                       </span>
                     </div>
                   </div>
@@ -307,14 +307,14 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                       proposal.phases.map((phase) => (
                         <div
                           key={phase.id}
-                          className={`p-6 transition-opacity ${
+                          className={`p-4 sm:p-6 transition-opacity ${
                             !phase.visible_in_portal ? 'opacity-60' : ''
                           }`}
                         >
-                          <div className="flex items-start justify-between mb-3">
-                            <div className="flex items-start gap-3">
-                              <div>
-                                <div className="flex items-center gap-2">
+                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
+                            <div className="flex items-start gap-3 min-w-0">
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
                                   <span className="text-radiance-gold text-sm font-mono">
                                     Phase {phase.phase_number}
                                   </span>
@@ -327,12 +327,12 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                                     </span>
                                   )}
                                 </div>
-                                <h3 className="text-lg font-semibold text-text-primary">
+                                <h3 className="text-base sm:text-lg font-semibold text-text-primary break-words">
                                   {phase.phase_name}
                                 </h3>
                               </div>
                             </div>
-                            <div className="flex items-start gap-4">
+                            <div className="flex items-center gap-4 flex-shrink-0">
                               <label className="flex items-center gap-2 cursor-pointer">
                                 <input
                                   type="checkbox"
@@ -378,7 +378,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                         </div>
                       ))
                     ) : (
-                      <div className="p-6 text-text-muted">No phases defined</div>
+                      <div className="p-4 sm:p-6 text-text-muted text-sm">No phases defined</div>
                     )}
                   </div>
                 </div>
@@ -394,36 +394,36 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                   }}
                 />
                 <div className="relative z-10">
-                  <div className="p-6 border-b border-depth-border">
-                    <div className="flex items-center gap-2 mb-2">
+                  <div className="p-4 sm:p-6 border-b border-depth-border">
+                    <div className="flex items-center gap-2 mb-1 sm:mb-2">
                       <div className="w-1.5 h-1.5 rounded-full bg-green-500/50" />
                       <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
                         Proposal::Milestones
                       </span>
                     </div>
-                    <h2 className="text-lg font-semibold text-text-primary">
-                      Payment Milestones ({proposal.milestones.length})
+                    <h2 className="text-base sm:text-lg font-semibold text-text-primary">
+                      Payments ({proposal.milestones.length})
                     </h2>
                   </div>
                   <div className="divide-y divide-depth-border">
                     {proposal.milestones.length > 0 ? (
                       proposal.milestones.map((milestone) => (
-                        <div key={milestone.id} className="p-6 flex items-center justify-between">
-                          <div>
-                            <h4 className="font-medium text-text-primary">
+                        <div key={milestone.id} className="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                          <div className="min-w-0 flex-1">
+                            <h4 className="font-medium text-text-primary text-sm sm:text-base">
                               {milestone.milestone_name}
                             </h4>
                             {milestone.description && (
-                              <p className="text-text-muted text-sm">{milestone.description}</p>
+                              <p className="text-text-muted text-xs sm:text-sm">{milestone.description}</p>
                             )}
                             {milestone.due_date && (
-                              <p className="text-text-muted text-sm">
+                              <p className="text-text-muted text-xs sm:text-sm">
                                 Due: {formatDate(milestone.due_date)}
                               </p>
                             )}
                           </div>
-                          <div className="text-right">
-                            <p className="font-bold text-text-primary">
+                          <div className="flex items-center justify-between sm:justify-end sm:text-right gap-3 flex-shrink-0">
+                            <p className="font-bold text-text-primary text-sm sm:text-base">
                               {formatCurrency(milestone.amount)}
                             </p>
                             <span
@@ -441,7 +441,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                         </div>
                       ))
                     ) : (
-                      <div className="p-6 text-text-muted">No milestones defined</div>
+                      <div className="p-4 sm:p-6 text-text-muted text-sm">No milestones defined</div>
                     )}
                   </div>
                 </div>
@@ -449,7 +449,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Status & Actions */}
               <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
                 <div
@@ -459,8 +459,8 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                     backgroundSize: '32px 32px',
                   }}
                 />
-                <div className="relative z-10 p-6">
-                  <div className="flex items-center gap-2 mb-4">
+                <div className="relative z-10 p-4 sm:p-6">
+                  <div className="flex items-center gap-2 mb-3 sm:mb-4">
                     <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
                     <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
                       Status
@@ -469,7 +469,7 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                   <select
                     value={proposal.status}
                     onChange={(e) => handleStatusChange(e.target.value as ProposalStatus)}
-                    className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary focus:border-radiance-gold focus:outline-none mb-4"
+                    className="w-full bg-depth-base border border-depth-border rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base text-text-primary focus:border-radiance-gold focus:outline-none mb-3 sm:mb-4"
                   >
                     {Object.entries(STATUS_LABELS).map(([value, label]) => (
                       <option key={value} value={value}>
@@ -479,8 +479,8 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                   </select>
 
                   <Link href={`/admin/proposals/${id}/dashboard`} className="block">
-                    <Button variant="outline" fullWidth>
-                      Manage Dashboard
+                    <Button variant="outline" fullWidth className="text-sm">
+                      Dashboard
                     </Button>
                   </Link>
                 </div>
@@ -495,24 +495,24 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                     backgroundSize: '32px 32px',
                   }}
                 />
-                <div className="relative z-10 p-6">
-                  <div className="flex items-center gap-2 mb-4">
+                <div className="relative z-10 p-4 sm:p-6">
+                  <div className="flex items-center gap-2 mb-3 sm:mb-4">
                     <div className="w-1.5 h-1.5 rounded-full bg-amber-500/50" />
                     <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
                       Portal Security
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-text-secondary">Password Protection</span>
+                    <span className="text-xs sm:text-sm text-text-secondary">Password</span>
                     {proposal.portal_password ? (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full bg-green-500/10 text-green-400 border border-green-500/30">
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs rounded-full bg-green-500/10 text-green-400 border border-green-500/30">
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
                         Enabled
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full bg-gray-500/10 text-gray-400 border border-gray-500/30">
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs rounded-full bg-gray-500/10 text-gray-400 border border-gray-500/30">
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
                         </svg>
@@ -522,8 +522,8 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                   </div>
                   {proposal.portal_password && (
                     <div className="mt-3 pt-3 border-t border-depth-border">
-                      <span className="text-text-muted text-xs">PIN Code:</span>
-                      <span className="ml-2 text-text-primary font-mono tracking-widest">{proposal.portal_password}</span>
+                      <span className="text-text-muted text-xs">PIN:</span>
+                      <span className="ml-2 text-text-primary font-mono tracking-widest text-sm">{proposal.portal_password}</span>
                     </div>
                   )}
                 </div>
@@ -538,30 +538,30 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                     backgroundSize: '32px 32px',
                   }}
                 />
-                <div className="relative z-10 p-6">
-                  <div className="flex items-center gap-2 mb-4">
+                <div className="relative z-10 p-4 sm:p-6">
+                  <div className="flex items-center gap-2 mb-3 sm:mb-4">
                     <div className="w-1.5 h-1.5 rounded-full bg-wisdom-violet/50" />
                     <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
                       Portal Sections
                     </span>
                   </div>
-                  <p className="text-text-muted text-xs mb-4">
+                  <p className="text-text-muted text-xs mb-3 sm:mb-4">
                     Control which tabs are visible to the client
                   </p>
-                  <div className="space-y-3">
+                  <div className="space-y-2.5 sm:space-y-3">
                     {(Object.keys(SECTION_LABELS) as (keyof PortalSections)[]).map((section) => (
                       <label
                         key={section}
                         className="flex items-center justify-between cursor-pointer group"
                       >
-                        <span className={`text-sm transition-colors ${
+                        <span className={`text-xs sm:text-sm transition-colors ${
                           portalSections[section] ? 'text-text-primary' : 'text-text-muted'
                         }`}>
                           {SECTION_LABELS[section]}
                         </span>
                         <div className="flex items-center gap-2">
                           {updatingSection === section && (
-                            <span className="text-xs text-text-muted">Saving...</span>
+                            <span className="text-xs text-text-muted">...</span>
                           )}
                           <input
                             type="checkbox"
@@ -586,18 +586,18 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                     backgroundSize: '32px 32px',
                   }}
                 />
-                <div className="relative z-10 p-6 space-y-4">
-                  <h3 className="font-semibold text-text-primary">Client</h3>
+                <div className="relative z-10 p-4 sm:p-6 space-y-3 sm:space-y-4">
+                  <h3 className="font-semibold text-text-primary text-sm sm:text-base">Client</h3>
                   <div>
-                    <p className="text-text-primary font-medium">{proposal.client_name}</p>
+                    <p className="text-text-primary font-medium text-sm sm:text-base">{proposal.client_name}</p>
                     <a
                       href={`mailto:${proposal.client_email}`}
-                      className="text-radiance-gold text-sm hover:text-radiance-amber"
+                      className="text-radiance-gold text-xs sm:text-sm hover:text-radiance-amber break-all"
                     >
                       {proposal.client_email}
                     </a>
                     {proposal.client_company && (
-                      <p className="text-text-muted text-sm">{proposal.client_company}</p>
+                      <p className="text-text-muted text-xs sm:text-sm">{proposal.client_company}</p>
                     )}
                   </div>
                 </div>
@@ -612,14 +612,14 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                     backgroundSize: '32px 32px',
                   }}
                 />
-                <div className="relative z-10 p-6 space-y-3">
-                  <h3 className="font-semibold text-text-primary">Pricing</h3>
-                  <div className="flex justify-between">
+                <div className="relative z-10 p-4 sm:p-6 space-y-2.5 sm:space-y-3">
+                  <h3 className="font-semibold text-text-primary text-sm sm:text-base">Pricing</h3>
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-text-muted">Total</span>
                     <span className="text-text-primary">{formatCurrency(proposal.total_amount)}</span>
                   </div>
                   {proposal.discount_percentage > 0 && (
-                    <div className="flex justify-between">
+                    <div className="flex justify-between text-xs sm:text-sm">
                       <span className="text-text-muted">Discount ({proposal.discount_percentage}%)</span>
                       <span className="text-red-400">
                         -{formatCurrency(proposal.total_amount * proposal.discount_percentage / 100)}
@@ -627,8 +627,8 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                     </div>
                   )}
                   <div className="flex justify-between pt-2 border-t border-depth-border">
-                    <span className="text-text-primary font-semibold">Final Amount</span>
-                    <span className="text-radiance-gold font-bold text-lg">
+                    <span className="text-text-primary font-semibold text-xs sm:text-sm">Final</span>
+                    <span className="text-radiance-gold font-bold text-base sm:text-lg">
                       {formatCurrency(proposal.final_amount)}
                     </span>
                   </div>
@@ -644,34 +644,34 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                     backgroundSize: '32px 32px',
                   }}
                 />
-                <div className="relative z-10 p-6 space-y-3">
-                  <h3 className="font-semibold text-text-primary">Timeline</h3>
+                <div className="relative z-10 p-4 sm:p-6 space-y-2.5 sm:space-y-3">
+                  <h3 className="font-semibold text-text-primary text-sm sm:text-base">Timeline</h3>
                   {proposal.total_timeline && (
                     <div>
-                      <span className="text-text-muted text-sm block">Duration</span>
-                      <span className="text-text-primary">{proposal.total_timeline}</span>
+                      <span className="text-text-muted text-xs sm:text-sm block">Duration</span>
+                      <span className="text-text-primary text-xs sm:text-sm">{proposal.total_timeline}</span>
                     </div>
                   )}
                   <div>
-                    <span className="text-text-muted text-sm block">Created</span>
-                    <span className="text-text-primary">{formatDate(proposal.created_at)}</span>
+                    <span className="text-text-muted text-xs sm:text-sm block">Created</span>
+                    <span className="text-text-primary text-xs sm:text-sm">{formatDate(proposal.created_at)}</span>
                   </div>
                   {proposal.sent_at && (
                     <div>
-                      <span className="text-text-muted text-sm block">Sent</span>
-                      <span className="text-text-primary">{formatDate(proposal.sent_at)}</span>
+                      <span className="text-text-muted text-xs sm:text-sm block">Sent</span>
+                      <span className="text-text-primary text-xs sm:text-sm">{formatDate(proposal.sent_at)}</span>
                     </div>
                   )}
                   {proposal.viewed_at && (
                     <div>
-                      <span className="text-text-muted text-sm block">Viewed</span>
-                      <span className="text-text-primary">{formatDate(proposal.viewed_at)}</span>
+                      <span className="text-text-muted text-xs sm:text-sm block">Viewed</span>
+                      <span className="text-text-primary text-xs sm:text-sm">{formatDate(proposal.viewed_at)}</span>
                     </div>
                   )}
                   {proposal.agreement_signed_at && (
                     <div>
-                      <span className="text-text-muted text-sm block">Agreement Signed</span>
-                      <span className="text-green-400">{formatDate(proposal.agreement_signed_at)}</span>
+                      <span className="text-text-muted text-xs sm:text-sm block">Agreement Signed</span>
+                      <span className="text-green-400 text-xs sm:text-sm">{formatDate(proposal.agreement_signed_at)}</span>
                     </div>
                   )}
                 </div>
@@ -687,10 +687,10 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                       backgroundSize: '32px 32px',
                     }}
                   />
-                  <div className="relative z-10 p-6">
-                    <h3 className="font-semibold text-text-primary mb-3">Agreement</h3>
+                  <div className="relative z-10 p-4 sm:p-6">
+                    <h3 className="font-semibold text-text-primary text-sm sm:text-base mb-2 sm:mb-3">Agreement</h3>
                     <span
-                      className={`inline-block px-3 py-1 text-sm rounded-full ${
+                      className={`inline-block px-2.5 py-1 text-xs sm:text-sm rounded-full ${
                         proposal.agreement.status === 'signed'
                           ? 'bg-green-500/10 text-green-400'
                           : proposal.agreement.status === 'declined'
@@ -698,12 +698,12 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                           : 'bg-amber-500/10 text-amber-400'
                       }`}
                     >
-                      {proposal.agreement.status === 'signed' ? 'Signed' : proposal.agreement.status === 'declined' ? 'Declined' : 'Pending Signature'}
+                      {proposal.agreement.status === 'signed' ? 'Signed' : proposal.agreement.status === 'declined' ? 'Declined' : 'Pending'}
                     </span>
                     {proposal.agreement.signed_by_name && (
                       <div className="mt-3">
-                        <span className="text-text-muted text-sm block">Signed by</span>
-                        <span className="text-text-primary">{proposal.agreement.signed_by_name}</span>
+                        <span className="text-text-muted text-xs sm:text-sm block">Signed by</span>
+                        <span className="text-text-primary text-xs sm:text-sm">{proposal.agreement.signed_by_name}</span>
                       </div>
                     )}
                   </div>
