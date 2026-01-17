@@ -125,7 +125,7 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
       return;
     }
 
-    // Create lead when completing qualification
+    // Create lead when completing qualification with full assessment details
     if (stage === 'qualify') {
       setIsLoading(true);
       try {
@@ -138,6 +138,9 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
             company: formData.company,
             phone: formData.phone,
             source: formData.source || 'assessment',
+            // Include all qualification details
+            isDecisionMaker: formData.isDecisionMaker,
+            openToNegativeVerdict: formData.openToNegativeVerdict,
           }),
         });
 
@@ -172,11 +175,26 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
       vslCompletedAt: new Date(),
       vslWatchPercentage: watchPercentage,
     });
+
+    // Save VSL completion to lead record
+    if (formData.leadId) {
+      fetch('/api/assessment/lead', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          leadId: formData.leadId,
+          vslCompleted: true,
+          vslWatchPercentage: watchPercentage,
+          stage: 'educate',
+        }),
+      }).catch(console.error);
+    }
+
     // Proceed to booking stage after VSL is complete
     if (watchPercentage >= ASSESSMENT_CONFIG.vsl.minimumWatchPercentage) {
       setStage('book');
     }
-  }, [updateFormData]);
+  }, [updateFormData, formData.leadId]);
 
   // Handle booking complete - this is the final action
   const handleBookingComplete = useCallback((bookingId: string, bookedSlot: Date) => {
@@ -186,7 +204,7 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
       bookingConfirmed: true,
     });
 
-    // Update lead with booking info
+    // Update lead with booking info and stage tracking
     if (formData.leadId) {
       fetch('/api/assessment/lead', {
         method: 'PATCH',
@@ -197,6 +215,7 @@ export const AssessmentPage: React.FC<AssessmentPageProps> = ({
           bookedSlot: bookedSlot.toISOString(),
           vslCompleted: true,
           vslWatchPercentage: formData.vslWatchPercentage,
+          stage: 'book',
         }),
       }).catch(console.error);
     }

@@ -212,12 +212,30 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
     }
   }, [stage]);
 
+  // Helper to update lead with stage progression
+  const updateLeadStage = useCallback(
+    (stageName: string, additionalData?: Record<string, unknown>) => {
+      if (!formData.leadId) return;
+
+      fetch('/api/assessment/lead', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          leadId: formData.leadId,
+          stage: stageName,
+          ...additionalData,
+        }),
+      }).catch(console.error);
+    },
+    [formData.leadId]
+  );
+
   // Stage 1 -> 2: Attract to Qualify
   const handleAttractContinue = useCallback(() => {
     goToNextStage();
   }, [goToNextStage]);
 
-  // Stage 2 -> 3: Qualify to Book (create lead)
+  // Stage 2 -> 3: Qualify to Book (create lead with full assessment details)
   const handleQualifyContinue = useCallback(async () => {
     if (!validateQualify()) return;
 
@@ -232,6 +250,9 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
           company: formData.company,
           phone: formData.phone,
           source: formData.source || 'assessment-funnel',
+          // Include all qualification details
+          isDecisionMaker: formData.isDecisionMaker,
+          openToNegativeVerdict: formData.openToNegativeVerdict,
         }),
       });
 
@@ -255,9 +276,24 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
         bookedSlot,
         bookingConfirmed: true,
       });
+
+      // Save booking details to lead record
+      if (formData.leadId) {
+        fetch('/api/assessment/lead', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            leadId: formData.leadId,
+            bookingId,
+            bookedSlot: bookedSlot.toISOString(),
+            stage: 'book',
+          }),
+        }).catch(console.error);
+      }
+
       goToNextStage();
     },
-    [updateFormData, goToNextStage]
+    [updateFormData, formData.leadId, goToNextStage]
   );
 
   // Stage 4 -> 5: Educate to Confirm (VSL complete)
@@ -269,7 +305,7 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
         priceAcknowledged: true,
       });
 
-      // Update lead with VSL completion
+      // Update lead with VSL completion and stage tracking
       if (formData.leadId) {
         fetch('/api/assessment/lead', {
           method: 'PATCH',
@@ -278,6 +314,7 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
             leadId: formData.leadId,
             vslCompleted: true,
             vslWatchPercentage: watchPercentage,
+            stage: 'educate',
           }),
         }).catch(console.error);
       }
@@ -293,8 +330,9 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
       callConfirmed: true,
       callConfirmedAt: new Date(),
     });
+    updateLeadStage('confirm');
     goToNextStage();
-  }, [updateFormData, goToNextStage]);
+  }, [updateFormData, updateLeadStage, goToNextStage]);
 
   // Stage 6 -> 7: Commit to Intake (payment complete)
   const handlePaymentComplete = useCallback(
@@ -304,9 +342,10 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
         paymentCompleted: true,
         paymentCompletedAt: new Date(),
       });
+      updateLeadStage('commit');
       goToNextStage();
     },
-    [updateFormData, goToNextStage]
+    [updateFormData, updateLeadStage, goToNextStage]
   );
 
   // Stage 7 -> 8: Intake to Deliver (intake submitted)
@@ -318,25 +357,38 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
         intakeSubmittedAt: new Date(),
       });
 
-      // In production, this would trigger an API call to save intake
-      // and notify the assessment team
+      // Save intake data to lead record
+      if (formData.leadId) {
+        fetch('/api/assessment/intake', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            leadId: formData.leadId,
+            intakeResponses: responses,
+            loomVideoUrl: loomUrl,
+          }),
+        }).catch(console.error);
+      }
 
+      updateLeadStage('intake');
       goToNextStage();
     },
-    [updateFormData, goToNextStage]
+    [updateFormData, formData.leadId, updateLeadStage, goToNextStage]
   );
 
   // Stage 8 -> 9: Deliver to Document (verdict received)
   const handleVerdictReceived = useCallback(
     (verdict: 'GO' | 'NO_GO' | 'NOT_YET', reasons: string[]) => {
+      const mappedVerdict = verdict === 'NOT_YET' ? 'CONDITIONAL_GO' : verdict;
       updateFormData({
-        verdict: verdict === 'NOT_YET' ? 'CONDITIONAL_GO' : verdict,
+        verdict: mappedVerdict,
         verdictReasons: reasons,
         verdictDeliveredAt: new Date(),
       });
+      updateLeadStage('deliver');
       goToNextStage();
     },
-    [updateFormData, goToNextStage]
+    [updateFormData, updateLeadStage, goToNextStage]
   );
 
   // Stage 9 -> 10: Document to Exit
@@ -344,8 +396,9 @@ export const AssessmentFunnelPage: React.FC<AssessmentFunnelPageProps> = ({
     updateFormData({
       reportDeliveredAt: new Date(),
     });
+    updateLeadStage('document');
     goToNextStage();
-  }, [updateFormData, goToNextStage]);
+  }, [updateFormData, updateLeadStage, goToNextStage]);
 
   return (
     <div className="min-h-screen pt-4 sm:pt-6">

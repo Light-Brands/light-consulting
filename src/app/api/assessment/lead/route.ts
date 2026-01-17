@@ -15,6 +15,9 @@ interface CreateLeadRequest {
   company?: string;
   phone?: string;
   source: string; // e.g., 'assessment', 'funnel-1', etc.
+  // Qualification details
+  isDecisionMaker?: boolean;
+  openToNegativeVerdict?: boolean;
 }
 
 interface UpdateLeadRequest {
@@ -23,6 +26,11 @@ interface UpdateLeadRequest {
   bookedSlot?: string;
   vslCompleted?: boolean;
   vslWatchPercentage?: number;
+  // Stage tracking
+  stage?: string;
+  // Additional VSL tracking
+  vslStartedAt?: string;
+  vslDuration?: number;
 }
 
 /**
@@ -32,7 +40,7 @@ interface UpdateLeadRequest {
 export async function POST(request: NextRequest) {
   try {
     const body: CreateLeadRequest = await request.json();
-    const { name, email, company, phone, source } = body;
+    const { name, email, company, phone, source, isDecisionMaker, openToNegativeVerdict } = body;
 
     // Validate required fields
     if (!name?.trim()) {
@@ -76,17 +84,27 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (existingLead) {
-      // Update existing lead with new source info
+      // Update existing lead with new source info and full assessment details
       const { error: updateError } = await supabaseAdmin
         .from('lead_submissions')
         .update({
           name,
           company: company || null,
           phone: phone || null,
-          // Track that they came through assessment
+          // Track full assessment details
           intake_data: {
             source,
             assessment_started_at: new Date().toISOString(),
+            // Qualification details
+            is_decision_maker: isDecisionMaker ?? false,
+            open_to_negative_verdict: openToNegativeVerdict ?? false,
+            qualification_completed_at: new Date().toISOString(),
+            // Stage tracking
+            current_stage: 'qualify',
+            stage_history: [{
+              stage: 'qualify',
+              completed_at: new Date().toISOString(),
+            }],
           },
           updated_at: new Date().toISOString(),
         })
@@ -104,7 +122,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Create new lead
+    // Create new lead with full assessment details
     const { data: newLead, error: createError } = await supabaseAdmin
       .from('lead_submissions')
       .insert({
@@ -117,6 +135,16 @@ export async function POST(request: NextRequest) {
         intake_data: {
           source,
           assessment_started_at: new Date().toISOString(),
+          // Qualification details
+          is_decision_maker: isDecisionMaker ?? false,
+          open_to_negative_verdict: openToNegativeVerdict ?? false,
+          qualification_completed_at: new Date().toISOString(),
+          // Stage tracking
+          current_stage: 'qualify',
+          stage_history: [{
+            stage: 'qualify',
+            completed_at: new Date().toISOString(),
+          }],
         },
       })
       .select('id')
@@ -147,11 +175,12 @@ export async function POST(request: NextRequest) {
 /**
  * PATCH /api/assessment/lead
  * Update lead with booking and VSL completion info
+ * Tracks full assessment progress with stage history
  */
 export async function PATCH(request: NextRequest) {
   try {
     const body: UpdateLeadRequest = await request.json();
-    const { leadId, bookingId, bookedSlot, vslCompleted, vslWatchPercentage } = body;
+    const { leadId, bookingId, bookedSlot, vslCompleted, vslWatchPercentage, stage, vslStartedAt, vslDuration } = body;
 
     if (!leadId) {
       return NextResponse.json(
@@ -175,19 +204,46 @@ export async function PATCH(request: NextRequest) {
       .eq('id', leadId)
       .single();
 
-    // Merge new data with existing intake_data
+    const existingIntakeData = currentLead?.intake_data || {};
+    const existingStageHistory = Array.isArray(existingIntakeData.stage_history)
+      ? existingIntakeData.stage_history
+      : [];
+
+    // Build stage history entry if stage is provided
+    const newStageEntry = stage ? {
+      stage,
+      completed_at: new Date().toISOString(),
+    } : null;
+
+    // Build comprehensive VSL data
+    const vslData = vslCompleted !== undefined || vslStartedAt ? {
+      ...(vslStartedAt && { vsl_started_at: vslStartedAt }),
+      ...(vslCompleted !== undefined && { vsl_completed: vslCompleted }),
+      ...(vslWatchPercentage !== undefined && { vsl_watch_percentage: vslWatchPercentage }),
+      ...(vslDuration !== undefined && { vsl_duration_seconds: vslDuration }),
+      ...(vslCompleted && { vsl_completed_at: new Date().toISOString() }),
+    } : {};
+
+    // Build booking data
+    const bookingData = bookingId ? {
+      booking_id: bookingId,
+      booked_slot: bookedSlot,
+      booked_at: new Date().toISOString(),
+    } : {};
+
+    // Merge all data together
     const updatedIntakeData = {
-      ...(currentLead?.intake_data || {}),
-      ...(vslCompleted !== undefined && {
-        vsl_completed: vslCompleted,
-        vsl_watch_percentage: vslWatchPercentage,
-        vsl_completed_at: new Date().toISOString(),
+      ...existingIntakeData,
+      ...vslData,
+      ...bookingData,
+      // Update current stage if provided
+      ...(stage && { current_stage: stage }),
+      // Append to stage history if new stage
+      ...(newStageEntry && {
+        stage_history: [...existingStageHistory, newStageEntry],
       }),
-      ...(bookingId && {
-        booking_id: bookingId,
-        booked_slot: bookedSlot,
-        booked_at: new Date().toISOString(),
-      }),
+      // Track last update
+      last_updated_at: new Date().toISOString(),
     };
 
     // Update lead with booking/VSL info
@@ -201,6 +257,11 @@ export async function PATCH(request: NextRequest) {
       updateData.status = 'booked';
     } else if (vslCompleted) {
       updateData.status = 'qualified'; // Watched VSL = qualified
+    }
+
+    // Also update booked_at column if booking occurred
+    if (bookingId && bookedSlot) {
+      updateData.booked_at = new Date().toISOString();
     }
 
     const { error: updateError } = await supabaseAdmin
