@@ -376,75 +376,74 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
             </h2>
 
             <div className="space-y-8">
+              {/* Dynamic project description - uses solution as overview if available */}
               <p className="text-text-secondary text-lg leading-relaxed">
-                This project demonstrates our approach to transforming complex business operations
-                through intelligent automation. By leveraging cutting-edge AI technologies, we
-                created a solution that not only addresses immediate operational challenges but
-                also establishes a foundation for future growth and innovation.
+                {project.solution || project.description}
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card elevation="elevated" className="p-6 bg-depth-surface/30 border border-depth-border backdrop-blur-sm hover:border-radiance-gold/30 transition-all group">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0">
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                      </svg>
-                    </div>
-                    <h3 className="text-lg font-semibold text-text-primary group-hover:text-radiance-gold transition-colors">
-                      Challenge
-                    </h3>
-                  </div>
-                  <p className="text-text-secondary leading-relaxed">
-                    The client faced significant challenges in processing and analyzing large
-                    volumes of healthcare data, with manual processes taking weeks to complete
-                    and creating bottlenecks in decision-making.
-                  </p>
-                </Card>
-
-                <Card elevation="elevated" className="p-6 bg-depth-surface/30 border border-depth-border backdrop-blur-sm hover:border-radiance-gold/30 transition-all group">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0">
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <h3 className="text-lg font-semibold text-text-primary group-hover:text-radiance-gold transition-colors">Solution</h3>
-                  </div>
-                  <p className="text-text-secondary leading-relaxed">
-                    We developed an AI-powered analytics platform that processes data in
-                    real-time, reduces analysis time by 95%, and ensures full compliance with
-                    healthcare regulations.
-                  </p>
-                </Card>
-              </div>
-
-              <div className="mt-12">
-                <div className="flex items-center gap-3 mb-8">
-                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-radiance-gold/30 to-transparent" />
-                  <h3 className="text-xl font-semibold text-text-primary">Key Results</h3>
-                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-radiance-gold/30 to-transparent" />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[
-                    '95% reduction in data processing time',
-                    '100% HIPAA compliance maintained',
-                    'Real-time analytics capabilities enabled',
-                    'Scalable architecture for future growth',
-                  ].map((result, index) => (
-                    <div key={index} className="group flex items-start gap-3 p-5 bg-depth-surface/30 border border-depth-border rounded-xl backdrop-blur-sm hover:border-radiance-gold/30 transition-all">
-                      <div className="w-6 h-6 rounded-lg bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-radiance-gold/30 transition-colors">
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </svg>
+              {/* Challenge and Solution Cards - only show if data exists */}
+              {(project.challenge || project.solution) && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {project.challenge && (
+                    <Card elevation="elevated" className="p-6 bg-depth-surface/30 border border-depth-border backdrop-blur-sm hover:border-radiance-gold/30 transition-all group">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-xl bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0">
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          </svg>
+                        </div>
+                        <h3 className="text-lg font-semibold text-text-primary group-hover:text-radiance-gold transition-colors">
+                          Challenge
+                        </h3>
                       </div>
-                      <p className="text-text-secondary leading-relaxed font-medium">
-                        {result}
+                      <p className="text-text-secondary leading-relaxed">
+                        {project.challenge}
                       </p>
-                    </div>
-                  ))}
+                    </Card>
+                  )}
+
+                  {project.solution && (
+                    <Card elevation="elevated" className="p-6 bg-depth-surface/30 border border-depth-border backdrop-blur-sm hover:border-radiance-gold/30 transition-all group">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-xl bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0">
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                        <h3 className="text-lg font-semibold text-text-primary group-hover:text-radiance-gold transition-colors">Solution</h3>
+                      </div>
+                      <p className="text-text-secondary leading-relaxed">
+                        {project.solution}
+                      </p>
+                    </Card>
+                  )}
                 </div>
-              </div>
+              )}
+
+              {/* Key Results - only show if results array exists and has items */}
+              {project.results && project.results.length > 0 && (
+                <div className="mt-12">
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="h-px flex-1 bg-gradient-to-r from-transparent via-radiance-gold/30 to-transparent" />
+                    <h3 className="text-xl font-semibold text-text-primary">Key Results</h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-transparent via-radiance-gold/30 to-transparent" />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {project.results.map((result, index) => (
+                      <div key={index} className="group flex items-start gap-3 p-5 bg-depth-surface/30 border border-depth-border rounded-xl backdrop-blur-sm hover:border-radiance-gold/30 transition-all">
+                        <div className="w-6 h-6 rounded-lg bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-radiance-gold/30 transition-colors">
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <p className="text-text-secondary leading-relaxed font-medium">
+                          {result}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </Container>
