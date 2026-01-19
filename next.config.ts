@@ -22,6 +22,14 @@ const nextConfig: NextConfig = {
     // Allow images from the public directory
     unoptimized: false,
     formats: ['image/avif', 'image/webp'],
+    // Allow images from Supabase Storage
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
   },
 
   // Optimize bundle size

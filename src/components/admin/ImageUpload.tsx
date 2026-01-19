@@ -52,28 +52,39 @@ export function ImageUpload({
     setIsUploading(true);
 
     try {
-      // Validate file type
+      // Validate file type - be lenient for pasted screenshots
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-      if (!allowedTypes.includes(file.type)) {
+      const fileType = file.type || '';
+      
+      // Allow pasted images even if they don't have a MIME type (common with screenshots)
+      // The server will handle MIME type detection
+      if (fileType && !allowedTypes.includes(fileType) && fileType !== 'application/octet-stream') {
         throw new Error('Invalid file type. Please upload a JPEG, PNG, GIF, WebP, or SVG image.');
       }
 
-      // Validate file size (5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        throw new Error('File size exceeds 5MB limit.');
+      // Validate file size (50MB)
+      if (file.size > 50 * 1024 * 1024) {
+        throw new Error('File size exceeds 50MB limit.');
+      }
+
+      // Ensure file has a name (pasted images might not)
+      let fileToUpload = file;
+      if (!file.name) {
+        // Create a File with a default name if it doesn't have one
+        const blob = file.slice(0, file.size, file.type || 'image/png');
+        fileToUpload = new File([blob], 'screenshot.png', { type: file.type || 'image/png' });
       }
 
       // Create form data
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', fileToUpload);
       formData.append('folder', folder);
 
       // Upload the file
+      // authFetch will automatically detect FormData and not set Content-Type
       const response = await authFetch('/api/upload', {
         method: 'POST',
         body: formData,
-        // Don't set Content-Type header - let browser set it with boundary
-        headers: {},
       });
 
       const result = await response.json();
@@ -146,18 +157,41 @@ export function ImageUpload({
   // Handle paste from clipboard
   useEffect(() => {
     const handlePaste = async (e: ClipboardEvent) => {
-      // Only handle paste if the drop zone or its children are focused
-      if (!dropZoneRef.current?.contains(document.activeElement) &&
-          document.activeElement !== dropZoneRef.current) {
-        return;
+      // Check if the drop zone is visible
+      if (!dropZoneRef.current) return;
+      
+      const rect = dropZoneRef.current.getBoundingClientRect();
+      const isVisible = rect.width > 0 && rect.height > 0 && 
+                       rect.top < window.innerHeight && 
+                       rect.bottom > 0;
+      
+      if (!isVisible) return;
+
+      // Check if user is typing in a text input/textarea
+      // Allow paste if drop zone is focused or if no text input is focused
+      const activeElement = document.activeElement;
+      const isTextInputFocused = activeElement?.tagName === 'INPUT' || 
+                                activeElement?.tagName === 'TEXTAREA';
+      const isDropZoneFocused = dropZoneRef.current?.contains(activeElement) || 
+                               activeElement === dropZoneRef.current;
+      
+      // If a text input is focused and it's not part of this component, don't intercept paste
+      if (isTextInputFocused && !isDropZoneFocused) {
+        // Check if the focused input is the readonly URL display (which is part of this component)
+        const urlInput = dropZoneRef.current?.querySelector('input[readonly]');
+        if (activeElement !== urlInput) {
+          return;
+        }
       }
 
       const items = e.clipboardData?.items;
       if (!items) return;
 
+      // Look for image in clipboard
       for (const item of items) {
         if (item.type.startsWith('image/')) {
           e.preventDefault();
+          e.stopPropagation();
           const file = item.getAsFile();
           if (file) {
             uploadFile(file);
@@ -167,8 +201,8 @@ export function ImageUpload({
       }
     };
 
-    document.addEventListener('paste', handlePaste);
-    return () => document.removeEventListener('paste', handlePaste);
+    document.addEventListener('paste', handlePaste, true); // Use capture phase for better interception
+    return () => document.removeEventListener('paste', handlePaste, true);
   }, [uploadFile]);
 
   // Handle remove image
@@ -218,15 +252,15 @@ export function ImageUpload({
               className="object-cover"
               unoptimized={previewUrl.includes('supabase')}
             />
-            {/* Remove button */}
+            {/* Remove button - more prominent */}
             <button
               type="button"
               onClick={handleRemove}
-              className="absolute top-2 right-2 p-2 bg-depth-base/80 hover:bg-red-500 rounded-full transition-colors group"
-              title="Remove image"
+              className="absolute top-2 right-2 p-2 bg-red-500/90 hover:bg-red-600 rounded-full transition-colors group shadow-lg z-10"
+              title="Remove image (or paste a new one)"
             >
               <svg
-                className="w-4 h-4 text-text-primary group-hover:text-white"
+                className="w-5 h-5 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -235,8 +269,9 @@ export function ImageUpload({
               </svg>
             </button>
             {/* Replace overlay on hover */}
-            <div className="absolute inset-0 bg-depth-base/60 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
-              <span className="text-text-primary font-medium">Click to replace</span>
+            <div className="absolute inset-0 bg-depth-base/60 opacity-0 hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
+              <span className="text-text-primary font-medium">Click to replace or paste image</span>
+              <span className="text-text-muted text-xs">(Ctrl+V / Cmd+V)</span>
             </div>
           </div>
         ) : (
@@ -263,10 +298,10 @@ export function ImageUpload({
                   />
                 </svg>
                 <p className="text-text-primary font-medium mb-1">
-                  Drop image here, paste, or click to upload
+                  Drop image here, paste (Ctrl+V / Cmd+V), or click to upload
                 </p>
                 <p className="text-text-muted text-sm">
-                  JPEG, PNG, GIF, WebP, or SVG (max 5MB)
+                  JPEG, PNG, GIF, WebP, or SVG (max 50MB)
                 </p>
               </>
             )}

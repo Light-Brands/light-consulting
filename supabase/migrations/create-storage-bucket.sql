@@ -11,12 +11,12 @@ VALUES (
   'project-images',
   'project-images',
   true,  -- Public bucket for read access
-  5242880,  -- 5MB file size limit
+  52428800,  -- 50MB file size limit
   ARRAY['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml']
 )
 ON CONFLICT (id) DO UPDATE SET
   public = true,
-  file_size_limit = 5242880,
+  file_size_limit = 52428800,
   allowed_mime_types = ARRAY['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
 
 -- ============================================================================
@@ -57,7 +57,7 @@ USING (
 -- ============================================================================
 -- This migration:
 -- 1. Creates a public 'project-images' storage bucket
--- 2. Limits file size to 5MB
+-- 2. Limits file size to 50MB
 -- 3. Allows only image MIME types (jpeg, png, gif, webp, svg)
 -- 4. Enables public read access for all images
 -- 5. Restricts write/update/delete to authenticated users

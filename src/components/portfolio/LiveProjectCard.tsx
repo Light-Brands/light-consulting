@@ -175,14 +175,10 @@ export const LiveProjectCard: React.FC<LiveProjectCardProps> = ({
       role="article"
       aria-labelledby={`project-title-${project.id}`}
     >
-      {/* Live Preview Container */}
+      {/* Live Preview Container - MacBook Pro 15" aspect ratio (16:10) */}
       <div
         ref={containerRef}
-        className="relative w-full overflow-hidden bg-depth-elevated"
-        style={{
-          height: scale > 0 ? `${((1080 * scale) / 2) * 1.6}px` : '400px',
-          minHeight: '300px',
-        }}
+        className="relative w-full aspect-[16/10] overflow-hidden bg-depth-elevated"
       >
         {/* Determine what to show: preview, fallback image, or placeholder */}
         {(() => {
