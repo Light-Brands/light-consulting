@@ -207,6 +207,7 @@ export default function EditProjectPage({ params }: PageProps) {
         industry: projectData?.industry || '',
         featured: projectData?.featured || false,
         status: projectData?.status || 'draft',
+        project_group: projectData?.project_group || 'past',
         sort_order: projectData?.sort_order || 0,
         // Enhanced fields
         brand_id: projectData?.brand_id || '',
@@ -250,6 +251,7 @@ export default function EditProjectPage({ params }: PageProps) {
         industry: data.industry || null,
         featured: data.featured,
         status: data.status,
+        project_group: data.project_group,
         sort_order: data.sort_order,
         // Enhanced fields
         brand_id: data.brand_id || null,
@@ -703,6 +705,25 @@ export default function EditProjectPage({ params }: PageProps) {
                 </select>
               </div>
 
+              {/* Project Group */}
+              <div>
+                <label htmlFor="project_group" className="block text-sm font-medium text-text-primary mb-2">
+                  Project Group
+                </label>
+                <select
+                  id="project_group"
+                  {...register('project_group')}
+                  className="w-full px-4 py-3 bg-depth-elevated border border-depth-border rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-radiance-gold focus:border-transparent"
+                >
+                  <option value="featured">Featured Projects</option>
+                  <option value="new">New Projects</option>
+                  <option value="past">Past Projects</option>
+                </select>
+                <p className="text-text-muted text-sm mt-1">
+                  Controls which section the project appears in
+                </p>
+              </div>
+
               {/* Sort Order */}
               <div>
                 <label htmlFor="sort_order" className="block text-sm font-medium text-text-primary mb-2">
@@ -715,6 +736,9 @@ export default function EditProjectPage({ params }: PageProps) {
                   className="w-full px-4 py-3 bg-depth-elevated border border-depth-border rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-radiance-gold focus:border-transparent"
                   placeholder="0"
                 />
+                <p className="text-text-muted text-sm mt-1">
+                  Order within the group (lower numbers appear first)
+                </p>
               </div>
             </div>
 

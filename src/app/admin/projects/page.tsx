@@ -11,7 +11,14 @@ import { AdminHeader } from '@/components/admin';
 import { Container } from '@/components/ui';
 import Button from '@/components/Button';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
-import type { Project } from '@/types/database';
+import type { Project, ProjectGroup } from '@/types/database';
+
+// Group configuration with display names and colors
+const PROJECT_GROUPS: { value: ProjectGroup; label: string; color: string }[] = [
+  { value: 'featured', label: 'Featured', color: 'text-purple-400 bg-purple-500/10' },
+  { value: 'new', label: 'New', color: 'text-green-400 bg-green-500/10' },
+  { value: 'past', label: 'Past', color: 'text-gray-400 bg-gray-500/10' },
+];
 
 export default function AdminProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -20,6 +27,7 @@ export default function AdminProjectsPage() {
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
+  const [updatingGroupId, setUpdatingGroupId] = useState<string | null>(null);
   const { authFetch } = useAuthFetch();
 
   const fetchProjects = useCallback(async () => {
@@ -62,6 +70,22 @@ export default function AdminProjectsPage() {
     }
   };
 
+  // Helper function to sort projects by group, sort_order, then title
+  const sortProjects = (projectList: Project[]): Project[] => {
+    const groupOrder: Record<string, number> = { featured: 0, new: 1, past: 2 };
+    return [...projectList].sort((a, b) => {
+      const groupA = groupOrder[a.project_group || 'past'] ?? 2;
+      const groupB = groupOrder[b.project_group || 'past'] ?? 2;
+      if (groupA !== groupB) {
+        return groupA - groupB;
+      }
+      if (a.sort_order !== b.sort_order) {
+        return a.sort_order - b.sort_order;
+      }
+      return a.title.localeCompare(b.title);
+    });
+  };
+
   const handleSortOrderChange = async (projectId: string, newSortOrder: number) => {
     try {
       setUpdatingOrderId(projectId);
@@ -74,18 +98,11 @@ export default function AdminProjectsPage() {
       });
 
       if (response.ok) {
-        // Update local state and re-sort
         setProjects(prevProjects => {
           const updated = prevProjects.map(p =>
             p.id === projectId ? { ...p, sort_order: newSortOrder } : p
           );
-          // Re-sort: by sort_order ascending, then title alphabetically for ties
-          return updated.sort((a, b) => {
-            if (a.sort_order !== b.sort_order) {
-              return a.sort_order - b.sort_order;
-            }
-            return a.title.localeCompare(b.title);
-          });
+          return sortProjects(updated);
         });
       } else {
         console.error('Error updating sort order');
@@ -94,6 +111,34 @@ export default function AdminProjectsPage() {
       console.error('Error updating sort order:', error);
     } finally {
       setUpdatingOrderId(null);
+    }
+  };
+
+  const handleGroupChange = async (projectId: string, newGroup: ProjectGroup) => {
+    try {
+      setUpdatingGroupId(projectId);
+      const response = await authFetch(`/api/projects/${projectId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ project_group: newGroup }),
+      });
+
+      if (response.ok) {
+        setProjects(prevProjects => {
+          const updated = prevProjects.map(p =>
+            p.id === projectId ? { ...p, project_group: newGroup } : p
+          );
+          return sortProjects(updated);
+        });
+      } else {
+        console.error('Error updating project group');
+      }
+    } catch (error) {
+      console.error('Error updating project group:', error);
+    } finally {
+      setUpdatingGroupId(null);
     }
   };
 
@@ -183,152 +228,117 @@ export default function AdminProjectsPage() {
                 <>
                   {/* Mobile Card View */}
                   <div className="md:hidden divide-y divide-depth-border">
-                    {projects.map((project) => (
-                      <div key={project.id} className="p-4">
-                        {/* Header: Image + Title + Status */}
-                        <div className="flex items-start gap-3 mb-3">
-                          <div className="w-16 h-16 rounded-lg bg-depth-elevated flex-shrink-0 overflow-hidden">
-                            {project.image_url ? (
-                              <img
-                                src={project.image_url}
-                                alt={project.title}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center">
-                                <svg className="w-6 h-6 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
+                    {projects.map((project, index) => {
+                      // Check if this is the first project in its group
+                      const currentGroup = project.project_group || 'past';
+                      const prevProject = index > 0 ? projects[index - 1] : null;
+                      const prevGroup = prevProject?.project_group || 'past';
+                      const isFirstInGroup = index === 0 || currentGroup !== prevGroup;
+                      const groupConfig = PROJECT_GROUPS.find(g => g.value === currentGroup);
+
+                      return (
+                        <React.Fragment key={project.id}>
+                          {/* Group Header */}
+                          {isFirstInGroup && (
+                            <div className="px-4 py-2 bg-depth-elevated/30">
+                              <div className="flex items-center gap-2">
+                                <span className={`px-2 py-0.5 text-xs font-semibold rounded ${groupConfig?.color || 'text-gray-400 bg-gray-500/10'}`}>
+                                  {groupConfig?.label || 'Past'} Projects
+                                </span>
+                                <span className="text-xs text-text-muted">
+                                  ({projects.filter(p => (p.project_group || 'past') === currentGroup).length})
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                          <div className="p-4">
+                            {/* Header: Image + Title + Status */}
+                            <div className="flex items-start gap-3 mb-3">
+                              <div className="w-16 h-16 rounded-lg bg-depth-elevated flex-shrink-0 overflow-hidden">
+                                {project.image_url ? (
+                                  <img
+                                    src={project.image_url}
+                                    alt={project.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center">
+                                    <svg className="w-6 h-6 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                  </div>
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <Link
+                                  href={`/admin/projects/${project.id}/edit`}
+                                  className="font-medium text-text-primary hover:text-radiance-gold transition-colors block break-words"
+                                  title={project.title}
+                                >
+                                  {project.title.length > 100
+                                    ? `${project.title.slice(0, 100)}...`
+                                    : project.title}
+                                </Link>
+                                <p className="text-sm text-text-muted truncate">{project.industry || 'No industry'}</p>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <span
+                                    className={`px-2 py-0.5 text-xs rounded-full ${
+                                      project.status === 'published'
+                                        ? 'bg-green-500/10 text-green-500'
+                                        : 'bg-amber-500/10 text-amber-500'
+                                    }`}
+                                  >
+                                    {project.status}
+                                  </span>
+                                  {project.featured && (
+                                    <span className="px-2 py-0.5 text-xs rounded-full bg-radiance-gold/10 text-radiance-gold">
+                                      Featured
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Tags */}
+                            {project.tags && project.tags.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mb-3">
+                                {project.tags.slice(0, 3).map((tag, i) => (
+                                  <span
+                                    key={i}
+                                    className="px-2 py-0.5 bg-depth-elevated text-text-muted text-xs rounded"
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                                {project.tags.length > 3 && (
+                                  <span className="text-text-muted text-xs">
+                                    +{project.tags.length - 3}
+                                  </span>
+                                )}
                               </div>
                             )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <Link
-                              href={`/admin/projects/${project.id}/edit`}
-                              className="font-medium text-text-primary hover:text-radiance-gold transition-colors block break-words"
-                              title={project.title}
-                            >
-                              {project.title.length > 100
-                                ? `${project.title.slice(0, 100)}...`
-                                : project.title}
-                            </Link>
-                            <p className="text-sm text-text-muted truncate">{project.industry || 'No industry'}</p>
-                            <div className="flex items-center gap-2 mt-1">
-                              <span
-                                className={`px-2 py-0.5 text-xs rounded-full ${
-                                  project.status === 'published'
-                                    ? 'bg-green-500/10 text-green-500'
-                                    : 'bg-amber-500/10 text-amber-500'
+
+                            {/* Actions */}
+                            <div className="flex items-center gap-2">
+                              <select
+                                value={project.project_group || 'past'}
+                                onChange={(e) => handleGroupChange(project.id, e.target.value as ProjectGroup)}
+                                disabled={updatingGroupId === project.id}
+                                className={`w-20 px-1.5 py-1.5 bg-depth-elevated border border-depth-border rounded-lg text-xs cursor-pointer hover:border-radiance-gold/50 focus:border-radiance-gold focus:outline-none transition-colors ${
+                                  updatingGroupId === project.id ? 'opacity-50 cursor-wait' : ''
                                 }`}
                               >
-                                {project.status}
-                              </span>
-                              {project.featured && (
-                                <span className="px-2 py-0.5 text-xs rounded-full bg-radiance-gold/10 text-radiance-gold">
-                                  Featured
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Tags */}
-                        {project.tags && project.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mb-3">
-                            {project.tags.slice(0, 3).map((tag, i) => (
-                              <span
-                                key={i}
-                                className="px-2 py-0.5 bg-depth-elevated text-text-muted text-xs rounded"
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                            {project.tags.length > 3 && (
-                              <span className="text-text-muted text-xs">
-                                +{project.tags.length - 3}
-                              </span>
-                            )}
-                          </div>
-                        )}
-
-                        {/* Actions */}
-                        <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-xs text-text-muted">Order:</span>
-                            <select
-                              value={project.sort_order}
-                              onChange={(e) => handleSortOrderChange(project.id, parseInt(e.target.value))}
-                              disabled={updatingOrderId === project.id}
-                              className={`w-14 px-1.5 py-1.5 bg-depth-elevated border border-depth-border rounded-lg text-xs text-center cursor-pointer hover:border-radiance-gold/50 focus:border-radiance-gold focus:outline-none transition-colors ${
-                                updatingOrderId === project.id ? 'opacity-50 cursor-wait' : ''
-                              }`}
-                            >
-                              {Array.from({ length: 100 }, (_, i) => i + 1).map((num) => (
-                                <option key={num} value={num}>
-                                  {num}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <Link
-                            href={`/admin/projects/${project.id}/edit`}
-                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-depth-elevated hover:bg-depth-border text-text-secondary rounded-lg transition-colors text-sm"
-                          >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            Edit
-                          </Link>
-                          <button
-                            onClick={() => {
-                              setProjectToDelete(project);
-                              setDeleteModalOpen(true);
-                            }}
-                            className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                          >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Desktop Table View */}
-                  <div className="hidden md:block overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-depth-elevated">
-                        <tr>
-                          <th className="px-4 py-4 text-center text-xs font-semibold text-text-muted uppercase tracking-wider w-20">
-                            Order
-                          </th>
-                          <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
-                            Title
-                          </th>
-                          <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
-                            Description
-                          </th>
-                          <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
-                            Tags
-                          </th>
-                          <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
-                            Status
-                          </th>
-                          <th className="px-6 py-4 text-right text-xs font-semibold text-text-muted uppercase tracking-wider">
-                            Actions
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-depth-border">
-                        {projects.map((project) => (
-                          <tr key={project.id} className="hover:bg-depth-elevated/50 transition-colors">
-                            <td className="px-4 py-4 whitespace-nowrap text-center">
+                                {PROJECT_GROUPS.map((group) => (
+                                  <option key={group.value} value={group.value}>
+                                    {group.label}
+                                  </option>
+                                ))}
+                              </select>
                               <select
                                 value={project.sort_order}
                                 onChange={(e) => handleSortOrderChange(project.id, parseInt(e.target.value))}
                                 disabled={updatingOrderId === project.id}
-                                className={`w-16 px-2 py-1.5 bg-depth-elevated border border-depth-border rounded-lg text-sm text-center cursor-pointer hover:border-radiance-gold/50 focus:border-radiance-gold focus:outline-none focus:ring-1 focus:ring-radiance-gold/30 transition-colors ${
+                                className={`w-14 px-1.5 py-1.5 bg-depth-elevated border border-depth-border rounded-lg text-xs text-center cursor-pointer hover:border-radiance-gold/50 focus:border-radiance-gold focus:outline-none transition-colors ${
                                   updatingOrderId === project.id ? 'opacity-50 cursor-wait' : ''
                                 }`}
                               >
@@ -338,95 +348,210 @@ export default function AdminProjectsPage() {
                                   </option>
                                 ))}
                               </select>
-                            </td>
-                            <td className="px-6 py-4">
-                              <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-depth-elevated flex-shrink-0 overflow-hidden">
-                                  {project.image_url ? (
-                                    <img
-                                      src={project.image_url}
-                                      alt={project.title}
-                                      className="w-full h-full object-cover"
-                                    />
-                                  ) : (
-                                    <div className="w-full h-full flex items-center justify-center">
-                                      <svg className="w-5 h-5 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                      </svg>
-                                    </div>
-                                  )}
-                                </div>
-                                <div>
-                                  <p className="font-medium text-text-primary">{project.title}</p>
-                                  <p className="text-text-muted text-sm">{project.industry || 'No industry'}</p>
-                                </div>
-                              </div>
-                            </td>
-                            <td className="px-6 py-4">
-                              <p className="text-text-secondary text-sm line-clamp-2 max-w-xs">
-                                {project.description}
-                              </p>
-                            </td>
-                            <td className="px-6 py-4">
-                              <div className="flex flex-wrap gap-1 max-w-[200px]">
-                                {project.tags?.slice(0, 3).map((tag, i) => (
-                                  <span
-                                    key={i}
-                                    className="px-2 py-0.5 bg-depth-elevated text-text-muted text-xs rounded"
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
-                                {project.tags && project.tags.length > 3 && (
-                                  <span className="text-text-muted text-xs">
-                                    +{project.tags.length - 3}
-                                  </span>
-                                )}
-                              </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <span
-                                className={`px-2 py-1 text-xs rounded-full ${
-                                  project.status === 'published'
-                                    ? 'bg-green-500/10 text-green-500'
-                                    : 'bg-amber-500/10 text-amber-500'
-                                }`}
+                              <Link
+                                href={`/admin/projects/${project.id}/edit`}
+                                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-depth-elevated hover:bg-depth-border text-text-secondary rounded-lg transition-colors text-sm"
                               >
-                                {project.status}
-                              </span>
-                              {project.featured && (
-                                <span className="ml-2 px-2 py-1 text-xs rounded-full bg-radiance-gold/10 text-radiance-gold">
-                                  Featured
-                                </span>
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                                Edit
+                              </Link>
+                              <button
+                                onClick={() => {
+                                  setProjectToDelete(project);
+                                  setDeleteModalOpen(true);
+                                }}
+                                className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                              >
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </React.Fragment>
+                      );
+                    })}
+                  </div>
+
+                  {/* Desktop Table View */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-depth-elevated">
+                        <tr>
+                          <th className="px-3 py-4 text-center text-xs font-semibold text-text-muted uppercase tracking-wider w-24">
+                            Group
+                          </th>
+                          <th className="px-3 py-4 text-center text-xs font-semibold text-text-muted uppercase tracking-wider w-16">
+                            Order
+                          </th>
+                          <th className="px-4 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
+                            Title
+                          </th>
+                          <th className="px-4 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
+                            Description
+                          </th>
+                          <th className="px-4 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
+                            Tags
+                          </th>
+                          <th className="px-4 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
+                            Status
+                          </th>
+                          <th className="px-4 py-4 text-right text-xs font-semibold text-text-muted uppercase tracking-wider">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-depth-border">
+                        {projects.map((project, index) => {
+                          // Check if this is the first project in its group
+                          const currentGroup = project.project_group || 'past';
+                          const prevProject = index > 0 ? projects[index - 1] : null;
+                          const prevGroup = prevProject?.project_group || 'past';
+                          const isFirstInGroup = index === 0 || currentGroup !== prevGroup;
+                          const groupConfig = PROJECT_GROUPS.find(g => g.value === currentGroup);
+
+                          return (
+                            <React.Fragment key={project.id}>
+                              {/* Group Header Row */}
+                              {isFirstInGroup && (
+                                <tr className="bg-depth-elevated/30">
+                                  <td colSpan={7} className="px-4 py-2">
+                                    <div className="flex items-center gap-2">
+                                      <span className={`px-2 py-0.5 text-xs font-semibold rounded ${groupConfig?.color || 'text-gray-400 bg-gray-500/10'}`}>
+                                        {groupConfig?.label || 'Past'} Projects
+                                      </span>
+                                      <span className="text-xs text-text-muted">
+                                        ({projects.filter(p => (p.project_group || 'past') === currentGroup).length} projects)
+                                      </span>
+                                    </div>
+                                  </td>
+                                </tr>
                               )}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-right">
-                              <div className="flex items-center justify-end gap-2">
-                                <Link
-                                  href={`/admin/projects/${project.id}/edit`}
-                                  className="p-2 text-text-muted hover:text-text-primary hover:bg-depth-elevated rounded-lg transition-colors"
-                                  title="Edit"
-                                >
-                                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                  </svg>
-                                </Link>
-                                <button
-                                  onClick={() => {
-                                    setProjectToDelete(project);
-                                    setDeleteModalOpen(true);
-                                  }}
-                                  className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                                  title="Delete"
-                                >
-                                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                  </svg>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
+                              <tr className="hover:bg-depth-elevated/50 transition-colors">
+                                <td className="px-3 py-4 whitespace-nowrap text-center">
+                                  <select
+                                    value={project.project_group || 'past'}
+                                    onChange={(e) => handleGroupChange(project.id, e.target.value as ProjectGroup)}
+                                    disabled={updatingGroupId === project.id}
+                                    className={`w-[90px] px-2 py-1.5 bg-depth-elevated border border-depth-border rounded-lg text-xs cursor-pointer hover:border-radiance-gold/50 focus:border-radiance-gold focus:outline-none focus:ring-1 focus:ring-radiance-gold/30 transition-colors ${
+                                      updatingGroupId === project.id ? 'opacity-50 cursor-wait' : ''
+                                    }`}
+                                  >
+                                    {PROJECT_GROUPS.map((group) => (
+                                      <option key={group.value} value={group.value}>
+                                        {group.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </td>
+                                <td className="px-3 py-4 whitespace-nowrap text-center">
+                                  <select
+                                    value={project.sort_order}
+                                    onChange={(e) => handleSortOrderChange(project.id, parseInt(e.target.value))}
+                                    disabled={updatingOrderId === project.id}
+                                    className={`w-14 px-1 py-1.5 bg-depth-elevated border border-depth-border rounded-lg text-sm text-center cursor-pointer hover:border-radiance-gold/50 focus:border-radiance-gold focus:outline-none focus:ring-1 focus:ring-radiance-gold/30 transition-colors ${
+                                      updatingOrderId === project.id ? 'opacity-50 cursor-wait' : ''
+                                    }`}
+                                  >
+                                    {Array.from({ length: 100 }, (_, i) => i + 1).map((num) => (
+                                      <option key={num} value={num}>
+                                        {num}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </td>
+                                <td className="px-4 py-4">
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-lg bg-depth-elevated flex-shrink-0 overflow-hidden">
+                                      {project.image_url ? (
+                                        <img
+                                          src={project.image_url}
+                                          alt={project.title}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      ) : (
+                                        <div className="w-full h-full flex items-center justify-center">
+                                          <svg className="w-5 h-5 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                          </svg>
+                                        </div>
+                                      )}
+                                    </div>
+                                    <div>
+                                      <p className="font-medium text-text-primary">{project.title}</p>
+                                      <p className="text-text-muted text-sm">{project.industry || 'No industry'}</p>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-4 py-4">
+                                  <p className="text-text-secondary text-sm line-clamp-2 max-w-xs">
+                                    {project.description}
+                                  </p>
+                                </td>
+                                <td className="px-4 py-4">
+                                  <div className="flex flex-wrap gap-1 max-w-[180px]">
+                                    {project.tags?.slice(0, 3).map((tag, i) => (
+                                      <span
+                                        key={i}
+                                        className="px-2 py-0.5 bg-depth-elevated text-text-muted text-xs rounded"
+                                      >
+                                        {tag}
+                                      </span>
+                                    ))}
+                                    {project.tags && project.tags.length > 3 && (
+                                      <span className="text-text-muted text-xs">
+                                        +{project.tags.length - 3}
+                                      </span>
+                                    )}
+                                  </div>
+                                </td>
+                                <td className="px-4 py-4 whitespace-nowrap">
+                                  <span
+                                    className={`px-2 py-1 text-xs rounded-full ${
+                                      project.status === 'published'
+                                        ? 'bg-green-500/10 text-green-500'
+                                        : 'bg-amber-500/10 text-amber-500'
+                                    }`}
+                                  >
+                                    {project.status}
+                                  </span>
+                                  {project.featured && (
+                                    <span className="ml-2 px-2 py-1 text-xs rounded-full bg-radiance-gold/10 text-radiance-gold">
+                                      Featured
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="px-4 py-4 whitespace-nowrap text-right">
+                                  <div className="flex items-center justify-end gap-2">
+                                    <Link
+                                      href={`/admin/projects/${project.id}/edit`}
+                                      className="p-2 text-text-muted hover:text-text-primary hover:bg-depth-elevated rounded-lg transition-colors"
+                                      title="Edit"
+                                    >
+                                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                      </svg>
+                                    </Link>
+                                    <button
+                                      onClick={() => {
+                                        setProjectToDelete(project);
+                                        setDeleteModalOpen(true);
+                                      }}
+                                      className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                      title="Delete"
+                                    >
+                                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            </React.Fragment>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
