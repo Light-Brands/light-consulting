@@ -240,14 +240,21 @@ export default function AdminProjectsPage() {
                         <React.Fragment key={project.id}>
                           {/* Group Header */}
                           {isFirstInGroup && (
-                            <div className="px-4 py-2 bg-depth-elevated/30">
-                              <div className="flex items-center gap-2">
-                                <span className={`px-2 py-0.5 text-xs font-semibold rounded ${groupConfig?.color || 'text-gray-400 bg-gray-500/10'}`}>
-                                  {groupConfig?.label || 'Past'} Projects
-                                </span>
-                                <span className="text-xs text-text-muted">
-                                  ({projects.filter(p => (p.project_group || 'past') === currentGroup).length})
-                                </span>
+                            <div className="px-4 py-4 bg-depth-elevated border-t-2 border-depth-border">
+                              <div className="flex items-center gap-3">
+                                <div className={`w-1.5 h-6 rounded-full ${
+                                  currentGroup === 'featured' ? 'bg-purple-500' :
+                                  currentGroup === 'new' ? 'bg-green-500' : 'bg-gray-500'
+                                }`} />
+                                <div>
+                                  <h3 className="text-base font-semibold text-text-primary">
+                                    {currentGroup === 'featured' ? 'Featured Projects' :
+                                     currentGroup === 'new' ? 'New Projects' : 'Past Projects'}
+                                  </h3>
+                                  <p className="text-xs text-text-muted">
+                                    {projects.filter(p => (p.project_group || 'past') === currentGroup).length} projects
+                                  </p>
+                                </div>
                               </div>
                             </div>
                           )}
@@ -416,15 +423,22 @@ export default function AdminProjectsPage() {
                             <React.Fragment key={project.id}>
                               {/* Group Header Row */}
                               {isFirstInGroup && (
-                                <tr className="bg-depth-elevated/30">
-                                  <td colSpan={7} className="px-4 py-2">
-                                    <div className="flex items-center gap-2">
-                                      <span className={`px-2 py-0.5 text-xs font-semibold rounded ${groupConfig?.color || 'text-gray-400 bg-gray-500/10'}`}>
-                                        {groupConfig?.label || 'Past'} Projects
-                                      </span>
-                                      <span className="text-xs text-text-muted">
-                                        ({projects.filter(p => (p.project_group || 'past') === currentGroup).length} projects)
-                                      </span>
+                                <tr className="bg-depth-elevated border-t-2 border-depth-border">
+                                  <td colSpan={7} className="px-6 py-4">
+                                    <div className="flex items-center gap-3">
+                                      <div className={`w-2 h-8 rounded-full ${
+                                        currentGroup === 'featured' ? 'bg-purple-500' :
+                                        currentGroup === 'new' ? 'bg-green-500' : 'bg-gray-500'
+                                      }`} />
+                                      <div>
+                                        <h3 className="text-lg font-semibold text-text-primary">
+                                          {currentGroup === 'featured' ? 'Featured Projects' :
+                                           currentGroup === 'new' ? 'New Projects' : 'Past Projects'}
+                                        </h3>
+                                        <p className="text-sm text-text-muted">
+                                          {projects.filter(p => (p.project_group || 'past') === currentGroup).length} projects
+                                        </p>
+                                      </div>
                                     </div>
                                   </td>
                                 </tr>
