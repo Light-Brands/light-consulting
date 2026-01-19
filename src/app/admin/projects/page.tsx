@@ -19,6 +19,7 @@ export default function AdminProjectsPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
   const { authFetch } = useAuthFetch();
 
   const fetchProjects = useCallback(async () => {
@@ -58,6 +59,41 @@ export default function AdminProjectsPage() {
       console.error('Error deleting project:', error);
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleSortOrderChange = async (projectId: string, newSortOrder: number) => {
+    try {
+      setUpdatingOrderId(projectId);
+      const response = await authFetch(`/api/projects/${projectId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sort_order: newSortOrder }),
+      });
+
+      if (response.ok) {
+        // Update local state and re-sort
+        setProjects(prevProjects => {
+          const updated = prevProjects.map(p =>
+            p.id === projectId ? { ...p, sort_order: newSortOrder } : p
+          );
+          // Re-sort: by sort_order ascending, then title alphabetically for ties
+          return updated.sort((a, b) => {
+            if (a.sort_order !== b.sort_order) {
+              return a.sort_order - b.sort_order;
+            }
+            return a.title.localeCompare(b.title);
+          });
+        });
+      } else {
+        console.error('Error updating sort order');
+      }
+    } catch (error) {
+      console.error('Error updating sort order:', error);
+    } finally {
+      setUpdatingOrderId(null);
     }
   };
 
@@ -217,6 +253,23 @@ export default function AdminProjectsPage() {
 
                         {/* Actions */}
                         <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs text-text-muted">Order:</span>
+                            <select
+                              value={project.sort_order}
+                              onChange={(e) => handleSortOrderChange(project.id, parseInt(e.target.value))}
+                              disabled={updatingOrderId === project.id}
+                              className={`w-14 px-1.5 py-1.5 bg-depth-elevated border border-depth-border rounded-lg text-xs text-center cursor-pointer hover:border-radiance-gold/50 focus:border-radiance-gold focus:outline-none transition-colors ${
+                                updatingOrderId === project.id ? 'opacity-50 cursor-wait' : ''
+                              }`}
+                            >
+                              {Array.from({ length: 100 }, (_, i) => i + 1).map((num) => (
+                                <option key={num} value={num}>
+                                  {num}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
                           <Link
                             href={`/admin/projects/${project.id}/edit`}
                             className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-depth-elevated hover:bg-depth-border text-text-secondary rounded-lg transition-colors text-sm"
@@ -247,8 +300,8 @@ export default function AdminProjectsPage() {
                     <table className="w-full">
                       <thead className="bg-depth-elevated">
                         <tr>
-                          <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
-                            ID
+                          <th className="px-4 py-4 text-center text-xs font-semibold text-text-muted uppercase tracking-wider w-20">
+                            Order
                           </th>
                           <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
                             Title
@@ -270,10 +323,21 @@ export default function AdminProjectsPage() {
                       <tbody className="divide-y divide-depth-border">
                         {projects.map((project) => (
                           <tr key={project.id} className="hover:bg-depth-elevated/50 transition-colors">
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <span className="text-text-muted text-sm font-mono">
-                                {project.id.substring(0, 8)}...
-                              </span>
+                            <td className="px-4 py-4 whitespace-nowrap text-center">
+                              <select
+                                value={project.sort_order}
+                                onChange={(e) => handleSortOrderChange(project.id, parseInt(e.target.value))}
+                                disabled={updatingOrderId === project.id}
+                                className={`w-16 px-2 py-1.5 bg-depth-elevated border border-depth-border rounded-lg text-sm text-center cursor-pointer hover:border-radiance-gold/50 focus:border-radiance-gold focus:outline-none focus:ring-1 focus:ring-radiance-gold/30 transition-colors ${
+                                  updatingOrderId === project.id ? 'opacity-50 cursor-wait' : ''
+                                }`}
+                              >
+                                {Array.from({ length: 100 }, (_, i) => i + 1).map((num) => (
+                                  <option key={num} value={num}>
+                                    {num}
+                                  </option>
+                                ))}
+                              </select>
                             </td>
                             <td className="px-6 py-4">
                               <div className="flex items-center gap-3">

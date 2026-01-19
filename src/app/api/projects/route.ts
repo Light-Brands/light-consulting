@@ -751,12 +751,12 @@ export async function GET(request: NextRequest) {
         );
       }
 
-      // Sort by sort_order (ascending), then by created_at (descending)
+      // Sort by sort_order (ascending), then by title (alphabetical) for ties
       projects.sort((a, b) => {
         if (a.sort_order !== b.sort_order) {
           return a.sort_order - b.sort_order;
         }
-        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        return a.title.localeCompare(b.title);
       });
 
       // Apply limit
@@ -772,7 +772,7 @@ export async function GET(request: NextRequest) {
       .from('projects')
       .select('*', { count: 'exact' })
       .order('sort_order', { ascending: true })
-      .order('created_at', { ascending: false });
+      .order('title', { ascending: true });
 
     // Filter by status
     if (status) {
