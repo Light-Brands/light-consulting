@@ -37,7 +37,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activePage, onNavigate }
             <img 
               src="/lb-logo.svg" 
               alt="Light Brand Consulting" 
-              className="h-8 md:h-10 w-auto transition-opacity group-hover:opacity-80"
+              className="h-6 md:h-8 w-auto transition-opacity group-hover:opacity-80"
             />
           </button>
 
