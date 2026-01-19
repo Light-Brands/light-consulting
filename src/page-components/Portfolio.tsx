@@ -10,12 +10,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Container, Section, Heading, Text } from '@/components/ui';
 import { PortfolioGrid, Breadcrumbs } from '@/components/portfolio';
 import Button from '@/components/Button';
-import type { Project } from '@/types/database';
+import type { Project, ProjectGroup } from '@/types/database';
 import type { PageKey } from '@/types';
 
 interface PortfolioPageProps {
   onNavigate: (page: PageKey) => void;
 }
+
+// Group configuration
+const PROJECT_GROUP_CONFIG: { value: ProjectGroup; label: string; description: string }[] = [
+  { value: 'featured', label: 'Featured Projects', description: 'Our best and most impactful work' },
+  { value: 'new', label: 'New Projects', description: 'Recent additions to our portfolio' },
+  { value: 'past', label: 'Past Projects', description: 'A collection of our previous work' },
+];
 
 // Enhanced filter options
 const FILTER_OPTIONS = [
@@ -282,11 +289,60 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ onNavigate }) => {
             </motion.div>
           ) : (
             <div id="projects-grid" role="tabpanel">
-              <PortfolioGrid 
-                projects={filteredProjects} 
-                isLoading={isLoading}
-                viewMode={viewMode}
-              />
+              {/* Show grouped sections when no filter is active */}
+              {activeFilter === 'all' && !searchQuery.trim() ? (
+                <div className="space-y-16">
+                  {PROJECT_GROUP_CONFIG.map((group) => {
+                    const groupProjects = filteredProjects.filter(
+                      (p) => (p.project_group || 'past') === group.value
+                    );
+
+                    // Skip empty groups
+                    if (groupProjects.length === 0) return null;
+
+                    return (
+                      <motion.section
+                        key={group.value}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        {/* Section Header */}
+                        <div className="flex items-center gap-4 mb-8">
+                          <div className={`w-1.5 h-12 rounded-full ${
+                            group.value === 'featured' ? 'bg-gradient-to-b from-purple-500 to-purple-600' :
+                            group.value === 'new' ? 'bg-gradient-to-b from-green-500 to-green-600' :
+                            'bg-gradient-to-b from-gray-400 to-gray-500'
+                          }`} />
+                          <div>
+                            <h2 className="text-2xl md:text-3xl font-bold text-text-primary">
+                              {group.label}
+                            </h2>
+                            <p className="text-text-muted text-sm mt-1">
+                              {group.description} • {groupProjects.length} {groupProjects.length === 1 ? 'project' : 'projects'}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Projects Grid */}
+                        <PortfolioGrid
+                          projects={groupProjects}
+                          isLoading={false}
+                          viewMode={viewMode}
+                        />
+                      </motion.section>
+                    );
+                  })}
+                </div>
+              ) : (
+                /* Show flat grid when filtering/searching */
+                <PortfolioGrid
+                  projects={filteredProjects}
+                  isLoading={isLoading}
+                  viewMode={viewMode}
+                />
+              )}
             </div>
           )}
         </Container>
