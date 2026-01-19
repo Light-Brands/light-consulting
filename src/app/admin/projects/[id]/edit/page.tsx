@@ -8,7 +8,7 @@
 import React, { useState, useEffect, useCallback, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { AdminHeader } from '@/components/admin';
+import { AdminHeader, ImageUpload } from '@/components/admin';
 import { Container } from '@/components/ui';
 import Button from '@/components/Button';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
@@ -158,6 +158,9 @@ export default function EditProjectPage({ params }: PageProps) {
   const [error, setError] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
+  // Image upload state
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
   // Array field states
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const [services, setServices] = useState<string[]>([]);
@@ -187,6 +190,7 @@ export default function EditProjectPage({ params }: PageProps) {
       const projectData = data.data;
       setProject(projectData);
       setSelectedTags(projectData?.tags || []);
+      setImageUrl(projectData?.image_url || null);
 
       // Set array field states
       setGalleryImages(projectData?.gallery_images || []);
@@ -240,7 +244,7 @@ export default function EditProjectPage({ params }: PageProps) {
         title: data.title,
         description: data.description,
         tags: selectedTags,
-        image_url: data.image_url || null,
+        image_url: imageUrl,
         case_study_url: data.case_study_url || null,
         client_name: data.client_name || null,
         industry: data.industry || null,
@@ -388,19 +392,14 @@ export default function EditProjectPage({ params }: PageProps) {
                 )}
               </div>
 
-              {/* Image URL */}
-              <div>
-                <label htmlFor="image_url" className="block text-sm font-medium text-text-primary mb-2">
-                  Image URL
-                </label>
-                <input
-                  id="image_url"
-                  type="text"
-                  {...register('image_url')}
-                  className="w-full px-4 py-3 bg-depth-elevated border border-depth-border rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-radiance-gold focus:border-transparent"
-                  placeholder="/images/portfolio/project-name.jpg"
-                />
-              </div>
+              {/* Cover Image Upload */}
+              <ImageUpload
+                value={imageUrl}
+                onChange={setImageUrl}
+                folder="covers"
+                label="Cover Image"
+                helpText="Drop, paste, or click to upload a cover image for this project"
+              />
 
               {/* Case Study URL */}
               <div>
