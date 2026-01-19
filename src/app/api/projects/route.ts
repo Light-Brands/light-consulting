@@ -751,8 +751,14 @@ export async function GET(request: NextRequest) {
         );
       }
 
-      // Sort by sort_order (ascending), then by title (alphabetical) for ties
+      // Sort by project_group (featured=0, new=1, past=2), then sort_order, then title
+      const groupOrder: Record<string, number> = { featured: 0, new: 1, past: 2 };
       projects.sort((a, b) => {
+        const groupA = groupOrder[a.project_group || 'past'] ?? 2;
+        const groupB = groupOrder[b.project_group || 'past'] ?? 2;
+        if (groupA !== groupB) {
+          return groupA - groupB;
+        }
         if (a.sort_order !== b.sort_order) {
           return a.sort_order - b.sort_order;
         }
@@ -767,10 +773,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ data: projects, error: null, count: projects.length });
     }
 
-    // Build query
+    // Build query - sort by project_group (featured < new < past alphabetically), then sort_order, then title
     let query = supabaseAdmin
       .from('projects')
       .select('*', { count: 'exact' })
+      .order('project_group', { ascending: true, nullsFirst: false })
       .order('sort_order', { ascending: true })
       .order('title', { ascending: true });
 

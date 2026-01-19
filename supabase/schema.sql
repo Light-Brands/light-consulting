@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS projects (
   industry VARCHAR(100),
   featured BOOLEAN DEFAULT false,
   status VARCHAR(50) DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
+  project_group VARCHAR(50) DEFAULT 'past' CHECK (project_group IN ('featured', 'new', 'past')),
   sort_order INTEGER DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -33,6 +34,7 @@ CREATE INDEX IF NOT EXISTS idx_projects_status ON projects(status);
 CREATE INDEX IF NOT EXISTS idx_projects_featured ON projects(featured);
 CREATE INDEX IF NOT EXISTS idx_projects_created_at ON projects(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_projects_sort_order ON projects(sort_order);
+CREATE INDEX IF NOT EXISTS idx_projects_project_group ON projects(project_group);
 
 -- ============================================================================
 -- Trigger for updated_at

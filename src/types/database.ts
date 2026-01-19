@@ -158,6 +158,9 @@ export interface Database {
   };
 }
 
+// Project Group type
+export type ProjectGroup = 'featured' | 'new' | 'past';
+
 // Project types
 export interface Project {
   id: string;
@@ -170,6 +173,7 @@ export interface Project {
   industry: string | null;
   featured: boolean;
   status: 'draft' | 'published';
+  project_group: ProjectGroup;
   sort_order: number;
   created_at: string;
   updated_at: string;
@@ -200,6 +204,7 @@ export interface ProjectInsert {
   industry?: string | null;
   featured?: boolean;
   status?: 'draft' | 'published';
+  project_group?: ProjectGroup;
   sort_order?: number;
   brand_id?: string | null;
   gallery_images?: string[];
@@ -227,6 +232,7 @@ export interface ProjectUpdate {
   industry?: string | null;
   featured?: boolean;
   status?: 'draft' | 'published';
+  project_group?: ProjectGroup;
   sort_order?: number;
   // Enhanced fields for project detail pages
   brand_id?: string | null;
