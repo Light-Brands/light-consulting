@@ -30,6 +30,7 @@ const FILTER_OPTIONS = [
   { label: 'Featured', value: 'featured' },
   { label: 'AI & Technology', value: 'AI' },
   { label: 'Hospitality', value: 'Hospitality' },
+  { label: 'Real Estate', value: 'Real Estate' },
   { label: 'Healthcare', value: 'Healthcare' },
   { label: 'Tourism & Travel', value: 'Tourism' },
   { label: 'Energy', value: 'Energy' },
