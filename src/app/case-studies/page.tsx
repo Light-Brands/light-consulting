@@ -17,6 +17,17 @@ export const metadata: Metadata = {
 
 const CASE_STUDIES = [
   {
+    slug: 'growth-mastery',
+    title: 'Growth Mastery',
+    subtitle: 'From Zero Code to 370,000 Lines in Months',
+    description:
+      'How a non-developer with zero coding experience built an enterprise-grade platform that would take a traditional dev team years to complete—using our AI-powered systems and guidance.',
+    image: '/images/case-studies/growth-mastery/hero.png',
+    industry: 'Technology / SaaS',
+    results: ['370K+ Lines of Code', 'Zero Prior Experience', 'Months Not Years'],
+    featured: true,
+  },
+  {
     slug: 'iboga-life-change',
     title: 'Iboga Life Change',
     subtitle: 'From Basic Website to AI-Powered Healing Platform',
@@ -25,7 +36,7 @@ const CASE_STUDIES = [
     image: '/images/case-studies/iboga/new-site-home-full.png',
     industry: 'Sacred Healing & Wellness',
     results: ['100% Design Overhaul', '10x UX Improvement', 'Premium Brand Elevation'],
-    featured: true,
+    featured: false,
   },
 ];
 
