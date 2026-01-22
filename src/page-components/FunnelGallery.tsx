@@ -347,7 +347,7 @@ const getTierColor = (tier: string) => {
 };
 
 // Password for accessing the gallery (can be configured via env variable)
-const GALLERY_PASSWORD = process.env.NEXT_PUBLIC_FUNNEL_GALLERY_PASSWORD || 'lightbrand2024';
+const GALLERY_PASSWORD = process.env.NEXT_PUBLIC_FUNNEL_GALLERY_PASSWORD || '8888';
 
 export const FunnelGallery: React.FC<FunnelGalleryProps> = ({ onNavigate }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
