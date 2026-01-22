@@ -11,51 +11,51 @@ import { DesignTokens } from './types';
 
 export const tokens: DesignTokens = {
   // ==========================================================================
-  // COLOR TOKENS
+  // COLOR TOKENS - Warm Minimal Palette
   // ==========================================================================
   colors: {
-    // Radiance Scale (Primary Accent) - Illumination moments, gold tones
+    // Radiance Scale (Primary Accent) - Refined gold for light backgrounds
     radiance: {
-      gold: '#E8B84A',    // Primary brand gold
-      amber: '#D4944C',   // Warmer gold variation
-      warm: '#C67D4E',    // Warmest gold variation
+      gold: '#C9940A',    // Primary brand gold - deeper for contrast
+      amber: '#B8860B',   // Darker gold for hover states
+      warm: '#A67508',    // Warmest gold variation
     },
 
-    // Clarity Scale (Secondary Accent) - Pure light, cream tones
+    // Clarity Scale (Secondary Accent) - Warm neutrals
     clarity: {
-      cream: '#FDF6E3',   // Lightest cream, almost white
+      cream: '#FDF6E3',   // Lightest cream
       soft: '#F5E6C8',    // Soft cream
-      muted: '#D9C9A5',   // Muted cream for subtle accents
+      muted: '#E8DCC4',   // Muted warm tone
     },
 
-    // Wisdom Scale (AI Features) - Intelligence, purple/violet tones
+    // Wisdom Scale (AI Features) - Adjusted for light mode
     wisdom: {
-      violet: '#8B7EC8',  // Primary wisdom violet
-      soft: '#A599D4',    // Lighter violet
-      muted: '#7A6BA8',   // Deeper violet
+      violet: '#6B5CA8',  // Primary wisdom violet - deeper
+      soft: '#8577C4',    // Lighter violet
+      muted: '#5A4D98',   // Deeper violet
     },
 
-    // Depth Scale (Backgrounds) - Professional darkness, warm blacks
+    // Depth Scale (Backgrounds) - Warm light backgrounds
     depth: {
-      base: '#0F0E0D',      // Deepest background (body)
-      elevated: '#151413',   // Slightly elevated surfaces
-      surface: '#1C1A18',    // Card surfaces, elevated content
-      border: '#2A2724',     // Border color
+      base: '#FAFAF8',      // Warm white body background
+      elevated: '#FFFFFF',   // Pure white for elevated surfaces
+      surface: '#F5F4F2',    // Warm light gray for cards
+      border: '#E8E6E3',     // Soft warm border
     },
 
-    // Text Scale - Warm moonlight tones
+    // Text Scale - Warm dark text (optimized for light backgrounds)
     text: {
-      primary: '#F8F5F0',    // Primary text, highest contrast
-      secondary: '#E5E0D8',  // Secondary text, good contrast
-      muted: '#A8A299',      // Muted text, lower contrast
+      primary: '#1A1918',    // Warm near-black for primary text
+      secondary: '#3D3A38',  // Darker warm gray for better readability
+      muted: '#5C5956',      // Darker muted for WCAG AA compliance
     },
 
-    // Semantic Colors - Feedback and state
+    // Semantic Colors - Adjusted for light backgrounds
     semantic: {
-      success: '#5CB85C',  // Green for success states
-      warning: '#F0A030',  // Orange for warning states
-      error: '#E85A5A',    // Red for error states
-      info: '#5DADE2',     // Blue for informational states
+      success: '#16A34A',  // Green for success states
+      warning: '#D97706',  // Orange for warning states
+      error: '#DC2626',    // Red for error states
+      info: '#0284C7',     // Blue for informational states
     },
   },
 
@@ -235,29 +235,29 @@ export const tokens: DesignTokens = {
   },
 
   // ==========================================================================
-  // SHADOW TOKENS
+  // SHADOW TOKENS - Optimized for light backgrounds
   // ==========================================================================
   shadows: {
     // Standard shadows
     none: 'none',
-    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-    base: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
-    md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
-    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-    xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-    '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-    inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)',
-    
-    // Brand-specific shadows
-    subtle: '0 2px 8px rgba(0, 0, 0, 0.3)',
-    elevated: '0 4px 24px rgba(0, 0, 0, 0.4)',
-    floating: '0 8px 40px rgba(0, 0, 0, 0.5)',
-    
-    // Colored glow shadows
-    illumination: '0 0 30px rgba(232, 184, 74, 0.25)',
-    'illumination-intense': '0 0 40px rgba(232, 184, 74, 0.35)',
-    wisdom: '0 0 30px rgba(139, 126, 200, 0.2)',
-    clarity: '0 0 20px rgba(253, 246, 227, 0.15)',
+    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.04)',
+    base: '0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.06)',
+    md: '0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05)',
+    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04)',
+    xl: '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04)',
+    '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
+    inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.04)',
+
+    // Brand-specific shadows - subtle for light mode
+    subtle: '0 2px 8px rgba(0, 0, 0, 0.06)',
+    elevated: '0 4px 20px rgba(0, 0, 0, 0.08)',
+    floating: '0 8px 30px rgba(0, 0, 0, 0.12)',
+
+    // Colored glow shadows - refined for light mode
+    illumination: '0 4px 20px rgba(201, 148, 10, 0.15)',
+    'illumination-intense': '0 4px 30px rgba(201, 148, 10, 0.25)',
+    wisdom: '0 4px 20px rgba(107, 92, 168, 0.15)',
+    clarity: '0 4px 15px rgba(0, 0, 0, 0.08)',
   },
 
   // ==========================================================================

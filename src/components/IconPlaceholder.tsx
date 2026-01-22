@@ -29,13 +29,13 @@ export const IconPlaceholder: React.FC<IconPlaceholderProps> = ({
   const colorClasses = {
     gold: 'text-radiance-gold bg-radiance-gold/10',
     amber: 'text-radiance-amber bg-radiance-amber/10',
-    cream: 'text-clarity-cream bg-clarity-cream/10',
+    cream: 'text-text-secondary bg-depth-surface',
   };
 
   const colorBorder = {
     gold: 'border-radiance-gold/30',
     amber: 'border-radiance-amber/30',
-    cream: 'border-clarity-cream/30',
+    cream: 'border-depth-border',
   };
 
   // Default fallback icon (abstract geometric shape)

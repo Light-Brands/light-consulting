@@ -1,7 +1,7 @@
 /**
  * Design System Exports
  * Light Brand Consulting
- * 
+ *
  * Central export point for all design system modules
  */
 
@@ -25,7 +25,9 @@ export {
   responsive,
 } from './theme';
 
-export type { ThemeContextValue } from './theme';
+// Theme Provider
+export { ThemeProvider, useTheme, themeScript } from './ThemeProvider';
+export type { ThemeProviderProps, ThemeContextValue } from './ThemeProvider';
 
 // Re-export default
 export { default } from './tokens';

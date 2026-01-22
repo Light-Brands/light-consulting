@@ -21,9 +21,9 @@ export function cn(...inputs: ClassValue[]): string {
 export const focusRing = cn(
   'focus:outline-none',
   'focus-visible:ring-2',
-  'focus-visible:ring-radiance-gold/20',
+  'focus-visible:ring-radiance-gold/30',
   'focus-visible:ring-offset-2',
-  'focus-visible:ring-offset-depth-base'
+  'focus-visible:ring-offset-white'
 );
 
 /**

@@ -30,16 +30,16 @@ const buttonVariants = cva(
       variant: {
         primary: [
           'bg-gradient-to-br from-radiance-gold to-radiance-amber',
-          'text-depth-base',
+          'text-white',
           'border-transparent',
           'hover:shadow-illumination hover:scale-[1.02]',
           'active:scale-[0.98]',
         ],
         secondary: [
           'bg-transparent',
-          'text-clarity-cream',
-          'border-clarity-muted',
-          'hover:bg-clarity-cream/10 hover:border-clarity-cream',
+          'text-text-primary',
+          'border-depth-border',
+          'hover:bg-depth-surface hover:border-text-muted',
         ],
         outline: [
           'bg-transparent',
@@ -55,13 +55,13 @@ const buttonVariants = cva(
         ],
         danger: [
           'bg-error',
-          'text-text-primary',
+          'text-white',
           'border-transparent',
-          'hover:bg-error/90 hover:shadow-[0_0_20px_rgba(232,90,90,0.3)]',
+          'hover:bg-error/90 hover:shadow-[0_0_20px_rgba(220,38,38,0.2)]',
         ],
         success: [
           'bg-success',
-          'text-text-primary',
+          'text-white',
           'border-transparent',
           'hover:bg-success/90',
         ],

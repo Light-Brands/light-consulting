@@ -43,10 +43,10 @@ export const MaturityLadder: React.FC<MaturityLadderProps> = ({
   };
 
   const getLevelColor = (level: number) => {
-    if (level <= 2) return { bg: 'rgba(139, 134, 130, 0.2)', border: 'rgba(139, 134, 130, 0.5)', text: 'text-text-muted' };
-    if (level === 3) return { bg: 'rgba(212, 148, 76, 0.2)', border: 'rgba(212, 148, 76, 0.6)', text: 'text-radiance-amber' };
-    if (level === 4) return { bg: 'rgba(232, 184, 74, 0.2)', border: 'rgba(232, 184, 74, 0.7)', text: 'text-radiance-gold' };
-    return { bg: 'rgba(253, 246, 227, 0.15)', border: 'rgba(253, 246, 227, 0.6)', text: 'text-clarity-cream' };
+    if (level <= 2) return { bg: 'rgba(139, 134, 130, 0.15)', border: 'rgba(139, 134, 130, 0.4)', text: 'text-text-muted' };
+    if (level === 3) return { bg: 'rgba(184, 134, 11, 0.15)', border: 'rgba(184, 134, 11, 0.5)', text: 'text-radiance-amber' };
+    if (level === 4) return { bg: 'rgba(201, 148, 10, 0.15)', border: 'rgba(201, 148, 10, 0.5)', text: 'text-radiance-gold' };
+    return { bg: 'rgba(201, 148, 10, 0.2)', border: 'rgba(201, 148, 10, 0.6)', text: 'text-radiance-gold' };
   };
 
   const getLevelGlow = (level: number) => {
@@ -69,7 +69,7 @@ export const MaturityLadder: React.FC<MaturityLadderProps> = ({
       <div className="relative max-w-4xl mx-auto">
         {/* Vertical line connecting levels */}
         <div
-          className="absolute left-8 md:left-12 top-0 bottom-0 w-0.5 bg-gradient-to-b from-text-muted/20 via-radiance-gold/50 to-clarity-cream/40"
+          className="absolute left-8 md:left-12 top-0 bottom-0 w-0.5 bg-gradient-to-b from-text-muted/30 via-radiance-gold/60 to-radiance-gold/80"
           style={{
             opacity: isVisible ? 1 : 0,
             transition: 'opacity 0.8s ease-out',

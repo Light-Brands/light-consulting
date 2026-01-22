@@ -13,55 +13,32 @@ import { tokens } from './tokens';
 // ==========================================================================
 
 /**
- * Dark Theme (Current/Primary)
- * The application currently uses a dark theme with warm tones
+ * Warm Minimal Theme (Primary)
+ * Modern, tech-forward design with warm neutral palette
  */
-export const darkTheme: Theme = {
-  mode: 'dark',
+export const warmTheme: Theme = {
+  mode: 'light',
   tokens,
 };
 
-/**
- * Light Theme (Future Implementation)
- * Placeholder for future light theme support
- */
-export const lightTheme: Theme = {
-  mode: 'light',
-  tokens: {
-    ...tokens,
-    // Light theme would override specific color tokens here
-    colors: {
-      ...tokens.colors,
-      // Example overrides for light mode:
-      depth: {
-        base: '#FFFFFF',
-        elevated: '#F8F5F0',
-        surface: '#FDF6E3',
-        border: '#D9C9A5',
-      },
-      text: {
-        primary: '#0F0E0D',
-        secondary: '#1C1A18',
-        muted: '#2A2724',
-      },
-    },
-  },
-};
+// Legacy exports for backwards compatibility
+export const darkTheme: Theme = warmTheme;
+export const lightTheme: Theme = warmTheme;
 
 // ==========================================================================
 // THEME MANAGEMENT
 // ==========================================================================
 
 /**
- * Default theme (currently dark)
+ * Default theme - Warm Minimal
  */
-export const defaultTheme = darkTheme;
+export const defaultTheme = warmTheme;
 
 /**
- * Get theme by mode
+ * Get theme by mode (returns warm theme for both modes)
  */
-export function getTheme(mode: ThemeMode = 'dark'): Theme {
-  return mode === 'dark' ? darkTheme : lightTheme;
+export function getTheme(mode: ThemeMode = 'light'): Theme {
+  return warmTheme;
 }
 
 /**
@@ -126,16 +103,18 @@ export function generateCSSVariables(theme: Theme): Record<string, string> {
 export function applyThemeToDocument(theme: Theme): void {
   const vars = generateCSSVariables(theme);
   const root = document.documentElement;
-  
+
   Object.entries(vars).forEach(([key, value]) => {
     root.style.setProperty(key, value);
   });
-  
-  // Update dark class on html element
+
+  // Update dark/light classes on html element
   if (theme.mode === 'dark') {
+    root.classList.remove('light');
     root.classList.add('dark');
   } else {
     root.classList.remove('dark');
+    root.classList.add('light');
   }
 }
 
@@ -163,7 +142,7 @@ export function createGradient(
 }
 
 /**
- * Pre-defined brand gradients
+ * Pre-defined brand gradients - Warm Minimal
  */
 export const brandGradients = {
   illumination: createGradient('linear', '135deg', [
@@ -172,15 +151,14 @@ export const brandGradients = {
   ]),
   dawn: createGradient('linear', '180deg', [
     { color: tokens.colors.depth.base, position: '0%' },
-    { color: tokens.colors.depth.surface, position: '50%' },
-    { color: tokens.colors.depth.border, position: '100%' },
+    { color: tokens.colors.depth.surface, position: '100%' },
   ]),
   clarityFade: createGradient('linear', '180deg', [
-    { color: 'rgba(253, 246, 227, 0.12)', position: '0%' },
+    { color: 'rgba(201, 148, 10, 0.08)', position: '0%' },
     { color: 'transparent', position: '100%' },
   ]),
   wisdomGlow: createGradient('radial', 'ellipse at center', [
-    { color: 'rgba(139, 126, 200, 0.15)', position: '0%' },
+    { color: 'rgba(107, 92, 168, 0.1)', position: '0%' },
     { color: 'transparent', position: '70%' },
   ]),
 };

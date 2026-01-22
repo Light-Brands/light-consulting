@@ -309,12 +309,7 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({ onNavigate }) => {
                         transition={{ duration: 0.5 }}
                       >
                         {/* Section Header */}
-                        <div className="flex items-center gap-4 mb-8">
-                          <div className={`w-1.5 h-12 rounded-full ${
-                            group.value === 'featured' ? 'bg-gradient-to-b from-purple-500 to-purple-600' :
-                            group.value === 'new' ? 'bg-gradient-to-b from-green-500 to-green-600' :
-                            'bg-gradient-to-b from-gray-400 to-gray-500'
-                          }`} />
+                        <div className="mb-8">
                           <div>
                             <h2 className="text-2xl md:text-3xl font-bold text-text-primary">
                               {group.label}

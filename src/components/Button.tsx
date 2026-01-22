@@ -29,7 +29,7 @@ export const Button: React.FC<ButtonProps> = ({
   const baseStyles = `
     inline-flex items-center justify-center font-semibold
     transition-all duration-300 ease-out
-    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-radiance-gold focus:ring-offset-depth-base
+    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-radiance-gold/30 focus:ring-offset-white
     disabled:opacity-40 disabled:cursor-not-allowed
     rounded-brand-btn
   `;
@@ -37,15 +37,15 @@ export const Button: React.FC<ButtonProps> = ({
   const variants = {
     primary: `
       bg-gradient-to-br from-radiance-gold to-radiance-amber
-      text-depth-base
+      text-white
       hover:shadow-illumination hover:scale-[1.02]
       active:scale-[0.98]
     `,
     secondary: `
       bg-transparent
-      text-clarity-cream
-      border border-clarity-muted
-      hover:bg-clarity-cream/10 hover:border-clarity-cream
+      text-text-primary
+      border border-depth-border
+      hover:bg-depth-surface hover:border-text-muted
     `,
     ghost: `
       bg-transparent

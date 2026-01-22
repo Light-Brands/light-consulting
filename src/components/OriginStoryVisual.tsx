@@ -52,8 +52,8 @@ export const OriginStoryVisual: React.FC<OriginStoryVisualProps> = ({ content })
       };
     }
     return {
-      bg: 'bg-clarity-cream/10',
-      text: 'text-clarity-cream',
+      bg: 'bg-depth-surface',
+      text: 'text-text-secondary',
     };
   };
 

@@ -10,6 +10,7 @@
  */
 
 import React from 'react';
+import dynamic from 'next/dynamic';
 import {
   NewsletterCapture,
   CheckIcon,
@@ -28,6 +29,7 @@ import {
   FooterVisual,
   ProjectCarousel,
 } from '../components';
+
 import {
   Container,
   Section,
@@ -51,67 +53,67 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section
-        className="min-h-[90vh] relative overflow-hidden flex flex-col justify-center pt-20"
-        style={{
-          backgroundImage: 'url(/images/light-brand-hero.webp)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        {/* Overlay for readability */}
-        <div className="absolute inset-0 bg-depth-base/70" />
+      <section className="min-h-[100vh] relative overflow-hidden flex flex-col justify-center pt-28 md:pt-32 bg-depth-base">
+        {/* Video Background */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          style={{ objectFit: 'cover' }}
+        >
+          <source src="/hero-video.mp4" type="video/mp4" />
+          <source src="/hero-video.webm" type="video/webm" />
+        </video>
 
-        {/* Bottom fade gradient */}
+        {/* Dark overlay with blur */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-[20%] pointer-events-none z-[1]"
-          style={{
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(15, 14, 13, 0.5) 50%, rgba(15, 14, 13, 1) 100%)',
-          }}
+          className="absolute inset-0 pointer-events-none z-[1] bg-black/40 backdrop-blur-sm"
         />
 
-        {/* Glow effects */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-radial-gradient from-radiance-gold/8 to-transparent blur-3xl pointer-events-none" />
 
         <div className="w-full relative z-10">
           <Container size="wide">
-            <div className="animate-fade-in">
-              <Badge variant="premium" size="md" className="mb-6">
-                AI Intelligence Systems
-              </Badge>
-            </div>
+            <div className="max-w-2xl">
+              <div className="animate-fade-in">
+                <Badge variant="premium" size="md" className="mb-6 text-white border-white/30">
+                  AI Intelligence Systems
+                </Badge>
+              </div>
 
-            <Heading level="h1" className="mb-8 animate-slide-up max-w-4xl">
-              We design AI intelligence systems{' '}
-              <span className="text-radiance-gold">
-                for businesses that want to thrive and lead the next decade.
-              </span>
-            </Heading>
+              <Heading level="h1" className="mb-8 animate-slide-up text-white !text-3xl md:!text-4xl lg:!text-5xl">
+                We design AI intelligence systems{' '}
+                <span className="text-radiance-gold">
+                  for businesses that want to thrive and lead the next decade.
+                </span>
+              </Heading>
 
-            <Text variant="lead" className="mb-6 max-w-3xl animate-slide-up delay-200">
-              Most companies are adding AI tools to broken systems.
-            </Text>
+              <Text variant="lead" className="mb-6 animate-slide-up delay-200 text-white">
+                Most companies are adding AI tools to broken systems.
+              </Text>
 
-            <Text variant="body" className="text-text-muted mb-12 max-w-3xl animate-slide-up delay-250">
-              We redesign how your business actually thinks, operates, and compounds in an AI-driven world.
-            </Text>
+              <Text variant="body" className="text-white/90 mb-12 animate-slide-up delay-250">
+                We redesign how your business actually thinks, operates, and compounds in an AI-driven world.
+              </Text>
 
-            <div className="flex flex-col sm:flex-row gap-4 animate-slide-up delay-300">
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={() => onNavigate('funnel')}
-              >
-                Discover Your AI Readiness
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4 animate-slide-up delay-300">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  onClick={() => onNavigate('funnel')}
+                >
+                  Discover Your AI Readiness
+                </Button>
+              </div>
             </div>
           </Container>
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-float">
-          <div className="w-6 h-10 rounded-full border-2 border-text-muted/30 flex justify-center pt-2">
-            <div className="w-1.5 h-3 bg-text-muted/30 rounded-full animate-bounce" />
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-float z-10">
+          <div className="w-6 h-10 rounded-full border-2 border-white/40 flex justify-center pt-2">
+            <div className="w-1.5 h-3 bg-white/40 rounded-full animate-bounce" />
           </div>
         </div>
       </section>

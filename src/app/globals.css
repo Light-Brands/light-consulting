@@ -11,32 +11,39 @@
  * ============================================================================ */
 
 @theme {
-  /* Color Palette */
-  --color-radiance-gold: #E8B84A;
-  --color-radiance-amber: #D4944C;
-  --color-radiance-warm: #C67D4E;
-  
+  /* Color Palette - Warm Minimal */
+
+  /* Radiance Scale (Primary Accent) - Refined gold for light backgrounds */
+  --color-radiance-gold: #C9940A;
+  --color-radiance-amber: #B8860B;
+  --color-radiance-warm: #A67508;
+
+  /* Clarity Scale - Warm neutrals */
   --color-clarity-cream: #FDF6E3;
   --color-clarity-soft: #F5E6C8;
-  --color-clarity-muted: #D9C9A5;
-  
-  --color-wisdom-violet: #8B7EC8;
-  --color-wisdom-soft: #A599D4;
-  --color-wisdom-muted: #7A6BA8;
-  
-  --color-depth-base: #0F0E0D;
-  --color-depth-elevated: #151413;
-  --color-depth-surface: #1C1A18;
-  --color-depth-border: #2A2724;
-  
-  --color-text-primary: #F8F5F0;
-  --color-text-secondary: #E5E0D8;
-  --color-text-muted: #A8A299;
-  
-  --color-success: #5CB85C;
-  --color-warning: #F0A030;
-  --color-error: #E85A5A;
-  --color-info: #5DADE2;
+  --color-clarity-muted: #E8DCC4;
+
+  /* Wisdom Scale (AI Features) - Adjusted for light mode */
+  --color-wisdom-violet: #6B5CA8;
+  --color-wisdom-soft: #8577C4;
+  --color-wisdom-muted: #5A4D98;
+
+  /* Depth Scale - Warm light backgrounds */
+  --color-depth-base: #FAFAF8;
+  --color-depth-elevated: #FFFFFF;
+  --color-depth-surface: #F5F4F2;
+  --color-depth-border: #E8E6E3;
+
+  /* Text Scale - Warm dark text (optimized for readability) */
+  --color-text-primary: #1A1918;
+  --color-text-secondary: #3D3A38;
+  --color-text-muted: #5C5956;
+
+  /* Semantic Colors */
+  --color-success: #16A34A;
+  --color-warning: #D97706;
+  --color-error: #DC2626;
+  --color-info: #0284C7;
 
   /* Font Families */
   --font-family-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
@@ -53,6 +60,7 @@
   --font-heading: var(--font-family-heading);
   --font-body: var(--font-family-body);
 }
+
 
 /* ============================================================================
  * Base Resets
@@ -104,7 +112,7 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--color-depth-base);
+    background: var(--color-depth-surface);
   }
 
   ::-webkit-scrollbar-thumb {
@@ -119,12 +127,12 @@
   /* Selection Styles */
   ::selection {
     background: var(--color-radiance-gold);
-    color: var(--color-depth-base);
+    color: #FFFFFF;
   }
 
   ::-moz-selection {
     background: var(--color-radiance-gold);
-    color: var(--color-depth-base);
+    color: #FFFFFF;
   }
 
   /* Focus Styles */
@@ -149,7 +157,7 @@
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus {
     -webkit-text-fill-color: var(--color-text-primary);
-    -webkit-box-shadow: 0 0 0px 1000px var(--color-depth-surface) inset;
+    -webkit-box-shadow: 0 0 0px 1000px #FFFFFF inset;
     transition: background-color 5000s ease-in-out 0s;
   }
 }
@@ -169,19 +177,19 @@
   }
 
   .gradient-dawn {
-    background: linear-gradient(180deg, var(--color-depth-base) 0%, var(--color-depth-surface) 50%, var(--color-depth-border) 100%);
+    background: linear-gradient(180deg, var(--color-depth-base) 0%, var(--color-depth-surface) 100%);
   }
 
   .gradient-clarity-fade {
-    background: linear-gradient(180deg, rgba(253, 246, 227, 0.12) 0%, transparent 100%);
+    background: linear-gradient(180deg, rgba(201, 148, 10, 0.08) 0%, transparent 100%);
   }
 
   .gradient-wisdom-glow {
-    background: radial-gradient(ellipse at center, rgba(139, 126, 200, 0.15) 0%, transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(107, 92, 168, 0.1) 0%, transparent 70%);
   }
 
   .gradient-capacity-bridge {
-    background: linear-gradient(90deg, var(--color-text-muted) 0%, var(--color-radiance-gold) 50%, var(--color-clarity-cream) 100%);
+    background: linear-gradient(90deg, var(--color-text-muted) 0%, var(--color-radiance-gold) 50%, var(--color-radiance-amber) 100%);
   }
 
   /* Text gradients */
@@ -192,21 +200,21 @@
     background-clip: text;
   }
 
-  /* Glow Effects */
+  /* Glow Effects - Subtle for light mode */
   .glow-illumination {
-    box-shadow: 0 0 30px rgba(232, 184, 74, 0.25);
+    box-shadow: 0 4px 20px rgba(201, 148, 10, 0.15);
   }
 
   .glow-illumination-intense {
-    box-shadow: 0 0 40px rgba(232, 184, 74, 0.35);
+    box-shadow: 0 4px 30px rgba(201, 148, 10, 0.25);
   }
 
   .glow-wisdom {
-    box-shadow: 0 0 30px rgba(139, 126, 200, 0.2);
+    box-shadow: 0 4px 20px rgba(107, 92, 168, 0.15);
   }
 
   .glow-clarity {
-    box-shadow: 0 0 20px rgba(253, 246, 227, 0.15);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   }
 
   /* Animations */

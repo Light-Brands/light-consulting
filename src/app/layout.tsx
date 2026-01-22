@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import "./globals.css";
 import { ConditionalLayout } from "@/components/ConditionalLayout";
 import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
     title: "Light Brand",
   },
   formatDetection: {
@@ -28,10 +27,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         {/* PWA Meta Tags */}
-        <meta name="theme-color" content="#0F0E0D" />
+        <meta name="theme-color" content="#FAFAF8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -45,7 +44,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-sans bg-depth-base text-text-primary antialiased selection:bg-radiance-gold selection:text-depth-base">
+      <body className="font-sans bg-depth-base text-text-primary antialiased">
         <ServiceWorkerRegistration />
         <ConditionalLayout>{children}</ConditionalLayout>
       </body>
