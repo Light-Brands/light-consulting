@@ -63,34 +63,28 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
     <div className="min-h-screen pt-24 md:pt-32">
       {/* Hero */}
       <section
-        className="section-spacing relative"
+        className="relative -mt-24 md:-mt-32 pt-24 md:pt-32 min-h-[60vh] flex items-center"
         style={{
           backgroundImage: `url(${IMAGE_CONFIG.heroes.services.src})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
-        <div className="absolute inset-0 bg-depth-base/80" />
-
-        <div
-          className="absolute bottom-0 left-0 right-0 h-[20%] pointer-events-none z-[1]"
-          style={{
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(15, 14, 13, 0.5) 50%, rgba(15, 14, 13, 1) 100%)',
-          }}
-        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/55" />
 
         <Container size="wide" className="relative z-10">
           <div className="text-center max-w-3xl mx-auto">
-            <Tag variant="premium" className="mb-4">
+            <Tag variant="premium" className="mb-4 text-white border-white/30">
               How We Work
             </Tag>
-            <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Clarity Before Commitment
             </h1>
-            <p className="text-text-secondary text-lg mb-4">
+            <p className="text-white/90 text-lg mb-4">
               We don't sell packages. We don't pitch transformation.
             </p>
-            <p className="text-text-muted">
+            <p className="text-white/80">
               We start with clarity. If there's a real opportunity, we'll tell you.
               If there isn't, we'll tell you that too.
             </p>

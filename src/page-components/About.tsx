@@ -33,38 +33,30 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
     <div className="min-h-screen pt-24 md:pt-32">
       {/* Hero */}
       <section 
-        className="section-spacing relative"
+        className="relative -mt-24 md:-mt-32 pt-24 md:pt-32 min-h-[60vh] flex items-center"
         style={{
           backgroundImage: `url(${IMAGE_CONFIG.heroes.about.src})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-depth-base/80" />
-        
-        {/* Bottom fade gradient - dissolves into next section */}
-        <div 
-          className="absolute bottom-0 left-0 right-0 h-[20%] pointer-events-none z-[1]"
-          style={{
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(15, 14, 13, 0.5) 50%, rgba(15, 14, 13, 1) 100%)',
-          }}
-        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/55" />
         
         <Container size="wide" className="relative z-10">
           <div className="max-w-3xl">
-            <Tag variant="premium" className="mb-4">
+            <Tag variant="premium" className="mb-4 text-white border-white/30">
               About Us
             </Tag>
-            <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
               We Are{' '}
               <span className="text-radiance-gold">AI Architects</span>
             </h1>
-            <p className="text-text-secondary text-lg mb-4">
+            <p className="text-white/90 text-lg mb-4">
               Not "prompt engineers." Not "automation agencies." Not "AI builders."
               We design <span className="text-radiance-gold">how your business will function in an AI economy</span>.
             </p>
-            <p className="text-text-muted">
+            <p className="text-white/80">
               Light Brand Consulting delivers enterprise-grade value through the AI Maturity Ladder framework,
               moving founders from wherever they are to Level 5, where AI becomes a structural advantage.
             </p>
