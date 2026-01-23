@@ -13,6 +13,26 @@ export const metadata: Metadata = {
     'Explore our portfolio of transformational AI and digital projects. See how Light Brand Consulting helps businesses achieve breakthrough results.',
   keywords:
     'AI case studies, digital transformation, business automation, Light Brand Consulting portfolio',
+  openGraph: {
+    title: 'Case Studies | Light Brand Consulting',
+    description:
+      'Explore our portfolio of transformational AI and digital projects. See how Light Brand Consulting helps businesses achieve breakthrough results.',
+    type: 'website',
+    url: 'https://lightbrandconsulting.com/case-studies',
+    images: [
+      {
+        url: '/graph-image.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Case Studies | Light Brand Consulting',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Case Studies | Light Brand Consulting',
+    description: 'Explore our portfolio of transformational AI and digital projects.',
+  },
 };
 
 const CASE_STUDIES = [

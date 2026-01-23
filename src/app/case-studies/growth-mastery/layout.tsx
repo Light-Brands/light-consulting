@@ -12,6 +12,14 @@ export const metadata: Metadata = {
       'From zero coding experience to 370,000 lines of production code in months. The future of software development.',
     type: 'article',
     url: 'https://lightbrandconsulting.com/case-studies/growth-mastery',
+    images: [
+      {
+        url: '/graph-image.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Case Study: Growth Mastery | Light Brand Consulting',
+      },
+    ],
   },
 };
 

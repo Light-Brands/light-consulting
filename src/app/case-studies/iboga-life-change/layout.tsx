@@ -12,6 +12,14 @@ export const metadata: Metadata = {
       'How Light Brand Consulting transformed a basic website into a sophisticated AI-powered platform.',
     type: 'article',
     url: 'https://lightbrandconsulting.com/case-studies/iboga-life-change',
+    images: [
+      {
+        url: '/graph-image.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Case Study: Iboga Life Change | Light Brand Consulting',
+      },
+    ],
   },
 };
 

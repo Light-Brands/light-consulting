@@ -20,6 +20,25 @@ export const metadata: Metadata = {
   other: {
     "mobile-web-app-capable": "yes",
   },
+  openGraph: {
+    title: "Light Brand Consulting | AI Business Transformation",
+    description: "Transform your business into an AI super intelligence. Illuminate the path between where you are and where AI can take you.",
+    type: "website",
+    url: "https://lightbrandconsulting.com",
+    images: [
+      {
+        url: "/graph-image.webp",
+        width: 1200,
+        height: 630,
+        alt: "Light Brand Consulting",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Light Brand Consulting | AI Business Transformation",
+    description: "Transform your business into an AI super intelligence.",
+  },
 };
 
 export default function RootLayout({
