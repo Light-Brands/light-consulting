@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ConditionalLayout } from "@/components/ConditionalLayout";
 import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
+import { PaletteProvider } from "@/design-system";
 
 export const metadata: Metadata = {
   title: "Light Brand Consulting | AI Business Transformation",
@@ -27,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* PWA Meta Tags */}
         <meta name="theme-color" content="#FAFAF8" />
@@ -46,7 +47,9 @@ export default function RootLayout({
       </head>
       <body className="font-sans bg-depth-base text-text-primary antialiased">
         <ServiceWorkerRegistration />
-        <ConditionalLayout>{children}</ConditionalLayout>
+        <PaletteProvider>
+          <ConditionalLayout>{children}</ConditionalLayout>
+        </PaletteProvider>
       </body>
     </html>
   );

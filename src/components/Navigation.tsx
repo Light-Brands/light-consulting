@@ -11,6 +11,8 @@ import { NAV_ITEMS } from '../lib/constants';
 import { PageKey } from '../types';
 import Button from './Button';
 import { MenuIcon, XIcon } from './Icons';
+import { PaletteSwitcher } from './ui/PaletteSwitcher';
+import { Logo } from './Logo';
 
 interface NavigationProps {
   activePage: PageKey;
@@ -80,11 +82,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activePage, onNavigate }
             onClick={() => handleNavigate('home')}
             className="flex items-center group"
           >
-            <img
-              src="/lb-logo.svg"
-              alt="Light Brand Consulting"
-              className="h-6 md:h-8 w-auto transition-all duration-300 group-hover:scale-105"
-            />
+            <Logo className="transition-all duration-300 group-hover:scale-105" />
           </button>
 
           {/* Desktop Navigation - Center */}
@@ -105,8 +103,9 @@ export const Navigation: React.FC<NavigationProps> = ({ activePage, onNavigate }
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
+          {/* CTA Button with Palette Switcher */}
+          <div className="hidden md:flex items-center gap-4">
+            <PaletteSwitcher variant="minimal" />
             <button
               onClick={() => handleNavigate('book')}
               className={cn(
@@ -152,6 +151,10 @@ export const Navigation: React.FC<NavigationProps> = ({ activePage, onNavigate }
                   {item.label}
                 </button>
               ))}
+              {/* Palette Switcher for Mobile */}
+              <div className="px-4 py-3">
+                <PaletteSwitcher variant="full" className="w-full [&>button]:w-full [&>button]:justify-between" />
+              </div>
               <div className="pt-3">
                 <button
                   onClick={() => handleNavigate('book')}

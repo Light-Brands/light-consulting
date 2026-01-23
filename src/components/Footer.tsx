@@ -3,9 +3,12 @@
  * Light Brand Consulting Design System
  */
 
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { PageKey } from '../types';
+import { Logo } from './Logo';
 
 interface FooterProps {
   onNavigate: (page: PageKey) => void;
@@ -29,11 +32,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           {/* Logo and Copyright */}
           <div className="flex items-center gap-3">
             <Link href="/admin" className="hover:opacity-80 transition-opacity">
-              <img
-                src="/lb-logo.svg"
-                alt="Light Brand Consulting"
-                className="h-6 w-auto"
-              />
+              <Logo className="h-6 w-auto" textColor="var(--color-text-primary)" />
             </Link>
             <span className="text-xs text-text-muted">
               &copy; {currentYear} Light Brand Consulting

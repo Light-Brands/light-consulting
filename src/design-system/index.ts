@@ -29,5 +29,22 @@ export {
 export { ThemeProvider, useTheme, themeScript } from './ThemeProvider';
 export type { ThemeProviderProps, ThemeContextValue } from './ThemeProvider';
 
+// Palette System
+export {
+  palettes,
+  defaultPaletteId,
+  getPaletteById,
+  getAllPalettes,
+  isValidPaletteId,
+  applyPaletteToDocument,
+  removePaletteFromDocument,
+  generatePaletteScript,
+} from './palettes';
+export type { Palette, PaletteId } from './palettes';
+
+// Palette Provider
+export { PaletteProvider, usePalette, paletteScript } from './PaletteProvider';
+export type { PaletteProviderProps, PaletteContextValue } from './PaletteProvider';
+
 // Re-export default
 export { default } from './tokens';

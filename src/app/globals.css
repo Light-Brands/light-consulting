@@ -319,6 +319,30 @@
     animation: shimmer 2s infinite;
   }
 
+  /* Animate-in utility for dropdowns */
+  @keyframes animate-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .animate-in {
+    animation: animate-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .fade-in-0 {
+    --tw-enter-opacity: 0;
+  }
+
+  .zoom-in-95 {
+    --tw-enter-scale: 0.95;
+  }
+
   /* Utility Classes */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -371,6 +395,79 @@
       padding-top: 8rem;
       padding-bottom: 8rem;
     }
+  }
+}
+
+/* ============================================================================
+ * Palette Transitions (Smooth color switching)
+ * ============================================================================ */
+
+/* Smooth transitions for all palette-affected properties */
+:root {
+  --palette-transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body,
+.bg-depth-base,
+.bg-depth-elevated,
+.bg-depth-surface,
+.text-text-primary,
+.text-text-secondary,
+.text-text-muted,
+.text-radiance-gold,
+.border-depth-border,
+.prose,
+.prose h1,
+.prose h2,
+.prose h3,
+.prose p,
+.prose li,
+.prose a,
+.prose blockquote,
+.prose code {
+  transition:
+    background-color var(--palette-transition),
+    color var(--palette-transition),
+    border-color var(--palette-transition),
+    box-shadow var(--palette-transition);
+}
+
+/* Cards, buttons, and interactive elements */
+[class*="bg-clarity"],
+[class*="bg-radiance"],
+[class*="border-radiance"],
+[class*="from-radiance"],
+[class*="to-radiance"] {
+  transition:
+    background-color var(--palette-transition),
+    background var(--palette-transition),
+    border-color var(--palette-transition),
+    box-shadow var(--palette-transition);
+}
+
+/* ============================================================================
+ * Palette-Specific Overrides
+ * ============================================================================ */
+
+/* Dark palette adjustments */
+.palette-dark {
+  /* Autofill styling for dark mode */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--color-text-primary);
+    -webkit-box-shadow: 0 0 0px 1000px var(--color-depth-elevated) inset;
+  }
+
+  /* Selection for dark mode */
+  ::selection {
+    background: var(--color-radiance-gold);
+    color: var(--color-depth-base);
+  }
+
+  ::-moz-selection {
+    background: var(--color-radiance-gold);
+    color: var(--color-depth-base);
   }
 }
 

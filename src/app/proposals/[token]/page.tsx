@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import { Container, Button } from '@/components/ui';
+import { Logo } from '@/components/Logo';
 import type { ProposalWithDetails, OnboardingFormField, PortalSections } from '@/types/proposals';
 import { DEFAULT_PORTAL_SECTIONS } from '@/types/proposals';
 
@@ -398,11 +399,7 @@ export default function ProposalPortalPage({ params }: PageProps) {
           <Container size="wide">
             <div className="flex items-center justify-center py-6">
               <Link href="/" className="flex items-center group">
-                <img
-                  src="/lb-logo.svg"
-                  alt="Light Brand Consulting"
-                  className="h-8 md:h-10 w-auto transition-opacity group-hover:opacity-80"
-                />
+                <Logo className="h-8 md:h-10 w-auto transition-opacity group-hover:opacity-80" textColor="var(--color-text-primary)" />
               </Link>
             </div>
           </Container>
@@ -554,10 +551,9 @@ export default function ProposalPortalPage({ params }: PageProps) {
         <Container size="wide">
           <div className="flex items-center justify-between py-5 relative z-10">
             <Link href="/" className="flex items-center group">
-              <img
-                src="/lb-logo.svg"
-                alt="Light Brand Consulting"
+              <Logo
                 className="h-8 md:h-10 w-auto transition-opacity group-hover:opacity-80"
+                textColor="var(--color-text-primary)"
               />
             </Link>
             <div className="text-right hidden md:block">

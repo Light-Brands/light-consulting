@@ -75,3 +75,6 @@ export type {
   ModalFooterProps,
   ConfirmDialogProps,
 } from './Modal';
+
+// Theme/Palette Components
+export { PaletteSwitcher } from './PaletteSwitcher';
