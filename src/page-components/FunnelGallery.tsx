@@ -310,6 +310,14 @@ const FUNNELS = [
     description: 'Your Business Deserves a Strategic Partner Who Gets It.',
     target: 'Established light workers wanting ongoing strategic partnership',
   },
+  {
+    id: 37,
+    route: 'funnel37',
+    title: 'AI Intelligence Systems',
+    tier: 'Core',
+    description: 'Your Business Doesn\'t Need More AI Tools. It Needs an Intelligence System.',
+    target: '7-8 figure founders with lean teams, overwhelmed by AI rollout',
+  },
 ];
 
 // Tier filter options
