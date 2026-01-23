@@ -40,6 +40,7 @@ export { FunnelPage33 } from './FunnelPage33';
 export { FunnelPage34 } from './FunnelPage34';
 export { FunnelPage35 } from './FunnelPage35';
 export { FunnelPage36 } from './FunnelPage36';
+export { FunnelPage37 } from './FunnelPage37';
 export { default as ServicesPage } from './Services';
 export { default as ServiceDetailPage } from './ServiceDetail';
 export { default as AboutPage } from './About';
