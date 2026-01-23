@@ -55,10 +55,10 @@ export const FunnelPage37: React.FC<FunnelPage37Props> = ({ onNavigate }) => {
 
             <div className="max-w-3xl mx-auto space-y-4 animate-slide-up delay-200">
               <p className="text-xl md:text-2xl text-text-secondary leading-relaxed">
-                You&apos;re a 7-8 figure founder with traction — but scaling feels harder, not easier.
+                You&apos;re a 7-8 figure founder with traction - but scaling feels harder, not easier.
               </p>
               <p className="text-xl md:text-2xl text-text-primary font-medium">
-                You&apos;ve got the tools, the team, and the ambition — but your systems are dragging.
+                You&apos;ve got the tools, the team, and the ambition - but your systems are dragging.
               </p>
             </div>
 
@@ -68,7 +68,7 @@ export const FunnelPage37: React.FC<FunnelPage37Props> = ({ onNavigate }) => {
                   'Turn siloed data into decision power',
                   'Kill busywork with lean automation',
                   'Eliminate team friction',
-                  'Get measurable ROI from AI — fast',
+                  'Get measurable ROI from AI - fast',
                 ].map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -168,7 +168,7 @@ export const FunnelPage37: React.FC<FunnelPage37Props> = ({ onNavigate }) => {
                   <span className="w-2 h-2 rounded-full bg-radiance-gold shadow-[0_0_8px_rgba(232,184,74,0.6)]" />
                   <span className="text-[10px] font-mono tracking-widest text-radiance-gold uppercase">Why_This_Happens</span>
                 </div>
-                <p className="text-text-primary italic">&ldquo;Most founders are paving cow paths — using expensive AI to patch broken systems.&rdquo;</p>
+                <p className="text-text-primary italic">&ldquo;Most founders are paving cow paths - using expensive AI to patch broken systems.&rdquo;</p>
               </div>
             </div>
           </div>
@@ -275,7 +275,7 @@ export const FunnelPage37: React.FC<FunnelPage37Props> = ({ onNavigate }) => {
             {[
               {
                 title: 'Automate judgment-level tasks',
-                desc: 'Not just data entry — actual decision support that frees your best people',
+                desc: 'Not just data entry - actual decision support that frees your best people',
               },
               {
                 title: 'Connect fragmented tools',
@@ -291,7 +291,7 @@ export const FunnelPage37: React.FC<FunnelPage37Props> = ({ onNavigate }) => {
               },
               {
                 title: 'Deliver measurable ROI in 30 days',
-                desc: 'Not promises — results you can see, track, and report',
+                desc: 'Not promises - results you can see, track, and report',
               },
             ].map((item, idx) => (
               <div key={idx} className="relative group">
@@ -348,8 +348,8 @@ export const FunnelPage37: React.FC<FunnelPage37Props> = ({ onNavigate }) => {
                       'You\'re generating 7-8 figures with a lean team',
                       'You have a modern operational mindset',
                       'You\'re ambitious about scaling further',
-                      'You already believe in AI — you\'re just stuck on rollout',
-                      'You want clarity, execution, and ROI — not theory',
+                      'You already believe in AI - you\'re just stuck on rollout',
+                      'You want clarity, execution, and ROI - not theory',
                     ].map((item, index) => (
                       <li key={index} className="flex items-start gap-3">
                         <div className="w-4 h-4 rounded-full bg-radiance-gold/20 text-radiance-gold flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -415,7 +415,7 @@ export const FunnelPage37: React.FC<FunnelPage37Props> = ({ onNavigate }) => {
               Escape AI Chaos
             </h2>
             <p className="text-xl text-text-secondary max-w-3xl mx-auto">
-              We help 7-8 figure founders escape AI chaos by architecting lean, intelligence-driven systems that reduce team drag, unlock scale, and deliver measurable ROI — <span className="text-radiance-gold font-semibold">in 30 days or less</span>.
+              We help 7-8 figure founders escape AI chaos by architecting lean, intelligence-driven systems that reduce team drag, unlock scale, and deliver measurable ROI - <span className="text-radiance-gold font-semibold">in 30 days or less</span>.
             </p>
           </div>
 
@@ -475,7 +475,7 @@ export const FunnelPage37: React.FC<FunnelPage37Props> = ({ onNavigate }) => {
             </div>
 
             <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-              We help 7-8 figure founders eliminate ops drag and deploy AI that actually compounds — <span className="text-radiance-gold font-semibold">in 30 days or less</span>.
+              We help 7-8 figure founders eliminate ops drag and deploy AI that actually compounds - <span className="text-radiance-gold font-semibold">in 30 days or less</span>.
             </p>
 
             <div className="pt-6 relative">
