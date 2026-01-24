@@ -31,6 +31,14 @@ const FUNNELS = [
     target: 'Business owners evaluating AI readiness',
   },
   {
+    id: 1,
+    route: 'funnel1',
+    title: 'The Light Brand Consultant Engine',
+    tier: 'Core',
+    description: 'A diagnostic-led brand and AI system that transforms consultants from "service providers" into signal-carrying authorities.',
+    target: 'Consultants ready to operate as a category signal, not a commodity',
+  },
+  {
     id: 2,
     route: 'funnel2',
     title: 'Web2 to AI-Native Transformation',

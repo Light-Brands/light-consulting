@@ -5,6 +5,7 @@
 
 export { default as HomePage } from './Home';
 export { FunnelPage } from './FunnelPage';
+export { FunnelPage1 } from './FunnelPage1';
 export { FunnelPage2 } from './FunnelPage2';
 export { FunnelPage3 } from './FunnelPage3';
 export { FunnelPage4 } from './FunnelPage4';
