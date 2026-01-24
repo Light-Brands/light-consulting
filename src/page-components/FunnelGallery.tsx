@@ -322,7 +322,8 @@ const FUNNELS = [
     id: 37,
     route: 'funnel37',
     title: 'AI Intelligence Systems',
-    tier: 'Core',
+    tier: 'AI Consulting',
+    series: 'ai-consulting',
     description: 'Your Business Doesn\'t Need More AI Tools. It Needs an Intelligence System.',
     target: '7-8 figure founders with lean teams, overwhelmed by AI rollout',
   },
@@ -330,7 +331,8 @@ const FUNNELS = [
     id: 38,
     route: 'funnel38',
     title: 'The 95% Problem',
-    tier: 'Core',
+    tier: 'AI Consulting',
+    series: 'ai-consulting',
     description: '95% of AI Projects Fail. Here\'s How to Be in the 5%.',
     target: 'Executives skeptical of AI after failed pilots or hearing horror stories',
   },
@@ -338,7 +340,8 @@ const FUNNELS = [
     id: 39,
     route: 'funnel39',
     title: 'AI Maturity Assessment',
-    tier: 'Core',
+    tier: 'AI Consulting',
+    series: 'ai-consulting',
     description: 'What\'s Your AI Maturity Score? Only 7% of companies are truly AI-ready.',
     target: 'Business leaders curious about their AI readiness level',
   },
@@ -346,7 +349,8 @@ const FUNNELS = [
     id: 40,
     route: 'funnel40',
     title: 'CEO\'s AI Playbook',
-    tier: 'Core',
+    tier: 'AI Consulting',
+    series: 'ai-consulting',
     description: 'The CEO\'s Guide to AI That Actually Moves the Needle.',
     target: 'CEOs and founders who need to lead AI strategy',
   },
@@ -354,7 +358,8 @@ const FUNNELS = [
     id: 41,
     route: 'funnel41',
     title: 'COO\'s Efficiency Engine',
-    tier: 'Core',
+    tier: 'AI Consulting',
+    series: 'ai-consulting',
     description: 'The COO\'s Blueprint for AI-Powered Operations.',
     target: 'COOs, VPs of Ops, and operations leaders focused on efficiency',
   },
@@ -362,7 +367,8 @@ const FUNNELS = [
     id: 42,
     route: 'funnel42',
     title: 'AI for Customer Service',
-    tier: 'Industry',
+    tier: 'AI Consulting',
+    series: 'ai-consulting',
     description: '10X Your Customer Service Without 10X the Headcount.',
     target: 'Customer service leaders, VPs of CX, support directors',
   },
@@ -370,7 +376,8 @@ const FUNNELS = [
     id: 43,
     route: 'funnel43',
     title: 'Shadow AI Audit',
-    tier: 'Core',
+    tier: 'AI Consulting',
+    series: 'ai-consulting',
     description: 'Your Employees Are Already Using AI. Do You Know Which Ones?',
     target: 'CISOs, CTOs, CEOs concerned about AI governance and data risks',
   },
@@ -378,7 +385,8 @@ const FUNNELS = [
     id: 44,
     route: 'funnel44',
     title: 'AI Without the Risk',
-    tier: 'Core',
+    tier: 'AI Consulting',
+    series: 'ai-consulting',
     description: 'Enterprise AI Without the Enterprise Risk.',
     target: 'Risk-averse leaders who want AI benefits without the downsides',
   },
@@ -386,7 +394,8 @@ const FUNNELS = [
     id: 45,
     route: 'funnel45',
     title: '90-Day AI Sprint',
-    tier: 'Core',
+    tier: 'AI Consulting',
+    series: 'ai-consulting',
     description: 'Your First AI Win in 90 Days - Guaranteed.',
     target: 'Leaders who need to show AI progress quickly',
   },
@@ -395,6 +404,7 @@ const FUNNELS = [
 // Tier filter options
 const TIER_OPTIONS = [
   { label: 'All', value: 'all' },
+  { label: 'AI Consulting', value: 'AI Consulting' },
   { label: 'Core', value: 'Core' },
   { label: 'Industry', value: 'Industry' },
   { label: 'Education', value: 'Education' },
@@ -404,9 +414,20 @@ const TIER_OPTIONS = [
   { label: 'Tier 4', value: 'Tier 4' },
 ];
 
+// Sort options
+const SORT_OPTIONS = [
+  { label: 'ID (Low to High)', value: 'id-asc' },
+  { label: 'ID (High to Low)', value: 'id-desc' },
+  { label: 'Name (A-Z)', value: 'name-asc' },
+  { label: 'Name (Z-A)', value: 'name-desc' },
+  { label: 'Tier', value: 'tier' },
+];
+
 // Tier color mapping
 const getTierColor = (tier: string) => {
   switch (tier) {
+    case 'AI Consulting':
+      return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
     case 'Core':
       return 'bg-radiance-gold/20 text-radiance-gold border-radiance-gold/30';
     case 'Industry':
@@ -426,6 +447,41 @@ const getTierColor = (tier: string) => {
   }
 };
 
+// Tier priority for sorting
+const TIER_PRIORITY: Record<string, number> = {
+  'AI Consulting': 0,
+  'Core': 1,
+  'Industry': 2,
+  'Education': 3,
+  'Tier 1': 4,
+  'Tier 2': 5,
+  'Tier 3': 6,
+  'Tier 4': 7,
+};
+
+// Sort function
+const sortFunnels = (funnels: typeof FUNNELS, sortBy: string) => {
+  const sorted = [...funnels];
+  switch (sortBy) {
+    case 'id-asc':
+      return sorted.sort((a, b) => a.id - b.id);
+    case 'id-desc':
+      return sorted.sort((a, b) => b.id - a.id);
+    case 'name-asc':
+      return sorted.sort((a, b) => a.title.localeCompare(b.title));
+    case 'name-desc':
+      return sorted.sort((a, b) => b.title.localeCompare(a.title));
+    case 'tier':
+      return sorted.sort((a, b) => {
+        const tierDiff = (TIER_PRIORITY[a.tier] ?? 99) - (TIER_PRIORITY[b.tier] ?? 99);
+        if (tierDiff !== 0) return tierDiff;
+        return a.id - b.id;
+      });
+    default:
+      return sorted;
+  }
+};
+
 // Password for accessing the gallery (can be configured via env variable)
 const GALLERY_PASSWORD = process.env.NEXT_PUBLIC_FUNNEL_GALLERY_PASSWORD || '8888';
 
@@ -434,6 +490,7 @@ export const FunnelGallery: React.FC<FunnelGalleryProps> = ({ onNavigate }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [activeTier, setActiveTier] = useState('all');
+  const [sortBy, setSortBy] = useState('id-asc');
   const [filteredFunnels, setFilteredFunnels] = useState(FUNNELS);
   const [copiedId, setCopiedId] = useState<number | null>(null);
 
@@ -445,14 +502,20 @@ export const FunnelGallery: React.FC<FunnelGalleryProps> = ({ onNavigate }) => {
     }
   }, []);
 
-  // Filter funnels by tier
+  // Filter and sort funnels
   useEffect(() => {
-    if (activeTier === 'all') {
-      setFilteredFunnels(FUNNELS);
-    } else {
-      setFilteredFunnels(FUNNELS.filter((f) => f.tier === activeTier));
+    let result = FUNNELS;
+
+    // Filter by tier
+    if (activeTier !== 'all') {
+      result = result.filter((f) => f.tier === activeTier);
     }
-  }, [activeTier]);
+
+    // Apply sorting
+    result = sortFunnels(result, sortBy);
+
+    setFilteredFunnels(result);
+  }, [activeTier, sortBy]);
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -573,30 +636,59 @@ export const FunnelGallery: React.FC<FunnelGalleryProps> = ({ onNavigate }) => {
             </p>
           </motion.div>
 
-          {/* Tier Filter Tabs */}
+          {/* Filter and Sort Controls */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex flex-wrap gap-2 mt-8"
-            role="tablist"
-            aria-label="Filter funnels by tier"
+            className="mt-8 space-y-4"
           >
-            {TIER_OPTIONS.map((option) => (
-              <button
-                key={option.value}
-                onClick={() => setActiveTier(option.value)}
-                role="tab"
-                aria-selected={activeTier === option.value}
-                className={`px-4 py-2 text-sm font-medium rounded-full transition-all ${
-                  activeTier === option.value
-                    ? 'bg-radiance-gold text-depth-base'
-                    : 'bg-depth-surface text-text-secondary hover:text-text-primary hover:bg-depth-elevated border border-depth-border'
-                }`}
+            {/* Tier Filter Tabs */}
+            <div
+              className="flex flex-wrap gap-2"
+              role="tablist"
+              aria-label="Filter funnels by tier"
+            >
+              {TIER_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setActiveTier(option.value)}
+                  role="tab"
+                  aria-selected={activeTier === option.value}
+                  className={`px-4 py-2 text-sm font-medium rounded-full transition-all ${
+                    activeTier === option.value
+                      ? 'bg-radiance-gold text-depth-base'
+                      : 'bg-depth-surface text-text-secondary hover:text-text-primary hover:bg-depth-elevated border border-depth-border'
+                  }`}
+                >
+                  {option.label}
+                  {option.value !== 'all' && (
+                    <span className="ml-1.5 text-xs opacity-70">
+                      ({FUNNELS.filter(f => f.tier === option.value).length})
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            {/* Sort Dropdown */}
+            <div className="flex items-center gap-3">
+              <label htmlFor="sort-select" className="text-text-muted text-sm">
+                Sort by:
+              </label>
+              <select
+                id="sort-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="px-3 py-2 bg-depth-surface border border-depth-border rounded-lg text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-radiance-gold/50 focus:border-radiance-gold/50"
               >
-                {option.label}
-              </button>
-            ))}
+                {SORT_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </motion.div>
         </Container>
       </Section>
