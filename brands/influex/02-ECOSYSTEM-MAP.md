@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-Influex operates a WordPress-centric development agency serving 200+ personal brand clients. This ecosystem map documents the current technical infrastructure, operational workflows, and integration points to inform the AI transformation strategy.
+Influex operates a WordPress-centric development agency serving 200+ personal brand clients at approximately **$100K/month in operational costs**—with revenue barely above break-even. The WordPress platform has become a liability rather than an asset: maintenance overhead consumes margin, plugin complexity creates instability, and every new client adds cost without proportional profit. This ecosystem map documents the current technical infrastructure, operational workflows, and integration points to inform the transformation strategy.
 
 ---
 

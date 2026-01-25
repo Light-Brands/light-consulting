@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-Influex is a premium personal branding and web design agency with a $100K+/month WordPress development operation serving 200+ high-profile clients including thought leaders, entrepreneurs, and conscious companies. They are seeking to transform their entire technical infrastructure from WordPress-centric delivery to a fully automated AI-powered brand development platform.
+Influex is a premium personal branding and web design agency serving 200+ high-profile clients including thought leaders, entrepreneurs, and conscious companies. They currently operate with approximately **$100K/month in WordPress infrastructure and development costs**, with revenue just above break-even most months. The WordPress-based model has reached its scaling ceiling—margins are compressed by maintenance overhead, and growth is constrained by the platform's inherent limitations. They are seeking to transform their entire technical infrastructure from WordPress-centric delivery to a fully automated AI-powered brand development platform.
 
 **Engagement Objective**: Position Light Brand Consulting as Influex's development partner and trusted technical advisor to architect and build their next-generation AI Brand Development Platform.
 
@@ -30,23 +30,24 @@ Influex is a premium personal branding and web design agency with a $100K+/month
 
 ## The Opportunity
 
-### Current State: $100K/Month WordPress Operation
+### Current State: $100K/Month Cost Structure, Thin Margins
 
-Influex has built a highly successful WordPress development practice:
+Influex has built a respected WordPress development practice, but the economics are challenging:
 - **200+ custom websites** delivered for thought leaders
-- Premium pricing for bespoke brand experiences
+- **~$100K/month in operational costs** (hosting, maintenance, development, support)
+- Revenue just above break-even—profitable, but barely
+- Premium positioning, but margins compressed by WordPress overhead
 - Strong design-first methodology ("Essence-Based Branding")
-- Established process for vision boards, brand strategy, website delivery
-- Maintenance plans with ongoing client relationships
+- Maintenance burden consuming resources that should drive growth
 
 ### Pain Points & Technical Debt
 
-1. **Manual Delivery Bottleneck**: Every project requires hands-on development
-2. **WordPress Limitations**: Platform wasn't designed for their scale
-3. **Maintenance Overhead**: 200+ sites requiring updates, security, backups
-4. **Scaling Ceiling**: Revenue limited by developer capacity
-5. **No Self-Service**: Clients can't make changes without Influex involvement
-6. **Fragmented Tools**: Multiple systems, no unified platform
+1. **WordPress Tax**: Platform overhead consumes most of the margin
+2. **Maintenance Black Hole**: More hours spent supporting than building
+3. **Scaling Paradox**: Every new client adds complexity, not profit
+4. **Plugin Instability**: Each addition makes the codebase more fragile
+5. **Manual Everything**: No automation, no self-service, no leverage
+6. **Fragmented Architecture**: 200+ separate codebases to maintain
 
 ### Desired Future State
 
@@ -143,6 +144,7 @@ This client roster validates both their premium positioning and the scale of the
 | [03-OPPORTUNITY-MATRIX.md](./03-OPPORTUNITY-MATRIX.md) | AI transformation opportunities |
 | [04-ROADMAP.md](./04-ROADMAP.md) | Strategic implementation plan |
 | [05-PROPOSAL.md](./05-PROPOSAL.md) | Formal engagement proposal |
+| [06-WORDPRESS-VS-MODERN-PLATFORM.md](./06-WORDPRESS-VS-MODERN-PLATFORM.md) | Why WordPress has reached its limits |
 
 ---
 

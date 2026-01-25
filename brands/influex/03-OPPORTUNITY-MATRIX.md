@@ -236,15 +236,27 @@ Explore strategic differentiators and advanced AI applications.
 
 ## ROI Projection
 
-| Opportunity | Current Cost | AI-Enabled Cost | Savings |
-|-------------|--------------|-----------------|---------|
-| Brand Development | $10K-30K/project | $2K-5K/project | 70-85% |
-| Website Build | $15K-50K/project | $3K-10K/project | 70-80% |
-| Maintenance (200 sites) | $50K/month | $10K/month | 80% |
-| Client Support | $20K/month | $5K/month | 75% |
+### Current State: ~$100K/Month Costs, Thin Margins
 
-**Total Estimated Annual Savings**: $500K - $1M+
-**Revenue Unlock Potential**: 5-10x current capacity
+| Cost Center | Current Monthly | AI-Enabled | Savings |
+|-------------|-----------------|------------|---------|
+| WordPress Hosting/Infra | ~$25K | ~$5K | 80% |
+| Maintenance & Updates | ~$30K | ~$3K | 90% |
+| Development Labor | ~$35K | ~$15K | 57% |
+| Support & Client Service | ~$10K | ~$2K | 80% |
+| **Total** | **~$100K** | **~$25K** | **75%** |
+
+### Transformation Impact
+
+| Metric | Current | Post-Transformation |
+|--------|---------|---------------------|
+| Monthly Costs | ~$100K | ~$25K |
+| Monthly Revenue | ~$105K (barely profitable) | Same or higher |
+| Monthly Profit | ~$5K | ~$80K+ |
+| Profit Margin | ~5% | ~70%+ |
+| Capacity | 200 sites (maxed) | 2,000+ sites |
+
+**The WordPress Tax Eliminated**: Currently, WordPress overhead consumes nearly all margin. Transformation converts that overhead into profit.
 
 ---
 

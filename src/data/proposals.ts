@@ -231,21 +231,25 @@ By signing below, both parties agree to the terms set forth in this Agreement.
     project_overview: `
 # AI Readiness Diagnostic
 
-A comprehensive analysis of Influex's current WordPress-based operations, technology stack, and brand development workflows to architect the transformation to an AI-powered brand development platform.
+A comprehensive analysis of Influex's current WordPress-based operations—currently running at ~$100K/month in costs with thin margins—to architect the transformation to an AI-powered brand development platform that can restore healthy profitability.
+
+## The Challenge
+
+WordPress was never designed to be an agency platform at scale. With 200+ sites, the maintenance overhead, plugin complexity, and fragmented architecture consume nearly all margin. The platform has reached its scaling ceiling.
 
 ## What You Get
 
-- **Full Ecosystem Map** — Visual documentation of your current 200+ site WordPress infrastructure, workflows, and data flows
-- **Technical Assessment** — WordPress architecture analysis and migration requirements
-- **AI Opportunity Matrix** — Complete inventory of AI applications for brand development automation
-- **Connection Architecture** — How everything connects and where AI can transform operations
-- **Priority Recommendation** — One clear, high-impact starting point for the AI Brand Builder
+- **Full Ecosystem Map** — Visual documentation of your 200+ site WordPress infrastructure and where the costs are hiding
+- **Technical Assessment** — Honest analysis of WordPress limitations and migration path
+- **AI Opportunity Matrix** — Complete inventory of opportunities to automate and reduce overhead
+- **Connection Architecture** — How to consolidate 200 codebases into one scalable platform
+- **Priority Recommendation** — The clearest path from ~5% margins to 60%+ margins
 
 ## Philosophy: Build As You Grow
 
 Start simple. Prove value. Expand from there.
 
-We identify the single best entry point that delivers immediate value while laying the foundation for your AI-powered brand development platform.
+We identify the single best entry point that delivers immediate cost reduction while laying the foundation for true scale.
     `.trim(),
     project_scope: `
 ## Deliverables

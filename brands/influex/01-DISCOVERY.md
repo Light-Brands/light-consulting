@@ -14,8 +14,9 @@ Dmitriy Kozlov launched Influex after running a creative design agency. High-pro
 
 - **2017**: Influex founded
 - **Present**: 200+ websites delivered for thought leaders
-- **Revenue**: ~$100K/month WordPress development operation
-- **Future**: AI-powered brand development platform
+- **Costs**: ~$100K/month WordPress infrastructure and operations
+- **Margins**: Barely profitable—revenue just above costs most months
+- **Future**: AI-powered brand development platform (the path to real margins)
 
 ---
 
@@ -231,23 +232,25 @@ Recent | Wealth Management
 ## Opportunity Assessment
 
 ### Strengths to Leverage
-- Exceptional design capabilities
+- Exceptional design capabilities and methodology
 - Strong client relationships (200+ premium brands)
-- Clear brand philosophy and methodology
-- Proven delivery at scale
-- Premium market positioning
+- Clear brand philosophy ("Essence-First")
+- Proven ability to serve high-profile clients
+- Premium market positioning and reputation
 
 ### Gaps to Address
-- WordPress-dependent infrastructure
-- Manual development bottleneck
+- WordPress consuming all the margin
+- $100K/month in costs with thin profitability
+- Manual development creating scaling ceiling
 - No self-service client capabilities
-- Fragmented tool ecosystem
-- Scaling limited by headcount
+- Fragmented tool ecosystem (200+ separate codebases)
+- Every new client adds complexity, not leverage
 
 ### Transformation Potential
-- **High**: Strong foundation, clear vision, ready for evolution
-- **Alignment**: Design-first values match our approach
-- **Scale**: $100K/mo operation ready for 10x growth potential
+- **Critical**: Current model is unsustainable at scale
+- **Alignment**: Design-first values match our approach perfectly
+- **Upside**: Moving from ~break-even to 60-80% margins possible
+- **Scale**: Same team could serve 10x clients with right platform
 
 ---
 
