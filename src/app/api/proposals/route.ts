@@ -318,7 +318,8 @@ export async function GET(request: NextRequest) {
       let filteredProposals = [...placeholderProposals];
 
       if (status) {
-        filteredProposals = filteredProposals.filter((p) => p.status === status);
+        const statusValues = status.split(',').map(s => s.trim()).filter(Boolean);
+        filteredProposals = filteredProposals.filter((p) => statusValues.includes(p.status));
       }
       if (limit) {
         filteredProposals = filteredProposals.slice(0, parseInt(limit, 10));
@@ -339,7 +340,13 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false });
 
     if (status) {
-      query = query.eq('status', status);
+      // Support comma-separated status values (e.g., "active,agreement_signed")
+      const statusValues = status.split(',').map(s => s.trim()).filter(Boolean);
+      if (statusValues.length === 1) {
+        query = query.eq('status', statusValues[0]);
+      } else if (statusValues.length > 1) {
+        query = query.in('status', statusValues);
+      }
     }
     if (limit) {
       query = query.limit(parseInt(limit, 10));
