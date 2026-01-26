@@ -16,6 +16,7 @@ import type {
   DeliverableUpdate,
   DeliverableStatus,
   DeliverablePriority,
+  DeliverableInlineLink,
 } from '@/types/deliverables';
 
 interface Phase {
@@ -66,6 +67,7 @@ export const DeliverableModal: React.FC<DeliverableModalProps> = ({
   const [priority, setPriority] = useState<DeliverablePriority>('medium');
   const [assignedTo, setAssignedTo] = useState<string | null>(null);
   const [dueDate, setDueDate] = useState('');
+  const [links, setLinks] = useState<DeliverableInlineLink[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -81,6 +83,7 @@ export const DeliverableModal: React.FC<DeliverableModalProps> = ({
       setPriority(deliverable.priority);
       setAssignedTo(deliverable.assigned_to);
       setDueDate(deliverable.due_date?.split('T')[0] || '');
+      setLinks(deliverable.links || []);
     } else {
       setName('');
       setDescription('');
@@ -90,14 +93,44 @@ export const DeliverableModal: React.FC<DeliverableModalProps> = ({
       setPriority('medium');
       setAssignedTo(null);
       setDueDate('');
+      setLinks([]);
     }
   }, [deliverable, isOpen]);
+
+  // Link management functions
+  const addLink = () => {
+    const newLink: DeliverableInlineLink = {
+      id: crypto.randomUUID(),
+      url: '',
+      title: '',
+    };
+    setLinks([...links, newLink]);
+  };
+
+  const updateLink = (id: string, field: 'url' | 'title', value: string) => {
+    setLinks(links.map(link =>
+      link.id === id ? { ...link, [field]: value } : link
+    ));
+  };
+
+  const removeLink = (id: string) => {
+    setLinks(links.filter(link => link.id !== id));
+  };
 
   const handleSave = async () => {
     if (!name.trim()) return;
 
     setIsSaving(true);
     try {
+      // Filter out empty links and clean up the data
+      const validLinks = links
+        .filter(link => link.url.trim())
+        .map(link => ({
+          id: link.id,
+          url: link.url.trim(),
+          title: link.title?.trim() || undefined,
+        }));
+
       const data: DeliverableInsert | DeliverableUpdate = {
         name: name.trim(),
         description: description.trim() || null,
@@ -107,6 +140,7 @@ export const DeliverableModal: React.FC<DeliverableModalProps> = ({
         priority,
         assigned_to: assignedTo,
         due_date: dueDate || null,
+        links: validLinks.length > 0 ? validLinks : null,
       };
 
       if (!isEditing) {
@@ -281,6 +315,68 @@ export const DeliverableModal: React.FC<DeliverableModalProps> = ({
               onChange={(e) => setDueDate(e.target.value)}
               className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-2.5 text-text-primary focus:border-radiance-gold focus:outline-none"
             />
+          </div>
+
+          {/* Links */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-medium text-text-primary">
+                Links
+              </label>
+              <button
+                type="button"
+                onClick={addLink}
+                className="flex items-center gap-1 text-xs text-radiance-gold hover:text-radiance-amber transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Add Link
+              </button>
+            </div>
+
+            {links.length === 0 ? (
+              <button
+                type="button"
+                onClick={addLink}
+                className="w-full py-3 border border-dashed border-depth-border rounded-lg text-text-muted hover:text-text-primary hover:border-radiance-gold/50 transition-colors text-sm"
+              >
+                Click to add a link
+              </button>
+            ) : (
+              <div className="space-y-3">
+                {links.map((link, index) => (
+                  <div key={link.id} className="flex gap-2 items-start">
+                    <div className="flex-1 space-y-2">
+                      <input
+                        type="url"
+                        value={link.url}
+                        onChange={(e) => updateLink(link.id, 'url', e.target.value)}
+                        placeholder="https://..."
+                        className="w-full bg-depth-base border border-depth-border rounded-lg px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-radiance-gold focus:outline-none"
+                      />
+                      <input
+                        type="text"
+                        value={link.title || ''}
+                        onChange={(e) => updateLink(link.id, 'title', e.target.value)}
+                        placeholder="Link title (optional)"
+                        className="w-full bg-depth-base border border-depth-border rounded-lg px-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:border-radiance-gold focus:outline-none"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeLink(link.id)}
+                      className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors mt-1"
+                      title="Remove link"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

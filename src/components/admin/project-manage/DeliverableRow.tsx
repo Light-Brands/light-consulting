@@ -105,6 +105,15 @@ export const DeliverableRow: React.FC<DeliverableRowProps> = ({
                 {deliverable.phase_name}
               </span>
             )}
+            {/* Links indicator */}
+            {deliverable.links && deliverable.links.length > 0 && (
+              <span className="inline-flex items-center gap-0.5 text-blue-400" title={`${deliverable.links.length} link${deliverable.links.length > 1 ? 's' : ''}`}>
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                <span className="text-xs">{deliverable.links.length}</span>
+              </span>
+            )}
           </div>
           {deliverable.description && (
             <p className="text-xs text-text-muted mt-0.5 line-clamp-1">

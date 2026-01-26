@@ -77,6 +77,16 @@ export interface DeliverableLinkUpdate {
 }
 
 // ============================================================================
+// Deliverable Inline Links (stored as JSONB on deliverables)
+// ============================================================================
+
+export interface DeliverableInlineLink {
+  id: string;
+  url: string;
+  title?: string;
+}
+
+// ============================================================================
 // Deliverables (Trackable items)
 // ============================================================================
 
@@ -92,6 +102,7 @@ export interface Deliverable {
   due_date: string | null;
   completed_at: string | null;
   assigned_to: string | null;
+  links: DeliverableInlineLink[] | null;
   sort_order: number;
   created_at: string;
   updated_at: string;
@@ -107,6 +118,7 @@ export interface DeliverableInsert {
   priority?: DeliverablePriority;
   due_date?: string | null;
   assigned_to?: string | null;
+  links?: DeliverableInlineLink[] | null;
   sort_order?: number;
 }
 
@@ -120,6 +132,7 @@ export interface DeliverableUpdate {
   due_date?: string | null;
   completed_at?: string | null;
   assigned_to?: string | null;
+  links?: DeliverableInlineLink[] | null;
   sort_order?: number;
 }
 
