@@ -9,3 +9,4 @@ export { DeliverableCard } from './DeliverableCard';
 export { MilestonePaymentCard } from './MilestonePaymentCard';
 export { ActivityFeed } from './ActivityFeed';
 export { ClientNavbar } from './ClientNavbar';
+export { CommandCenterNav } from './CommandCenterNav';

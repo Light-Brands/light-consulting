@@ -55,9 +55,62 @@ export default function ProposalPortalPage({ params }: PageProps) {
     message: string;
   } | null>(null);
 
+  // Dashboard access modal state
+  const [showDashboardModal, setShowDashboardModal] = useState(false);
+  const [dashboardEmail, setDashboardEmail] = useState('');
+  const [dashboardRequestStatus, setDashboardRequestStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [dashboardErrorMessage, setDashboardErrorMessage] = useState('');
+  const [dashboardDevLink, setDashboardDevLink] = useState<string | null>(null);
+
   // Check if this proposal requires a passcode (from database)
   const requiredPasscode = proposal?.portal_password;
   const needsPasscode = !!requiredPasscode && !isUnlocked;
+
+  // Pre-fill dashboard email when proposal loads
+  useEffect(() => {
+    if (proposal?.client_email) {
+      setDashboardEmail(proposal.client_email);
+    }
+  }, [proposal?.client_email]);
+
+  // Handle dashboard access request
+  const handleDashboardAccessRequest = async () => {
+    if (!dashboardEmail.trim()) {
+      setDashboardErrorMessage('Please enter your email address.');
+      setDashboardRequestStatus('error');
+      return;
+    }
+
+    setDashboardRequestStatus('loading');
+    setDashboardErrorMessage('');
+    setDashboardDevLink(null);
+
+    try {
+      const response = await fetch('/api/client-portal/auth/request-magic-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: dashboardEmail.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setDashboardRequestStatus('error');
+        setDashboardErrorMessage(data.error || 'Failed to send magic link.');
+        return;
+      }
+
+      setDashboardRequestStatus('success');
+      // In dev mode, show the link
+      if (data.devLink) {
+        setDashboardDevLink(data.devLink);
+      }
+    } catch (error) {
+      console.error('Dashboard access request error:', error);
+      setDashboardRequestStatus('error');
+      setDashboardErrorMessage('An unexpected error occurred. Please try again.');
+    }
+  };
 
   // Handle payment URL parameters
   useEffect(() => {
@@ -556,9 +609,20 @@ export default function ProposalPortalPage({ params }: PageProps) {
                 textColor="var(--color-text-primary)"
               />
             </Link>
-            <div className="text-right hidden md:block">
-              <p className="text-text-primary font-medium">{proposal.project_name}</p>
-              <p className="text-text-muted text-sm">For {proposal.client_name}</p>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setShowDashboardModal(true)}
+                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-radiance-gold hover:text-radiance-gold/80 bg-radiance-gold/10 hover:bg-radiance-gold/15 border border-radiance-gold/20 rounded-lg transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                <span className="hidden sm:inline">Dashboard Access</span>
+              </button>
+              <div className="text-right hidden md:block">
+                <p className="text-text-primary font-medium">{proposal.project_name}</p>
+                <p className="text-text-muted text-sm">For {proposal.client_name}</p>
+              </div>
             </div>
           </div>
         </Container>
@@ -1637,6 +1701,138 @@ export default function ProposalPortalPage({ params }: PageProps) {
           </div>
         </Container>
       </footer>
+
+      {/* Dashboard Access Modal */}
+      {showDashboardModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-depth-base/80 backdrop-blur-sm"
+            onClick={() => {
+              if (dashboardRequestStatus !== 'loading') {
+                setShowDashboardModal(false);
+                setDashboardRequestStatus('idle');
+              }
+            }}
+          />
+
+          {/* Modal */}
+          <div className="relative w-full max-w-md bg-depth-surface border border-depth-border rounded-2xl shadow-2xl overflow-hidden">
+            {/* Close button */}
+            <button
+              onClick={() => {
+                if (dashboardRequestStatus !== 'loading') {
+                  setShowDashboardModal(false);
+                  setDashboardRequestStatus('idle');
+                }
+              }}
+              className="absolute top-4 right-4 p-2 text-text-muted hover:text-text-primary transition-colors z-10"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <div className="p-8">
+              {dashboardRequestStatus === 'success' ? (
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-full bg-green-500/10 border-2 border-green-500/30 flex items-center justify-center mx-auto mb-6">
+                    <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-text-primary mb-2">
+                    Check your email
+                  </h3>
+                  <p className="text-text-secondary mb-2">
+                    We sent a magic link to <span className="text-radiance-gold font-medium">{dashboardEmail}</span>
+                  </p>
+                  <p className="text-text-muted text-sm">
+                    Click the link in your email to access your Client Command Center with all your projects.
+                  </p>
+
+                  {/* Dev mode link */}
+                  {dashboardDevLink && (
+                    <div className="mt-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl text-left">
+                      <p className="text-amber-400 text-xs font-mono mb-2">DEV MODE - Click to verify:</p>
+                      <a
+                        href={dashboardDevLink}
+                        className="text-radiance-gold text-sm break-all hover:underline"
+                      >
+                        Open Dashboard
+                      </a>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={() => {
+                      setShowDashboardModal(false);
+                      setDashboardRequestStatus('idle');
+                    }}
+                    className="mt-6 text-text-muted hover:text-text-primary text-sm transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="text-center mb-6">
+                    <div className="w-14 h-14 rounded-xl bg-radiance-gold/10 border border-radiance-gold/20 flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-7 h-7 text-radiance-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-text-primary mb-2">
+                      Access Your Dashboard
+                    </h3>
+                    <p className="text-text-secondary text-sm">
+                      Get a magic link to access your Client Command Center where you can see all your projects, payments, and progress in one place.
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label htmlFor="dashboard-email" className="block text-text-primary text-sm font-medium mb-2">
+                        Email Address
+                      </label>
+                      <input
+                        id="dashboard-email"
+                        type="email"
+                        value={dashboardEmail}
+                        onChange={(e) => setDashboardEmail(e.target.value)}
+                        placeholder="you@company.com"
+                        className="w-full bg-depth-base border border-depth-border rounded-xl px-4 py-3 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none transition-colors"
+                      />
+                    </div>
+
+                    {dashboardRequestStatus === 'error' && dashboardErrorMessage && (
+                      <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg flex items-center gap-2">
+                        <svg className="w-4 h-4 text-red-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <p className="text-red-400 text-sm">{dashboardErrorMessage}</p>
+                      </div>
+                    )}
+
+                    <Button
+                      variant="primary"
+                      fullWidth
+                      onClick={handleDashboardAccessRequest}
+                      isLoading={dashboardRequestStatus === 'loading'}
+                    >
+                      Send Magic Link
+                    </Button>
+
+                    <p className="text-text-muted text-xs text-center">
+                      The link will expire in 15 minutes
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
