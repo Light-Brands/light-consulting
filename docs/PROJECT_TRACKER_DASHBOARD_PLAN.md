@@ -41,7 +41,195 @@ The good news: **90% of the infrastructure already exists**. The proposals syste
 │  • Invite team members          │  • Invite team collaborators          │
 │  • Mark deliverables complete   │  • View project updates               │
 │  • Create portfolio entries     │  • Download assets/resources          │
+│  • **Personal todo list**       │                                       │
+│  • **Team workload view**       │                                       │
 └─────────────────────────────────┴───────────────────────────────────────┘
+```
+
+---
+
+## Organizational Model
+
+Based on real-world usage, the system needs to organize work across multiple dimensions:
+
+### Project Categories
+
+| Category | Description | Examples |
+|----------|-------------|----------|
+| **Client Projects** | Paid client work with proposals/contracts | TEC, Cho-Ventures, INFLUEX |
+| **Prospects** | Potential clients in discovery phase | AWKN, Richard Becher |
+| **Internal Projects** | Internal brand/product development | LBC Website, Light Brand Studio |
+| **Personal Brand** | AI Personal Double & individual brands | Nicholas.ai, Eyob.ai, Lawless.ai |
+| **Core Offers** | Products/services being launched | AI Informe System, AI Acceleration Blueprint |
+| **Service Providers** | Vendors/contractors we work with | Clientscale.io |
+| **Finalized** | Completed archived projects | Ibogalifechange, Planetary Party |
+
+### Enhanced Project Statuses
+
+```
+PROSPECT ─→ PROPOSAL ─→ ACTIVE ─→ COMPLETED
+    │           │          │
+    │           │          └─→ ON_HOLD (paused)
+    │           │
+    │           └─→ DECLINED
+    │
+    └─→ LOST
+
+Internal/Personal projects:
+PLANNING ─→ IN_PROGRESS ─→ COMPLETED
+                │
+                └─→ ON_HOLD
+```
+
+### Real-World Organization Example
+
+```
+┌─ COMMAND CENTER ─────────────────────────────────────────────────────────┐
+│                                                                          │
+│  [Clients] [Prospects] [Internal] [Personal] [Offers] [Vendors] [Done]   │
+│                                                                          │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  📁 CLIENT PROJECTS                                                      │
+│  ├─ 🟢 TEC - Strategy, financials, investor presentation                │
+│  ├─ 🟢 Cho-Ventures - $3500 AI Level Diagnostic                         │
+│  ├─ 🟡 INFLUEX - Discovery Meeting Tuesday                              │
+│  ├─ 🟡 Montessori - AI Level Diagnostic (Send Eyob Nancy email)         │
+│  ├─ ⏸️ Transcend Documentary - PAUSED                                   │
+│  └─ ⏸️ NAI / NTX - AI Level Diagnostic - PAUSED                         │
+│                                                                          │
+│  👤 PROSPECTS                                                            │
+│  ├─ 🔵 AWKN - AI Level Diagnostic                                       │
+│  └─ 🔵 Richard Becher - Schedule Discovery Call                         │
+│                                                                          │
+│  🏢 INTERNAL PROJECTS                                                    │
+│  ├─ 🟢 LBC Website Deep Dive Review - This week                         │
+│  ├─ 🟢 Light Brand Studio (IDE)                                         │
+│  └─ 🟢 Light Brand Studio (Orchestrator)                                │
+│                                                                          │
+│  🤖 AI PERSONAL DOUBLES                                                  │
+│  ├─ 📚 Nicholas.ai - Book, Course                                       │
+│  ├─ 📚 Eyob.ai - Book, Course                                           │
+│  └─ 🎮 Lawless.ai - Interactivity                                       │
+│                                                                          │
+│  🚀 CURRENT OFFERS                                                       │
+│  └─ 📅 AI Informe System + Blueprint - Launch Feb 1st                   │
+│                                                                          │
+│  🤝 SERVICE PROVIDERS                                                    │
+│  └─ 📞 Clientscale.io - Onboarding call Wednesday                       │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Team Todo System
+
+Every team member has their own dashboard with personal todos. Todos can come from:
+1. **Deliverables** - Auto-generated from project deliverables assigned to them
+2. **Manual Todos** - Created by themselves or assigned by managers
+3. **Next Actions** - Quick follow-up items from meetings/notes
+
+### Todo Categories
+
+| Type | Description | Example |
+|------|-------------|---------|
+| **Deliverable** | Linked to a project deliverable | "Build landing page for TEC" |
+| **Admin** | Administrative/business tasks | "Transfer $5k for ads loan" |
+| **Follow-up** | Communication/outreach | "Send Eyob Nancy email" |
+| **Review** | Items needing review/approval | "Review partner agreement - Sign it" |
+| **Meeting** | Calls/meetings to schedule | "Schedule Discovery call with Richard" |
+| **Financial** | Money-related tasks | "Give bank access to Dan" |
+
+### Personal Dashboard View (Per Team Member)
+
+```
+┌─ MY DASHBOARD ─────────────────────────────────────────────────────────┐
+│                                                                         │
+│  Welcome back, Nick!                           [+ New Todo]             │
+│                                                                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  📋 MY TODOS                                    Today | This Week | All │
+│                                                                         │
+│  ⚡ HIGH PRIORITY                                                       │
+│  ├─ ☐ Review partner agreement - Sign it              📅 Today         │
+│  ├─ ☐ Transfer additional $5k of 10k loan             📅 Today         │
+│  └─ ☐ Transfer $5k for ads loan                       📅 This week     │
+│                                                                         │
+│  📁 FROM PROJECTS                                                       │
+│  ├─ ☐ TEC: Finalize investor presentation            📅 Jan 28         │
+│  ├─ ☐ TEC: Complete documentary shift outline        📅 Jan 30         │
+│  └─ ☐ LBC Website: Deep dive review                  📅 This week      │
+│                                                                         │
+│  💼 ADMIN TASKS                                                         │
+│  └─ ☐ Give bank access to Dan                        📅 This week      │
+│                                                                         │
+│  ✅ COMPLETED TODAY                                                     │
+│  └─ ☑ Sent proposal to Cho-Ventures                  ✓ 2 hours ago     │
+│                                                                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  🎯 MY ASSIGNED PROJECTS                                                │
+│  ├─ TEC (Lead) - 3 active deliverables                                 │
+│  ├─ LBC Website (Contributor) - 1 active deliverable                   │
+│  └─ Nicholas.ai (Owner) - 2 active deliverables                        │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Team Workload View (Manager View)
+
+```
+┌─ TEAM WORKLOAD ────────────────────────────────────────────────────────┐
+│                                                                         │
+│  Team Overview                                 [+ Assign Task]          │
+│                                                                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  👤 NICK                                              8 Active Todos    │
+│  ├─ ☐ Review partner agreement - Sign it                    High       │
+│  ├─ ☐ Transfer additional $5k of 10k loan                   High       │
+│  ├─ ☐ Transfer $5k for ads loan                             High       │
+│  └─ ☐ Give bank access to Dan                               Medium     │
+│  [View All] [+ Assign Todo]                                            │
+│                                                                         │
+│  👤 EYOB                                              5 Active Todos    │
+│  ├─ ☐ Create initial strategic partnership agreement        High       │
+│  ├─ ☐ LinkedIn campaign - Launch this week                  High       │
+│  └─ ☐ Send Nancy email for Montessori                       Medium     │
+│  [View All] [+ Assign Todo]                                            │
+│                                                                         │
+│  👤 DAN                                               3 Active Todos    │
+│  ├─ ☐ Create investor pitch materials for TE               High       │
+│  └─ ...                                                                │
+│  [View All] [+ Assign Todo]                                            │
+│                                                                         │
+│  👤 ANDREAS                                           2 Active Todos    │
+│  ├─ ☐ Clean up investor presentation                       Medium     │
+│  └─ ☐ Clean up light consulting website                    Medium     │
+│  [View All] [+ Assign Todo]                                            │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Quick Next Actions
+
+For rapid capture of follow-up items directly from project views:
+
+```
+┌─ QUICK ADD NEXT ACTION ────────────────────────────────────────────────┐
+│                                                                         │
+│  What needs to happen?                                                  │
+│  [Send Eyob Nancy email for Montessori                              ]   │
+│                                                                         │
+│  Assign to: [Eyob ▼]    Priority: [Medium ▼]    Due: [This week ▼]     │
+│                                                                         │
+│  Link to project: [Montessori AI Diagnostic ▼] (optional)              │
+│                                                                         │
+│  [Cancel]                                         [+ Add Next Action]   │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -454,11 +642,234 @@ CREATE INDEX idx_activity_log_client_visible ON project_activity_log(proposal_id
   WHERE visible_to_client = true;
 ```
 
+#### Migration 5: Project Categories & Enhanced Statuses
+
+**File:** `supabase/migrations/005-project-categories.sql`
+
+```sql
+-- ============================================
+-- PROJECT CATEGORIES
+-- Organize projects by type
+-- ============================================
+
+-- Add category and enhanced status to proposals
+ALTER TABLE proposals
+ADD COLUMN IF NOT EXISTS project_category VARCHAR(50) DEFAULT 'client'
+  CHECK (project_category IN (
+    'client',           -- Paid client work
+    'prospect',         -- Potential clients in discovery
+    'internal',         -- Internal brand/product development
+    'personal_brand',   -- AI Personal Doubles, individual brands
+    'core_offer',       -- Products/services being launched
+    'service_provider', -- Vendors/contractors we work with
+    'archived'          -- Completed/finalized projects
+  )),
+ADD COLUMN IF NOT EXISTS is_on_hold BOOLEAN DEFAULT false,
+ADD COLUMN IF NOT EXISTS on_hold_reason TEXT,
+ADD COLUMN IF NOT EXISTS on_hold_at TIMESTAMP WITH TIME ZONE;
+
+-- ============================================
+-- INTERNAL PROJECTS TABLE
+-- For non-client projects that don't need full proposal structure
+-- ============================================
+CREATE TABLE IF NOT EXISTS internal_projects (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+  -- Basic info
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+
+  -- Categorization
+  project_category VARCHAR(50) NOT NULL DEFAULT 'internal'
+    CHECK (project_category IN ('internal', 'personal_brand', 'core_offer', 'service_provider')),
+
+  -- Status
+  status VARCHAR(50) DEFAULT 'planning'
+    CHECK (status IN ('planning', 'in_progress', 'on_hold', 'completed', 'cancelled')),
+
+  -- Timeline
+  target_date DATE,
+  completed_at TIMESTAMP WITH TIME ZONE,
+
+  -- Additional context
+  notes TEXT,
+  tags TEXT[],  -- For flexible categorization
+
+  -- Ownership
+  owner_id UUID REFERENCES user_profiles(id),
+
+  -- Timestamps
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Index for fast queries
+CREATE INDEX idx_proposals_category ON proposals(project_category);
+CREATE INDEX idx_proposals_on_hold ON proposals(is_on_hold) WHERE is_on_hold = true;
+CREATE INDEX idx_internal_projects_category ON internal_projects(project_category, status);
+CREATE INDEX idx_internal_projects_owner ON internal_projects(owner_id);
+```
+
+#### Migration 6: Team Todo System
+
+**File:** `supabase/migrations/006-team-todos.sql`
+
+```sql
+-- ============================================
+-- TODOS TABLE
+-- Personal and assigned tasks for team members
+-- ============================================
+CREATE TABLE IF NOT EXISTS todos (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+  -- Who owns this todo
+  user_id UUID NOT NULL REFERENCES user_profiles(id) ON DELETE CASCADE,
+
+  -- Todo content
+  title VARCHAR(500) NOT NULL,
+  description TEXT,
+
+  -- Categorization
+  todo_type VARCHAR(50) DEFAULT 'task'
+    CHECK (todo_type IN (
+      'task',           -- General task
+      'deliverable',    -- Linked to project deliverable
+      'admin',          -- Administrative/business
+      'follow_up',      -- Communication/outreach
+      'review',         -- Items needing review/approval
+      'meeting',        -- Calls/meetings to schedule
+      'financial'       -- Money-related
+    )),
+
+  -- Priority
+  priority VARCHAR(20) DEFAULT 'medium'
+    CHECK (priority IN ('low', 'medium', 'high', 'urgent')),
+
+  -- Status
+  status VARCHAR(50) DEFAULT 'pending'
+    CHECK (status IN ('pending', 'in_progress', 'completed', 'cancelled', 'deferred')),
+
+  -- Timeline
+  due_date DATE,
+  due_time TIME,  -- For time-specific todos
+  completed_at TIMESTAMP WITH TIME ZONE,
+
+  -- Linking (optional - can link to various entities)
+  proposal_id UUID REFERENCES proposals(id) ON DELETE SET NULL,
+  internal_project_id UUID REFERENCES internal_projects(id) ON DELETE SET NULL,
+  deliverable_id UUID REFERENCES deliverables(id) ON DELETE SET NULL,
+  phase_id UUID REFERENCES proposal_phases(id) ON DELETE SET NULL,
+  milestone_id UUID REFERENCES milestones(id) ON DELETE SET NULL,
+
+  -- Assignment tracking
+  assigned_by UUID REFERENCES user_profiles(id),
+  assigned_at TIMESTAMP WITH TIME ZONE,
+
+  -- Recurrence (optional)
+  is_recurring BOOLEAN DEFAULT false,
+  recurrence_pattern VARCHAR(50),  -- 'daily', 'weekly', 'monthly', etc.
+
+  -- Notes/context
+  notes TEXT,
+
+  -- Timestamps
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================
+-- QUICK ACTIONS / NEXT STEPS
+-- Lightweight follow-up items captured in context
+-- ============================================
+CREATE TABLE IF NOT EXISTS next_actions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+  -- What needs to happen
+  action_text VARCHAR(500) NOT NULL,
+
+  -- Who should do it
+  assigned_to UUID REFERENCES user_profiles(id),
+
+  -- Context (where was this captured)
+  context_type VARCHAR(50),  -- 'meeting', 'project_review', 'conversation', etc.
+  context_notes TEXT,
+
+  -- Linking
+  proposal_id UUID REFERENCES proposals(id) ON DELETE SET NULL,
+  internal_project_id UUID REFERENCES internal_projects(id) ON DELETE SET NULL,
+
+  -- Status
+  status VARCHAR(50) DEFAULT 'pending'
+    CHECK (status IN ('pending', 'completed', 'converted_to_todo', 'cancelled')),
+
+  -- When converted to a full todo
+  converted_to_todo_id UUID REFERENCES todos(id),
+
+  -- Timeline
+  due_date DATE,
+
+  -- Tracking
+  created_by UUID REFERENCES user_profiles(id),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  completed_at TIMESTAMP WITH TIME ZONE
+);
+
+-- ============================================
+-- INDEXES FOR PERFORMANCE
+-- ============================================
+CREATE INDEX idx_todos_user ON todos(user_id, status);
+CREATE INDEX idx_todos_user_due ON todos(user_id, due_date) WHERE status = 'pending';
+CREATE INDEX idx_todos_proposal ON todos(proposal_id) WHERE proposal_id IS NOT NULL;
+CREATE INDEX idx_todos_priority ON todos(user_id, priority, status);
+CREATE INDEX idx_next_actions_assigned ON next_actions(assigned_to, status);
+CREATE INDEX idx_next_actions_proposal ON next_actions(proposal_id) WHERE proposal_id IS NOT NULL;
+
+-- ============================================
+-- HELPFUL VIEWS
+-- ============================================
+
+-- View: User's pending todos with project info
+CREATE OR REPLACE VIEW user_todos_with_context AS
+SELECT
+  t.*,
+  p.project_name AS linked_project_name,
+  ip.title AS linked_internal_project_name,
+  d.title AS linked_deliverable_name,
+  COALESCE(p.project_name, ip.title) AS project_context
+FROM todos t
+LEFT JOIN proposals p ON t.proposal_id = p.id
+LEFT JOIN internal_projects ip ON t.internal_project_id = ip.id
+LEFT JOIN deliverables d ON t.deliverable_id = d.id
+WHERE t.status IN ('pending', 'in_progress');
+
+-- View: Team workload summary
+CREATE OR REPLACE VIEW team_workload_summary AS
+SELECT
+  up.id AS user_id,
+  up.full_name,
+  up.avatar_url,
+  COUNT(t.id) FILTER (WHERE t.status = 'pending') AS pending_count,
+  COUNT(t.id) FILTER (WHERE t.status = 'in_progress') AS in_progress_count,
+  COUNT(t.id) FILTER (WHERE t.priority = 'high' AND t.status = 'pending') AS high_priority_count,
+  COUNT(t.id) FILTER (WHERE t.priority = 'urgent' AND t.status = 'pending') AS urgent_count,
+  COUNT(t.id) FILTER (WHERE t.due_date = CURRENT_DATE AND t.status = 'pending') AS due_today_count,
+  COUNT(t.id) FILTER (WHERE t.due_date < CURRENT_DATE AND t.status = 'pending') AS overdue_count
+FROM user_profiles up
+LEFT JOIN todos t ON t.user_id = up.id
+WHERE up.system_role IN ('super_admin', 'admin', 'developer', 'manager')
+GROUP BY up.id, up.full_name, up.avatar_url;
+```
+
 **Database Changes Summary:**
 - 4 new tables: `user_profiles`, `project_members`, `user_invitations`, `deliverable_links`
 - 1 new table: `deliverables` (individual deliverable items)
 - 1 new table: `project_activity_log`
+- 1 new table: `internal_projects` (non-client projects)
+- 1 new table: `todos` (personal/assigned tasks)
+- 1 new table: `next_actions` (quick follow-up capture)
 - Assignment fields on `proposal_phases` and `milestones`
+- Category and hold status on `proposals`
+- 2 helpful views for todo management
 - Comprehensive indexes for performance
 
 ---
@@ -689,6 +1100,199 @@ export interface CreateDeliverableLinkInput {
   description?: string;
   link_type: DeliverableLinkType;
   visible_to_client?: boolean;
+}
+```
+
+**File:** `src/types/todos.ts` (NEW)
+
+```typescript
+// Todo types
+export type TodoType = 'task' | 'deliverable' | 'admin' | 'follow_up' | 'review' | 'meeting' | 'financial';
+export type TodoPriority = 'low' | 'medium' | 'high' | 'urgent';
+export type TodoStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'deferred';
+
+// Todo item
+export interface Todo {
+  id: string;
+  user_id: string;
+  title: string;
+  description: string | null;
+  todo_type: TodoType;
+  priority: TodoPriority;
+  status: TodoStatus;
+  due_date: string | null;
+  due_time: string | null;
+  completed_at: string | null;
+
+  // Linked entities
+  proposal_id: string | null;
+  internal_project_id: string | null;
+  deliverable_id: string | null;
+  phase_id: string | null;
+  milestone_id: string | null;
+
+  // Assignment
+  assigned_by: string | null;
+  assigned_at: string | null;
+
+  // Recurrence
+  is_recurring: boolean;
+  recurrence_pattern: string | null;
+
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+
+  // Joined data
+  user?: UserProfile;
+  assignee?: UserProfile;
+  linked_project_name?: string;
+  linked_internal_project_name?: string;
+  linked_deliverable_name?: string;
+}
+
+// For creating todos
+export interface CreateTodoInput {
+  title: string;
+  description?: string;
+  todo_type?: TodoType;
+  priority?: TodoPriority;
+  due_date?: string;
+  due_time?: string;
+  proposal_id?: string;
+  internal_project_id?: string;
+  deliverable_id?: string;
+  notes?: string;
+}
+
+// For assigning todos
+export interface AssignTodoInput {
+  user_id: string;
+  title: string;
+  description?: string;
+  todo_type?: TodoType;
+  priority?: TodoPriority;
+  due_date?: string;
+  proposal_id?: string;
+}
+
+// Next action (quick capture)
+export interface NextAction {
+  id: string;
+  action_text: string;
+  assigned_to: string | null;
+  context_type: string | null;
+  context_notes: string | null;
+  proposal_id: string | null;
+  internal_project_id: string | null;
+  status: 'pending' | 'completed' | 'converted_to_todo' | 'cancelled';
+  converted_to_todo_id: string | null;
+  due_date: string | null;
+  created_by: string | null;
+  created_at: string;
+  completed_at: string | null;
+
+  // Joined data
+  assignee?: UserProfile;
+}
+
+// Team workload summary
+export interface TeamMemberWorkload {
+  user_id: string;
+  full_name: string;
+  avatar_url: string | null;
+  pending_count: number;
+  in_progress_count: number;
+  high_priority_count: number;
+  urgent_count: number;
+  due_today_count: number;
+  overdue_count: number;
+}
+
+// My dashboard data
+export interface MyDashboardData {
+  user: UserProfile;
+  todos: {
+    urgent: Todo[];
+    due_today: Todo[];
+    from_projects: Todo[];
+    admin_tasks: Todo[];
+    completed_today: Todo[];
+  };
+  assigned_projects: {
+    id: string;
+    name: string;
+    role: string;
+    active_deliverables_count: number;
+  }[];
+  stats: {
+    total_pending: number;
+    completed_this_week: number;
+    overdue: number;
+  };
+}
+```
+
+**File:** `src/types/projects.ts` (NEW)
+
+```typescript
+// Project categories
+export type ProjectCategory =
+  | 'client'
+  | 'prospect'
+  | 'internal'
+  | 'personal_brand'
+  | 'core_offer'
+  | 'service_provider'
+  | 'archived';
+
+// Internal project status
+export type InternalProjectStatus = 'planning' | 'in_progress' | 'on_hold' | 'completed' | 'cancelled';
+
+// Internal project (non-client)
+export interface InternalProject {
+  id: string;
+  title: string;
+  description: string | null;
+  project_category: ProjectCategory;
+  status: InternalProjectStatus;
+  target_date: string | null;
+  completed_at: string | null;
+  notes: string | null;
+  tags: string[];
+  owner_id: string | null;
+  created_at: string;
+  updated_at: string;
+
+  // Joined data
+  owner?: UserProfile;
+  todos?: Todo[];
+  deliverables?: Deliverable[];
+}
+
+// Unified project view (combines proposals and internal projects)
+export interface UnifiedProject {
+  id: string;
+  type: 'proposal' | 'internal';
+  title: string;
+  category: ProjectCategory;
+  status: string;
+  is_on_hold: boolean;
+  progress_percentage: number;
+  owner?: UserProfile;
+  client_name?: string;
+  client_company?: string;
+  next_action?: string;
+  updated_at: string;
+}
+
+// Command center filters
+export interface ProjectFilters {
+  category?: ProjectCategory;
+  status?: string;
+  is_on_hold?: boolean;
+  assigned_to?: string;
+  search?: string;
 }
 ```
 
@@ -1494,8 +2098,18 @@ src/
 │   ├── admin/
 │   │   ├── command-center/
 │   │   │   └── page.tsx                    ← NEW: Main Command Center
+│   │   ├── my-dashboard/
+│   │   │   └── page.tsx                    ← NEW: Personal Dashboard with Todos
 │   │   ├── team/
-│   │   │   └── page.tsx                    ← NEW: Team Management
+│   │   │   ├── page.tsx                    ← NEW: Team Management
+│   │   │   └── workload/
+│   │   │       └── page.tsx                ← NEW: Team Workload View
+│   │   ├── projects/
+│   │   │   ├── page.tsx                    ← NEW: All Projects (unified view)
+│   │   │   ├── internal/
+│   │   │   │   └── page.tsx                ← NEW: Internal Projects
+│   │   │   └── [category]/
+│   │   │       └── page.tsx                ← NEW: Projects by Category
 │   │   └── proposals/
 │   │       └── [id]/
 │   │           └── page.tsx                ← MODIFY: Add phase tracking, assignments, links
@@ -1529,8 +2143,24 @@ src/
 │       ├── admin/                          ← NEW: Admin APIs
 │       │   ├── team/
 │       │   │   ├── route.ts                ← List/invite team
+│       │   │   ├── workload/
+│       │   │   │   └── route.ts            ← Team workload summary
 │       │   │   └── [id]/
 │       │   │       └── route.ts            ← Manage team member
+│       │   ├── todos/
+│       │   │   ├── route.ts                ← CRUD todos
+│       │   │   ├── my/
+│       │   │   │   └── route.ts            ← Current user's todos
+│       │   │   └── [id]/
+│       │   │       └── route.ts            ← Update/delete todo
+│       │   ├── next-actions/
+│       │   │   ├── route.ts                ← Quick action capture
+│       │   │   └── [id]/
+│       │   │       └── route.ts            ← Convert to todo
+│       │   ├── internal-projects/
+│       │   │   ├── route.ts                ← CRUD internal projects
+│       │   │   └── [id]/
+│       │   │       └── route.ts            ← Manage internal project
 │       │   ├── deliverable-links/
 │       │   │   ├── route.ts                ← Create/list links
 │       │   │   └── [id]/
@@ -1578,6 +2208,14 @@ src/
 │   │   ├── AssignmentDropdown.tsx          ← NEW: Assign work
 │   │   ├── TeamMemberCard.tsx              ← NEW
 │   │   ├── InviteTeamModal.tsx             ← NEW
+│   │   ├── TodoList.tsx                    ← NEW: Todo list component
+│   │   ├── TodoItem.tsx                    ← NEW: Individual todo item
+│   │   ├── TodoForm.tsx                    ← NEW: Create/edit todo form
+│   │   ├── QuickAddTodo.tsx                ← NEW: Quick todo capture
+│   │   ├── NextActionCapture.tsx           ← NEW: Quick next action
+│   │   ├── TeamWorkloadCard.tsx            ← NEW: Team member workload
+│   │   ├── ProjectCategoryTabs.tsx         ← NEW: Category filter tabs
+│   │   ├── InternalProjectCard.tsx         ← NEW: Internal project card
 │   │   ├── AdminSidebar.tsx                ← MODIFY: Add nav items
 │   │   └── MobileAdminNav.tsx              ← MODIFY: Add nav items
 │   │
@@ -1601,6 +2239,8 @@ src/
 │   ├── proposals.ts                        ← MODIFY: Add new types
 │   ├── users.ts                            ← NEW: User types
 │   ├── deliverables.ts                     ← NEW: Deliverable types
+│   ├── todos.ts                            ← NEW: Todo types
+│   ├── projects.ts                         ← NEW: Project/category types
 │   └── client-portal.ts                    ← NEW: Client portal types
 │
 ├── lib/
@@ -1619,7 +2259,9 @@ src/
         ├── 001-add-project-tracking-fields.sql   ← NEW
         ├── 002-user-management.sql               ← NEW
         ├── 003-deliverable-links.sql             ← NEW
-        └── 004-team-assignment.sql               ← NEW
+        ├── 004-team-assignment.sql               ← NEW
+        ├── 005-project-categories.sql            ← NEW
+        └── 006-team-todos.sql                    ← NEW
 ```
 
 ---
@@ -1627,8 +2269,8 @@ src/
 ## Implementation Order
 
 ### Sprint 1: Foundation & Database
-1. Run all database migrations (001-004)
-2. Create all TypeScript types (`users.ts`, `deliverables.ts`, `client-portal.ts`)
+1. Run all database migrations (001-006)
+2. Create all TypeScript types (`users.ts`, `deliverables.ts`, `todos.ts`, `projects.ts`, `client-portal.ts`)
 3. Update existing `proposals.ts` types
 4. Create `/api/command-center` endpoint
 5. Test API with existing data
@@ -1706,11 +2348,42 @@ src/
 57. Add real-time updates (optional)
 58. Performance optimization
 
-### Sprint 12: Portfolio Integration
-59. Create `/api/proposals/[id]/to-portfolio` endpoint
-60. Add "Add to Portfolio" button to completed projects
-61. Create portfolio creation modal
-62. Test full workflow: proposal → active → completed → portfolio
+### Sprint 12: Team Todo System
+59. Create `/api/admin/todos` endpoints (CRUD)
+60. Create `/api/admin/todos/my` endpoint for current user
+61. Create `TodoList`, `TodoItem`, `TodoForm` components
+62. Build My Dashboard page with personal todos
+63. Create `QuickAddTodo` component
+64. Test todo creation and completion flow
+
+### Sprint 13: Team Workload & Assignment
+65. Create `/api/admin/team/workload` endpoint
+66. Create `TeamWorkloadCard` component
+67. Build Team Workload page
+68. Add assign todo to team member functionality
+69. Test manager assigning todos to team
+
+### Sprint 14: Project Categories & Internal Projects
+70. Create `/api/admin/internal-projects` endpoints
+71. Create `InternalProjectCard` component
+72. Create `ProjectCategoryTabs` component
+73. Build unified Projects page with category filters
+74. Build Internal Projects page
+75. Add "On Hold" functionality to proposals
+76. Test project categorization flow
+
+### Sprint 15: Next Actions & Quick Capture
+77. Create `/api/admin/next-actions` endpoints
+78. Create `NextActionCapture` component
+79. Add quick action capture to project views
+80. Create convert-to-todo functionality
+81. Test rapid task capture flow
+
+### Sprint 16: Portfolio Integration
+82. Create `/api/proposals/[id]/to-portfolio` endpoint
+83. Add "Add to Portfolio" button to completed projects
+84. Create portfolio creation modal
+85. Test full workflow: proposal → active → completed → portfolio
 
 ---
 
@@ -1973,11 +2646,31 @@ This plan extends the existing robust proposal management infrastructure to crea
 - **Multi-user support** enables team collaboration on both sides
 - **Progressive visibility** means links appear to clients only when ready
 - **Single source of truth** across both portals
+- **Personal dashboards** let each team member see their own todos and assignments
+- **Project categories** organize work across clients, internal, and personal brand projects
+- **Quick capture** enables rapid task creation without losing context
 
 ### Estimated Scope
 
-- **Database**: 6 new tables, ~15 new columns
-- **API Endpoints**: ~25 new endpoints
-- **Pages**: ~10 new pages
-- **Components**: ~25 new components
-- **Sprints**: 12 sprints (flexible based on team capacity)
+- **Database**: 8 new tables, ~20 new columns, 2 views
+- **API Endpoints**: ~35 new endpoints
+- **Pages**: ~15 new pages
+- **Components**: ~35 new components
+- **Sprints**: 16 sprints (flexible based on team capacity)
+
+### System Handles All Your Organizational Needs
+
+Based on your real-world list, this system now covers:
+
+| Your Need | System Feature |
+|-----------|----------------|
+| Projects on Hold (Transcend, NAI) | `is_on_hold` flag with reason |
+| Active Projects (TEC, Cho-Ventures) | Standard proposal workflow |
+| Prospects (AWKN, Richard Becher) | `project_category = 'prospect'` |
+| Service Providers (Clientscale.io) | `project_category = 'service_provider'` |
+| Internal Projects (LBC Website, Light Brand Studio) | `internal_projects` table |
+| AI Personal Doubles (Nicholas.ai, Eyob.ai) | `project_category = 'personal_brand'` |
+| Core Offers (AI Informe System) | `project_category = 'core_offer'` |
+| Finalized Projects (Ibogalifechange, etc.) | `project_category = 'archived'` |
+| Team Todos (Nick, Eyob, Dan, Andreas tasks) | `todos` table with personal dashboards |
+| Quick Follow-ups (Send email, Schedule call) | `next_actions` quick capture |
