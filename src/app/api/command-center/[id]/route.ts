@@ -29,20 +29,11 @@ export async function GET(
 
     const { id } = await params;
 
-    // If Supabase is not configured, return placeholder
     if (!isSupabaseConfigured()) {
-      return NextResponse.json({
-        data: {
-          id,
-          project_name: 'Sample Project',
-          client_name: 'Sample Client',
-          status: 'active',
-          progress_percentage: 50,
-          health_status: 'on_track',
-          priority: 'medium',
-        },
-        error: null,
-      });
+      return NextResponse.json(
+        { data: null, error: 'Database not configured' },
+        { status: 503 }
+      );
     }
 
     const { data, error } = await supabaseAdmin
@@ -127,12 +118,11 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
-    // If Supabase is not configured, return mock success
     if (!isSupabaseConfigured()) {
-      return NextResponse.json({
-        data: { id, ...body },
-        error: null,
-      });
+      return NextResponse.json(
+        { data: null, error: 'Database not configured' },
+        { status: 503 }
+      );
     }
 
     // Build update object with allowed fields

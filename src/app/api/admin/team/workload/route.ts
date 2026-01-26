@@ -8,29 +8,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isAdminAuthenticated } from '@/lib/supabase-server-auth';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
-import type { TeamMemberWorkload } from '@/types/todos';
-
-// Placeholder data
-const placeholderWorkload: TeamMemberWorkload[] = [
-  {
-    user_profile_id: 'user-001',
-    full_name: 'John Smith',
-    email: 'john@lightbrand.co',
-    active_todos: 8,
-    urgent_todos: 2,
-    overdue_todos: 1,
-    active_projects: 3,
-  },
-  {
-    user_profile_id: 'user-002',
-    full_name: 'Jane Doe',
-    email: 'jane@lightbrand.co',
-    active_todos: 5,
-    urgent_todos: 0,
-    overdue_todos: 0,
-    active_projects: 2,
-  },
-];
 
 /**
  * GET /api/admin/team/workload
@@ -46,7 +23,10 @@ export async function GET(request: NextRequest) {
     }
 
     if (!isSupabaseConfigured()) {
-      return NextResponse.json({ data: placeholderWorkload, error: null });
+      return NextResponse.json(
+        { data: null, error: 'Database not configured' },
+        { status: 503 }
+      );
     }
 
     // Use the view we created in migrations

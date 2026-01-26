@@ -12,67 +12,6 @@ import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 import type { Proposal, ProposalPhase, Milestone } from '@/types/proposals';
 import type { CommandCenterStats } from '@/types/projects';
 
-// Placeholder data for development
-const placeholderProjects = [
-  {
-    id: 'project-001',
-    project_name: 'AI Integration Platform',
-    client_name: 'Acme Corp',
-    client_company: 'Acme Corporation',
-    status: 'active',
-    progress_percentage: 65,
-    health_status: 'on_track',
-    priority: 'high',
-    final_amount: 45000,
-    start_date: '2026-01-15',
-    estimated_completion_date: '2026-03-15',
-    last_activity_at: new Date().toISOString(),
-    next_action: 'Review design mockups',
-    next_action_due_date: '2026-01-28',
-    project_category: 'client_project',
-    is_on_hold: false,
-    phases: [
-      { id: 'p1', phase_name: 'Discovery', phase_status: 'completed' },
-      { id: 'p2', phase_name: 'Design', phase_status: 'in_progress' },
-      { id: 'p3', phase_name: 'Development', phase_status: 'not_started' },
-    ],
-    milestones: [],
-  },
-  {
-    id: 'project-002',
-    project_name: 'E-commerce Redesign',
-    client_name: 'Jane Smith',
-    client_company: 'StyleShop',
-    status: 'active',
-    progress_percentage: 30,
-    health_status: 'at_risk',
-    priority: 'urgent',
-    final_amount: 28000,
-    start_date: '2026-01-10',
-    estimated_completion_date: '2026-02-28',
-    last_activity_at: new Date(Date.now() - 86400000).toISOString(),
-    next_action: 'Client feedback on wireframes',
-    next_action_due_date: '2026-01-26',
-    project_category: 'client_project',
-    is_on_hold: false,
-    phases: [
-      { id: 'p1', phase_name: 'Research', phase_status: 'completed' },
-      { id: 'p2', phase_name: 'Wireframes', phase_status: 'in_progress' },
-    ],
-    milestones: [],
-  },
-];
-
-const placeholderStats: CommandCenterStats = {
-  total_active: 2,
-  on_track: 1,
-  at_risk: 1,
-  behind: 0,
-  blocked: 0,
-  on_hold: 0,
-  total_value: 73000,
-  urgent_count: 1,
-};
 
 /**
  * GET /api/command-center
@@ -95,15 +34,11 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category');
     const includeOnHold = searchParams.get('include_on_hold') === 'true';
 
-    // If Supabase is not configured, return placeholder data
     if (!isSupabaseConfigured()) {
-      return NextResponse.json({
-        data: {
-          projects: placeholderProjects,
-          stats: placeholderStats,
-        },
-        error: null,
-      });
+      return NextResponse.json(
+        { data: null, error: 'Database not configured' },
+        { status: 503 }
+      );
     }
 
     // Build query for active projects (proposals with status 'active' or 'agreement_signed')
@@ -212,12 +147,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // If Supabase is not configured, return mock success
     if (!isSupabaseConfigured()) {
-      return NextResponse.json({
-        data: { id: project_id, ...updates },
-        error: null,
-      });
+      return NextResponse.json(
+        { data: null, error: 'Database not configured' },
+        { status: 503 }
+      );
     }
 
     // Build update object with allowed fields

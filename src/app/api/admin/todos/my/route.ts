@@ -8,32 +8,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isAdminAuthenticated, getCurrentUser } from '@/lib/supabase-server-auth';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
-import type { Todo } from '@/types/todos';
-
-// Placeholder data
-const placeholderTodos: Todo[] = [
-  {
-    id: 'todo-001',
-    title: 'Review client feedback',
-    description: 'Go through the latest round of client feedback on the design mockups',
-    status: 'in_progress',
-    priority: 'high',
-    assigned_to: 'user-001',
-    created_by: 'user-001',
-    proposal_id: 'project-001',
-    internal_project_id: null,
-    phase_id: null,
-    milestone_id: null,
-    due_date: '2026-01-28',
-    completed_at: null,
-    is_recurring: false,
-    recurrence_pattern: null,
-    tags: ['design', 'client'],
-    estimated_minutes: 60,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-];
 
 /**
  * GET /api/admin/todos/my
@@ -48,16 +22,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json(
+        { data: null, error: 'Database not configured' },
+        { status: 503 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const includeCompleted = searchParams.get('include_completed') === 'true';
-
-    if (!isSupabaseConfigured()) {
-      let filtered = [...placeholderTodos];
-      if (!includeCompleted) {
-        filtered = filtered.filter((t) => t.status !== 'completed');
-      }
-      return NextResponse.json({ data: filtered, error: null });
-    }
 
     // Get current user's profile
     const user = await getCurrentUser(request);

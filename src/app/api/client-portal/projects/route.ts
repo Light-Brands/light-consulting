@@ -9,28 +9,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 import type { ClientProject } from '@/types/client-portal';
 
-// Placeholder data
-const placeholderProjects: ClientProject[] = [
-  {
-    id: 'project-001',
-    project_name: 'AI Integration Platform',
-    client_name: 'John Client',
-    client_company: 'Acme Corp',
-    status: 'active',
-    progress_percentage: 65,
-    start_date: '2026-01-15',
-    estimated_completion_date: '2026-03-15',
-    current_phase: 'Design',
-    phases_completed: 1,
-    phases_total: 3,
-    next_milestone: 'Design Review',
-    next_milestone_due: '2026-01-28',
-    total_paid: 15000,
-    total_due: 30000,
-    has_pending_action: false,
-  },
-];
-
 /**
  * GET /api/client-portal/projects
  */
@@ -49,7 +27,10 @@ export async function GET(request: NextRequest) {
     }
 
     if (!isSupabaseConfigured()) {
-      return NextResponse.json({ data: placeholderProjects, error: null });
+      return NextResponse.json(
+        { data: null, error: 'Database not configured' },
+        { status: 503 }
+      );
     }
 
     // Query proposals for this client
