@@ -52,11 +52,11 @@ interface Proposal {
 }
 
 interface PageProps {
-  params: Promise<{ proposalId: string }>;
+  params: Promise<{ id: string }>;
 }
 
 export default function ProjectManagePage({ params }: PageProps) {
-  const { proposalId } = use(params);
+  const { id } = use(params);
   const { authFetch } = useAuthFetch();
 
   // Data state
@@ -85,7 +85,7 @@ export default function ProjectManagePage({ params }: PageProps) {
   // Fetch proposal and phases
   const fetchProposal = useCallback(async () => {
     try {
-      const response = await authFetch(`/api/proposals/${proposalId}`);
+      const response = await authFetch(`/api/proposals/${id}`);
       const data = await response.json();
       if (data.data) {
         setProposal({
@@ -111,13 +111,13 @@ export default function ProjectManagePage({ params }: PageProps) {
     } catch (error) {
       console.error('Error fetching proposal:', error);
     }
-  }, [authFetch, proposalId]);
+  }, [authFetch, id]);
 
   // Fetch deliverables
   const fetchDeliverables = useCallback(async () => {
     try {
       const response = await authFetch(
-        `/api/admin/deliverables?proposal_id=${proposalId}&include_completed=true`
+        `/api/admin/deliverables?proposal_id=${id}&include_completed=true`
       );
       const data = await response.json();
       if (data.data) {
@@ -126,7 +126,7 @@ export default function ProjectManagePage({ params }: PageProps) {
     } catch (error) {
       console.error('Error fetching deliverables:', error);
     }
-  }, [authFetch, proposalId]);
+  }, [authFetch, id]);
 
   // Fetch team members
   const fetchTeam = useCallback(async () => {
@@ -145,7 +145,7 @@ export default function ProjectManagePage({ params }: PageProps) {
   const checkMigration = useCallback(async () => {
     try {
       const response = await authFetch(
-        `/api/admin/deliverables/migrate?proposal_id=${proposalId}`
+        `/api/admin/deliverables/migrate?proposal_id=${id}`
       );
       const data = await response.json();
       if (data.data?.needs_migration) {
@@ -154,7 +154,7 @@ export default function ProjectManagePage({ params }: PageProps) {
     } catch (error) {
       console.error('Error checking migration:', error);
     }
-  }, [authFetch, proposalId]);
+  }, [authFetch, id]);
 
   // Initial data load
   useEffect(() => {
@@ -172,7 +172,7 @@ export default function ProjectManagePage({ params }: PageProps) {
     try {
       const response = await authFetch('/api/admin/deliverables/migrate', {
         method: 'POST',
-        body: JSON.stringify({ proposal_id: proposalId }),
+        body: JSON.stringify({ proposal_id: id }),
       });
       const data = await response.json();
       if (data.data) {
@@ -341,7 +341,7 @@ export default function ProjectManagePage({ params }: PageProps) {
         <Container size="wide">
           {/* Back Link */}
           <Link
-            href={`/admin/proposals/${proposalId}`}
+            href={`/admin/proposals/${id}`}
             className="inline-flex items-center gap-2 text-text-muted hover:text-text-primary mb-4 sm:mb-6 transition-colors text-sm"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -425,7 +425,7 @@ export default function ProjectManagePage({ params }: PageProps) {
           setEditingDeliverable(null);
         }}
         deliverable={editingDeliverable}
-        proposalId={proposalId}
+        id={id}
         phases={phases}
         milestones={milestones}
         teamMembers={teamMembers}
