@@ -28,6 +28,15 @@ import type {
   ProposalCommentInsert,
 } from './proposals';
 
+import type {
+  Deliverable,
+  DeliverableInsert,
+  DeliverableUpdate,
+  DeliverableLink,
+  DeliverableLinkInsert,
+  DeliverableLinkUpdate,
+} from './deliverables';
+
 // Assessment Types
 export type AssessmentStage = 'qualify' | 'book' | 'educate' | 'confirm' | 'commit' | 'intake' | 'status';
 export type AssessmentVerdict = 'GO' | 'CONDITIONAL_GO' | 'NO_GO';
@@ -153,6 +162,16 @@ export interface Database {
         Row: AssessmentSubmission;
         Insert: AssessmentSubmissionInsert;
         Update: AssessmentSubmissionUpdate;
+      };
+      deliverables: {
+        Row: Deliverable;
+        Insert: DeliverableInsert;
+        Update: DeliverableUpdate;
+      };
+      deliverable_links: {
+        Row: DeliverableLink;
+        Insert: DeliverableLinkInsert;
+        Update: DeliverableLinkUpdate;
       };
     };
   };

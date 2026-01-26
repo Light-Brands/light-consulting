@@ -21,6 +21,8 @@ export type DeliverableLinkType =
 
 export type DeliverableStatus = 'pending' | 'in_progress' | 'review' | 'completed' | 'cancelled';
 
+export type DeliverablePriority = 'urgent' | 'high' | 'medium' | 'low';
+
 // ============================================================================
 // Deliverable Links
 // ============================================================================
@@ -82,9 +84,11 @@ export interface Deliverable {
   id: string;
   proposal_id: string;
   phase_id: string | null;
+  milestone_id: string | null;
   name: string;
   description: string | null;
   status: DeliverableStatus;
+  priority: DeliverablePriority;
   due_date: string | null;
   completed_at: string | null;
   assigned_to: string | null;
@@ -96,9 +100,11 @@ export interface Deliverable {
 export interface DeliverableInsert {
   proposal_id: string;
   phase_id?: string | null;
+  milestone_id?: string | null;
   name: string;
   description?: string | null;
   status?: DeliverableStatus;
+  priority?: DeliverablePriority;
   due_date?: string | null;
   assigned_to?: string | null;
   sort_order?: number;
@@ -106,9 +112,11 @@ export interface DeliverableInsert {
 
 export interface DeliverableUpdate {
   phase_id?: string | null;
+  milestone_id?: string | null;
   name?: string;
   description?: string | null;
   status?: DeliverableStatus;
+  priority?: DeliverablePriority;
   due_date?: string | null;
   completed_at?: string | null;
   assigned_to?: string | null;
@@ -127,8 +135,53 @@ export interface DeliverableLinkWithContext extends DeliverableLink {
 
 export interface DeliverableWithAssignee extends Deliverable {
   assigned_to_name?: string;
+  assigned_to_email?: string;
   phase_name?: string;
+  milestone_name?: string;
 }
+
+// ============================================================================
+// Deliverables by Status (for Kanban view)
+// ============================================================================
+
+export interface DeliverablesByStatus {
+  pending: DeliverableWithAssignee[];
+  in_progress: DeliverableWithAssignee[];
+  review: DeliverableWithAssignee[];
+  completed: DeliverableWithAssignee[];
+}
+
+// ============================================================================
+// Status Configuration (for UI)
+// ============================================================================
+
+export interface DeliverableStatusConfig {
+  value: DeliverableStatus;
+  label: string;
+  color: string;
+}
+
+export const DELIVERABLE_STATUS_CONFIGS: DeliverableStatusConfig[] = [
+  { value: 'pending', label: 'Pending', color: 'gray' },
+  { value: 'in_progress', label: 'In Progress', color: 'blue' },
+  { value: 'review', label: 'In Review', color: 'purple' },
+  { value: 'completed', label: 'Completed', color: 'green' },
+  { value: 'cancelled', label: 'Cancelled', color: 'gray' },
+];
+
+export interface DeliverablePriorityConfig {
+  value: DeliverablePriority;
+  label: string;
+  color: string;
+  bgColor: string;
+}
+
+export const DELIVERABLE_PRIORITY_CONFIGS: DeliverablePriorityConfig[] = [
+  { value: 'urgent', label: 'Urgent', color: 'text-red-400', bgColor: 'bg-red-500/10' },
+  { value: 'high', label: 'High', color: 'text-orange-400', bgColor: 'bg-orange-500/10' },
+  { value: 'medium', label: 'Medium', color: 'text-amber-400', bgColor: 'bg-amber-500/10' },
+  { value: 'low', label: 'Low', color: 'text-gray-400', bgColor: 'bg-gray-500/10' },
+];
 
 // ============================================================================
 // API Response Types
