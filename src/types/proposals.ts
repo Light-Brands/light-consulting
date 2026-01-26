@@ -110,6 +110,11 @@ export const DEFAULT_PORTAL_SECTIONS: PortalSections = {
   dashboard: true,
 };
 
+// Project tracking status types
+export type HealthStatus = 'on_track' | 'at_risk' | 'behind' | 'blocked';
+export type ProjectPriority = 'low' | 'medium' | 'high' | 'urgent';
+export type ProjectCategory = 'client_project' | 'internal' | 'maintenance' | 'retainer';
+
 export interface Proposal {
   id: string;
   lead_submission_id: string | null;
@@ -136,6 +141,24 @@ export interface Proposal {
   sent_at: string | null;
   viewed_at: string | null;
   agreement_signed_at: string | null;
+
+  // Project tracking fields (Command Center)
+  progress_percentage: number;
+  last_activity_at: string | null;
+  health_status: HealthStatus;
+  priority: ProjectPriority;
+  next_action: string | null;
+  next_action_due_date: string | null;
+
+  // Project categorization
+  project_category: ProjectCategory;
+  is_on_hold: boolean;
+  on_hold_reason: string | null;
+  on_hold_since: string | null;
+
+  // Team assignment
+  assigned_to: string | null;
+  project_manager_id: string | null;
 }
 
 export interface ProposalInsert {
@@ -157,6 +180,23 @@ export interface ProposalInsert {
   portal_sections?: PortalSections;
   portal_password?: string | null;
   created_by?: string | null;
+
+  // Project tracking fields
+  progress_percentage?: number;
+  health_status?: HealthStatus;
+  priority?: ProjectPriority;
+  next_action?: string | null;
+  next_action_due_date?: string | null;
+
+  // Project categorization
+  project_category?: ProjectCategory;
+  is_on_hold?: boolean;
+  on_hold_reason?: string | null;
+  on_hold_since?: string | null;
+
+  // Team assignment
+  assigned_to?: string | null;
+  project_manager_id?: string | null;
 }
 
 export interface ProposalUpdate {
@@ -180,6 +220,24 @@ export interface ProposalUpdate {
   sent_at?: string | null;
   viewed_at?: string | null;
   agreement_signed_at?: string | null;
+
+  // Project tracking fields
+  progress_percentage?: number;
+  last_activity_at?: string | null;
+  health_status?: HealthStatus;
+  priority?: ProjectPriority;
+  next_action?: string | null;
+  next_action_due_date?: string | null;
+
+  // Project categorization
+  project_category?: ProjectCategory;
+  is_on_hold?: boolean;
+  on_hold_reason?: string | null;
+  on_hold_since?: string | null;
+
+  // Team assignment
+  assigned_to?: string | null;
+  project_manager_id?: string | null;
 }
 
 // ============================================================================
@@ -191,6 +249,9 @@ export interface Deliverable {
   name: string;
   description?: string;
 }
+
+// Phase status type
+export type PhaseStatus = 'not_started' | 'in_progress' | 'completed' | 'blocked';
 
 export interface ProposalPhase {
   id: string;
@@ -209,6 +270,13 @@ export interface ProposalPhase {
   visible_in_portal: boolean;
   created_at: string;
   updated_at: string;
+
+  // Phase tracking fields
+  phase_status: PhaseStatus;
+  completed_at: string | null;
+  actual_start_date: string | null;
+  actual_end_date: string | null;
+  progress_notes: string | null;
 }
 
 export interface ProposalPhaseInsert {
@@ -225,6 +293,12 @@ export interface ProposalPhaseInsert {
   amount: number;
   sort_order?: number;
   visible_in_portal?: boolean;
+
+  // Phase tracking fields
+  phase_status?: PhaseStatus;
+  actual_start_date?: string | null;
+  actual_end_date?: string | null;
+  progress_notes?: string | null;
 }
 
 export interface ProposalPhaseUpdate {
@@ -240,6 +314,13 @@ export interface ProposalPhaseUpdate {
   amount?: number;
   sort_order?: number;
   visible_in_portal?: boolean;
+
+  // Phase tracking fields
+  phase_status?: PhaseStatus;
+  completed_at?: string | null;
+  actual_start_date?: string | null;
+  actual_end_date?: string | null;
+  progress_notes?: string | null;
 }
 
 // ============================================================================

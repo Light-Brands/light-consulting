@@ -86,3 +86,23 @@ export async function isAdminAuthenticated(request: Request): Promise<boolean> {
   const user = await verifySupabaseAuth(request);
   return user !== null;
 }
+
+/**
+ * Get the current authenticated user from request
+ * Returns the user object or null if not authenticated
+ */
+export async function getCurrentUser(request: Request) {
+  // If Supabase auth is not configured, return a placeholder in development
+  if (!isSupabaseAuthConfigured()) {
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    if (isDevelopment) {
+      return {
+        id: 'dev-user-001',
+        email: 'dev@example.com',
+      };
+    }
+    return null;
+  }
+
+  return verifySupabaseAuth(request);
+}
