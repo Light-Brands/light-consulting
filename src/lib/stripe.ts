@@ -265,6 +265,23 @@ export async function createAssessmentCheckout(
   }
 }
 
+// Check if a checkout session is still valid (not expired, completed, or cancelled)
+export async function isCheckoutSessionValid(sessionId: string): Promise<boolean> {
+  if (!stripe) {
+    return false;
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    // Session is valid if status is 'open' (not completed or expired)
+    return session.status === 'open';
+  } catch (error) {
+    // Session not found or other error - consider it invalid
+    console.error('Error checking checkout session:', error);
+    return false;
+  }
+}
+
 // Verify and construct webhook event
 export function constructWebhookEvent(
   payload: string | Buffer,
