@@ -316,6 +316,19 @@ export interface ClientCommandCenterData {
   action_items: ClientActionItem[];
   proposals: ClientProposalSummary[];
   recent_activity: ClientActivity[];
+  // Client hierarchy data (optional for backward compatibility)
+  client?: {
+    id: string;
+    client_name: string;
+    client_company: string | null;
+    client_email: string;
+  } | null;
+  projects?: {
+    id: string;
+    project_name: string;
+    status: string;
+    proposal_count?: number;
+  }[];
 }
 
 export const PROPOSAL_STATUS_DISPLAY = {

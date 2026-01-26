@@ -243,3 +243,95 @@ export async function getClientName(email: string): Promise<string | null> {
 
   return data?.client_name || null;
 }
+
+/**
+ * Get client entity by email
+ * Returns the client from the clients table if they exist
+ */
+export async function getClientByEmail(email: string) {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from('clients')
+    .select('*')
+    .eq('client_email', email.toLowerCase())
+    .single();
+
+  if (error) {
+    // Client might not exist in the clients table yet (legacy proposals)
+    return null;
+  }
+
+  return data;
+}
+
+/**
+ * Get projects for a client by client ID
+ */
+export async function getClientProjectsById(clientId: string) {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from('client_projects')
+    .select(`
+      *,
+      proposals:proposals(id, project_name, status, final_amount, progress_percentage)
+    `)
+    .eq('client_id', clientId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('[ClientAuth] Failed to fetch client projects:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * Get all data for client portal dashboard
+ * Returns client entity, projects, and proposals organized hierarchically
+ */
+export async function getClientDashboardData(email: string) {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return { client: null, projects: [], proposals: [] };
+  }
+
+  // First, try to find the client entity
+  const client = await getClientByEmail(email);
+
+  if (client) {
+    // Get projects for this client
+    const projects = await getClientProjectsById(client.id);
+
+    // Get proposals linked to this client
+    const { data: proposals } = await supabase
+      .from('proposals')
+      .select('*')
+      .eq('client_id', client.id)
+      .in('status', ['sent', 'viewed', 'agreement_signed', 'active', 'completed'])
+      .order('created_at', { ascending: false });
+
+    return {
+      client,
+      projects,
+      proposals: proposals || [],
+    };
+  }
+
+  // Fallback: Get proposals by email (legacy behavior)
+  const proposals = await getClientProposals(email);
+
+  return {
+    client: null,
+    projects: [],
+    proposals,
+  };
+}

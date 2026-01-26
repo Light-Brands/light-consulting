@@ -3,10 +3,13 @@
  * Light Brand Consulting
  *
  * GET /api/client-portal/projects - Get client's projects list
+ *
+ * Supports both new client hierarchy (client_projects) and legacy proposals
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
+import { getClientByEmail } from '@/lib/client-auth';
 import type { ClientProject } from '@/types/client-portal';
 
 /**
@@ -33,6 +36,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // First, try to find the client entity by email
+    let clientId: string | null = null;
+    if (clientEmail) {
+      const clientEntity = await getClientByEmail(clientEmail);
+      if (clientEntity) {
+        clientId = clientEntity.id;
+      }
+    }
+
     // Query proposals for this client
     let query = supabaseAdmin
       .from('proposals')
@@ -46,6 +58,8 @@ export async function GET(request: NextRequest) {
         start_date,
         estimated_completion_date,
         final_amount,
+        project_id,
+        client_project:client_projects(id, project_name, status),
         proposal_phases (
           id,
           phase_name,
@@ -62,7 +76,11 @@ export async function GET(request: NextRequest) {
       `)
       .in('status', ['active', 'agreement_signed', 'completed']);
 
-    if (clientEmail) {
+    if (clientId) {
+      // Use client_id for linked proposals
+      query = query.eq('client_id', clientId);
+    } else if (clientEmail) {
+      // Fall back to email-based lookup
       query = query.eq('client_email', clientEmail);
     }
     if (accessToken) {

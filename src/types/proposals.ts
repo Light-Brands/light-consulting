@@ -118,6 +118,10 @@ export type ProjectCategory = 'client_project' | 'internal' | 'maintenance' | 'r
 export interface Proposal {
   id: string;
   lead_submission_id: string | null;
+  // Client hierarchy references (optional for backward compatibility)
+  client_id: string | null;
+  project_id: string | null;
+  // Legacy client fields (kept for backward compatibility)
   client_name: string;
   client_email: string;
   client_company: string | null;
@@ -163,6 +167,10 @@ export interface Proposal {
 
 export interface ProposalInsert {
   lead_submission_id?: string | null;
+  // Client hierarchy references
+  client_id?: string | null;
+  project_id?: string | null;
+  // Client fields
   client_name: string;
   client_email: string;
   client_company?: string | null;
@@ -201,6 +209,10 @@ export interface ProposalInsert {
 
 export interface ProposalUpdate {
   lead_submission_id?: string | null;
+  // Client hierarchy references
+  client_id?: string | null;
+  project_id?: string | null;
+  // Client fields
   client_name?: string;
   client_email?: string;
   client_company?: string | null;

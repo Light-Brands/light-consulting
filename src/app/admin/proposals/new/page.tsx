@@ -14,6 +14,8 @@ import { Container, Button, Input, Textarea } from '@/components/ui';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { LeadSubmission, Deliverable } from '@/types/proposals';
 import type { BusinessIntelligence } from '@/types/business-intelligence';
+import type { Client } from '@/types/clients';
+import type { ClientProject } from '@/types/client-projects';
 
 interface PhaseFormData {
   phase_name: string;
@@ -94,6 +96,12 @@ function NewProposalContent() {
   const [customRequirements, setCustomRequirements] = useState('');
   const [showBusinessIntel, setShowBusinessIntel] = useState(true);
   const [showAdvancedContext, setShowAdvancedContext] = useState(false);
+
+  // Client hierarchy state
+  const [clients, setClients] = useState<Client[]>([]);
+  const [clientProjects, setClientProjects] = useState<ClientProject[]>([]);
+  const [selectedClientId, setSelectedClientId] = useState<string>('');
+  const [selectedProjectId, setSelectedProjectId] = useState<string>('');
 
   // Enhanced context state for richer AI generation
   const [enhancedContext, setEnhancedContext] = useState({
@@ -192,6 +200,61 @@ function NewProposalContent() {
       fetchLead(leadId);
     }
   }, [leadId, fetchLead]);
+
+  // Fetch clients on mount
+  useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        const response = await authFetch('/api/clients?status=active');
+        const data = await response.json();
+        if (data.data) {
+          setClients(data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching clients:', error);
+      }
+    };
+    fetchClients();
+  }, [authFetch]);
+
+  // Fetch projects when client is selected
+  useEffect(() => {
+    const fetchProjects = async () => {
+      if (!selectedClientId) {
+        setClientProjects([]);
+        setSelectedProjectId('');
+        return;
+      }
+      try {
+        const response = await authFetch(`/api/clients/${selectedClientId}/projects?status=active,draft`);
+        const data = await response.json();
+        if (data.data) {
+          setClientProjects(data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
+    fetchProjects();
+  }, [authFetch, selectedClientId]);
+
+  // Handle client selection - auto-populate client info
+  const handleClientSelect = (clientId: string) => {
+    setSelectedClientId(clientId);
+    setSelectedProjectId('');
+    if (clientId) {
+      const client = clients.find(c => c.id === clientId);
+      if (client) {
+        setFormData(prev => ({
+          ...prev,
+          client_name: client.client_name,
+          client_email: client.client_email,
+          client_company: client.client_company || '',
+          client_phone: client.client_phone || '',
+        }));
+      }
+    }
+  };
 
   const handleGenerateWithAI = async () => {
     if (!lead || selectedServices.length === 0) {
@@ -420,6 +483,8 @@ function NewProposalContent() {
     try {
       const proposalData = {
         lead_submission_id: leadId || null,
+        client_id: selectedClientId || null,
+        project_id: selectedProjectId || null,
         client_name: formData.client_name,
         client_email: formData.client_email,
         client_company: formData.client_company || null,
@@ -908,6 +973,63 @@ function NewProposalContent() {
                   {/* Details Tab */}
                   {activeTab === 'details' && (
                     <div className="space-y-8">
+                      {/* Client/Project Selection */}
+                      <div>
+                        <h3 className="text-lg font-semibold text-text-primary mb-4">Link to Client & Project</h3>
+                        <p className="text-text-muted text-sm mb-4">
+                          Optionally link this proposal to an existing client and project for better organization.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-text-primary text-sm font-medium mb-2">
+                              Client
+                            </label>
+                            <select
+                              value={selectedClientId}
+                              onChange={(e) => handleClientSelect(e.target.value)}
+                              className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary focus:border-radiance-gold focus:outline-none"
+                            >
+                              <option value="">-- New / No Client --</option>
+                              {clients.map((client) => (
+                                <option key={client.id} value={client.id}>
+                                  {client.client_name}{client.client_company ? ` (${client.client_company})` : ''}
+                                </option>
+                              ))}
+                            </select>
+                            <p className="text-text-muted text-xs mt-1">
+                              <Link href="/admin/clients/new" className="text-radiance-gold hover:underline">
+                                + Create new client
+                              </Link>
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-text-primary text-sm font-medium mb-2">
+                              Project
+                            </label>
+                            <select
+                              value={selectedProjectId}
+                              onChange={(e) => setSelectedProjectId(e.target.value)}
+                              disabled={!selectedClientId}
+                              className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary focus:border-radiance-gold focus:outline-none disabled:opacity-50"
+                            >
+                              <option value="">-- No Project --</option>
+                              {clientProjects.map((project) => (
+                                <option key={project.id} value={project.id}>
+                                  {project.project_name}
+                                </option>
+                              ))}
+                            </select>
+                            {selectedClientId && (
+                              <p className="text-text-muted text-xs mt-1">
+                                <Link href={`/admin/clients/${selectedClientId}/projects/new`} className="text-radiance-gold hover:underline">
+                                  + Create new project
+                                </Link>
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
                       <div>
                         <h3 className="text-lg font-semibold text-text-primary mb-4">Client Information</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

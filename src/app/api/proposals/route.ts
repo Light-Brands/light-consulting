@@ -26,6 +26,8 @@ const placeholderProposals: Proposal[] = [
   {
     id: 'cho-ventures-001',
     lead_submission_id: null,
+    client_id: null,
+    project_id: null,
     client_name: 'Tony Cho',
     client_email: 'tony@choventures.com',
     client_company: 'Cho Ventures',
@@ -49,6 +51,21 @@ const placeholderProposals: Proposal[] = [
     sent_at: new Date().toISOString(),
     viewed_at: null,
     agreement_signed_at: null,
+    // Project tracking fields
+    progress_percentage: 0,
+    last_activity_at: null,
+    health_status: 'on_track',
+    priority: 'medium',
+    next_action: null,
+    next_action_due_date: null,
+    // Project categorization
+    project_category: 'client_project',
+    is_on_hold: false,
+    on_hold_reason: null,
+    on_hold_since: null,
+    // Team assignment
+    assigned_to: null,
+    project_manager_id: null,
   },
 ];
 
@@ -102,6 +119,8 @@ export async function POST(request: NextRequest) {
       const mockProposal: Proposal = {
         id: crypto.randomUUID(),
         lead_submission_id: body.lead_submission_id || null,
+        client_id: body.client_id || null,
+        project_id: body.project_id || null,
         client_name,
         client_email,
         client_company: body.client_company || null,
@@ -125,6 +144,21 @@ export async function POST(request: NextRequest) {
         sent_at: null,
         viewed_at: null,
         agreement_signed_at: null,
+        // Project tracking fields
+        progress_percentage: 0,
+        last_activity_at: null,
+        health_status: 'on_track',
+        priority: 'medium',
+        next_action: null,
+        next_action_due_date: null,
+        // Project categorization
+        project_category: 'client_project',
+        is_on_hold: false,
+        on_hold_reason: null,
+        on_hold_since: null,
+        // Team assignment
+        assigned_to: null,
+        project_manager_id: null,
       };
       return NextResponse.json({ data: mockProposal, error: null }, { status: 201 });
     }
@@ -132,6 +166,10 @@ export async function POST(request: NextRequest) {
     // Create proposal
     const proposalData: ProposalInsert = {
       lead_submission_id: body.lead_submission_id || null,
+      // Client hierarchy references
+      client_id: body.client_id || null,
+      project_id: body.project_id || null,
+      // Client info
       client_name,
       client_email,
       client_company: body.client_company || null,

@@ -8,7 +8,7 @@
 
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { getCurrentClientSession } from '@/lib/client-auth';
+import { getCurrentClientSession, getClientByEmail } from '@/lib/client-auth';
 import type {
   ClientCommandCenterData,
   ClientCommandCenterStats,
@@ -34,8 +34,11 @@ export async function GET() {
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
     const clientEmail = session.email.toLowerCase();
 
-    // Fetch all proposals for this client
-    const { data: proposals, error: proposalsError } = await supabase
+    // First, try to find the client entity by email
+    const clientEntity = await getClientByEmail(clientEmail);
+
+    // Build the query - use client_id if available, otherwise fall back to email
+    let proposalsQuery = supabase
       .from('proposals')
       .select(`
         *,
@@ -43,11 +46,21 @@ export async function GET() {
         milestones(*),
         agreement:agreements(*),
         onboarding_form:onboarding_forms(*),
-        dashboard_updates(*)
+        dashboard_updates(*),
+        client_project:client_projects(id, project_name, status)
       `)
-      .eq('client_email', clientEmail)
       .in('status', ['sent', 'viewed', 'agreement_signed', 'active', 'completed'])
       .order('created_at', { ascending: false });
+
+    if (clientEntity) {
+      // Query by client_id for linked proposals
+      proposalsQuery = proposalsQuery.eq('client_id', clientEntity.id);
+    } else {
+      // Fall back to email-based lookup for legacy proposals
+      proposalsQuery = proposalsQuery.eq('client_email', clientEmail);
+    }
+
+    const { data: proposals, error: proposalsError } = await proposalsQuery;
 
     if (proposalsError) {
       console.error('[Dashboard API] Failed to fetch proposals:', proposalsError);
@@ -69,11 +82,25 @@ export async function GET() {
     // Aggregate recent activity
     const recentActivity: ClientActivity[] = aggregateRecentActivity(proposals || []);
 
+    // Fetch client projects if client entity exists
+    let projects: any[] = [];
+    if (clientEntity) {
+      const { data: projectsData } = await supabase
+        .from('client_projects')
+        .select('*')
+        .eq('client_id', clientEntity.id)
+        .order('created_at', { ascending: false });
+      projects = projectsData || [];
+    }
+
     const data: ClientCommandCenterData = {
       stats,
       action_items: actionItems,
       proposals: proposalSummaries,
       recent_activity: recentActivity.slice(0, 10),
+      // New hierarchy fields
+      client: clientEntity || null,
+      projects: projects,
     };
 
     return NextResponse.json({ data });
