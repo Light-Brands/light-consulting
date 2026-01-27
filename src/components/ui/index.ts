@@ -78,3 +78,6 @@ export type {
 
 // Theme/Palette Components
 export { PaletteSwitcher } from './PaletteSwitcher';
+
+// Visualization Components
+export { MermaidDiagram } from './MermaidDiagram';

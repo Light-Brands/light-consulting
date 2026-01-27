@@ -844,6 +844,77 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                 </div>
               </div>
 
+              {/* Referrer / Source */}
+              {proposal.referrer_type && (
+                <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
+                  <div
+                    className="absolute inset-0 opacity-[0.015] pointer-events-none"
+                    style={{
+                      backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                      backgroundSize: '32px 32px',
+                    }}
+                  />
+                  <div className="relative z-10 p-4 sm:p-6 space-y-2.5 sm:space-y-3">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-500/50" />
+                      <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
+                        Source
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`inline-flex items-center gap-1.5 px-2 py-1 text-xs rounded-full ${
+                        proposal.referrer_type === 'team_member'
+                          ? 'bg-blue-500/10 text-blue-400 border border-blue-500/30'
+                          : proposal.referrer_type === 'ads'
+                          ? 'bg-purple-500/10 text-purple-400 border border-purple-500/30'
+                          : proposal.referrer_type === 'direct'
+                          ? 'bg-green-500/10 text-green-400 border border-green-500/30'
+                          : 'bg-gray-500/10 text-gray-400 border border-gray-500/30'
+                      }`}>
+                        {proposal.referrer_type === 'team_member' && (
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                        )}
+                        {proposal.referrer_type === 'ads' && (
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                          </svg>
+                        )}
+                        {proposal.referrer_type === 'direct' && (
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                          </svg>
+                        )}
+                        {proposal.referrer_type === 'other' && (
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                          </svg>
+                        )}
+                        {proposal.referrer_type === 'team_member' ? 'Team Member' :
+                         proposal.referrer_type === 'ads' ? 'Ads' :
+                         proposal.referrer_type === 'direct' ? 'Direct' : 'Other'}
+                      </span>
+                    </div>
+                    {proposal.referrer_type === 'team_member' && proposal.referrer_user && (
+                      <div className="pt-2 border-t border-depth-border">
+                        <span className="text-text-muted text-xs block">Referred by</span>
+                        <span className="text-text-primary text-sm font-medium">
+                          {proposal.referrer_user.full_name || proposal.referrer_user.email}
+                        </span>
+                      </div>
+                    )}
+                    {proposal.referrer_type === 'other' && proposal.referrer_source && (
+                      <div className="pt-2 border-t border-depth-border">
+                        <span className="text-text-muted text-xs block">Source</span>
+                        <span className="text-text-primary text-sm">{proposal.referrer_source}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {/* Agreement Status */}
               {proposal.agreement && (
                 <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">

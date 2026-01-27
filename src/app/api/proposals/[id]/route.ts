@@ -151,6 +151,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       { data: dashboard_updates },
       { data: comments },
       { data: lead_submission },
+      { data: referrer_user },
     ] = await Promise.all([
       supabaseAdmin
         .from('proposal_phases')
@@ -189,6 +190,14 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
             .eq('id', proposal.lead_submission_id)
             .single()
         : Promise.resolve({ data: null }),
+      // Fetch referrer user if referrer_user_id exists
+      proposal.referrer_user_id
+        ? supabaseAdmin
+            .from('user_profiles')
+            .select('id, full_name, email')
+            .eq('id', proposal.referrer_user_id)
+            .single()
+        : Promise.resolve({ data: null }),
     ]);
 
     const proposalWithDetails: ProposalWithDetails = {
@@ -201,6 +210,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       dashboard_updates: dashboard_updates || [],
       comments: comments || [],
       lead_submission: lead_submission || null,
+      referrer_user: referrer_user || null,
     };
 
     const response: ProposalDetailApiResponse = {
@@ -262,6 +272,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       'sent_at',
       'viewed_at',
       'agreement_signed_at',
+      // Referrer tracking fields
+      'referrer_type',
+      'referrer_user_id',
+      'referrer_source',
     ];
 
     allowedFields.forEach((field) => {

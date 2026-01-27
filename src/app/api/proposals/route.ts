@@ -185,6 +185,10 @@ export async function POST(request: NextRequest) {
       final_amount,
       status: body.status || 'draft',
       portal_password: body.portal_password || null,
+      // Referrer tracking
+      referrer_type: body.referrer_type || null,
+      referrer_user_id: body.referrer_user_id || null,
+      referrer_source: body.referrer_source || null,
     };
 
     const { data: proposal, error: proposalError } = await supabaseAdmin

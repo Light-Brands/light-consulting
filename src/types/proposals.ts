@@ -115,6 +115,9 @@ export type HealthStatus = 'on_track' | 'at_risk' | 'behind' | 'blocked';
 export type ProjectPriority = 'low' | 'medium' | 'high' | 'urgent';
 export type ProjectCategory = 'client_project' | 'internal' | 'maintenance' | 'retainer';
 
+// Referrer tracking types
+export type ReferrerType = 'team_member' | 'ads' | 'direct' | 'other';
+
 export interface Proposal {
   id: string;
   lead_submission_id: string | null;
@@ -163,6 +166,11 @@ export interface Proposal {
   // Team assignment
   assigned_to: string | null;
   project_manager_id: string | null;
+
+  // Referrer tracking
+  referrer_type: ReferrerType | null;
+  referrer_user_id: string | null;
+  referrer_source: string | null;
 }
 
 export interface ProposalInsert {
@@ -205,6 +213,11 @@ export interface ProposalInsert {
   // Team assignment
   assigned_to?: string | null;
   project_manager_id?: string | null;
+
+  // Referrer tracking
+  referrer_type?: ReferrerType | null;
+  referrer_user_id?: string | null;
+  referrer_source?: string | null;
 }
 
 export interface ProposalUpdate {
@@ -250,6 +263,11 @@ export interface ProposalUpdate {
   // Team assignment
   assigned_to?: string | null;
   project_manager_id?: string | null;
+
+  // Referrer tracking
+  referrer_type?: ReferrerType | null;
+  referrer_user_id?: string | null;
+  referrer_source?: string | null;
 }
 
 // ============================================================================
@@ -561,6 +579,8 @@ export interface ProposalWithDetails extends Proposal {
   dashboard_updates: DashboardUpdate[];
   comments: ProposalComment[];
   lead_submission?: LeadSubmission | null;
+  // Referrer user info (populated when referrer_type is 'team_member')
+  referrer_user?: { id: string; full_name: string | null; email: string } | null;
 }
 
 // ============================================================================

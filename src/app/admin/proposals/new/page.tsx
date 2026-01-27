@@ -103,6 +103,9 @@ function NewProposalContent() {
   const [selectedClientId, setSelectedClientId] = useState<string>('');
   const [selectedProjectId, setSelectedProjectId] = useState<string>('');
 
+  // Team members for referrer selection
+  const [teamMembers, setTeamMembers] = useState<{ id: string; name: string; email: string }[]>([]);
+
   // Enhanced context state for richer AI generation
   const [enhancedContext, setEnhancedContext] = useState({
     salesNotes: '',
@@ -130,6 +133,9 @@ function NewProposalContent() {
     estimated_completion_date: '',
     discount_percentage: '0',
     portal_password: '',
+    referrer_type: '' as '' | 'team_member' | 'ads' | 'direct' | 'other',
+    referrer_user_id: '',
+    referrer_source: '',
   });
 
   const [phases, setPhases] = useState<PhaseFormData[]>([
@@ -215,6 +221,26 @@ function NewProposalContent() {
       }
     };
     fetchClients();
+  }, [authFetch]);
+
+  // Fetch team members for referrer selection
+  useEffect(() => {
+    const fetchTeamMembers = async () => {
+      try {
+        const response = await authFetch('/api/admin/team');
+        const data = await response.json();
+        if (data.data) {
+          setTeamMembers(data.data.map((member: { id: string; full_name: string; email: string }) => ({
+            id: member.id,
+            name: member.full_name || member.email,
+            email: member.email,
+          })));
+        }
+      } catch (error) {
+        console.error('Error fetching team members:', error);
+      }
+    };
+    fetchTeamMembers();
   }, [authFetch]);
 
   // Fetch projects when client is selected
@@ -520,6 +546,9 @@ function NewProposalContent() {
         final_amount: calculateFinalAmount(),
         status,
         portal_password: formData.portal_password || null,
+        referrer_type: formData.referrer_type || null,
+        referrer_user_id: formData.referrer_type === 'team_member' && formData.referrer_user_id ? formData.referrer_user_id : null,
+        referrer_source: formData.referrer_type === 'other' && formData.referrer_source ? formData.referrer_source : null,
         phases: phases
           .filter((p) => p.phase_name)
           .map((p, i) => ({
@@ -1245,6 +1274,74 @@ function NewProposalContent() {
                               Leave empty for no password protection
                             </p>
                           </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h3 className="text-lg font-semibold text-text-primary mb-4">Referrer / Source</h3>
+                        <p className="text-text-muted text-sm mb-4">
+                          Track the source of this project for team compensation and analytics.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-text-primary text-sm font-medium mb-2">
+                              Referrer Type
+                            </label>
+                            <select
+                              value={formData.referrer_type}
+                              onChange={(e) => {
+                                const value = e.target.value as '' | 'team_member' | 'ads' | 'direct' | 'other';
+                                setFormData({
+                                  ...formData,
+                                  referrer_type: value,
+                                  referrer_user_id: value === 'team_member' ? formData.referrer_user_id : '',
+                                  referrer_source: value === 'other' ? formData.referrer_source : '',
+                                });
+                              }}
+                              className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary focus:border-radiance-gold focus:outline-none"
+                            >
+                              <option value="">-- Select Source --</option>
+                              <option value="team_member">Team Member</option>
+                              <option value="ads">Ads</option>
+                              <option value="direct">Direct</option>
+                              <option value="other">Other</option>
+                            </select>
+                          </div>
+
+                          {formData.referrer_type === 'team_member' && (
+                            <div>
+                              <label className="block text-text-primary text-sm font-medium mb-2">
+                                Team Member
+                              </label>
+                              <select
+                                value={formData.referrer_user_id}
+                                onChange={(e) => setFormData({ ...formData, referrer_user_id: e.target.value })}
+                                className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary focus:border-radiance-gold focus:outline-none"
+                              >
+                                <option value="">-- Select Team Member --</option>
+                                {teamMembers.map((member) => (
+                                  <option key={member.id} value={member.id}>
+                                    {member.name} ({member.email})
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          )}
+
+                          {formData.referrer_type === 'other' && (
+                            <div>
+                              <label className="block text-text-primary text-sm font-medium mb-2">
+                                Source Description
+                              </label>
+                              <input
+                                type="text"
+                                value={formData.referrer_source}
+                                onChange={(e) => setFormData({ ...formData, referrer_source: e.target.value })}
+                                placeholder="e.g., Conference, Partner, Referral"
+                                className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none transition-colors"
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

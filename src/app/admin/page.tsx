@@ -16,6 +16,7 @@ import {
   ProjectList,
   QuickUpdateModal,
 } from '@/components/admin/command-center';
+import { MermaidDiagram } from '@/components/ui';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { CommandCenterStats as Stats, HealthStatus, ProjectPriority, PhaseStatus } from '@/types/projects';
 
@@ -338,6 +339,129 @@ export default function CommandCenterPage() {
                   onPriorityChange={handlePriorityChange}
                   onQuickUpdate={handleQuickUpdate}
                 />
+              </div>
+            </div>
+          </div>
+
+          {/* Delivery Cycle Diagram */}
+          <div className="bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+            <div className="p-4 md:p-6 border-b border-depth-border">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
+                <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
+                  System::Workflow
+                </span>
+              </div>
+              <h2 className="text-lg font-semibold text-text-primary">
+                Delivery Cycle
+              </h2>
+              <p className="text-sm text-text-muted mt-1">
+                How work flows through the system from client acquisition to deliverable handoff
+              </p>
+            </div>
+
+            <div className="p-4 md:p-6 flex justify-center overflow-x-auto">
+              <MermaidDiagram
+                className="min-w-[600px]"
+                chart={`
+flowchart TB
+    subgraph SALES["Sales"]
+        L[("Lead")]
+        P["Proposal"]
+        L -->|"Scope & Send"| P
+    end
+
+    subgraph WINS["Closed Won"]
+        C[("Client")]
+        PR["Project"]
+    end
+
+    P -->|"Signed"| C
+    C --> PR
+
+    subgraph DELIVERY["Project Delivery"]
+        M1["Milestone 1"]
+        M2["Milestone 2"]
+        M3["Milestone N"]
+
+        M1 --> D1["Deliverables"]
+        M2 --> D2["Deliverables"]
+        M3 --> D3["Deliverables"]
+
+        D1 --> PAY1(["Payment"])
+        D2 --> PAY2(["Payment"])
+        D3 --> PAY3(["Payment"])
+    end
+
+    PR --> M1
+    PR --> M2
+    PR --> M3
+
+    subgraph PORTAL["Client Portal"]
+        DASH["Dashboard"]
+        LINKS["Deliverable Links"]
+    end
+
+    D1 --> LINKS
+    D2 --> LINKS
+    D3 --> LINKS
+
+    LINKS --> DASH
+    DASH -.->|"Client Access"| C
+
+    style L fill:#3B82F6,stroke:#60A5FA,color:#fff
+    style C fill:#10B981,stroke:#34D399,color:#fff
+    style P fill:#8B5CF6,stroke:#A78BFA,color:#fff
+    style PR fill:#F59E0B,stroke:#FBBF24,color:#fff
+    style M1 fill:#1F2937,stroke:#E8B84A,color:#fff
+    style M2 fill:#1F2937,stroke:#E8B84A,color:#fff
+    style M3 fill:#1F2937,stroke:#E8B84A,color:#fff
+    style D1 fill:#374151,stroke:#6B7280,color:#fff
+    style D2 fill:#374151,stroke:#6B7280,color:#fff
+    style D3 fill:#374151,stroke:#6B7280,color:#fff
+    style PAY1 fill:#059669,stroke:#10B981,color:#fff
+    style PAY2 fill:#059669,stroke:#10B981,color:#fff
+    style PAY3 fill:#059669,stroke:#10B981,color:#fff
+    style DASH fill:#E8B84A,stroke:#FCD34D,color:#000
+    style LINKS fill:#E8B84A,stroke:#FCD34D,color:#000
+`}
+              />
+            </div>
+
+            <div className="px-4 md:px-6 pb-4 md:pb-6">
+              <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs justify-center">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-blue-500" />
+                  <span className="text-text-muted">Lead</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-purple-500" />
+                  <span className="text-text-muted">Proposal</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-green-500" />
+                  <span className="text-text-muted">Client</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-amber-500" />
+                  <span className="text-text-muted">Project</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded border border-radiance-gold bg-depth-base" />
+                  <span className="text-text-muted">Milestone</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-gray-600" />
+                  <span className="text-text-muted">Deliverable</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-emerald-600" />
+                  <span className="text-text-muted">Payment</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-radiance-gold" />
+                  <span className="text-text-muted">Portal</span>
+                </div>
               </div>
             </div>
           </div>
