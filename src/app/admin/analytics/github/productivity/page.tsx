@@ -9,6 +9,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { authFetch } from '@/lib/api-client';
 import { AdminHeader } from '@/components/admin';
 import { Container } from '@/components/ui';
 import type { TimeRange, ProductivityMetrics } from '@/types/github-analytics';
@@ -33,7 +34,7 @@ export default function TeamProductivityPage() {
   // Fetch team developer count
   const fetchTeamCount = useCallback(async () => {
     try {
-      const response = await fetch('/api/admin/analytics/github/team-developers?include_stats=false');
+      const response = await authFetch('/api/admin/analytics/github/team-developers?include_stats=false');
       const result = await response.json();
       if (!result.error && result.data) {
         setDeveloperCount(result.data.length);
@@ -53,7 +54,7 @@ export default function TeamProductivityPage() {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(
+      const response = await authFetch(
         `/api/admin/analytics/github/productivity?time_range=${timeRange}&developer_count=${developerCount}&_t=${Date.now()}`,
         { cache: 'no-store' }
       );

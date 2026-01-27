@@ -9,6 +9,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
+import { authFetch } from '@/lib/api-client';
 import type { AggregatedContributor, TeamDeveloper } from '@/types/github-analytics';
 import { formatNumber } from '@/types/github-analytics';
 
@@ -35,8 +36,8 @@ export const TeamDeveloperModal: React.FC<TeamDeveloperModalProps> = ({
 
       // Fetch both contributors and current team developers
       const [contribRes, teamRes] = await Promise.all([
-        fetch('/api/admin/analytics/github/contributors?limit=200'),
-        fetch('/api/admin/analytics/github/team-developers?include_stats=false'),
+        authFetch('/api/admin/analytics/github/contributors?limit=200'),
+        authFetch('/api/admin/analytics/github/team-developers?include_stats=false'),
       ]);
 
       const contribResult = await contribRes.json();
@@ -65,7 +66,7 @@ export const TeamDeveloperModal: React.FC<TeamDeveloperModalProps> = ({
 
       if (isCurrentlyTeamMember) {
         // Remove from team
-        const response = await fetch(
+        const response = await authFetch(
           `/api/admin/analytics/github/team-developers/${encodeURIComponent(contributor.github_login)}`,
           { method: 'DELETE' }
         );
@@ -79,7 +80,7 @@ export const TeamDeveloperModal: React.FC<TeamDeveloperModalProps> = ({
         }
       } else {
         // Add to team
-        const response = await fetch('/api/admin/analytics/github/team-developers', {
+        const response = await authFetch('/api/admin/analytics/github/team-developers', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

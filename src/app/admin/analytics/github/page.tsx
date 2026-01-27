@@ -10,6 +10,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { authFetch } from '@/lib/api-client';
 import { AdminHeader } from '@/components/admin';
 import { Container } from '@/components/ui';
 import { useSyncProgress } from '@/contexts/SyncProgressContext';
@@ -87,7 +88,7 @@ export default function GitHubAnalyticsPage() {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/admin/analytics/github?time_range=${timeRange}&_t=${Date.now()}`, {
+      const response = await authFetch(`/api/admin/analytics/github?time_range=${timeRange}&_t=${Date.now()}`, {
         cache: 'no-store',
       });
       const result = await response.json();
@@ -112,7 +113,7 @@ export default function GitHubAnalyticsPage() {
   // Fetch tracked orgs count
   const fetchTrackedOrgsCount = useCallback(async () => {
     try {
-      const response = await fetch('/api/admin/analytics/github/orgs');
+      const response = await authFetch('/api/admin/analytics/github/orgs');
       const result = await response.json();
       if (!result.error && result.data) {
         const tracked = result.data.filter((org: { is_tracked: boolean }) => org.is_tracked).length;
@@ -138,7 +139,7 @@ export default function GitHubAnalyticsPage() {
   const fetchRepositories = useCallback(async () => {
     try {
       setReposLoading(true);
-      const response = await fetch('/api/admin/analytics/github/repositories');
+      const response = await authFetch('/api/admin/analytics/github/repositories');
       const result = await response.json();
       if (!result.error) {
         setRepositories(result.data || []);
@@ -153,7 +154,7 @@ export default function GitHubAnalyticsPage() {
   // Toggle repository tracking
   const handleToggleTracked = useCallback(async (id: string, tracked: boolean) => {
     try {
-      const response = await fetch('/api/admin/analytics/github/repositories', {
+      const response = await authFetch('/api/admin/analytics/github/repositories', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, is_tracked: tracked }),
@@ -185,7 +186,7 @@ export default function GitHubAnalyticsPage() {
   // Fetch contributors
   const fetchContributors = useCallback(async () => {
     try {
-      const response = await fetch('/api/admin/analytics/github/contributors?limit=50');
+      const response = await authFetch('/api/admin/analytics/github/contributors?limit=50');
       const result = await response.json();
       if (!result.error) {
         setContributors(result.data || []);
@@ -198,7 +199,7 @@ export default function GitHubAnalyticsPage() {
   // Fetch pull requests
   const fetchPullRequests = useCallback(async () => {
     try {
-      const response = await fetch('/api/admin/analytics/github/pull-requests?limit=50');
+      const response = await authFetch('/api/admin/analytics/github/pull-requests?limit=50');
       const result = await response.json();
       if (!result.error) {
         setPullRequests(result.data || []);

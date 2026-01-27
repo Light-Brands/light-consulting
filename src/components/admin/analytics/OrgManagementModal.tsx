@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
+import { authFetch } from '@/lib/api-client';
 import type { GitHubOrganization } from '@/types/github-analytics';
 
 interface OrgManagementModalProps {
@@ -37,7 +38,7 @@ export const OrgManagementModal: React.FC<OrgManagementModalProps> = ({
         ? '/api/admin/analytics/github/orgs?refresh=true'
         : '/api/admin/analytics/github/orgs';
 
-      const response = await fetch(url);
+      const response = await authFetch(url);
       const result = await response.json();
 
       if (!result.error) {
@@ -55,7 +56,7 @@ export const OrgManagementModal: React.FC<OrgManagementModalProps> = ({
     try {
       setTogglingOrg(org.login);
 
-      const response = await fetch(`/api/admin/analytics/github/orgs/${org.login}/track`, {
+      const response = await authFetch(`/api/admin/analytics/github/orgs/${org.login}/track`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ is_tracked: !org.is_tracked }),
