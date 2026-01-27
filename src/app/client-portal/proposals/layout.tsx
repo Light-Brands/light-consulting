@@ -16,10 +16,8 @@ export default function ProposalsLayout({
 }) {
   return (
     <ClientAuthProvider>
-      <div className="min-h-screen bg-depth-base">
-        <CommandCenterNav />
-        <main>{children}</main>
-      </div>
+      <CommandCenterNav />
+      {children}
     </ClientAuthProvider>
   );
 }

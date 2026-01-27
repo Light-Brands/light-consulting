@@ -20,6 +20,11 @@ export const ClientNavbar: React.FC<ClientNavbarProps> = ({
 }) => {
   const pathname = usePathname();
 
+  // Don't render on dashboard routes - CommandCenterNav handles those
+  if (pathname?.startsWith('/client-portal/dashboard')) {
+    return null;
+  }
+
   return (
     <header className="bg-depth-surface border-b border-depth-border sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

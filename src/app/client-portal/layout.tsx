@@ -4,7 +4,6 @@
  */
 
 import React from 'react';
-import { ClientNavbar } from '@/components/client-portal';
 
 export default function ClientPortalLayout({
   children,
@@ -13,7 +12,6 @@ export default function ClientPortalLayout({
 }) {
   return (
     <div className="min-h-screen bg-depth-base">
-      <ClientNavbar />
       <main>{children}</main>
     </div>
   );
