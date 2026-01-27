@@ -256,6 +256,26 @@ function NewProposalContent() {
     }
   };
 
+  // Handle project selection - auto-populate project info
+  const handleProjectSelect = (projectId: string) => {
+    setSelectedProjectId(projectId);
+    if (projectId) {
+      const project = clientProjects.find(p => p.id === projectId);
+      if (project) {
+        setFormData(prev => ({
+          ...prev,
+          project_name: project.project_name,
+          project_overview: project.description || prev.project_overview,
+          start_date: project.start_date || prev.start_date,
+        }));
+      }
+    }
+  };
+
+  // Get selected client/project objects for display
+  const selectedClient = selectedClientId ? clients.find(c => c.id === selectedClientId) : null;
+  const selectedProject = selectedProjectId ? clientProjects.find(p => p.id === selectedProjectId) : null;
+
   const handleGenerateWithAI = async () => {
     if (!lead || selectedServices.length === 0) {
       alert('Please select at least one service.');
@@ -977,7 +997,7 @@ function NewProposalContent() {
                       <div>
                         <h3 className="text-lg font-semibold text-text-primary mb-4">Link to Client & Project</h3>
                         <p className="text-text-muted text-sm mb-4">
-                          Optionally link this proposal to an existing client and project for better organization.
+                          Link this proposal to an existing client and project to auto-fill information.
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
@@ -1008,7 +1028,7 @@ function NewProposalContent() {
                             </label>
                             <select
                               value={selectedProjectId}
-                              onChange={(e) => setSelectedProjectId(e.target.value)}
+                              onChange={(e) => handleProjectSelect(e.target.value)}
                               disabled={!selectedClientId}
                               className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary focus:border-radiance-gold focus:outline-none disabled:opacity-50"
                             >
@@ -1030,61 +1050,147 @@ function NewProposalContent() {
                         </div>
                       </div>
 
-                      <div>
-                        <h3 className="text-lg font-semibold text-text-primary mb-4">Client Information</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <Input
-                            label="Client Name"
-                            required
-                            value={formData.client_name}
-                            onChange={(e) => setFormData({ ...formData, client_name: e.target.value })}
-                          />
-                          <Input
-                            label="Client Email"
-                            type="email"
-                            required
-                            value={formData.client_email}
-                            onChange={(e) => setFormData({ ...formData, client_email: e.target.value })}
-                          />
-                          <Input
-                            label="Company"
-                            value={formData.client_company}
-                            onChange={(e) => setFormData({ ...formData, client_company: e.target.value })}
-                          />
-                          <Input
-                            label="Phone"
-                            type="tel"
-                            value={formData.client_phone}
-                            onChange={(e) => setFormData({ ...formData, client_phone: e.target.value })}
-                          />
+                      {/* Client Information - Show summary card if client selected, otherwise show form */}
+                      {selectedClient ? (
+                        <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-xl">
+                          <div className="flex items-center justify-between mb-3">
+                            <h3 className="text-sm font-semibold text-green-400 flex items-center gap-2">
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                              Client Linked
+                            </h3>
+                            <button
+                              type="button"
+                              onClick={() => handleClientSelect('')}
+                              className="text-text-muted hover:text-text-primary text-xs"
+                            >
+                              Change
+                            </button>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                              <span className="text-text-muted">Name:</span>
+                              <span className="text-text-primary ml-2 font-medium">{selectedClient.client_name}</span>
+                            </div>
+                            <div>
+                              <span className="text-text-muted">Email:</span>
+                              <span className="text-text-primary ml-2">{selectedClient.client_email}</span>
+                            </div>
+                            {selectedClient.client_company && (
+                              <div>
+                                <span className="text-text-muted">Company:</span>
+                                <span className="text-text-primary ml-2">{selectedClient.client_company}</span>
+                              </div>
+                            )}
+                            {selectedClient.client_phone && (
+                              <div>
+                                <span className="text-text-muted">Phone:</span>
+                                <span className="text-text-primary ml-2">{selectedClient.client_phone}</span>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div>
+                          <h3 className="text-lg font-semibold text-text-primary mb-4">Client Information</h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Input
+                              label="Client Name"
+                              required
+                              value={formData.client_name}
+                              onChange={(e) => setFormData({ ...formData, client_name: e.target.value })}
+                            />
+                            <Input
+                              label="Client Email"
+                              type="email"
+                              required
+                              value={formData.client_email}
+                              onChange={(e) => setFormData({ ...formData, client_email: e.target.value })}
+                            />
+                            <Input
+                              label="Company"
+                              value={formData.client_company}
+                              onChange={(e) => setFormData({ ...formData, client_company: e.target.value })}
+                            />
+                            <Input
+                              label="Phone"
+                              type="tel"
+                              value={formData.client_phone}
+                              onChange={(e) => setFormData({ ...formData, client_phone: e.target.value })}
+                            />
+                          </div>
+                        </div>
+                      )}
 
-                      <div>
-                        <h3 className="text-lg font-semibold text-text-primary mb-4">Project Information</h3>
-                        <div className="space-y-4">
-                          <Input
-                            label="Project Name"
-                            required
-                            value={formData.project_name}
-                            onChange={(e) => setFormData({ ...formData, project_name: e.target.value })}
-                          />
-                          <Textarea
-                            label="Project Overview"
-                            rows={4}
-                            value={formData.project_overview}
-                            onChange={(e) => setFormData({ ...formData, project_overview: e.target.value })}
-                            hint="Supports markdown formatting"
-                          />
-                          <Textarea
-                            label="Project Scope"
-                            rows={4}
-                            value={formData.project_scope}
-                            onChange={(e) => setFormData({ ...formData, project_scope: e.target.value })}
-                            hint="Supports markdown formatting"
-                          />
+                      {/* Project Information - Show summary card if project selected, otherwise show form */}
+                      {selectedProject ? (
+                        <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-xl">
+                          <div className="flex items-center justify-between mb-3">
+                            <h3 className="text-sm font-semibold text-green-400 flex items-center gap-2">
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                              Project Linked
+                            </h3>
+                            <button
+                              type="button"
+                              onClick={() => handleProjectSelect('')}
+                              className="text-text-muted hover:text-text-primary text-xs"
+                            >
+                              Change
+                            </button>
+                          </div>
+                          <div className="space-y-2 text-sm">
+                            <div>
+                              <span className="text-text-muted">Project:</span>
+                              <span className="text-text-primary ml-2 font-medium">{selectedProject.project_name}</span>
+                            </div>
+                            {selectedProject.description && (
+                              <div>
+                                <span className="text-text-muted">Description:</span>
+                                <span className="text-text-primary ml-2">{selectedProject.description}</span>
+                              </div>
+                            )}
+                          </div>
+                          {/* Still allow editing proposal-specific scope */}
+                          <div className="mt-4 pt-4 border-t border-depth-border">
+                            <Textarea
+                              label="Proposal Scope (specific to this proposal)"
+                              rows={3}
+                              value={formData.project_scope}
+                              onChange={(e) => setFormData({ ...formData, project_scope: e.target.value })}
+                              hint="Define the specific scope for this proposal"
+                            />
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div>
+                          <h3 className="text-lg font-semibold text-text-primary mb-4">Project Information</h3>
+                          <div className="space-y-4">
+                            <Input
+                              label="Project Name"
+                              required
+                              value={formData.project_name}
+                              onChange={(e) => setFormData({ ...formData, project_name: e.target.value })}
+                            />
+                            <Textarea
+                              label="Project Overview"
+                              rows={4}
+                              value={formData.project_overview}
+                              onChange={(e) => setFormData({ ...formData, project_overview: e.target.value })}
+                              hint="Supports markdown formatting"
+                            />
+                            <Textarea
+                              label="Project Scope"
+                              rows={4}
+                              value={formData.project_scope}
+                              onChange={(e) => setFormData({ ...formData, project_scope: e.target.value })}
+                              hint="Supports markdown formatting"
+                            />
+                          </div>
+                        </div>
+                      )}
 
                       <div>
                         <h3 className="text-lg font-semibold text-text-primary mb-4">Timeline & Pricing</h3>
