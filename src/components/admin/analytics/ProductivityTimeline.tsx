@@ -138,8 +138,10 @@ export const ProductivityTimeline: React.FC<ProductivityTimelineProps> = ({
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => {
-                if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
-                if (value >= 1000) return `${(value / 1000).toFixed(0)}K`;
+                const absValue = Math.abs(value);
+                const sign = value < 0 ? '-' : '';
+                if (absValue >= 1000000) return `${sign}${(absValue / 1000000).toFixed(1)}M`;
+                if (absValue >= 1000) return `${sign}${(absValue / 1000).toFixed(0)}K`;
                 return value.toString();
               }}
             />
@@ -150,7 +152,9 @@ export const ProductivityTimeline: React.FC<ProductivityTimelineProps> = ({
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => {
-                if (value >= 1000) return `${(value / 1000).toFixed(0)}K`;
+                const absValue = Math.abs(value);
+                const sign = value < 0 ? '-' : '';
+                if (absValue >= 1000) return `${sign}${(absValue / 1000).toFixed(0)}K`;
                 return value.toString();
               }}
             />
