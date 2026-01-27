@@ -64,6 +64,8 @@ export default function AdminClientProjectDetailPage({ params }: { params: Promi
   const [isLoading, setIsLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showLinkModal, setShowLinkModal] = useState(false);
+  const [deleteProposals, setDeleteProposals] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [availableProposals, setAvailableProposals] = useState<Proposal[]>([]);
   const [loadingProposals, setLoadingProposals] = useState(false);
 
@@ -91,7 +93,12 @@ export default function AdminClientProjectDetailPage({ params }: { params: Promi
 
   const handleDeleteProject = async () => {
     try {
-      const response = await authFetch(`/api/client-projects/${id}`, {
+      setIsDeleting(true);
+      const url = deleteProposals
+        ? `/api/client-projects/${id}?deleteProposals=true`
+        : `/api/client-projects/${id}`;
+
+      const response = await authFetch(url, {
         method: 'DELETE',
       });
 
@@ -100,7 +107,14 @@ export default function AdminClientProjectDetailPage({ params }: { params: Promi
       }
     } catch (error) {
       console.error('Error deleting project:', error);
+    } finally {
+      setIsDeleting(false);
     }
+  };
+
+  const openDeleteModal = () => {
+    setDeleteProposals(false);
+    setShowDeleteModal(true);
   };
 
   // Fetch proposals that can be linked to this project
@@ -283,7 +297,7 @@ export default function AdminClientProjectDetailPage({ params }: { params: Promi
 
               <div className="mt-6 pt-6 border-t border-depth-border flex gap-3">
                 <button
-                  onClick={() => setShowDeleteModal(true)}
+                  onClick={openDeleteModal}
                   className="text-sm text-red-400 hover:text-red-300 transition-colors"
                 >
                   Delete Project
@@ -435,21 +449,57 @@ export default function AdminClientProjectDetailPage({ params }: { params: Promi
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
             className="absolute inset-0 bg-black/60"
-            onClick={() => setShowDeleteModal(false)}
+            onClick={() => !isDeleting && setShowDeleteModal(false)}
           />
           <div className="relative bg-depth-surface border border-depth-border rounded-2xl p-6 max-w-md w-full">
             <h3 className="text-lg font-semibold text-text-primary mb-2">
               Delete Project
             </h3>
-            <p className="text-text-secondary mb-6">
-              Are you sure you want to delete this project? Proposals will be unlinked but not deleted. This action cannot be undone.
+            <p className="text-text-secondary mb-4">
+              Are you sure you want to delete <span className="font-medium text-text-primary">{project.project_name}</span>?
             </p>
+
+            {/* Associated Proposals */}
+            {project.proposals && project.proposals.length > 0 && (
+              <div className="mb-4 p-4 bg-depth-elevated border border-depth-border rounded-xl">
+                <p className="text-sm text-text-muted mb-3">
+                  This project has {project.proposals.length} linked proposal{project.proposals.length > 1 ? 's' : ''}:
+                </p>
+                <div className="space-y-2 mb-4 max-h-32 overflow-y-auto">
+                  {project.proposals.map((proposal) => (
+                    <div key={proposal.id} className="flex items-center justify-between text-sm">
+                      <span className="text-text-secondary truncate">{proposal.project_name}</span>
+                      <span className="text-text-muted ml-2">{formatCurrency(proposal.final_amount || 0)}</span>
+                    </div>
+                  ))}
+                </div>
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={deleteProposals}
+                    onChange={(e) => setDeleteProposals(e.target.checked)}
+                    className="mt-0.5 w-4 h-4 rounded border-depth-border bg-depth-base text-red-500 focus:ring-red-500/30 focus:ring-offset-0 cursor-pointer"
+                  />
+                  <span className="text-sm text-red-400 group-hover:text-red-300 transition-colors">
+                    Also delete these proposals and all their data (phases, milestones, agreements)
+                  </span>
+                </label>
+              </div>
+            )}
+
+            <p className="text-xs text-text-muted mb-6">
+              {deleteProposals
+                ? 'The project and all linked proposals will be permanently deleted.'
+                : 'Proposals will be unlinked but not deleted.'
+              } This action cannot be undone.
+            </p>
+
             <div className="flex justify-end gap-3">
-              <Button variant="ghost" onClick={() => setShowDeleteModal(false)}>
+              <Button variant="ghost" onClick={() => setShowDeleteModal(false)} disabled={isDeleting}>
                 Cancel
               </Button>
-              <Button variant="danger" onClick={handleDeleteProject}>
-                Delete
+              <Button variant="danger" onClick={handleDeleteProject} disabled={isDeleting}>
+                {isDeleting ? 'Deleting...' : deleteProposals ? 'Delete All' : 'Delete Project'}
               </Button>
             </div>
           </div>

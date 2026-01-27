@@ -184,7 +184,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
 /**
  * DELETE /api/client-projects/[id]
- * Delete a project (cascades to proposals via ON DELETE SET NULL)
+ * Delete a project
+ * Query params:
+ *   - deleteProposals=true: Also delete all linked proposals (and their phases, milestones, etc.)
  */
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
@@ -205,6 +207,59 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       );
     }
 
+    const { searchParams } = new URL(request.url);
+    const deleteProposals = searchParams.get('deleteProposals') === 'true';
+
+    // If deleteProposals is true, delete all linked proposals first
+    if (deleteProposals) {
+      // Get all proposal IDs for this project
+      const { data: proposals } = await supabaseAdmin
+        .from('proposals')
+        .select('id')
+        .eq('project_id', id);
+
+      if (proposals && proposals.length > 0) {
+        const proposalIds = proposals.map(p => p.id);
+
+        // Delete in order: comments, milestones, phases, agreements, then proposals
+        // (respecting foreign key constraints)
+        await supabaseAdmin
+          .from('proposal_comments')
+          .delete()
+          .in('proposal_id', proposalIds);
+
+        await supabaseAdmin
+          .from('milestones')
+          .delete()
+          .in('proposal_id', proposalIds);
+
+        await supabaseAdmin
+          .from('phases')
+          .delete()
+          .in('proposal_id', proposalIds);
+
+        await supabaseAdmin
+          .from('agreements')
+          .delete()
+          .in('proposal_id', proposalIds);
+
+        // Finally delete the proposals
+        const { error: proposalError } = await supabaseAdmin
+          .from('proposals')
+          .delete()
+          .in('id', proposalIds);
+
+        if (proposalError) {
+          console.error('Error deleting proposals:', proposalError);
+          return NextResponse.json(
+            { data: null, error: 'Failed to delete associated proposals' },
+            { status: 500 }
+          );
+        }
+      }
+    }
+
+    // Delete the project
     const { error } = await supabaseAdmin
       .from('client_projects')
       .delete()
@@ -218,7 +273,10 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    return NextResponse.json({ data: { id }, error: null });
+    return NextResponse.json({
+      data: { id, proposalsDeleted: deleteProposals },
+      error: null
+    });
   } catch (error) {
     console.error('Error in DELETE /api/client-projects/[id]:', error);
     return NextResponse.json(
