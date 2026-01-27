@@ -2,7 +2,8 @@
  * GitHub Repositories API Route
  * Light Brand Consulting
  *
- * GET /api/admin/analytics/github/repositories - List repositories
+ * GET /api/admin/analytics/github/repositories - List repositories with stats
+ * PATCH /api/admin/analytics/github/repositories - Update repository tracking
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -10,9 +11,22 @@ import { isAdminAuthenticated } from '@/lib/supabase-server-auth';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 import type { GitHubRepository } from '@/types/github-analytics';
 
+export interface RepositoryWithStats extends GitHubRepository {
+  total_additions: number;
+  total_deletions: number;
+  stats_start_date: string | null;
+  stats_end_date: string | null;
+}
+
+interface DailyStatsRow {
+  stat_date: string;
+  additions: number | null;
+  deletions: number | null;
+}
+
 /**
  * GET /api/admin/analytics/github/repositories
- * List all synced repositories
+ * List all synced repositories with their line stats
  */
 export async function GET(request: NextRequest) {
   try {
@@ -57,7 +71,7 @@ export async function GET(request: NextRequest) {
     const sortField = validSortFields.includes(sort) ? sort : 'pushed_at';
     query = query.order(sortField, { ascending: order, nullsFirst: false });
 
-    const { data, error } = await query;
+    const { data: repos, error } = await query;
 
     if (error) {
       console.error('Error fetching repositories:', error);
@@ -70,9 +84,91 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ data: data as GitHubRepository[], error: null });
+    // Get line stats for each repository
+    const reposWithStats: RepositoryWithStats[] = [];
+
+    for (const repo of (repos || []) as GitHubRepository[]) {
+      // Get aggregated stats from daily_stats
+      const { data: statsData } = await supabaseAdmin
+        .from('github_daily_stats')
+        .select('stat_date, additions, deletions')
+        .eq('repository_id', repo.id)
+        .order('stat_date', { ascending: true });
+
+      const stats = (statsData || []) as DailyStatsRow[];
+      const totalAdditions = stats.reduce((sum, s) => sum + (s.additions || 0), 0);
+      const totalDeletions = stats.reduce((sum, s) => sum + (s.deletions || 0), 0);
+      const statsStartDate = stats.length > 0 ? stats[0].stat_date : null;
+      const statsEndDate = stats.length > 0 ? stats[stats.length - 1].stat_date : null;
+
+      reposWithStats.push({
+        ...repo,
+        total_additions: totalAdditions,
+        total_deletions: totalDeletions,
+        stats_start_date: statsStartDate,
+        stats_end_date: statsEndDate,
+      });
+    }
+
+    return NextResponse.json({ data: reposWithStats, error: null });
   } catch (error) {
     console.error('Error in GET /api/admin/analytics/github/repositories:', error);
+    return NextResponse.json(
+      { data: null, error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * PATCH /api/admin/analytics/github/repositories
+ * Update repository tracking status
+ */
+export async function PATCH(request: NextRequest) {
+  try {
+    const isAuthenticated = await isAdminAuthenticated(request);
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { data: null, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    if (!isSupabaseConfigured()) {
+      return NextResponse.json(
+        { data: null, error: 'Database not configured' },
+        { status: 503 }
+      );
+    }
+
+    const body = await request.json();
+    const { id, is_tracked } = body;
+
+    if (!id || typeof is_tracked !== 'boolean') {
+      return NextResponse.json(
+        { data: null, error: 'Missing required fields: id and is_tracked' },
+        { status: 400 }
+      );
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from('github_repositories')
+      .update({ is_tracked } as never)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating repository:', error);
+      return NextResponse.json(
+        { data: null, error: `Failed to update repository: ${error.message}` },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ data, error: null });
+  } catch (error) {
+    console.error('Error in PATCH /api/admin/analytics/github/repositories:', error);
     return NextResponse.json(
       { data: null, error: 'Internal server error' },
       { status: 500 }

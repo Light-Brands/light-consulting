@@ -47,6 +47,54 @@ export interface GitHubConfigPublic {
   is_active: boolean;
   last_validated_at: string | null;
   has_token: boolean;
+  tracked_orgs_count?: number;
+}
+
+// ============================================================================
+// Organization Models
+// ============================================================================
+
+// GitHub API response for organization
+export interface GitHubApiOrganization {
+  id: number;
+  login: string;
+  name: string | null;
+  avatar_url: string;
+  description: string | null;
+}
+
+// Database model for organization
+export interface GitHubOrganization {
+  id: string;
+  github_id: number;
+  login: string;
+  name: string | null;
+  avatar_url: string | null;
+  description: string | null;
+  is_tracked: boolean;
+  repos_count: number;
+  synced_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GitHubOrganizationInsert {
+  github_id: number;
+  login: string;
+  name?: string | null;
+  avatar_url?: string | null;
+  description?: string | null;
+  is_tracked?: boolean;
+  repos_count?: number;
+}
+
+export interface GitHubOrganizationUpdate {
+  name?: string | null;
+  avatar_url?: string | null;
+  description?: string | null;
+  is_tracked?: boolean;
+  repos_count?: number;
+  synced_at?: string | null;
 }
 
 // Repository
@@ -70,6 +118,7 @@ export interface GitHubRepository {
   synced_at: string | null;
   created_at: string;
   updated_at: string;
+  org_id: string | null;
 }
 
 export interface GitHubRepositoryInsert {
@@ -88,6 +137,7 @@ export interface GitHubRepositoryInsert {
   open_issues_count?: number;
   created_at_github: string;
   pushed_at?: string | null;
+  org_id?: string | null;
 }
 
 export interface GitHubRepositoryUpdate {
@@ -103,6 +153,7 @@ export interface GitHubRepositoryUpdate {
   open_issues_count?: number;
   pushed_at?: string | null;
   synced_at?: string | null;
+  org_id?: string | null;
 }
 
 // Commit
@@ -289,6 +340,10 @@ export interface GitHubSyncLogInsert {
   rate_limit_remaining?: number | null;
   error_message?: string | null;
   started_at?: string;
+  progress_message?: string | null;
+  current_repo?: string | null;
+  total_repos?: number | null;
+  current_repo_index?: number | null;
 }
 
 export interface GitHubSyncLogUpdate {
@@ -301,6 +356,10 @@ export interface GitHubSyncLogUpdate {
   error_message?: string | null;
   completed_at?: string | null;
   duration_seconds?: number | null;
+  progress_message?: string | null;
+  current_repo?: string | null;
+  total_repos?: number | null;
+  current_repo_index?: number | null;
 }
 
 // ============================================================================
@@ -314,6 +373,11 @@ export interface GitHubConfigApiResponse {
 
 export interface GitHubRepositoriesApiResponse {
   data: GitHubRepository[] | null;
+  error: string | null;
+}
+
+export interface GitHubOrganizationsApiResponse {
+  data: GitHubOrganization[] | null;
   error: string | null;
 }
 

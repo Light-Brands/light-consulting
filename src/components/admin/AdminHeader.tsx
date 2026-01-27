@@ -28,7 +28,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   const headerActions = actions || action;
 
   return (
-    <header className="relative bg-depth-surface border-b border-depth-border py-4 md:py-8 overflow-hidden">
+    <header className="relative bg-depth-surface border-b border-depth-border py-4 md:py-8 overflow-visible">
       {/* Subtle background glow */}
       <div className="absolute top-1/2 right-0 w-96 h-96 bg-radiance-gold/3 blur-3xl pointer-events-none rounded-full -translate-y-1/2 translate-x-1/4" />
 

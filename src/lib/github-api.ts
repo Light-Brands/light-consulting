@@ -6,6 +6,7 @@ import type {
   GitHubApiPullRequest,
   GitHubApiContributorStats,
   GitHubApiRateLimit,
+  GitHubApiOrganization,
 } from '@/types/github-analytics';
 
 // ============================================================================
@@ -178,11 +179,11 @@ async function fetchAllPages<T>(
 
 export class GitHubClient {
   private token: string;
-  private orgName: string;
+  private orgName: string | null;
 
-  constructor(token: string, orgName: string) {
+  constructor(token: string, orgName?: string | null) {
     this.token = token;
-    this.orgName = orgName;
+    this.orgName = orgName || null;
   }
 
   // Validate token and get user info
@@ -227,10 +228,22 @@ export class GitHubClient {
   // Organization & Repositories
   // ============================================================================
 
-  async getOrgRepositories(includePrivate: boolean = true): Promise<GitHubApiRepository[]> {
+  // Get all organizations the token has access to
+  async getUserOrganizations(): Promise<GitHubApiOrganization[]> {
+    return fetchAllPages<GitHubApiOrganization>(
+      `${GITHUB_API_BASE}/user/orgs`,
+      this.token
+    );
+  }
+
+  async getOrgRepositories(includePrivate: boolean = true, orgLogin?: string): Promise<GitHubApiRepository[]> {
+    const org = orgLogin || this.orgName;
+    if (!org) {
+      throw new Error('No organization specified');
+    }
     const type = includePrivate ? 'all' : 'public';
     return fetchAllPages<GitHubApiRepository>(
-      `${GITHUB_API_BASE}/orgs/${this.orgName}/repos?type=${type}&sort=pushed`,
+      `${GITHUB_API_BASE}/orgs/${org}/repos?type=${type}&sort=pushed`,
       this.token
     );
   }
@@ -360,13 +373,19 @@ export function createGitHubClient(): GitHubClient | null {
   const token = process.env.GITHUB_ACCESS_TOKEN;
   const orgName = process.env.GITHUB_ORG_NAME;
 
-  if (!token || !orgName) {
+  if (!token) {
     return null;
   }
 
-  return new GitHubClient(token, orgName);
+  return new GitHubClient(token, orgName || null);
 }
 
 export function isGitHubConfigured(): boolean {
-  return !!(process.env.GITHUB_ACCESS_TOKEN && process.env.GITHUB_ORG_NAME);
+  // Token is required, org name is now optional (multi-org support)
+  return !!process.env.GITHUB_ACCESS_TOKEN;
+}
+
+// Check if legacy single-org mode (env var only, no tracked orgs in DB)
+export function hasLegacyOrgConfig(): boolean {
+  return !!process.env.GITHUB_ORG_NAME;
 }

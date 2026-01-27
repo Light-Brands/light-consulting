@@ -2,7 +2,7 @@
 // Orchestrates syncing data from GitHub API to Supabase
 
 import { supabaseAdmin } from '@/lib/supabase';
-import { GitHubClient, getRateLimitState } from '@/lib/github-api';
+import { GitHubClient, getRateLimitState, hasLegacyOrgConfig } from '@/lib/github-api';
 import type {
   SyncType,
   GitHubRepositoryInsert,
@@ -12,6 +12,7 @@ import type {
   GitHubDailyStatsInsert,
   GitHubSyncLogInsert,
   GitHubSyncLogUpdate,
+  GitHubOrganizationInsert,
   PRState,
 } from '@/types/github-analytics';
 
@@ -126,11 +127,79 @@ async function completeSyncLog(
 }
 
 // ============================================================================
+// Organization Sync
+// ============================================================================
+
+interface OrgRow {
+  id: string;
+  login: string;
+}
+
+export async function syncOrganizations(client: GitHubClient): Promise<number> {
+  const orgs = await client.getUserOrganizations();
+  let syncedCount = 0;
+
+  for (const org of orgs) {
+    const insert: GitHubOrganizationInsert = {
+      github_id: org.id,
+      login: org.login,
+      name: org.name,
+      avatar_url: org.avatar_url,
+      description: org.description,
+    };
+
+    // Upsert organization
+    const { error } = await supabaseAdmin
+      .from('github_orgs')
+      .upsert(
+        { ...insert, synced_at: new Date().toISOString() } as never,
+        { onConflict: 'github_id' }
+      );
+
+    if (error) {
+      console.error(`Failed to sync organization ${org.login}:`, error);
+    } else {
+      syncedCount++;
+    }
+  }
+
+  return syncedCount;
+}
+
+// Get tracked orgs from DB, or fall back to env var
+async function getOrgsToSync(): Promise<{ orgId: string | null; orgLogin: string }[]> {
+  // Check for tracked orgs in DB
+  const { data: trackedOrgs } = await supabaseAdmin
+    .from('github_orgs')
+    .select('id, login')
+    .eq('is_tracked', true);
+
+  if (trackedOrgs && trackedOrgs.length > 0) {
+    return (trackedOrgs as OrgRow[]).map(org => ({
+      orgId: org.id,
+      orgLogin: org.login,
+    }));
+  }
+
+  // Fall back to legacy env var
+  if (hasLegacyOrgConfig()) {
+    const orgName = process.env.GITHUB_ORG_NAME!;
+    return [{ orgId: null, orgLogin: orgName }];
+  }
+
+  return [];
+}
+
+// ============================================================================
 // Repository Sync
 // ============================================================================
 
-async function syncRepositories(client: GitHubClient): Promise<number> {
-  const repos = await client.getOrgRepositories(true);
+async function syncRepositoriesForOrg(
+  client: GitHubClient,
+  orgId: string | null,
+  orgLogin: string
+): Promise<number> {
+  const repos = await client.getOrgRepositories(true, orgLogin);
   let syncedCount = 0;
 
   for (const repo of repos) {
@@ -160,6 +229,7 @@ async function syncRepositories(client: GitHubClient): Promise<number> {
       open_issues_count: repo.open_issues_count,
       created_at_github: repo.created_at,
       pushed_at: repo.pushed_at,
+      org_id: orgId,
     };
 
     // Upsert repository
@@ -177,7 +247,31 @@ async function syncRepositories(client: GitHubClient): Promise<number> {
     }
   }
 
+  // Update org repos_count
+  if (orgId) {
+    await supabaseAdmin
+      .from('github_orgs')
+      .update({ repos_count: syncedCount, synced_at: new Date().toISOString() } as never)
+      .eq('id', orgId);
+  }
+
   return syncedCount;
+}
+
+async function syncRepositories(client: GitHubClient): Promise<number> {
+  const orgsToSync = await getOrgsToSync();
+  let totalSynced = 0;
+
+  for (const { orgId, orgLogin } of orgsToSync) {
+    try {
+      const count = await syncRepositoriesForOrg(client, orgId, orgLogin);
+      totalSynced += count;
+    } catch (e) {
+      console.error(`Failed to sync repositories for org ${orgLogin}:`, e);
+    }
+  }
+
+  return totalSynced;
 }
 
 // ============================================================================
@@ -188,7 +282,8 @@ async function syncCommits(
   client: GitHubClient,
   repositoryId?: string,
   since?: Date,
-  maxPerRepo: number = 500
+  maxPerRepo: number = 500,
+  syncLogId?: string
 ): Promise<number> {
   // Get repositories to sync
   let query = supabaseAdmin.from('github_repositories').select('*').eq('is_tracked', true);
@@ -202,9 +297,23 @@ async function syncCommits(
   }
 
   let totalSynced = 0;
+  const repoList = repos as RepoRow[];
+  const totalRepos = repoList.length;
 
-  for (const repo of repos as RepoRow[]) {
+  for (let i = 0; i < repoList.length; i++) {
+    const repo = repoList[i];
     const [owner, repoName] = repo.full_name.split('/');
+
+    // Update progress
+    if (syncLogId) {
+      await updateSyncLog(syncLogId, {
+        progress_message: `Syncing commits from ${repo.full_name}`,
+        current_repo: repo.full_name,
+        current_repo_index: i + 1,
+        total_repos: totalRepos,
+        commits_synced: totalSynced,
+      });
+    }
 
     try {
       const commits = await client.getCommits(owner, repoName, {
@@ -251,6 +360,65 @@ async function syncCommits(
   }
 
   return totalSynced;
+}
+
+// ============================================================================
+// Code Frequency Sync (for accurate line stats)
+// ============================================================================
+
+async function syncCodeFrequency(
+  client: GitHubClient,
+  repositoryId?: string
+): Promise<void> {
+  let query = supabaseAdmin.from('github_repositories').select('*').eq('is_tracked', true);
+  if (repositoryId) {
+    query = query.eq('id', repositoryId);
+  }
+
+  const { data: repos, error: repoError } = await query;
+  if (repoError || !repos) {
+    throw new Error(`Failed to get repositories: ${repoError?.message}`);
+  }
+
+  for (const repo of repos as RepoRow[]) {
+    const [owner, repoName] = repo.full_name.split('/');
+
+    try {
+      // Get code frequency (weekly additions/deletions)
+      const codeFrequency = await client.getCodeFrequency(owner, repoName);
+
+      if (!codeFrequency || codeFrequency.length === 0) {
+        continue;
+      }
+
+      // Process each week's data into daily stats
+      for (const [timestamp, additions, deletions] of codeFrequency) {
+        const weekDate = new Date(timestamp * 1000);
+        const dateStr = weekDate.toISOString().split('T')[0];
+
+        // Upsert into daily stats with the weekly data
+        // We store at week granularity since that's what GitHub provides
+        const { error } = await supabaseAdmin
+          .from('github_daily_stats')
+          .upsert(
+            {
+              repository_id: repo.id,
+              stat_date: dateStr,
+              additions: additions,
+              deletions: Math.abs(deletions), // GitHub returns deletions as negative
+              synced_at: new Date().toISOString(),
+            } as never,
+            { onConflict: 'repository_id,stat_date' }
+          );
+
+        if (error) {
+          console.error(`Failed to upsert daily stats for ${repo.full_name}:`, error);
+        }
+      }
+    } catch (e) {
+      console.error(`Failed to sync code frequency for ${repo.full_name}:`, e);
+    }
+  }
 }
 
 // ============================================================================
@@ -415,6 +583,23 @@ async function aggregateDailyStats(repositoryId?: string): Promise<void> {
   if (!repos) return;
 
   for (const repo of repos as { id: string }[]) {
+    // First, get existing daily stats (which may have code_frequency data)
+    const { data: existingStats } = await supabaseAdmin
+      .from('github_daily_stats')
+      .select('stat_date, additions, deletions')
+      .eq('repository_id', repo.id);
+
+    // Build a map of existing code frequency data
+    const existingCodeFreq: Record<string, { additions: number; deletions: number }> = {};
+    for (const stat of (existingStats || []) as { stat_date: string; additions: number | null; deletions: number | null }[]) {
+      if (stat.additions || stat.deletions) {
+        existingCodeFreq[stat.stat_date] = {
+          additions: stat.additions || 0,
+          deletions: stat.deletions || 0,
+        };
+      }
+    }
+
     // Aggregate commits by date
     const { data: commits } = await supabaseAdmin
       .from('github_commits')
@@ -430,12 +615,14 @@ async function aggregateDailyStats(repositoryId?: string): Promise<void> {
       const date = new Date(commit.committed_at).toISOString().split('T')[0];
 
       if (!dailyData[date]) {
+        // Preserve existing code frequency data if present
+        const existingFreq = existingCodeFreq[date];
         dailyData[date] = {
           repository_id: repo.id,
           stat_date: date,
           commits_count: 0,
-          additions: 0,
-          deletions: 0,
+          additions: existingFreq?.additions || 0,
+          deletions: existingFreq?.deletions || 0,
           prs_opened: 0,
           prs_merged: 0,
           unique_contributors: 0,
@@ -443,8 +630,11 @@ async function aggregateDailyStats(repositoryId?: string): Promise<void> {
       }
 
       dailyData[date].commits_count = (dailyData[date].commits_count || 0) + 1;
-      dailyData[date].additions = (dailyData[date].additions || 0) + (commit.additions || 0);
-      dailyData[date].deletions = (dailyData[date].deletions || 0) + (commit.deletions || 0);
+      // Only add commit line stats if we don't have code_frequency data for this date
+      if (!existingCodeFreq[date]) {
+        dailyData[date].additions = (dailyData[date].additions || 0) + (commit.additions || 0);
+        dailyData[date].deletions = (dailyData[date].deletions || 0) + (commit.deletions || 0);
+      }
     }
 
     // Calculate unique contributors per day
@@ -487,6 +677,22 @@ async function aggregateDailyStats(repositoryId?: string): Promise<void> {
       }
     }
 
+    // Also include dates that have code_frequency data but no commits
+    for (const [date, freq] of Object.entries(existingCodeFreq)) {
+      if (!dailyData[date]) {
+        dailyData[date] = {
+          repository_id: repo.id,
+          stat_date: date,
+          commits_count: 0,
+          additions: freq.additions,
+          deletions: freq.deletions,
+          prs_opened: 0,
+          prs_merged: 0,
+          unique_contributors: 0,
+        };
+      }
+    }
+
     // Upsert daily stats
     for (const stats of Object.values(dailyData)) {
       await supabaseAdmin
@@ -521,36 +727,60 @@ export async function runSync(
   };
 
   try {
-    // Always sync repositories first for full sync
-    if (syncType === 'full' || syncType === 'repositories') {
+    // Always sync repositories for full/incremental syncs to pick up new repos
+    if (syncType === 'full' || syncType === 'incremental' || syncType === 'repositories') {
+      await updateSyncLog(syncLogId, { progress_message: 'Discovering repositories...' });
       result.repositoriesSynced = await syncRepositories(client);
-      await updateSyncLog(syncLogId, { repositories_synced: result.repositoriesSynced });
+      await updateSyncLog(syncLogId, {
+        repositories_synced: result.repositoriesSynced,
+        progress_message: `Found ${result.repositoriesSynced} repositories`,
+      });
     }
 
     // Sync commits
     if (syncType === 'full' || syncType === 'incremental' || syncType === 'commits') {
-      result.commitsSynced = await syncCommits(client, repositoryId, since, maxCommitsPerRepo);
-      await updateSyncLog(syncLogId, { commits_synced: result.commitsSynced });
+      await updateSyncLog(syncLogId, { progress_message: 'Starting commit sync...' });
+      result.commitsSynced = await syncCommits(client, repositoryId, since, maxCommitsPerRepo, syncLogId);
+      await updateSyncLog(syncLogId, {
+        commits_synced: result.commitsSynced,
+        progress_message: `Synced ${result.commitsSynced} commits`,
+      });
     }
 
     // Sync PRs
     if (syncType === 'full' || syncType === 'incremental' || syncType === 'pull_requests') {
+      await updateSyncLog(syncLogId, { progress_message: 'Syncing pull requests...' });
       result.prsSynced = await syncPullRequests(client, repositoryId);
-      await updateSyncLog(syncLogId, { prs_synced: result.prsSynced });
+      await updateSyncLog(syncLogId, {
+        prs_synced: result.prsSynced,
+        progress_message: `Synced ${result.prsSynced} pull requests`,
+      });
     }
 
     // Sync contributors
     if (syncType === 'full' || syncType === 'incremental' || syncType === 'contributors') {
+      await updateSyncLog(syncLogId, { progress_message: 'Syncing contributors...' });
       result.contributorsSynced = await syncContributors(client, repositoryId);
-      await updateSyncLog(syncLogId, { contributors_synced: result.contributorsSynced });
+      await updateSyncLog(syncLogId, {
+        contributors_synced: result.contributorsSynced,
+        progress_message: `Synced ${result.contributorsSynced} contributors`,
+      });
+    }
+
+    // Sync code frequency (line stats) - this gets accurate additions/deletions
+    if (syncType === 'full' || syncType === 'incremental') {
+      await updateSyncLog(syncLogId, { progress_message: 'Syncing code frequency data...' });
+      await syncCodeFrequency(client, repositoryId);
     }
 
     // Aggregate daily stats
     if (syncType === 'full' || syncType === 'incremental') {
+      await updateSyncLog(syncLogId, { progress_message: 'Aggregating daily statistics...' });
       await aggregateDailyStats(repositoryId);
     }
 
     result.success = true;
+    await updateSyncLog(syncLogId, { progress_message: 'Sync complete!' });
     await completeSyncLog(syncLogId, result);
 
     return result;
@@ -570,6 +800,18 @@ export async function getLatestSyncStatus(): Promise<{
   lastSync: { completed_at: string; status: string; duration_seconds: number } | null;
   isRunning: boolean;
 }> {
+  // First, auto-clear any stuck syncs (running for more than 30 minutes)
+  const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+  await supabaseAdmin
+    .from('github_sync_log')
+    .update({
+      status: 'failed',
+      error_message: 'Sync timed out or was interrupted',
+      completed_at: new Date().toISOString(),
+    } as never)
+    .eq('status', 'running')
+    .lt('started_at', thirtyMinutesAgo);
+
   // Check for running sync
   const { data: running } = await supabaseAdmin
     .from('github_sync_log')

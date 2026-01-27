@@ -88,7 +88,9 @@ function NewProposalContent() {
   const { authFetch } = useAuthFetch();
 
   const [lead, setLead] = useState<LeadSubmission | null>(null);
+  const [leads, setLeads] = useState<LeadSubmission[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingLeads, setIsLoadingLeads] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeTab, setActiveTab] = useState<'details' | 'phases' | 'milestones' | 'agreement'>('details');
@@ -206,6 +208,29 @@ function NewProposalContent() {
       fetchLead(leadId);
     }
   }, [leadId, fetchLead]);
+
+  // Fetch leads list for the selector
+  useEffect(() => {
+    const fetchLeads = async () => {
+      setIsLoadingLeads(true);
+      try {
+        const response = await authFetch('/api/leads');
+        const data = await response.json();
+        if (data.data) {
+          // Filter out converted/closed leads - only show active ones
+          const activeLeads = data.data.filter(
+            (l: LeadSubmission) => !['converted', 'closed', 'lost'].includes(l.status)
+          );
+          setLeads(activeLeads);
+        }
+      } catch (error) {
+        console.error('Error fetching leads:', error);
+      } finally {
+        setIsLoadingLeads(false);
+      }
+    };
+    fetchLeads();
+  }, [authFetch]);
 
   // Fetch clients on mount
   useEffect(() => {
@@ -1022,6 +1047,68 @@ function NewProposalContent() {
                   {/* Details Tab */}
                   {activeTab === 'details' && (
                     <div className="space-y-8">
+                      {/* Lead Selection */}
+                      <div>
+                        <h3 className="text-lg font-semibold text-text-primary mb-4">Lead Selection</h3>
+                        <p className="text-text-muted text-sm mb-4">
+                          Select a lead to access AI-powered proposal generation and auto-fill client information.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-text-primary text-sm font-medium mb-2">
+                              Lead
+                            </label>
+                            <select
+                              value={lead?.id || ''}
+                              onChange={(e) => {
+                                if (e.target.value) {
+                                  fetchLead(e.target.value);
+                                } else {
+                                  setLead(null);
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    client_name: '',
+                                    client_email: '',
+                                    client_company: '',
+                                    client_phone: '',
+                                  }));
+                                  setSelectedServices([]);
+                                  router.replace('/admin/proposals/new');
+                                }
+                              }}
+                              disabled={isLoadingLeads}
+                              className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary focus:border-radiance-gold focus:outline-none disabled:opacity-50"
+                            >
+                              <option value="">
+                                {isLoadingLeads ? 'Loading leads...' : '-- No Lead (Manual Entry) --'}
+                              </option>
+                              {leads.map((l) => (
+                                <option key={l.id} value={l.id}>
+                                  {l.name}{l.company ? ` (${l.company})` : ''} - {l.service}
+                                </option>
+                              ))}
+                            </select>
+                            <p className="text-text-muted text-xs mt-1">
+                              <Link href="/admin/leads" className="text-radiance-gold hover:underline">
+                                Manage Leads
+                              </Link>
+                            </p>
+                          </div>
+                          {lead && (
+                            <div className="flex items-center">
+                              <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-sm">
+                                <span className="text-green-400 font-medium flex items-center gap-2">
+                                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                  </svg>
+                                  Lead linked: {lead.name}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
                       {/* Client/Project Selection */}
                       <div>
                         <h3 className="text-lg font-semibold text-text-primary mb-4">Link to Client & Project</h3>
@@ -1076,6 +1163,75 @@ function NewProposalContent() {
                               </p>
                             )}
                           </div>
+                        </div>
+                      </div>
+
+                      {/* Referrer / Source */}
+                      <div>
+                        <h3 className="text-lg font-semibold text-text-primary mb-4">Referrer / Source</h3>
+                        <p className="text-text-muted text-sm mb-4">
+                          Track the source of this project for team compensation and analytics.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-text-primary text-sm font-medium mb-2">
+                              Referrer Type
+                            </label>
+                            <select
+                              value={formData.referrer_type}
+                              onChange={(e) => {
+                                const value = e.target.value as '' | 'team_member' | 'ads' | 'direct' | 'other';
+                                setFormData({
+                                  ...formData,
+                                  referrer_type: value,
+                                  referrer_user_id: value === 'team_member' ? formData.referrer_user_id : '',
+                                  referrer_source: value === 'other' ? formData.referrer_source : '',
+                                });
+                              }}
+                              className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary focus:border-radiance-gold focus:outline-none"
+                            >
+                              <option value="">-- Select Source --</option>
+                              <option value="team_member">Team Member</option>
+                              <option value="ads">Ads</option>
+                              <option value="direct">Direct</option>
+                              <option value="other">Other</option>
+                            </select>
+                          </div>
+
+                          {formData.referrer_type === 'team_member' && (
+                            <div>
+                              <label className="block text-text-primary text-sm font-medium mb-2">
+                                Team Member
+                              </label>
+                              <select
+                                value={formData.referrer_user_id}
+                                onChange={(e) => setFormData({ ...formData, referrer_user_id: e.target.value })}
+                                className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary focus:border-radiance-gold focus:outline-none"
+                              >
+                                <option value="">-- Select Team Member --</option>
+                                {teamMembers.map((member) => (
+                                  <option key={member.id} value={member.id}>
+                                    {member.name} ({member.email})
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          )}
+
+                          {formData.referrer_type === 'other' && (
+                            <div>
+                              <label className="block text-text-primary text-sm font-medium mb-2">
+                                Source Description
+                              </label>
+                              <input
+                                type="text"
+                                value={formData.referrer_source}
+                                onChange={(e) => setFormData({ ...formData, referrer_source: e.target.value })}
+                                placeholder="e.g., Conference, Partner, Referral"
+                                className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none transition-colors"
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
 
@@ -1274,74 +1430,6 @@ function NewProposalContent() {
                               Leave empty for no password protection
                             </p>
                           </div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <h3 className="text-lg font-semibold text-text-primary mb-4">Referrer / Source</h3>
-                        <p className="text-text-muted text-sm mb-4">
-                          Track the source of this project for team compensation and analytics.
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-text-primary text-sm font-medium mb-2">
-                              Referrer Type
-                            </label>
-                            <select
-                              value={formData.referrer_type}
-                              onChange={(e) => {
-                                const value = e.target.value as '' | 'team_member' | 'ads' | 'direct' | 'other';
-                                setFormData({
-                                  ...formData,
-                                  referrer_type: value,
-                                  referrer_user_id: value === 'team_member' ? formData.referrer_user_id : '',
-                                  referrer_source: value === 'other' ? formData.referrer_source : '',
-                                });
-                              }}
-                              className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary focus:border-radiance-gold focus:outline-none"
-                            >
-                              <option value="">-- Select Source --</option>
-                              <option value="team_member">Team Member</option>
-                              <option value="ads">Ads</option>
-                              <option value="direct">Direct</option>
-                              <option value="other">Other</option>
-                            </select>
-                          </div>
-
-                          {formData.referrer_type === 'team_member' && (
-                            <div>
-                              <label className="block text-text-primary text-sm font-medium mb-2">
-                                Team Member
-                              </label>
-                              <select
-                                value={formData.referrer_user_id}
-                                onChange={(e) => setFormData({ ...formData, referrer_user_id: e.target.value })}
-                                className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary focus:border-radiance-gold focus:outline-none"
-                              >
-                                <option value="">-- Select Team Member --</option>
-                                {teamMembers.map((member) => (
-                                  <option key={member.id} value={member.id}>
-                                    {member.name} ({member.email})
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                          )}
-
-                          {formData.referrer_type === 'other' && (
-                            <div>
-                              <label className="block text-text-primary text-sm font-medium mb-2">
-                                Source Description
-                              </label>
-                              <input
-                                type="text"
-                                value={formData.referrer_source}
-                                onChange={(e) => setFormData({ ...formData, referrer_source: e.target.value })}
-                                placeholder="e.g., Conference, Partner, Referral"
-                                className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary placeholder-text-muted/50 focus:border-radiance-gold focus:outline-none transition-colors"
-                              />
-                            </div>
-                          )}
                         </div>
                       </div>
                     </div>
@@ -1685,18 +1773,9 @@ function NewProposalContent() {
                   <p className="text-text-muted text-sm mb-2">
                     No lead selected
                   </p>
-                  <p className="text-text-muted text-xs mb-4">
-                    Select a lead to access AI-powered proposal generation and business intelligence.
+                  <p className="text-text-muted text-xs">
+                    Select a lead in the Details tab to access AI-powered proposal generation and business intelligence.
                   </p>
-                  <Link
-                    href="/admin/leads"
-                    className="inline-flex items-center gap-2 text-radiance-gold hover:underline text-sm"
-                  >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    View Leads
-                  </Link>
                 </div>
               )}
             </div>

@@ -7,13 +7,15 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import type { GitHubRepository } from '@/types/github-analytics';
-import { RepositoryCard } from './RepositoryCard';
+import { RepositoryCard, type RepositoryWithStats } from './RepositoryCard';
 
 interface RepositoryListProps {
-  repositories: GitHubRepository[];
+  repositories: RepositoryWithStats[];
   loading?: boolean;
   showRanks?: boolean;
+  showLineStats?: boolean;
+  showToggle?: boolean;
+  onToggleTracked?: (id: string, tracked: boolean) => void;
   className?: string;
 }
 
@@ -21,6 +23,9 @@ export const RepositoryList: React.FC<RepositoryListProps> = ({
   repositories,
   loading,
   showRanks = false,
+  showLineStats = false,
+  showToggle = false,
+  onToggleTracked,
   className,
 }) => {
   if (loading) {
@@ -65,6 +70,9 @@ export const RepositoryList: React.FC<RepositoryListProps> = ({
           key={repo.id}
           repository={repo}
           rank={showRanks ? index + 1 : undefined}
+          showLineStats={showLineStats}
+          showToggle={showToggle}
+          onToggleTracked={onToggleTracked}
         />
       ))}
     </div>

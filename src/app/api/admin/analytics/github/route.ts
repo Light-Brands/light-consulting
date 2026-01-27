@@ -31,6 +31,7 @@ interface DashboardData {
     additions: number;
     deletions: number;
   }>;
+  tracked_orgs_count: number;
 }
 
 /**
@@ -72,10 +73,17 @@ export async function GET(request: NextRequest) {
           top_repositories: [],
           top_contributors: [],
           daily_stats: [],
+          tracked_orgs_count: 0,
         } as DashboardData,
         error: null,
       });
     }
+
+    // Get tracked orgs count
+    const { count: trackedOrgsCount } = await supabaseAdmin
+      .from('github_orgs')
+      .select('id', { count: 'exact', head: true })
+      .eq('is_tracked', true);
 
     const { start: startDate, end: endDate } = getDateRangeFromTimeRange(timeRange);
 
@@ -108,6 +116,7 @@ export async function GET(request: NextRequest) {
         top_repositories: [],
         top_contributors: [],
         daily_stats: [],
+        tracked_orgs_count: trackedOrgsCount || 0,
       };
       return NextResponse.json({ data: emptyDashboard, error: null });
     }
@@ -211,17 +220,8 @@ export async function GET(request: NextRequest) {
         .single(),
     ]);
 
-    // Process commit stats
-    type CommitRow = { additions: number | null; deletions: number | null };
-    type CommitAcc = { count: number; additions: number; deletions: number };
-    const commitStats = ((commitsResult.data || []) as CommitRow[]).reduce<CommitAcc>(
-      (acc, c) => ({
-        count: acc.count + 1,
-        additions: acc.additions + (c.additions || 0),
-        deletions: acc.deletions + (c.deletions || 0),
-      }),
-      { count: 0, additions: 0, deletions: 0 }
-    );
+    // Process commit count
+    const commitCount = (commitsResult.data || []).length;
 
     // Aggregate contributors
     type ContributorRow = {
@@ -287,10 +287,14 @@ export async function GET(request: NextRequest) {
       a.stat_date.localeCompare(b.stat_date)
     );
 
+    // Calculate total lines from daily stats (which has accurate code_frequency data)
+    const totalAdditions = dailyStats.reduce((sum, d) => sum + d.additions, 0);
+    const totalDeletions = dailyStats.reduce((sum, d) => sum + d.deletions, 0);
+
     const summary: GitHubSummaryStats = {
-      total_commits: commitStats.count,
-      total_additions: commitStats.additions,
-      total_deletions: commitStats.deletions,
+      total_commits: commitCount,
+      total_additions: totalAdditions,
+      total_deletions: totalDeletions,
       open_prs: openPrsResult.count || 0,
       merged_prs: mergedPrsResult.count || 0,
       total_repositories: totalReposResult.count || 0,
@@ -308,6 +312,7 @@ export async function GET(request: NextRequest) {
       top_repositories: (topReposResult.data || []) as GitHubRepository[],
       top_contributors: topContributors,
       daily_stats: dailyStats,
+      tracked_orgs_count: trackedOrgsCount || 0,
     };
 
     return NextResponse.json({ data: dashboard, error: null });

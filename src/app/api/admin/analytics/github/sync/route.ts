@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
       syncType,
       repositoryId,
       since,
-      maxCommitsPerRepo: syncType === 'full' ? 1000 : 200,
+      maxCommitsPerRepo: syncType === 'full' ? 5000 : 200,
     });
 
     if (!result.success) {

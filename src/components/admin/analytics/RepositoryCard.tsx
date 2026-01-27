@@ -10,10 +10,20 @@ import { cn } from '@/lib/utils';
 import type { GitHubRepository } from '@/types/github-analytics';
 import { formatNumber, getRelativeTime } from '@/types/github-analytics';
 
+export interface RepositoryWithStats extends GitHubRepository {
+  total_additions?: number;
+  total_deletions?: number;
+  stats_start_date?: string | null;
+  stats_end_date?: string | null;
+}
+
 interface RepositoryCardProps {
-  repository: GitHubRepository;
+  repository: RepositoryWithStats;
   rank?: number;
   showStats?: boolean;
+  showLineStats?: boolean;
+  showToggle?: boolean;
+  onToggleTracked?: (id: string, tracked: boolean) => void;
   className?: string;
 }
 
@@ -21,6 +31,9 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
   repository,
   rank,
   showStats = true,
+  showLineStats = false,
+  showToggle = false,
+  onToggleTracked,
   className,
 }) => {
   const languageColors: Record<string, string> = {
@@ -36,9 +49,18 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
     HTML: 'bg-orange-400',
   };
 
+  const handleToggle = () => {
+    if (onToggleTracked) {
+      onToggleTracked(repository.id, !repository.is_tracked);
+    }
+  };
+
   return (
     <div className={cn(
-      'bg-depth-elevated rounded-lg p-4 border border-depth-border hover:border-radiance-gold/30 transition-colors',
+      'bg-depth-elevated rounded-lg p-4 border transition-colors',
+      repository.is_tracked
+        ? 'border-depth-border hover:border-radiance-gold/30'
+        : 'border-depth-border/50 opacity-60',
       className
     )}>
       <div className="flex items-start gap-3">
@@ -48,16 +70,49 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <h4 className="font-medium text-text-primary truncate">{repository.name}</h4>
-            {repository.is_private && (
-              <span className="px-1.5 py-0.5 text-[10px] font-medium bg-amber-500/20 text-amber-400 rounded">
-                Private
-              </span>
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <div className="flex items-center gap-2 min-w-0">
+              <h4 className="font-medium text-text-primary truncate">{repository.name}</h4>
+              {repository.is_private && (
+                <span className="px-1.5 py-0.5 text-[10px] font-medium bg-amber-500/20 text-amber-400 rounded shrink-0">
+                  Private
+                </span>
+              )}
+            </div>
+            {showToggle && (
+              <button
+                onClick={handleToggle}
+                className={cn(
+                  'shrink-0 px-2 py-1 text-xs font-medium rounded transition-colors',
+                  repository.is_tracked
+                    ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
+                    : 'bg-depth-surface text-text-muted hover:bg-depth-border'
+                )}
+                title={repository.is_tracked ? 'Included in totals - click to exclude' : 'Excluded from totals - click to include'}
+              >
+                {repository.is_tracked ? 'Included' : 'Excluded'}
+              </button>
             )}
           </div>
+
           {repository.description && (
             <p className="text-sm text-text-muted line-clamp-2 mb-3">{repository.description}</p>
+          )}
+
+          {/* Line stats */}
+          {showLineStats && (repository.total_additions !== undefined || repository.total_deletions !== undefined) && (
+            <div className="flex items-center gap-4 mb-3 text-sm">
+              <div className="flex items-center gap-1.5">
+                <span className="text-green-400 font-medium">+{formatNumber(repository.total_additions || 0)}</span>
+                <span className="text-text-muted">/</span>
+                <span className="text-red-400 font-medium">-{formatNumber(repository.total_deletions || 0)}</span>
+              </div>
+              {repository.stats_start_date && repository.stats_end_date && (
+                <span className="text-xs text-text-muted">
+                  ({repository.stats_start_date} to {repository.stats_end_date})
+                </span>
+              )}
+            </div>
           )}
 
           <div className="flex items-center gap-4 text-xs text-text-muted">
