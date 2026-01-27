@@ -38,7 +38,7 @@ export default function AdminProposalsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>('card');
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const { authFetch } = useAuthFetch();
 
   const fetchProposals = useCallback(async () => {
