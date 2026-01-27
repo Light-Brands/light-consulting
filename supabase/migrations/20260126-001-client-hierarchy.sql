@@ -90,8 +90,9 @@ ALTER TABLE project_members
   CHECK (proposal_id IS NOT NULL OR client_project_id IS NOT NULL);
 
 -- Update unique constraint to handle both proposal and project level membership
-DROP INDEX IF EXISTS uq_project_member;
+-- Drop constraint first (which depends on the index), then the index
 ALTER TABLE project_members DROP CONSTRAINT IF EXISTS uq_project_member;
+DROP INDEX IF EXISTS uq_project_member;
 
 CREATE UNIQUE INDEX IF NOT EXISTS uq_project_member_proposal
 ON project_members(proposal_id, user_profile_id)
