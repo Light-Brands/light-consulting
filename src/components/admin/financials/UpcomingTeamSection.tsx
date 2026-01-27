@@ -1,6 +1,8 @@
 /**
- * Team Overhead Section Component
+ * Upcoming Team Section Component
  * Light Brand Consulting
+ *
+ * Displays team members with future start dates for OpEx projections
  */
 
 'use client';
@@ -8,10 +10,10 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui';
 import type { TeamOverhead, CostType } from '@/types/financials';
-import { getCostTypeConfig, formatCurrency } from '@/types/financials';
+import { getCostTypeConfig, formatCurrency, formatDate } from '@/types/financials';
 import { TeamOverheadModal } from './TeamOverheadModal';
 
-interface TeamOverheadSectionProps {
+interface UpcomingTeamSectionProps {
   team: TeamOverhead[];
   onAdd: (data: {
     name: string;
@@ -30,23 +32,19 @@ interface TeamOverheadSectionProps {
     start_date: string | null;
   }) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
-  onReorder?: (orderedIds: string[]) => Promise<void>;
   isLoading?: boolean;
 }
 
-export const TeamOverheadSection: React.FC<TeamOverheadSectionProps> = ({
+export const UpcomingTeamSection: React.FC<UpcomingTeamSectionProps> = ({
   team,
   onAdd,
   onUpdate,
   onDelete,
-  onReorder,
   isLoading,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [editingMember, setEditingMember] = useState<TeamOverhead | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [draggedId, setDraggedId] = useState<string | null>(null);
-  const [dragOverId, setDragOverId] = useState<string | null>(null);
 
   const total = team.reduce((sum, t) => sum + Number(t.monthly_cost), 0);
 
@@ -86,65 +84,26 @@ export const TeamOverheadSection: React.FC<TeamOverheadSectionProps> = ({
     }
   };
 
-  const handleDragStart = (e: React.DragEvent, id: string) => {
-    setDraggedId(id);
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', id);
-  };
-
-  const handleDragOver = (e: React.DragEvent, id: string) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    if (id !== draggedId) {
-      setDragOverId(id);
-    }
-  };
-
-  const handleDragLeave = () => {
-    setDragOverId(null);
-  };
-
-  const handleDrop = async (e: React.DragEvent, targetId: string) => {
-    e.preventDefault();
-    setDragOverId(null);
-
-    if (!draggedId || draggedId === targetId || !onReorder) {
-      setDraggedId(null);
-      return;
-    }
-
-    const currentIds = team.map(m => m.id);
-    const draggedIndex = currentIds.indexOf(draggedId);
-    const targetIndex = currentIds.indexOf(targetId);
-
-    if (draggedIndex === -1 || targetIndex === -1) {
-      setDraggedId(null);
-      return;
-    }
-
-    // Remove dragged item and insert at target position
-    const newIds = [...currentIds];
-    newIds.splice(draggedIndex, 1);
-    newIds.splice(targetIndex, 0, draggedId);
-
-    setDraggedId(null);
-    await onReorder(newIds);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedId(null);
-    setDragOverId(null);
-  };
+  // Sort by start date
+  const sortedTeam = [...team].sort((a, b) => {
+    if (!a.start_date || !b.start_date) return 0;
+    return new Date(a.start_date).getTime() - new Date(b.start_date).getTime();
+  });
 
   return (
-    <div className="bg-depth-surface border border-depth-border rounded-2xl p-6">
+    <div className="bg-depth-surface border border-amber-500/20 rounded-2xl p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-xl font-semibold text-text-primary">Team Overhead</h2>
-          <p className="text-sm text-text-muted">Salaries, contractors, and stipends</p>
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl font-semibold text-text-primary">Upcoming Team</h2>
+            <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400">
+              Projections
+            </span>
+          </div>
+          <p className="text-sm text-text-muted">Planned hires for future OpEx</p>
         </div>
         <Button variant="primary" size="sm" onClick={handleAdd}>
-          Add Member
+          Add Upcoming
         </Button>
       </div>
 
@@ -156,40 +115,26 @@ export const TeamOverheadSection: React.FC<TeamOverheadSectionProps> = ({
         </div>
       ) : team.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-text-muted mb-4">No team costs added yet</p>
+          <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-amber-500/10 flex items-center justify-center">
+            <svg className="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <p className="text-text-muted mb-4">No upcoming hires scheduled</p>
           <Button variant="ghost" onClick={handleAdd}>
-            Add your first team member
+            Plan a new hire
           </Button>
         </div>
       ) : (
         <>
           <div className="space-y-3">
-            {team.map((member) => {
+            {sortedTeam.map((member) => {
               const costTypeConfig = getCostTypeConfig(member.cost_type);
-              const isDragging = draggedId === member.id;
-              const isDragOver = dragOverId === member.id;
               return (
                 <div
                   key={member.id}
-                  draggable={!!onReorder}
-                  onDragStart={(e) => handleDragStart(e, member.id)}
-                  onDragOver={(e) => handleDragOver(e, member.id)}
-                  onDragLeave={handleDragLeave}
-                  onDrop={(e) => handleDrop(e, member.id)}
-                  onDragEnd={handleDragEnd}
-                  className={`bg-depth-base border rounded-lg p-4 flex items-center justify-between gap-4 transition-all ${
-                    isDragging ? 'opacity-50 border-radiance-gold' : ''
-                  } ${isDragOver ? 'border-radiance-gold border-2' : 'border-depth-border'} ${
-                    onReorder ? 'cursor-grab active:cursor-grabbing' : ''
-                  }`}
+                  className="bg-depth-base border border-amber-500/10 rounded-lg p-4 flex items-center justify-between gap-4"
                 >
-                  {onReorder && (
-                    <div className="flex-shrink-0 text-text-muted/50 hover:text-text-muted">
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 8h16M4 16h16" />
-                      </svg>
-                    </div>
-                  )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-medium text-text-primary truncate">
@@ -199,15 +144,26 @@ export const TeamOverheadSection: React.FC<TeamOverheadSectionProps> = ({
                         {costTypeConfig.label}
                       </span>
                     </div>
-                    {member.role && (
-                      <div className="text-sm text-text-muted">
-                        {member.role}
-                      </div>
-                    )}
+                    <div className="flex items-center gap-2 text-sm">
+                      {member.role && (
+                        <span className="text-text-muted">{member.role}</span>
+                      )}
+                      {member.role && member.start_date && (
+                        <span className="text-text-muted">·</span>
+                      )}
+                      {member.start_date && (
+                        <span className="text-amber-400 flex items-center gap-1">
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          Starts {formatDate(member.start_date)}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="font-semibold text-text-primary whitespace-nowrap">
-                      {formatCurrency(member.monthly_cost)}/mo
+                    <span className="font-semibold text-amber-400 whitespace-nowrap">
+                      +{formatCurrency(member.monthly_cost)}/mo
                     </span>
                     <div className="flex items-center gap-1">
                       <button
@@ -237,10 +193,10 @@ export const TeamOverheadSection: React.FC<TeamOverheadSectionProps> = ({
           </div>
 
           {/* Section total */}
-          <div className="mt-4 pt-4 border-t border-depth-border flex justify-between items-center">
-            <span className="text-text-muted">Total Team ({team.length})</span>
-            <span className="text-lg font-semibold text-radiance-gold">
-              {formatCurrency(total)}/mo
+          <div className="mt-4 pt-4 border-t border-amber-500/20 flex justify-between items-center">
+            <span className="text-text-muted">Projected Addition ({team.length})</span>
+            <span className="text-lg font-semibold text-amber-400">
+              +{formatCurrency(total)}/mo
             </span>
           </div>
         </>
@@ -254,10 +210,11 @@ export const TeamOverheadSection: React.FC<TeamOverheadSectionProps> = ({
           }}
           onSave={handleSave}
           editData={editingMember}
+          defaultUpcoming={!editingMember}
         />
       )}
     </div>
   );
 };
 
-export default TeamOverheadSection;
+export default UpcomingTeamSection;

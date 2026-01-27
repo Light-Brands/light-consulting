@@ -25,8 +25,10 @@ interface TeamOverheadModalProps {
     monthly_cost: number;
     cost_type: CostType;
     notes: string | null;
+    start_date: string | null;
   }) => Promise<void>;
   editData?: TeamOverhead | null;
+  defaultUpcoming?: boolean;
 }
 
 const costTypes: Array<{ value: CostType; label: string }> = [
@@ -39,12 +41,14 @@ export const TeamOverheadModal: React.FC<TeamOverheadModalProps> = ({
   onClose,
   onSave,
   editData,
+  defaultUpcoming = false,
 }) => {
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
   const [monthlyCost, setMonthlyCost] = useState('');
   const [costType, setCostType] = useState<CostType>('salary');
   const [notes, setNotes] = useState('');
+  const [startDate, setStartDate] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -82,8 +86,14 @@ export const TeamOverheadModal: React.FC<TeamOverheadModalProps> = ({
       setMonthlyCost(editData.monthly_cost.toString());
       setCostType(editData.cost_type);
       setNotes(editData.notes || '');
+      setStartDate(editData.start_date || '');
+    } else if (defaultUpcoming) {
+      // Set default start date to tomorrow for upcoming members
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      setStartDate(tomorrow.toISOString().split('T')[0]);
     }
-  }, [editData]);
+  }, [editData, defaultUpcoming]);
 
   // Handle team member selection
   const handleMemberSelect = (memberId: string) => {
@@ -121,6 +131,7 @@ export const TeamOverheadModal: React.FC<TeamOverheadModalProps> = ({
         monthly_cost: parseFloat(monthlyCost),
         cost_type: costType,
         notes: notes || null,
+        start_date: startDate || null,
       });
       onClose();
     } catch (err) {
@@ -130,17 +141,19 @@ export const TeamOverheadModal: React.FC<TeamOverheadModalProps> = ({
     }
   };
 
+  const isUpcoming = startDate && new Date(startDate) > new Date();
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className="relative bg-depth-surface border border-depth-border rounded-2xl p-6 max-w-md w-full">
+      <div className="relative bg-depth-surface border border-depth-border rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-start justify-between mb-6">
           <div>
             <h3 className="text-lg font-semibold text-text-primary">
-              {editData ? 'Edit Team Member' : 'Add Team Member'}
+              {editData ? 'Edit Team Member' : defaultUpcoming ? 'Add Upcoming Team Member' : 'Add Team Member'}
             </h3>
             <p className="text-sm text-text-muted">
-              {editData ? 'Update team member details' : 'Track a team member cost'}
+              {editData ? 'Update team member details' : defaultUpcoming ? 'Track a planned team member for projections' : 'Track a team member cost'}
             </p>
           </div>
           <button
@@ -240,6 +253,24 @@ export const TeamOverheadModal: React.FC<TeamOverheadModalProps> = ({
               className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-2.5 text-text-primary placeholder:text-text-muted focus:border-radiance-gold focus:outline-none"
               required
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-text-primary mb-2">
+              Start Date
+              {isUpcoming && (
+                <span className="ml-2 text-xs text-amber-500 font-normal">(Upcoming)</span>
+              )}
+            </label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-2.5 text-text-primary focus:border-radiance-gold focus:outline-none"
+            />
+            <p className="text-xs text-text-muted mt-1">
+              Leave blank for current team. Set future date for upcoming hires.
+            </p>
           </div>
 
           <div>

@@ -58,6 +58,8 @@ export interface TeamOverhead {
   cost_type: CostType;
   notes: string | null;
   is_active: boolean;
+  order_index: number;
+  start_date: string | null; // NULL or past = current, future = upcoming
   created_at: string;
   updated_at: string;
 }
@@ -68,6 +70,7 @@ export interface TeamOverheadInsert {
   monthly_cost: number;
   cost_type: CostType;
   notes?: string | null;
+  start_date?: string | null;
 }
 
 export interface TeamOverheadUpdate {
@@ -77,15 +80,19 @@ export interface TeamOverheadUpdate {
   cost_type?: CostType;
   notes?: string | null;
   is_active?: boolean;
+  start_date?: string | null;
 }
 
 // OpEx Summary
 export interface OpExSummary {
   service_costs_total: number;
   team_overhead_total: number;
+  upcoming_team_total: number;
   grand_total: number;
+  projected_total: number; // grand_total + upcoming_team_total
   service_count: number;
   team_count: number;
+  upcoming_team_count: number;
 }
 
 // API Response types
@@ -163,4 +170,23 @@ export function formatCurrency(amount: number): string {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(amount);
+}
+
+// Check if a team member is upcoming (start_date is in the future)
+export function isUpcomingTeamMember(member: TeamOverhead): boolean {
+  if (!member.start_date) return false;
+  const startDate = new Date(member.start_date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return startDate > today;
+}
+
+// Format date for display
+export function formatDate(dateString: string | null): string {
+  if (!dateString) return '';
+  return new Date(dateString).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
 }

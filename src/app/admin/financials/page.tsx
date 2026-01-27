@@ -7,12 +7,12 @@
 
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { AdminHeader } from '@/components/admin';
 import { Container } from '@/components/ui';
-import { ServiceCostSection, TeamOverheadSection } from '@/components/admin/financials';
+import { ServiceCostSection, TeamOverheadSection, UpcomingTeamSection } from '@/components/admin/financials';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
-import { formatCurrency } from '@/types/financials';
+import { formatCurrency, isUpcomingTeamMember } from '@/types/financials';
 import type { ServiceCost, TeamOverhead, OpExSummary, CostType } from '@/types/financials';
 
 export default function FinancialsPage() {
@@ -22,6 +22,22 @@ export default function FinancialsPage() {
   const [isLoadingServices, setIsLoadingServices] = useState(true);
   const [isLoadingTeam, setIsLoadingTeam] = useState(true);
   const { authFetch } = useAuthFetch();
+
+  // Split team into current and upcoming
+  const { currentTeam, upcomingTeam } = useMemo(() => {
+    const current: TeamOverhead[] = [];
+    const upcoming: TeamOverhead[] = [];
+
+    team.forEach(member => {
+      if (isUpcomingTeamMember(member)) {
+        upcoming.push(member);
+      } else {
+        current.push(member);
+      }
+    });
+
+    return { currentTeam: current, upcomingTeam: upcoming };
+  }, [team]);
 
   const fetchServices = useCallback(async () => {
     try {
@@ -133,6 +149,7 @@ export default function FinancialsPage() {
     monthly_cost: number;
     cost_type: CostType;
     notes: string | null;
+    start_date: string | null;
   }) => {
     const response = await authFetch('/api/admin/financials/team', {
       method: 'POST',
@@ -153,6 +170,7 @@ export default function FinancialsPage() {
     monthly_cost: number;
     cost_type: CostType;
     notes: string | null;
+    start_date: string | null;
   }) => {
     const response = await authFetch(`/api/admin/financials/team/${id}`, {
       method: 'PUT',
@@ -179,6 +197,27 @@ export default function FinancialsPage() {
     fetchSummary();
   };
 
+  const handleReorderTeam = async (orderedIds: string[]) => {
+    // Optimistically update local state (only for current team)
+    const reorderedTeam = orderedIds
+      .map(id => currentTeam.find(m => m.id === id))
+      .filter((m): m is TeamOverhead => m !== undefined);
+    // Combine with upcoming team
+    setTeam([...reorderedTeam, ...upcomingTeam]);
+
+    const response = await authFetch('/api/admin/financials/team/reorder', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderedIds }),
+    });
+    const result = await response.json();
+    if (result.error) {
+      // Revert on error
+      fetchTeam();
+      throw new Error(result.error);
+    }
+  };
+
   const isLoading = isLoadingServices || isLoadingTeam;
 
   return (
@@ -193,7 +232,7 @@ export default function FinancialsPage() {
 
         <Container size="wide" className="relative z-10 space-y-6">
           {/* Summary Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {[
               {
                 label: 'Services',
@@ -210,13 +249,19 @@ export default function FinancialsPage() {
               {
                 label: 'Monthly OpEx',
                 value: summary ? formatCurrency(summary.grand_total) : '-',
-                subtitle: 'Total monthly',
+                subtitle: 'Current monthly',
                 color: 'text-radiance-gold',
               },
               {
-                label: 'Yearly Est.',
-                value: summary ? formatCurrency(summary.grand_total * 12) : '-',
-                subtitle: 'Projected annual',
+                label: 'Upcoming',
+                value: summary ? `+${formatCurrency(summary.upcoming_team_total)}` : '-',
+                subtitle: `${summary?.upcoming_team_count || 0} planned`,
+                color: 'text-amber-400',
+              },
+              {
+                label: 'Projected',
+                value: summary ? formatCurrency(summary.projected_total) : '-',
+                subtitle: 'With upcoming',
                 color: 'text-emerald-400',
               },
             ].map((stat) => (
@@ -244,13 +289,23 @@ export default function FinancialsPage() {
             />
 
             <TeamOverheadSection
-              team={team}
+              team={currentTeam}
               onAdd={handleAddTeam}
               onUpdate={handleUpdateTeam}
               onDelete={handleDeleteTeam}
+              onReorder={handleReorderTeam}
               isLoading={isLoadingTeam}
             />
           </div>
+
+          {/* Upcoming Team Section */}
+          <UpcomingTeamSection
+            team={upcomingTeam}
+            onAdd={handleAddTeam}
+            onUpdate={handleUpdateTeam}
+            onDelete={handleDeleteTeam}
+            isLoading={isLoadingTeam}
+          />
         </Container>
       </div>
     </div>

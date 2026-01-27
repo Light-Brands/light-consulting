@@ -7,3 +7,4 @@ export { ServiceCostSection } from './ServiceCostSection';
 export { ServiceCostModal } from './ServiceCostModal';
 export { TeamOverheadSection } from './TeamOverheadSection';
 export { TeamOverheadModal } from './TeamOverheadModal';
+export { UpcomingTeamSection } from './UpcomingTeamSection';

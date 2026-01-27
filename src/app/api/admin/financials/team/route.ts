@@ -42,8 +42,7 @@ export async function GET(request: NextRequest) {
     let query = supabaseAdmin
       .from('team_overhead')
       .select('*')
-      .order('cost_type')
-      .order('name');
+      .order('order_index', { ascending: true, nullsFirst: false });
 
     if (costType) {
       query = query.eq('cost_type', costType);
@@ -94,7 +93,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { name, role, monthly_cost, cost_type, notes } = body;
+    const { name, role, monthly_cost, cost_type, notes, start_date } = body;
 
     if (!name || monthly_cost === undefined || !cost_type) {
       return NextResponse.json(
@@ -103,12 +102,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get the max order_index to add new item at the end
+    const { data: maxOrderData } = await supabaseAdmin
+      .from('team_overhead')
+      .select('order_index')
+      .order('order_index', { ascending: false })
+      .limit(1)
+      .single();
+
+    const nextOrderIndex = ((maxOrderData as { order_index?: number } | null)?.order_index ?? -1) + 1;
+
     const insertData = {
       name,
       role: role || null,
       monthly_cost,
       cost_type,
       notes: notes || null,
+      order_index: nextOrderIndex,
+      start_date: start_date || null,
     };
 
     const { data, error } = await supabaseAdmin

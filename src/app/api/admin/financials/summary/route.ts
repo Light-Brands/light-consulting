@@ -13,9 +13,14 @@ interface CostRow {
   monthly_cost: number;
 }
 
+interface TeamCostRow {
+  monthly_cost: number;
+  start_date: string | null;
+}
+
 /**
  * GET /api/admin/financials/summary
- * Get operating expenses summary (totals for services, team, and grand total)
+ * Get operating expenses summary (totals for services, team, upcoming, and grand total)
  */
 export async function GET(request: NextRequest) {
   try {
@@ -48,10 +53,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Fetch active team overhead
+    // Fetch active team overhead (including start_date for filtering)
     const { data: teamData, error: teamError } = await supabaseAdmin
       .from('team_overhead')
-      .select('monthly_cost')
+      .select('monthly_cost, start_date')
       .eq('is_active', true);
 
     if (teamError) {
@@ -64,19 +69,40 @@ export async function GET(request: NextRequest) {
 
     // Cast to typed arrays
     const services = (servicesData || []) as CostRow[];
-    const team = (teamData || []) as CostRow[];
+    const allTeam = (teamData || []) as TeamCostRow[];
+
+    // Split team into current and upcoming based on start_date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const currentTeam = allTeam.filter(t => {
+      if (!t.start_date) return true; // No start date = current
+      const startDate = new Date(t.start_date);
+      return startDate <= today;
+    });
+
+    const upcomingTeam = allTeam.filter(t => {
+      if (!t.start_date) return false;
+      const startDate = new Date(t.start_date);
+      return startDate > today;
+    });
 
     // Calculate totals
     const serviceCostsTotal = services.reduce((sum, s) => sum + (Number(s.monthly_cost) || 0), 0);
-    const teamOverheadTotal = team.reduce((sum, t) => sum + (Number(t.monthly_cost) || 0), 0);
+    const teamOverheadTotal = currentTeam.reduce((sum, t) => sum + (Number(t.monthly_cost) || 0), 0);
+    const upcomingTeamTotal = upcomingTeam.reduce((sum, t) => sum + (Number(t.monthly_cost) || 0), 0);
     const grandTotal = serviceCostsTotal + teamOverheadTotal;
+    const projectedTotal = grandTotal + upcomingTeamTotal;
 
     const summary = {
       service_costs_total: serviceCostsTotal,
       team_overhead_total: teamOverheadTotal,
+      upcoming_team_total: upcomingTeamTotal,
       grand_total: grandTotal,
+      projected_total: projectedTotal,
       service_count: services.length,
-      team_count: team.length,
+      team_count: currentTeam.length,
+      upcoming_team_count: upcomingTeam.length,
     };
 
     return NextResponse.json({ data: summary, error: null });

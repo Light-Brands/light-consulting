@@ -94,7 +94,7 @@ export async function PUT(
     const body = await request.json();
 
     // Whitelist allowed fields
-    const allowedFields = ['name', 'role', 'monthly_cost', 'cost_type', 'notes', 'is_active'];
+    const allowedFields = ['name', 'role', 'monthly_cost', 'cost_type', 'notes', 'is_active', 'start_date'];
     const updateData: Record<string, unknown> = {};
 
     for (const field of allowedFields) {
