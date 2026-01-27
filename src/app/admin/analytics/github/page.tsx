@@ -8,6 +8,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { AdminHeader } from '@/components/admin';
 import { Container } from '@/components/ui';
@@ -242,63 +243,77 @@ export default function GitHubAnalyticsPage() {
 
   const [syncMenuOpen, setSyncMenuOpen] = useState(false);
 
-  const syncButton = (
-    <div className="relative z-[9999]">
-      <div className="flex">
-        <button
-          onClick={() => handleSync('incremental')}
-          disabled={isSyncing || loading}
-          className={cn(
-            'flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-l-lg transition-all',
-            isSyncing || loading
-              ? 'bg-depth-elevated text-text-muted cursor-not-allowed'
-              : 'bg-radiance-gold text-depth-base hover:bg-radiance-amber'
-          )}
-        >
-          <svg className={cn('w-4 h-4', isSyncing && 'animate-spin')} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          {isSyncing ? 'Syncing...' : 'Sync'}
-        </button>
-        <button
-          onClick={() => setSyncMenuOpen(!syncMenuOpen)}
-          disabled={isSyncing || loading}
-          className={cn(
-            'px-2 py-2 text-sm font-medium rounded-r-lg border-l border-depth-base/20 transition-all',
-            isSyncing || loading
-              ? 'bg-depth-elevated text-text-muted cursor-not-allowed'
-              : 'bg-radiance-gold text-depth-base hover:bg-radiance-amber'
-          )}
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-      </div>
-      {syncMenuOpen && !isSyncing && (
-        <div className="absolute right-0 mt-1 w-48 bg-depth-elevated border border-depth-border rounded-lg shadow-xl z-[9999]">
+  const headerActions = (
+    <div className="flex items-center gap-3">
+      {/* Team Productivity Link */}
+      <Link
+        href="/admin/analytics/github/productivity"
+        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-depth-elevated rounded-lg transition-colors"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+        </svg>
+        Team Productivity
+      </Link>
+
+      {/* Sync Button */}
+      <div className="relative z-[9999]">
+        <div className="flex">
           <button
-            onClick={() => {
-              setSyncMenuOpen(false);
-              handleSync('incremental');
-            }}
-            className="w-full px-4 py-2 text-left text-sm text-text-primary hover:bg-depth-surface rounded-t-lg"
+            onClick={() => handleSync('incremental')}
+            disabled={isSyncing || loading}
+            className={cn(
+              'flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-l-lg transition-all',
+              isSyncing || loading
+                ? 'bg-depth-elevated text-text-muted cursor-not-allowed'
+                : 'bg-radiance-gold text-depth-base hover:bg-radiance-amber'
+            )}
           >
-            Quick Sync
-            <span className="block text-xs text-text-muted">Since last sync</span>
+            <svg className={cn('w-4 h-4', isSyncing && 'animate-spin')} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            {isSyncing ? 'Syncing...' : 'Sync'}
           </button>
           <button
-            onClick={() => {
-              setSyncMenuOpen(false);
-              handleSync('full');
-            }}
-            className="w-full px-4 py-2 text-left text-sm text-text-primary hover:bg-depth-surface rounded-b-lg border-t border-depth-border"
+            onClick={() => setSyncMenuOpen(!syncMenuOpen)}
+            disabled={isSyncing || loading}
+            className={cn(
+              'px-2 py-2 text-sm font-medium rounded-r-lg border-l border-depth-base/20 transition-all',
+              isSyncing || loading
+                ? 'bg-depth-elevated text-text-muted cursor-not-allowed'
+                : 'bg-radiance-gold text-depth-base hover:bg-radiance-amber'
+            )}
           >
-            Full Sync
-            <span className="block text-xs text-text-muted">All historical data</span>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
           </button>
         </div>
-      )}
+        {syncMenuOpen && !isSyncing && (
+          <div className="absolute right-0 mt-1 w-48 bg-depth-elevated border border-depth-border rounded-lg shadow-xl z-[9999]">
+            <button
+              onClick={() => {
+                setSyncMenuOpen(false);
+                handleSync('incremental');
+              }}
+              className="w-full px-4 py-2 text-left text-sm text-text-primary hover:bg-depth-surface rounded-t-lg"
+            >
+              Quick Sync
+              <span className="block text-xs text-text-muted">Since last sync</span>
+            </button>
+            <button
+              onClick={() => {
+                setSyncMenuOpen(false);
+                handleSync('full');
+              }}
+              className="w-full px-4 py-2 text-left text-sm text-text-primary hover:bg-depth-surface rounded-b-lg border-t border-depth-border"
+            >
+              Full Sync
+              <span className="block text-xs text-text-muted">All historical data</span>
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 
@@ -307,7 +322,7 @@ export default function GitHubAnalyticsPage() {
       <AdminHeader
         title="GitHub Analytics"
         subtitle="Track development activity across your organization's repositories"
-        actions={syncButton}
+        actions={headerActions}
       />
 
       <div className="py-4 md:py-8 relative overflow-hidden">

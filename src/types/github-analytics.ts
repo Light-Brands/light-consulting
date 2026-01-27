@@ -422,6 +422,16 @@ export interface GitHubSyncLogsApiResponse {
 // Dashboard & Summary Types
 // ============================================================================
 
+export interface PeriodComparison {
+  total_commits: number;
+  total_additions: number;
+  total_deletions: number;
+  merged_prs: number;
+  prs_opened: number;
+  active_contributors: number;
+  active_repositories: number;
+}
+
 export interface GitHubSummaryStats {
   total_commits: number;
   total_additions: number;
@@ -434,6 +444,11 @@ export interface GitHubSummaryStats {
   last_sync_at: string | null;
   period_start: string;
   period_end: string;
+  // Period-specific metrics for comparison
+  prs_opened: number;
+  active_contributors: number;
+  active_repositories: number;
+  previous_period?: PeriodComparison | null;
 }
 
 export interface GitHubDashboardApiResponse {
@@ -676,4 +691,104 @@ export function getRelativeTime(dateString: string): string {
   if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
   if (diffDays < 365) return `${Math.floor(diffDays / 30)}mo ago`;
   return `${Math.floor(diffDays / 365)}y ago`;
+}
+
+// ============================================================================
+// Team Developers & Productivity Types
+// ============================================================================
+
+// Industry benchmark: 5,000 net lines of code per developer per month
+export const INDUSTRY_BENCHMARK_LOC_PER_MONTH = 5000;
+
+// Team Developer - internal team member
+export interface TeamDeveloper {
+  id: string;
+  github_login: string;
+  github_id: number;
+  display_name: string | null;
+  avatar_url: string | null;
+  user_profile_id: string | null;
+  designated_at: string;
+  designated_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TeamDeveloperInsert {
+  github_login: string;
+  github_id: number;
+  display_name?: string | null;
+  avatar_url?: string | null;
+  user_profile_id?: string | null;
+  designated_by?: string | null;
+}
+
+export interface TeamDeveloperUpdate {
+  display_name?: string | null;
+  avatar_url?: string | null;
+  user_profile_id?: string | null;
+}
+
+// Team Developer with aggregated stats (from contributors table)
+export interface TeamDeveloperWithStats extends TeamDeveloper {
+  total_commits: number;
+  total_additions: number;
+  total_deletions: number;
+  net_lines: number;
+  repositories_count: number;
+  first_commit_at: string | null;
+  last_commit_at: string | null;
+}
+
+// Productivity metrics for the dashboard
+export interface ProductivityMetrics {
+  // Team overview
+  team_developer_count: number;
+  time_range_days: number;
+
+  // Total metrics (team only)
+  total_additions: number;
+  total_deletions: number;
+  net_lines: number;
+  total_commits: number;
+
+  // Per-developer averages
+  avg_additions_per_dev: number;
+  avg_deletions_per_dev: number;
+  avg_net_lines_per_dev: number;
+  avg_commits_per_dev: number;
+
+  // Industry comparison
+  traditional_benchmark: number;  // Expected LOC for team size + time period
+  efficiency_multiplier: number;  // Actual vs benchmark
+  human_months_equivalent: number;  // How many human-months the work represents
+  human_years_equivalent: number;   // Converted to years
+
+  // Individual breakdowns
+  developers: TeamDeveloperWithStats[];
+
+  // Daily stats for timeline chart
+  daily_stats: Array<{
+    stat_date: string;
+    additions: number;
+    deletions: number;
+    net_lines: number;
+    commits_count: number;
+  }>;
+}
+
+// API Response types
+export interface TeamDevelopersApiResponse {
+  data: TeamDeveloper[] | null;
+  error: string | null;
+}
+
+export interface TeamDeveloperApiResponse {
+  data: TeamDeveloper | null;
+  error: string | null;
+}
+
+export interface ProductivityApiResponse {
+  data: ProductivityMetrics | null;
+  error: string | null;
 }

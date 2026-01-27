@@ -16,8 +16,9 @@ import type {
   GitHubRepository,
   AggregatedContributor,
   TimeRange,
+  PeriodComparison,
 } from '@/types/github-analytics';
-import { getDateRangeFromTimeRange } from '@/types/github-analytics';
+import { getDateRangeFromTimeRange, getTimeRangeOption } from '@/types/github-analytics';
 
 interface DashboardData {
   config: GitHubConfigPublic | null;
@@ -87,6 +88,18 @@ export async function GET(request: NextRequest) {
 
     const { start: startDate, end: endDate } = getDateRangeFromTimeRange(timeRange);
 
+    // Calculate previous period for comparison (only if not "all time")
+    const timeRangeOption = getTimeRangeOption(timeRange);
+    let prevStartDate: Date | null = null;
+    let prevEndDate: Date | null = null;
+
+    if (timeRangeOption.days !== null && startDate) {
+      prevEndDate = new Date(startDate.getTime() - 1); // 1ms before current period start
+      prevStartDate = new Date(prevEndDate);
+      prevStartDate.setDate(prevStartDate.getDate() - timeRangeOption.days);
+      prevStartDate.setHours(0, 0, 0, 0);
+    }
+
     // Get tracked repos
     const { data: trackedRepos } = await supabaseAdmin
       .from('github_repositories')
@@ -111,6 +124,10 @@ export async function GET(request: NextRequest) {
           last_sync_at: null,
           period_start: startDate?.toISOString() || '',
           period_end: endDate.toISOString(),
+          prs_opened: 0,
+          active_contributors: 0,
+          active_repositories: 0,
+          previous_period: null,
         },
         recent_commits: [],
         top_repositories: [],
@@ -133,6 +150,17 @@ export async function GET(request: NextRequest) {
       topReposResult,
       dailyStatsResult,
       lastSyncResult,
+      prevCommitsCountResult,
+      prevMergedPrsResult,
+      prevDailyStatsResult,
+      // Current period metrics
+      prsOpenedResult,
+      activeContributorsResult,
+      activeReposResult,
+      // Previous period metrics
+      prevPrsOpenedResult,
+      prevActiveContributorsResult,
+      prevActiveReposResult,
     ] = await Promise.all([
       // Commit count (use count instead of fetching all rows - Supabase default limit is 1000!)
       (async () => {
@@ -218,6 +246,105 @@ export async function GET(request: NextRequest) {
         .order('completed_at', { ascending: false })
         .limit(1)
         .single(),
+
+      // Previous period commit count (for comparison)
+      (async () => {
+        if (!prevStartDate || !prevEndDate) return { count: null };
+        return supabaseAdmin
+          .from('github_commits')
+          .select('*', { count: 'exact', head: true })
+          .in('repository_id', repoIds)
+          .gte('committed_at', prevStartDate.toISOString())
+          .lte('committed_at', prevEndDate.toISOString());
+      })(),
+
+      // Previous period merged PRs (for comparison)
+      (async () => {
+        if (!prevStartDate || !prevEndDate) return { count: null };
+        return supabaseAdmin
+          .from('github_pull_requests')
+          .select('id', { count: 'exact', head: true })
+          .in('repository_id', repoIds)
+          .eq('state', 'merged')
+          .gte('merged_at', prevStartDate.toISOString())
+          .lte('merged_at', prevEndDate.toISOString());
+      })(),
+
+      // Previous period daily stats (for additions/deletions comparison)
+      (async () => {
+        if (!prevStartDate || !prevEndDate) return { data: null };
+        return supabaseAdmin
+          .from('github_daily_stats')
+          .select('stat_date, commits_count, additions, deletions')
+          .in('repository_id', repoIds)
+          .gte('stat_date', prevStartDate.toISOString().split('T')[0])
+          .lte('stat_date', prevEndDate.toISOString().split('T')[0]);
+      })(),
+
+      // Current period: PRs opened (created in period)
+      (async () => {
+        let query = supabaseAdmin
+          .from('github_pull_requests')
+          .select('id', { count: 'exact', head: true })
+          .in('repository_id', repoIds);
+        if (startDate) query = query.gte('created_at_github', startDate.toISOString());
+        return query.lte('created_at_github', endDate.toISOString());
+      })(),
+
+      // Current period: Active contributors (unique commit authors)
+      (async () => {
+        let query = supabaseAdmin
+          .from('github_commits')
+          .select('author_github_login')
+          .in('repository_id', repoIds)
+          .not('author_github_login', 'is', null);
+        if (startDate) query = query.gte('committed_at', startDate.toISOString());
+        return query.lte('committed_at', endDate.toISOString());
+      })(),
+
+      // Current period: Active repositories (repos with commits)
+      (async () => {
+        let query = supabaseAdmin
+          .from('github_commits')
+          .select('repository_id')
+          .in('repository_id', repoIds);
+        if (startDate) query = query.gte('committed_at', startDate.toISOString());
+        return query.lte('committed_at', endDate.toISOString());
+      })(),
+
+      // Previous period: PRs opened
+      (async () => {
+        if (!prevStartDate || !prevEndDate) return { count: null };
+        return supabaseAdmin
+          .from('github_pull_requests')
+          .select('id', { count: 'exact', head: true })
+          .in('repository_id', repoIds)
+          .gte('created_at_github', prevStartDate.toISOString())
+          .lte('created_at_github', prevEndDate.toISOString());
+      })(),
+
+      // Previous period: Active contributors
+      (async () => {
+        if (!prevStartDate || !prevEndDate) return { data: null };
+        return supabaseAdmin
+          .from('github_commits')
+          .select('author_github_login')
+          .in('repository_id', repoIds)
+          .not('author_github_login', 'is', null)
+          .gte('committed_at', prevStartDate.toISOString())
+          .lte('committed_at', prevEndDate.toISOString());
+      })(),
+
+      // Previous period: Active repositories
+      (async () => {
+        if (!prevStartDate || !prevEndDate) return { data: null };
+        return supabaseAdmin
+          .from('github_commits')
+          .select('repository_id')
+          .in('repository_id', repoIds)
+          .gte('committed_at', prevStartDate.toISOString())
+          .lte('committed_at', prevEndDate.toISOString());
+      })(),
     ]);
 
     // Process commit count (now using proper count query)
@@ -291,6 +418,56 @@ export async function GET(request: NextRequest) {
     const totalAdditions = dailyStats.reduce((sum, d) => sum + d.additions, 0);
     const totalDeletions = dailyStats.reduce((sum, d) => sum + d.deletions, 0);
 
+    // Calculate current period active contributors and repos
+    type CommitAuthorRow = { author_github_login: string | null };
+    type CommitRepoRow = { repository_id: string };
+
+    const activeContributorLogins = new Set<string>();
+    for (const row of (activeContributorsResult.data || []) as CommitAuthorRow[]) {
+      if (row.author_github_login) activeContributorLogins.add(row.author_github_login);
+    }
+
+    const activeRepoIds = new Set<string>();
+    for (const row of (activeReposResult.data || []) as CommitRepoRow[]) {
+      activeRepoIds.add(row.repository_id);
+    }
+
+    // Calculate previous period stats for comparison
+    let previousPeriod: PeriodComparison | null = null;
+    if (prevStartDate && prevEndDate) {
+      // Aggregate previous period daily stats
+      let prevTotalAdditions = 0;
+      let prevTotalDeletions = 0;
+      if (prevDailyStatsResult.data) {
+        for (const stat of prevDailyStatsResult.data as DailyStatsRow[]) {
+          prevTotalAdditions += stat.additions || 0;
+          prevTotalDeletions += stat.deletions || 0;
+        }
+      }
+
+      // Calculate previous period active contributors
+      const prevActiveContributorLogins = new Set<string>();
+      for (const row of (prevActiveContributorsResult.data || []) as CommitAuthorRow[]) {
+        if (row.author_github_login) prevActiveContributorLogins.add(row.author_github_login);
+      }
+
+      // Calculate previous period active repos
+      const prevActiveRepoIds = new Set<string>();
+      for (const row of (prevActiveReposResult.data || []) as CommitRepoRow[]) {
+        prevActiveRepoIds.add(row.repository_id);
+      }
+
+      previousPeriod = {
+        total_commits: prevCommitsCountResult.count || 0,
+        total_additions: prevTotalAdditions,
+        total_deletions: prevTotalDeletions,
+        merged_prs: prevMergedPrsResult.count || 0,
+        prs_opened: prevPrsOpenedResult.count || 0,
+        active_contributors: prevActiveContributorLogins.size,
+        active_repositories: prevActiveRepoIds.size,
+      };
+    }
+
     const summary: GitHubSummaryStats = {
       total_commits: commitCount,
       total_additions: totalAdditions,
@@ -303,6 +480,11 @@ export async function GET(request: NextRequest) {
       last_sync_at: (lastSyncResult.data as { completed_at: string | null } | null)?.completed_at || null,
       period_start: startDate?.toISOString() || '',
       period_end: endDate.toISOString(),
+      // Period-specific metrics
+      prs_opened: prsOpenedResult.count || 0,
+      active_contributors: activeContributorLogins.size,
+      active_repositories: activeRepoIds.size,
+      previous_period: previousPeriod,
     };
 
     const dashboard: DashboardData = {

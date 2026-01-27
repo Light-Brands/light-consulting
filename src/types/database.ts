@@ -37,6 +37,12 @@ import type {
   DeliverableLinkUpdate,
 } from './deliverables';
 
+import type {
+  TeamDeveloper,
+  TeamDeveloperInsert,
+  TeamDeveloperUpdate,
+} from './github-analytics';
+
 // Assessment Types
 export type AssessmentStage = 'qualify' | 'book' | 'educate' | 'confirm' | 'commit' | 'intake' | 'status';
 export type AssessmentVerdict = 'GO' | 'CONDITIONAL_GO' | 'NO_GO';
@@ -172,6 +178,11 @@ export interface Database {
         Row: DeliverableLink;
         Insert: DeliverableLinkInsert;
         Update: DeliverableLinkUpdate;
+      };
+      team_developers: {
+        Row: TeamDeveloper;
+        Insert: TeamDeveloperInsert;
+        Update: TeamDeveloperUpdate;
       };
     };
   };

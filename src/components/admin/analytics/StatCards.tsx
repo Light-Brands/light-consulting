@@ -22,33 +22,64 @@ interface StatCardProps {
   icon: React.ReactNode;
   color: string;
   loading?: boolean;
+  previousValue?: number | null;
+  currentValue?: number;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ label, value, icon, color, loading }) => (
-  <div className="bg-depth-elevated rounded-lg p-4 border border-depth-border">
-    <div className="flex items-center gap-3">
-      <div className={cn('p-2 rounded-lg', color)}>
-        {icon}
-      </div>
-      <div>
-        {loading ? (
-          <div className="h-6 w-16 bg-depth-surface rounded animate-pulse" />
-        ) : (
-          <div className="text-xl font-bold text-text-primary">
-            {typeof value === 'number' ? formatNumber(value) : value}
-          </div>
-        )}
-        <div className="text-xs text-text-muted">{label}</div>
+function getChangeIndicator(current: number | undefined, previous: number | null | undefined): { text: string; color: string; icon: string } | null {
+  if (previous === null || previous === undefined || current === undefined) return null;
+
+  const diff = current - previous;
+  if (diff === 0) return { text: 'No change', color: 'text-text-muted', icon: '→' };
+
+  const percentChange = previous === 0 ? (diff > 0 ? 100 : 0) : Math.round((diff / previous) * 100);
+  const isPositive = diff > 0;
+
+  return {
+    text: `${isPositive ? '+' : ''}${percentChange}%`,
+    color: isPositive ? 'text-green-400' : 'text-red-400',
+    icon: isPositive ? '↑' : '↓',
+  };
+}
+
+const StatCard: React.FC<StatCardProps> = ({ label, value, icon, color, loading, previousValue, currentValue }) => {
+  const change = getChangeIndicator(currentValue, previousValue);
+
+  return (
+    <div className="bg-depth-elevated rounded-lg p-4 border border-depth-border">
+      <div className="flex items-center gap-3">
+        <div className={cn('p-2 rounded-lg', color)}>
+          {icon}
+        </div>
+        <div className="min-w-0">
+          {loading ? (
+            <div className="h-6 w-16 bg-depth-surface rounded animate-pulse" />
+          ) : (
+            <div className="text-xl font-bold text-text-primary">
+              {typeof value === 'number' ? formatNumber(value) : value}
+            </div>
+          )}
+          <div className="text-xs text-text-muted">{label}</div>
+          {!loading && change && (
+            <div className={cn('text-[10px] mt-0.5', change.color)}>
+              <span className="opacity-75">{change.icon}</span> {change.text} vs prev
+            </div>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export const StatCards: React.FC<StatCardsProps> = ({ stats, loading, className }) => {
+  const previousPeriod = stats?.previous_period;
+
   const cards = [
     {
       label: 'Commits',
       value: stats?.total_commits ?? 0,
+      currentValue: stats?.total_commits ?? 0,
+      previousValue: previousPeriod?.total_commits,
       color: 'bg-blue-500/20 text-blue-400',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -59,6 +90,8 @@ export const StatCards: React.FC<StatCardsProps> = ({ stats, loading, className 
     {
       label: 'Lines Added',
       value: stats?.total_additions ?? 0,
+      currentValue: stats?.total_additions ?? 0,
+      previousValue: previousPeriod?.total_additions,
       color: 'bg-green-500/20 text-green-400',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -69,6 +102,8 @@ export const StatCards: React.FC<StatCardsProps> = ({ stats, loading, className 
     {
       label: 'Lines Removed',
       value: stats?.total_deletions ?? 0,
+      currentValue: stats?.total_deletions ?? 0,
+      previousValue: previousPeriod?.total_deletions,
       color: 'bg-red-500/20 text-red-400',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -77,8 +112,10 @@ export const StatCards: React.FC<StatCardsProps> = ({ stats, loading, className 
       ),
     },
     {
-      label: 'Open PRs',
-      value: stats?.open_prs ?? 0,
+      label: 'PRs Opened',
+      value: stats?.prs_opened ?? 0,
+      currentValue: stats?.prs_opened ?? 0,
+      previousValue: previousPeriod?.prs_opened,
       color: 'bg-purple-500/20 text-purple-400',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -87,8 +124,10 @@ export const StatCards: React.FC<StatCardsProps> = ({ stats, loading, className 
       ),
     },
     {
-      label: 'Repositories',
-      value: stats?.tracked_repositories ?? 0,
+      label: 'Active Repos',
+      value: stats?.active_repositories ?? 0,
+      currentValue: stats?.active_repositories ?? 0,
+      previousValue: previousPeriod?.active_repositories,
       color: 'bg-amber-500/20 text-amber-400',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -98,7 +137,9 @@ export const StatCards: React.FC<StatCardsProps> = ({ stats, loading, className 
     },
     {
       label: 'Contributors',
-      value: stats?.total_contributors ?? 0,
+      value: stats?.active_contributors ?? 0,
+      currentValue: stats?.active_contributors ?? 0,
+      previousValue: previousPeriod?.active_contributors,
       color: 'bg-cyan-500/20 text-cyan-400',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -118,6 +159,8 @@ export const StatCards: React.FC<StatCardsProps> = ({ stats, loading, className 
           icon={card.icon}
           color={card.color}
           loading={loading}
+          previousValue={('previousValue' in card) ? card.previousValue : undefined}
+          currentValue={('currentValue' in card) ? card.currentValue : undefined}
         />
       ))}
     </div>

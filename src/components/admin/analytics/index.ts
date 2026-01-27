@@ -12,3 +12,11 @@ export { PRTable } from './PRTable';
 export { SyncStatusFooter } from './SyncStatusFooter';
 export { StatCards } from './StatCards';
 export { OrgManagementModal } from './OrgManagementModal';
+
+// Team Productivity Components
+export { TeamDeveloperModal } from './TeamDeveloperModal';
+export { ProductivityHero } from './ProductivityHero';
+export { HumanComparisonChart } from './HumanComparisonChart';
+export { EfficiencyGauge } from './EfficiencyGauge';
+export { DeveloperBreakdown } from './DeveloperBreakdown';
+export { ProductivityTimeline } from './ProductivityTimeline';
