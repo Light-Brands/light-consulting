@@ -60,7 +60,7 @@ const tabs: { id: TabId; label: string }[] = [
 ];
 
 export default function GitHubAnalyticsPage() {
-  const { isSyncing, startSync, lastSyncCompleted } = useSyncProgress();
+  const { isSyncing, startSync, startRepoSync, lastSyncCompleted, repoJobs } = useSyncProgress();
   const [timeRange, setTimeRange] = useState<TimeRange>('30d');
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [loading, setLoading] = useState(true);
@@ -74,8 +74,10 @@ export default function GitHubAnalyticsPage() {
   // Additional data for tabs
   const [repositories, setRepositories] = useState<RepositoryWithStats[]>([]);
   const [reposLoading, setReposLoading] = useState(false);
-  const [syncingRepoId, setSyncingRepoId] = useState<string | null>(null);
   const [contributors, setContributors] = useState<AggregatedContributor[]>([]);
+
+  // Get syncing repo ID from context (for button state)
+  const syncingRepoId = repoJobs.find(j => j.status === 'running' || j.status === 'queued')?.repoId || null;
   const [pullRequests, setPullRequests] = useState<(GitHubPullRequest & { github_repositories?: { name: string; full_name: string } })[]>([]);
 
   // Fetch dashboard data
@@ -172,19 +174,12 @@ export default function GitHubAnalyticsPage() {
     }
   }, [fetchDashboard]);
 
-  // Sync individual repository
-  const handleSyncRepo = useCallback(async (repoId: string, fullName: string) => {
-    try {
-      setSyncingRepoId(repoId);
-      setError(null);
-      await startSync('full', repoId);
-    } catch (err) {
-      setError(`Failed to sync ${fullName}`);
-      console.error('Repo sync error:', err);
-    } finally {
-      setSyncingRepoId(null);
-    }
-  }, [startSync]);
+  // Sync individual repository - uses the queue system
+  const handleSyncRepo = useCallback((repoId: string, fullName: string) => {
+    // Extract just the repo name from full_name (org/repo -> repo)
+    const repoName = fullName.split('/').pop() || fullName;
+    startRepoSync(repoId, repoName);
+  }, [startRepoSync]);
 
   // Fetch contributors
   const fetchContributors = useCallback(async () => {
