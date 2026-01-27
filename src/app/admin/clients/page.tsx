@@ -192,7 +192,7 @@ export default function AdminClientsPage() {
               }}
             />
 
-            <div className="relative z-10">
+            <div className="relative z-10 overflow-hidden">
               <div className="p-4 md:p-6 border-b border-depth-border">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
@@ -304,7 +304,7 @@ export default function AdminClientsPage() {
 
                   {/* List View */}
                   {viewMode === 'list' && (
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto max-w-full">
                     <table className="w-full min-w-[800px]">
                       <thead className="bg-depth-elevated">
                         <tr>

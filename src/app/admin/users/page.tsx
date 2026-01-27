@@ -273,7 +273,7 @@ export default function AdminUsersPage() {
 
           {/* Users Table */}
           <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
-            <div className="relative z-10">
+            <div className="relative z-10 overflow-hidden">
               <div className="p-4 md:p-6 border-b border-depth-border">
                 <h2 className="text-lg font-semibold text-text-primary">All Users</h2>
                 <p className="text-sm text-text-muted">Users with team access can manage the admin portal</p>
@@ -286,7 +286,7 @@ export default function AdminUsersPage() {
                   No users found. Create a new user to get started.
                 </div>
               ) : (
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto max-w-full">
                   <table className="w-full min-w-[700px]">
                     <thead className="bg-depth-elevated">
                       <tr>

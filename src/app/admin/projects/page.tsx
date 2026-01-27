@@ -206,8 +206,8 @@ export default function AdminProjectsPage() {
                 backgroundSize: '32px 32px',
               }}
             />
-            <div className="relative z-10">
-              <div className="p-6 border-b border-depth-border">
+            <div className="relative z-10 overflow-hidden">
+              <div className="p-4 md:p-6 border-b border-depth-border">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
                   <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
@@ -216,9 +216,9 @@ export default function AdminProjectsPage() {
                 </div>
               </div>
               {isLoading ? (
-                <div className="p-6 text-center text-text-muted">Loading projects...</div>
+                <div className="p-4 md:p-6 text-center text-text-muted">Loading projects...</div>
               ) : projects.length === 0 ? (
-                <div className="p-6 text-center text-text-muted">
+                <div className="p-4 md:p-6 text-center text-text-muted">
                   No projects yet.{' '}
                   <Link href="/admin/projects/new" className="text-radiance-gold hover:underline">
                     Create your first project
@@ -308,7 +308,7 @@ export default function AdminProjectsPage() {
 
                             {/* Tags */}
                             {project.tags && project.tags.length > 0 && (
-                              <div className="flex flex-wrap gap-1 mb-3">
+                              <div className="flex flex-wrap gap-1">
                                 {project.tags.slice(0, 3).map((tag, i) => (
                                   <span
                                     key={i}
@@ -324,58 +324,6 @@ export default function AdminProjectsPage() {
                                 )}
                               </div>
                             )}
-
-                            {/* Actions */}
-                            <div className="flex items-center gap-2">
-                              <select
-                                value={project.project_group || 'past'}
-                                onChange={(e) => handleGroupChange(project.id, e.target.value as ProjectGroup)}
-                                disabled={updatingGroupId === project.id}
-                                className={`w-20 px-1.5 py-1.5 bg-depth-elevated border border-depth-border rounded-lg text-xs cursor-pointer hover:border-radiance-gold/50 focus:border-radiance-gold focus:outline-none transition-colors ${
-                                  updatingGroupId === project.id ? 'opacity-50 cursor-wait' : ''
-                                }`}
-                              >
-                                {PROJECT_GROUPS.map((group) => (
-                                  <option key={group.value} value={group.value}>
-                                    {group.label}
-                                  </option>
-                                ))}
-                              </select>
-                              <select
-                                value={project.sort_order}
-                                onChange={(e) => handleSortOrderChange(project.id, parseInt(e.target.value))}
-                                disabled={updatingOrderId === project.id}
-                                className={`w-14 px-1.5 py-1.5 bg-depth-elevated border border-depth-border rounded-lg text-xs text-center cursor-pointer hover:border-radiance-gold/50 focus:border-radiance-gold focus:outline-none transition-colors ${
-                                  updatingOrderId === project.id ? 'opacity-50 cursor-wait' : ''
-                                }`}
-                              >
-                                {Array.from({ length: 100 }, (_, i) => i + 1).map((num) => (
-                                  <option key={num} value={num}>
-                                    {num}
-                                  </option>
-                                ))}
-                              </select>
-                              <Link
-                                href={`/admin/projects/${project.id}/edit`}
-                                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-depth-elevated hover:bg-depth-border text-text-secondary rounded-lg transition-colors text-sm"
-                              >
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                                Edit
-                              </Link>
-                              <button
-                                onClick={() => {
-                                  setProjectToDelete(project);
-                                  setDeleteModalOpen(true);
-                                }}
-                                className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                              >
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                              </button>
-                            </div>
                           </div>
                         </React.Fragment>
                       );
@@ -383,7 +331,7 @@ export default function AdminProjectsPage() {
                   </div>
 
                   {/* Desktop Table View */}
-                  <div className="hidden md:block overflow-x-auto">
+                  <div className="hidden md:block overflow-x-auto max-w-full">
                     <table className="w-full min-w-[900px]">
                       <thead className="bg-depth-elevated">
                         <tr>

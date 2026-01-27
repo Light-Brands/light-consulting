@@ -217,8 +217,8 @@ export default function AdminLeadsPage() {
               }}
             />
 
-            <div className="relative z-10">
-              <div className="p-6 border-b border-depth-border">
+            <div className="relative z-10 overflow-hidden">
+              <div className="p-4 md:p-6 border-b border-depth-border">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
                   <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
@@ -231,9 +231,9 @@ export default function AdminLeadsPage() {
               </div>
 
               {isLoading ? (
-                <div className="p-6 text-center text-text-muted">Loading...</div>
+                <div className="p-4 md:p-6 text-center text-text-muted">Loading...</div>
               ) : leads.length === 0 ? (
-                <div className="p-6 text-center text-text-muted">
+                <div className="p-4 md:p-6 text-center text-text-muted">
                   No leads found. Leads will appear here when customers submit the booking form.
                 </div>
               ) : (
@@ -327,7 +327,7 @@ export default function AdminLeadsPage() {
 
                   {/* List View */}
                   {viewMode === 'list' && (
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto max-w-full">
                     <table className="w-full min-w-[800px]">
                       <thead className="bg-depth-elevated">
                         <tr>

@@ -179,6 +179,7 @@ export default function AdminClientProjectsPage() {
 
           {/* Projects List */}
           <div className="bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+            <div className="overflow-hidden">
             <div className="p-4 md:p-6 border-b border-depth-border">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
@@ -255,7 +256,7 @@ export default function AdminClientProjectsPage() {
 
                 {/* List View */}
                 {viewMode === 'list' && (
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto max-w-full">
                     <div className="divide-y divide-depth-border min-w-[600px]">
                       {filteredProjects.map((project) => (
                         <Link
@@ -304,6 +305,7 @@ export default function AdminClientProjectsPage() {
                 )}
               </>
             )}
+            </div>
           </div>
         </Container>
       </div>
