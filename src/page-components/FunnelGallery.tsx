@@ -16,10 +16,6 @@ import { Container, Section, Heading, Text } from '@/components/ui';
 import Button from '@/components/Button';
 import type { PageKey } from '@/types';
 
-interface FunnelGalleryProps {
-  onNavigate: (page: PageKey) => void;
-}
-
 // Funnel data extracted from all funnel pages
 const FUNNELS = [
   {
@@ -429,21 +425,30 @@ const getTierColor = (tier: string) => {
 // Password for accessing the gallery (can be configured via env variable)
 const GALLERY_PASSWORD = process.env.NEXT_PUBLIC_FUNNEL_GALLERY_PASSWORD || '8888';
 
-export const FunnelGallery: React.FC<FunnelGalleryProps> = ({ onNavigate }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+interface FunnelGalleryProps {
+  onNavigate: (page: PageKey) => void;
+  isAdminAccess?: boolean;
+}
+
+export const FunnelGallery: React.FC<FunnelGalleryProps> = ({ onNavigate, isAdminAccess = false }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(isAdminAccess);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [activeTier, setActiveTier] = useState('all');
   const [filteredFunnels, setFilteredFunnels] = useState(FUNNELS);
   const [copiedId, setCopiedId] = useState<number | null>(null);
 
-  // Check for stored authentication on mount
+  // Check for stored authentication or admin access on mount
   useEffect(() => {
+    if (isAdminAccess) {
+      setIsAuthenticated(true);
+      return;
+    }
     const stored = sessionStorage.getItem('funnel-gallery-auth');
     if (stored === 'true') {
       setIsAuthenticated(true);
     }
-  }, []);
+  }, [isAdminAccess]);
 
   // Filter funnels by tier
   useEffect(() => {
