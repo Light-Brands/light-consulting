@@ -145,11 +145,22 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const updateData: ClientProjectUpdate = {};
 
     if (body.project_name !== undefined) updateData.project_name = body.project_name;
-    if (body.description !== undefined) updateData.description = body.description;
+    if (body.description !== undefined) updateData.description = body.description || null;
     if (body.status !== undefined) updateData.status = body.status;
-    if (body.start_date !== undefined) updateData.start_date = body.start_date;
-    if (body.end_date !== undefined) updateData.end_date = body.end_date;
+    if (body.start_date !== undefined) updateData.start_date = body.start_date || null;
+    if (body.end_date !== undefined) updateData.end_date = body.end_date || null;
     if (body.metadata !== undefined) updateData.metadata = body.metadata;
+
+    // Log what we're updating for debugging
+    console.log('Updating project:', id, 'with data:', JSON.stringify(updateData));
+
+    // Check if there's anything to update
+    if (Object.keys(updateData).length === 0) {
+      return NextResponse.json(
+        { data: null, error: 'No update data provided' },
+        { status: 400 }
+      );
+    }
 
     const { data: project, error } = await supabaseAdmin
       .from('client_projects')
@@ -160,6 +171,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     if (error) {
       console.error('Error updating project:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
       if (error.code === 'PGRST116') {
         return NextResponse.json(
           { data: null, error: 'Project not found' },
@@ -167,7 +179,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         );
       }
       return NextResponse.json(
-        { data: null, error: 'Failed to update project' },
+        { data: null, error: `Failed to update project: ${error.message}` },
         { status: 500 }
       );
     }
@@ -175,8 +187,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     return NextResponse.json({ data: project, error: null });
   } catch (error) {
     console.error('Error in PUT /api/client-projects/[id]:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { data: null, error: 'Internal server error' },
+      { data: null, error: message },
       { status: 500 }
     );
   }
