@@ -241,6 +241,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     // Only include fields that are provided
     const allowedFields: (keyof ProposalUpdate)[] = [
+      'client_id',
+      'project_id',
       'client_name',
       'client_email',
       'client_company',
