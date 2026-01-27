@@ -262,26 +262,6 @@ export default function CommandCenterPage() {
             </div>
           </div>
 
-          {/* Marketing */}
-          <div className="mt-4">
-            <p className="text-xs text-text-muted uppercase tracking-wide mb-2 px-1">Marketing</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="bg-depth-surface border border-depth-border rounded-xl overflow-hidden">
-                <Link
-                  href="/admin/funnel-gallery"
-                  className="flex items-center gap-3 p-3 hover:bg-depth-elevated transition-colors"
-                >
-                  <div className="p-2 rounded-lg bg-pink-500/10 text-pink-400">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
-                    </svg>
-                  </div>
-                  <span className="font-medium text-text-primary text-sm">Funnel Gallery</span>
-                </Link>
-              </div>
-            </div>
-          </div>
-
           {/* Stats */}
           <CollapsibleStats>
             <CommandCenterStats

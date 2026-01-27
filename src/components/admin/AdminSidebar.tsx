@@ -97,6 +97,16 @@ const icons = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   ),
+  marketing: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+    </svg>
+  ),
+  funnelGallery: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+    </svg>
+  ),
   chevron: (
     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -140,6 +150,16 @@ const navSections: NavSection[] = [
     ],
   },
 ];
+
+// Marketing section
+const marketingSection: NavSection = {
+  label: 'Marketing',
+  icon: icons.marketing,
+  defaultOpen: false,
+  items: [
+    { label: 'Funnel Gallery', href: '/admin/funnel-gallery', icon: icons.funnelGallery },
+  ],
+};
 
 // Bottom standalone items
 const bottomItems: NavItem[] = [
@@ -260,6 +280,7 @@ export const AdminSidebar: React.FC = () => {
     navSections.forEach(section => {
       initial[section.label] = section.defaultOpen ?? false;
     });
+    initial[marketingSection.label] = marketingSection.defaultOpen ?? false;
     initial[manageSection.label] = manageSection.defaultOpen ?? false;
     return initial;
   });
@@ -324,6 +345,16 @@ export const AdminSidebar: React.FC = () => {
               onToggle={() => toggleSection(section.label)}
             />
           ))}
+        </div>
+
+        {/* Marketing section */}
+        <div className="mb-4">
+          <CollapsibleSection
+            section={marketingSection}
+            pathname={pathname}
+            isOpen={openSections[marketingSection.label]}
+            onToggle={() => toggleSection(marketingSection.label)}
+          />
         </div>
 
         {/* Bottom standalone items */}
