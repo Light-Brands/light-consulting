@@ -7,7 +7,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { AdminHeader } from '@/components/admin';
+import { AdminHeader, ViewToggle } from '@/components/admin';
+import type { ViewMode } from '@/components/admin';
 import { Container, Button, Badge } from '@/components/ui';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { LeadSubmission, LeadStatus } from '@/types/proposals';
@@ -41,6 +42,7 @@ export default function AdminLeadsPage() {
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [serviceFilter, setServiceFilter] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>('card');
   const { authFetch } = useAuthFetch();
 
   const fetchLeads = useCallback(async () => {
@@ -161,7 +163,7 @@ export default function AdminLeadsPage() {
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap gap-4 mb-6">
+          <div className="flex flex-wrap items-center gap-4 mb-6">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -197,6 +199,10 @@ export default function AdminLeadsPage() {
             >
               Clear Filters
             </button>
+
+            <div className="flex-1" />
+
+            <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
           </div>
 
           {/* Leads Table */}
@@ -230,93 +236,96 @@ export default function AdminLeadsPage() {
                 </div>
               ) : (
                 <>
-                  {/* Mobile Card View */}
-                  <div className="md:hidden divide-y divide-depth-border">
-                    {leads.map((lead) => (
-                      <div key={lead.id} className="p-4">
-                        {/* Header: Name + Status */}
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex-1 min-w-0">
-                            <Link
-                              href={`/admin/leads/${lead.id}`}
-                              className="font-medium text-text-primary hover:text-radiance-gold transition-colors block break-words"
-                              title={lead.name}
-                            >
-                              {lead.name.length > 100
-                                ? `${lead.name.slice(0, 100)}...`
-                                : lead.name}
-                            </Link>
-                            <p className="text-sm text-text-muted truncate">{lead.email}</p>
-                            {lead.company && (
-                              <p className="text-sm text-text-muted truncate">{lead.company}</p>
+                  {/* Card View */}
+                  {viewMode === 'card' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                      {leads.map((lead) => (
+                        <div key={lead.id} className="bg-depth-elevated border border-depth-border rounded-xl p-4 hover:border-radiance-gold/30 transition-all">
+                          {/* Header: Name + Score */}
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex-1 min-w-0">
+                              <Link
+                                href={`/admin/leads/${lead.id}`}
+                                className="font-medium text-text-primary hover:text-radiance-gold transition-colors block break-words"
+                                title={lead.name}
+                              >
+                                {lead.name.length > 50
+                                  ? `${lead.name.slice(0, 50)}...`
+                                  : lead.name}
+                              </Link>
+                              <p className="text-sm text-text-muted truncate">{lead.email}</p>
+                              {lead.company && (
+                                <p className="text-sm text-text-muted truncate">{lead.company}</p>
+                              )}
+                            </div>
+                            {lead.readiness_score !== null && (
+                              <div className="flex items-center gap-1 ml-3 bg-radiance-gold/10 px-2 py-1 rounded-lg">
+                                <span className="text-sm font-semibold text-radiance-gold">
+                                  {lead.readiness_score}
+                                </span>
+                                <span className="text-[10px] text-text-muted">/100</span>
+                              </div>
                             )}
                           </div>
-                          {lead.readiness_score !== null && (
-                            <div className="flex items-center gap-1 ml-3 bg-radiance-gold/10 px-2 py-1 rounded-lg">
-                              <span className="text-sm font-semibold text-radiance-gold">
-                                {lead.readiness_score}
-                              </span>
-                              <span className="text-[10px] text-text-muted">/100</span>
-                            </div>
-                          )}
-                        </div>
 
-                        {/* Status dropdown + Date */}
-                        <div className="flex items-center gap-3 mb-3">
-                          <select
-                            value={lead.status}
-                            onChange={(e) =>
-                              handleStatusChange(lead.id, e.target.value as LeadStatus)
-                            }
-                            className="flex-1 bg-depth-base border border-depth-border rounded-lg px-3 py-2 text-sm text-text-primary focus:border-radiance-gold focus:outline-none"
-                          >
-                            {Object.entries(STATUS_LABELS).map(([value, label]) => (
-                              <option key={value} value={value}>
-                                {label}
-                              </option>
-                            ))}
-                          </select>
-                          <span className="text-xs text-text-muted whitespace-nowrap">
-                            {formatDate(lead.created_at)}
-                          </span>
-                        </div>
+                          {/* Status dropdown + Date */}
+                          <div className="flex items-center gap-3 mb-3">
+                            <select
+                              value={lead.status}
+                              onChange={(e) =>
+                                handleStatusChange(lead.id, e.target.value as LeadStatus)
+                              }
+                              className="flex-1 bg-depth-base border border-depth-border rounded-lg px-3 py-2 text-sm text-text-primary focus:border-radiance-gold focus:outline-none"
+                            >
+                              {Object.entries(STATUS_LABELS).map(([value, label]) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
+                              ))}
+                            </select>
+                            <span className="text-xs text-text-muted whitespace-nowrap">
+                              {formatDate(lead.created_at)}
+                            </span>
+                          </div>
 
-                        {/* Actions */}
-                        <div className="flex items-center gap-2">
-                          <Link
-                            href={`/admin/leads/${lead.id}`}
-                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-depth-elevated hover:bg-depth-border text-text-secondary rounded-lg transition-colors text-sm"
-                          >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            View
-                          </Link>
-                          <Link
-                            href={`/admin/proposals/new?lead=${lead.id}`}
-                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-wisdom-violet/10 hover:bg-wisdom-violet/20 text-wisdom-violet rounded-lg transition-colors text-sm"
-                          >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
-                            </svg>
-                            Proposal
-                          </Link>
-                          <button
-                            onClick={() => setDeleteId(lead.id)}
-                            className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                          >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
+                          {/* Actions */}
+                          <div className="flex items-center gap-2">
+                            <Link
+                              href={`/admin/leads/${lead.id}`}
+                              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-depth-base hover:bg-depth-border text-text-secondary rounded-lg transition-colors text-sm"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                              View
+                            </Link>
+                            <Link
+                              href={`/admin/proposals/new?lead=${lead.id}`}
+                              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-wisdom-violet/10 hover:bg-wisdom-violet/20 text-wisdom-violet rounded-lg transition-colors text-sm"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                              </svg>
+                              Proposal
+                            </Link>
+                            <button
+                              onClick={() => setDeleteId(lead.id)}
+                              className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                            >
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
 
-                  {/* Desktop Table View */}
-                  <div className="hidden md:block overflow-x-auto">
+                  {/* List View */}
+                  {viewMode === 'list' && (
+                    <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead className="bg-depth-elevated">
                         <tr>
@@ -441,6 +450,7 @@ export default function AdminLeadsPage() {
                       </tbody>
                     </table>
                   </div>
+                  )}
                 </>
               )}
             </div>

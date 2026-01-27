@@ -7,7 +7,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { AdminHeader } from '@/components/admin';
+import { AdminHeader, ViewToggle } from '@/components/admin';
+import type { ViewMode } from '@/components/admin';
 import { Container, Button } from '@/components/ui';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { Proposal, ProposalStatus } from '@/types/proposals';
@@ -37,6 +38,7 @@ export default function AdminProposalsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>('card');
   const { authFetch } = useAuthFetch();
 
   const fetchProposals = useCallback(async () => {
@@ -153,7 +155,7 @@ export default function AdminProposalsPage() {
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap gap-4 mb-6">
+          <div className="flex flex-wrap items-center gap-4 mb-6">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -173,6 +175,10 @@ export default function AdminProposalsPage() {
             >
               Clear Filter
             </button>
+
+            <div className="flex-1" />
+
+            <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
           </div>
 
           {/* Proposals Table */}
@@ -212,84 +218,87 @@ export default function AdminProposalsPage() {
                 </div>
               ) : (
                 <>
-                  {/* Mobile Card View */}
-                  <div className="md:hidden divide-y divide-depth-border overflow-hidden">
-                    {proposals.map((proposal) => (
-                      <div key={proposal.id} className="p-3 overflow-hidden">
-                        {/* Header: Project + Amount */}
-                        <div className="flex items-start justify-between gap-3 mb-2">
-                          <div className="flex-1 min-w-0 overflow-hidden">
+                  {/* Card View */}
+                  {viewMode === 'card' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                      {proposals.map((proposal) => (
+                        <div key={proposal.id} className="bg-depth-elevated border border-depth-border rounded-xl p-4 hover:border-radiance-gold/30 transition-all">
+                          {/* Header: Project + Amount */}
+                          <div className="flex items-start justify-between gap-3 mb-2">
+                            <div className="flex-1 min-w-0 overflow-hidden">
+                              <Link
+                                href={`/admin/proposals/${proposal.id}`}
+                                className="font-medium text-text-primary hover:text-radiance-gold transition-colors block break-words text-sm"
+                                title={proposal.project_name}
+                              >
+                                {proposal.project_name.length > 50
+                                  ? `${proposal.project_name.slice(0, 50)}...`
+                                  : proposal.project_name}
+                              </Link>
+                              <p className="text-xs text-text-muted truncate">
+                                {proposal.client_name}
+                                {proposal.client_company && ` - ${proposal.client_company}`}
+                              </p>
+                            </div>
+                            <div className="text-right flex-shrink-0 whitespace-nowrap">
+                              <p className="font-semibold text-text-primary text-sm">
+                                {formatCurrency(proposal.final_amount)}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Status + Date */}
+                          <div className="flex items-center gap-2 mb-3">
+                            <span
+                              className={`px-2 py-0.5 text-xs rounded-full font-medium ${
+                                STATUS_COLORS[proposal.status]
+                              }`}
+                            >
+                              {STATUS_LABELS[proposal.status]}
+                            </span>
+                            <span className="text-xs text-text-muted truncate">
+                              {proposal.sent_at ? `Sent ${formatDate(proposal.sent_at)}` : 'Not sent'}
+                            </span>
+                          </div>
+
+                          {/* Actions */}
+                          <div className="flex items-center gap-2">
                             <Link
                               href={`/admin/proposals/${proposal.id}`}
-                              className="font-medium text-text-primary hover:text-radiance-gold transition-colors block break-words text-sm"
-                              title={proposal.project_name}
+                              className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 bg-depth-base hover:bg-depth-border text-text-secondary rounded-lg transition-colors text-sm"
                             >
-                              {proposal.project_name.length > 100
-                                ? `${proposal.project_name.slice(0, 100)}...`
-                                : proposal.project_name}
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                              View
                             </Link>
-                            <p className="text-xs text-text-muted truncate">
-                              {proposal.client_name}
-                              {proposal.client_company && ` - ${proposal.client_company}`}
-                            </p>
+                            <button
+                              onClick={() => copyAccessLink(proposal.access_token)}
+                              className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 bg-radiance-gold/10 hover:bg-radiance-gold/20 text-radiance-gold rounded-lg transition-colors text-sm"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                              </svg>
+                              Copy Link
+                            </button>
+                            <button
+                              onClick={() => setDeleteId(proposal.id)}
+                              className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0"
+                            >
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
                           </div>
-                          <div className="text-right flex-shrink-0 whitespace-nowrap">
-                            <p className="font-semibold text-text-primary text-sm">
-                              {formatCurrency(proposal.final_amount)}
-                            </p>
-                          </div>
                         </div>
+                      ))}
+                    </div>
+                  )}
 
-                        {/* Status + Date */}
-                        <div className="flex items-center gap-2 mb-3">
-                          <span
-                            className={`px-2 py-0.5 text-xs rounded-full font-medium ${
-                              STATUS_COLORS[proposal.status]
-                            }`}
-                          >
-                            {STATUS_LABELS[proposal.status]}
-                          </span>
-                          <span className="text-xs text-text-muted truncate">
-                            {proposal.sent_at ? `Sent ${formatDate(proposal.sent_at)}` : 'Not sent'}
-                          </span>
-                        </div>
-
-                        {/* Actions */}
-                        <div className="flex items-center gap-2">
-                          <Link
-                            href={`/admin/proposals/${proposal.id}`}
-                            className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 bg-depth-elevated hover:bg-depth-border text-text-secondary rounded-lg transition-colors text-sm"
-                          >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            View
-                          </Link>
-                          <button
-                            onClick={() => copyAccessLink(proposal.access_token)}
-                            className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 bg-radiance-gold/10 hover:bg-radiance-gold/20 text-radiance-gold rounded-lg transition-colors text-sm"
-                          >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                            </svg>
-                            Copy Link
-                          </button>
-                          <button
-                            onClick={() => setDeleteId(proposal.id)}
-                            className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0"
-                          >
-                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Desktop Table View */}
-                  <div className="hidden md:block overflow-x-auto">
+                  {/* List View */}
+                  {viewMode === 'list' && (
+                    <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead className="bg-depth-elevated">
                         <tr>
@@ -397,6 +406,7 @@ export default function AdminProposalsPage() {
                       </tbody>
                     </table>
                   </div>
+                  )}
                 </>
               )}
             </div>

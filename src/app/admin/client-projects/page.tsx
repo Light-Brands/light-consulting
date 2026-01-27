@@ -7,7 +7,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { AdminHeader } from '@/components/admin';
+import { AdminHeader, ViewToggle } from '@/components/admin';
+import type { ViewMode } from '@/components/admin';
 import { Container, Button } from '@/components/ui';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { ClientProjectSummary } from '@/types/client-projects';
@@ -34,6 +35,7 @@ export default function AdminClientProjectsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>('card');
 
   const fetchProjects = useCallback(async () => {
     try {
@@ -145,8 +147,8 @@ export default function AdminClientProjectsPage() {
 
           {/* Filters */}
           <div className="bg-depth-surface border border-depth-border rounded-xl p-4 mb-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
+            <div className="flex flex-col md:flex-row gap-4 items-center">
+              <div className="flex-1 w-full md:w-auto">
                 <input
                   type="text"
                   placeholder="Search projects, clients..."
@@ -169,6 +171,7 @@ export default function AdminClientProjectsPage() {
                   <option value="cancelled">Cancelled</option>
                 </select>
               </div>
+              <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
             </div>
           </div>
 
@@ -203,52 +206,101 @@ export default function AdminClientProjectsPage() {
                 )}
               </div>
             ) : (
-              <div className="divide-y divide-depth-border">
-                {filteredProjects.map((project) => (
-                  <Link
-                    key={project.id}
-                    href={`/admin/client-projects/${project.id}`}
-                    className="block p-4 md:p-6 hover:bg-depth-elevated transition-colors"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="font-medium text-text-primary truncate">
+              <>
+                {/* Card View */}
+                {viewMode === 'card' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                    {filteredProjects.map((project) => (
+                      <Link
+                        key={project.id}
+                        href={`/admin/client-projects/${project.id}`}
+                        className="block bg-depth-elevated border border-depth-border rounded-xl p-4 hover:border-radiance-gold/30 transition-all"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-medium text-text-primary truncate flex-1">
                             {project.project_name}
                           </h3>
                           <span
-                            className={`px-2 py-0.5 text-xs rounded-full font-medium ${
+                            className={`px-2 py-0.5 text-xs rounded-full font-medium flex-shrink-0 ${
                               PROJECT_STATUS_COLORS[project.status]
                             }`}
                           >
                             {PROJECT_STATUS_LABELS[project.status]}
                           </span>
                         </div>
-                        <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted">
-                          {(project.client_name || project.client_company) && (
-                            <span className="flex items-center gap-1">
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                              </svg>
-                              {project.client_name}
-                              {project.client_company && ` (${project.client_company})`}
-                            </span>
-                          )}
-                          <span>{project.proposal_count || 0} proposals</span>
-                          <span>{formatCurrency(project.total_value || 0)}</span>
-                          {project.start_date && (
-                            <span>Started {formatDate(project.start_date)}</span>
-                          )}
-                        </div>
-                      </div>
 
-                      <svg className="w-5 h-5 text-text-muted flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+                        {(project.client_name || project.client_company) && (
+                          <p className="text-sm text-text-muted mb-3 truncate">
+                            {project.client_name}
+                            {project.client_company && ` (${project.client_company})`}
+                          </p>
+                        )}
+
+                        <div className="flex items-center gap-4 text-sm text-text-muted">
+                          <span>{project.proposal_count || 0} proposals</span>
+                          <span className="text-radiance-gold font-medium">{formatCurrency(project.total_value || 0)}</span>
+                        </div>
+
+                        {project.start_date && (
+                          <p className="text-xs text-text-muted mt-2">
+                            Started {formatDate(project.start_date)}
+                          </p>
+                        )}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+
+                {/* List View */}
+                {viewMode === 'list' && (
+                  <div className="divide-y divide-depth-border">
+                    {filteredProjects.map((project) => (
+                      <Link
+                        key={project.id}
+                        href={`/admin/client-projects/${project.id}`}
+                        className="block p-4 md:p-6 hover:bg-depth-elevated transition-colors"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-3 mb-2">
+                              <h3 className="font-medium text-text-primary truncate">
+                                {project.project_name}
+                              </h3>
+                              <span
+                                className={`px-2 py-0.5 text-xs rounded-full font-medium ${
+                                  PROJECT_STATUS_COLORS[project.status]
+                                }`}
+                              >
+                                {PROJECT_STATUS_LABELS[project.status]}
+                              </span>
+                            </div>
+                            <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted">
+                              {(project.client_name || project.client_company) && (
+                                <span className="flex items-center gap-1">
+                                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                  </svg>
+                                  {project.client_name}
+                                  {project.client_company && ` (${project.client_company})`}
+                                </span>
+                              )}
+                              <span>{project.proposal_count || 0} proposals</span>
+                              <span>{formatCurrency(project.total_value || 0)}</span>
+                              {project.start_date && (
+                                <span>Started {formatDate(project.start_date)}</span>
+                              )}
+                            </div>
+                          </div>
+
+                          <svg className="w-5 h-5 text-text-muted flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </div>
         </Container>
