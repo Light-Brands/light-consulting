@@ -9,7 +9,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
-import { getClientByEmail } from '@/lib/client-auth';
+import { getCurrentClientSession, getClientByEmail } from '@/lib/client-auth';
 import type { ClientProject } from '@/types/client-portal';
 
 /**
@@ -17,12 +17,14 @@ import type { ClientProject } from '@/types/client-portal';
  */
 export async function GET(request: NextRequest) {
   try {
-    // Get client identifier from session/token
+    // Get client session from cookies
+    const session = await getCurrentClientSession();
+
+    // Also support token-based access for legacy URLs
     const { searchParams } = new URL(request.url);
-    const clientEmail = searchParams.get('email');
     const accessToken = searchParams.get('token');
 
-    if (!clientEmail && !accessToken) {
+    if (!session && !accessToken) {
       return NextResponse.json(
         { data: null, error: 'Authentication required' },
         { status: 401 }
@@ -35,6 +37,9 @@ export async function GET(request: NextRequest) {
         { status: 503 }
       );
     }
+
+    // Get client email from session
+    const clientEmail = session?.email?.toLowerCase() || null;
 
     // First, try to find the client entity by email
     let clientId: string | null = null;
@@ -82,8 +87,8 @@ export async function GET(request: NextRequest) {
     } else if (clientEmail) {
       // Fall back to email-based lookup
       query = query.eq('client_email', clientEmail);
-    }
-    if (accessToken) {
+    } else if (accessToken) {
+      // Legacy: token-only access for a specific proposal
       query = query.eq('access_token', accessToken);
     }
 
