@@ -251,9 +251,8 @@ export default function CommandCenterPage() {
                 <span className="font-medium text-text-primary text-sm">Projects</span>
               </Link>
               <Link
-                href="/admin/clients"
+                href="/admin/client-projects/new"
                 className="flex items-center justify-center gap-1 px-3 py-2 border-t border-depth-border text-xs text-text-muted hover:text-radiance-gold hover:bg-radiance-gold/5 transition-colors"
-                title="Create a project from within a client"
               >
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
