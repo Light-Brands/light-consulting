@@ -2,7 +2,7 @@
  * Admin Users API Route
  * Light Brand Consulting
  *
- * Handles user creation and listing using Supabase Admin API
+ * Handles user creation, listing, and team promotion using Supabase Admin API
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -14,7 +14,7 @@ interface CreateUserRequest {
   password: string;
 }
 
-// GET - List all auth users (admin only)
+// GET - List all auth users with their team status
 export async function GET(request: NextRequest) {
   try {
     // Check authentication
@@ -46,14 +46,31 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Return simplified user data
-    const users = data.users.map((user) => ({
-      id: user.id,
-      email: user.email,
-      email_confirmed_at: user.email_confirmed_at,
-      created_at: user.created_at,
-      last_sign_in_at: user.last_sign_in_at,
-    }));
+    // Get all user profiles to check team status
+    const { data: profiles } = await supabaseAdmin
+      .from('user_profiles')
+      .select('auth_user_id, system_role, full_name, is_active');
+
+    const profileMap = new Map(
+      (profiles || []).map((p) => [p.auth_user_id, p])
+    );
+
+    // Return user data with team status
+    const users = data.users.map((user) => {
+      const profile = profileMap.get(user.id);
+      return {
+        id: user.id,
+        email: user.email,
+        email_confirmed_at: user.email_confirmed_at,
+        created_at: user.created_at,
+        last_sign_in_at: user.last_sign_in_at,
+        // Team status
+        is_team_member: profile ? ['admin', 'team_member'].includes(profile.system_role) : false,
+        team_role: profile?.system_role || null,
+        team_name: profile?.full_name || null,
+        is_active: profile?.is_active ?? true,
+      };
+    });
 
     return NextResponse.json({ data: users, error: null });
   } catch (error) {

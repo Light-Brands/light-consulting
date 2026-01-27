@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { AdminHeader } from '@/components/admin';
+import { AdminHeader, CollapsibleStats } from '@/components/admin';
 import { Container, Button } from '@/components/ui';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
 
@@ -16,6 +16,10 @@ interface AuthUser {
   email_confirmed_at: string | null;
   created_at: string;
   last_sign_in_at: string | null;
+  is_team_member: boolean;
+  team_role: string | null;
+  team_name: string | null;
+  is_active: boolean;
 }
 
 export default function AdminUsersPage() {
@@ -23,8 +27,12 @@ export default function AdminUsersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [showPromoteModal, setShowPromoteModal] = useState(false);
+  const [promoteUser, setPromoteUser] = useState<AuthUser | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [promoteName, setPromoteName] = useState('');
+  const [promoteRole, setPromoteRole] = useState<'team_member' | 'admin'>('team_member');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const { authFetch } = useAuthFetch();
@@ -80,77 +88,108 @@ export default function AdminUsersPage() {
     }
   };
 
+  const handlePromoteToTeam = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!promoteUser) return;
+
+    setError(null);
+    setSuccess(null);
+    setIsCreating(true);
+
+    try {
+      const response = await authFetch(`/api/admin/users/${promoteUser.id}/promote`, {
+        method: 'POST',
+        body: JSON.stringify({
+          full_name: promoteName,
+          role: promoteRole,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Failed to promote user');
+        return;
+      }
+
+      setSuccess(`${promoteName} has been added to the team!`);
+      setShowPromoteModal(false);
+      setPromoteUser(null);
+      setPromoteName('');
+      setPromoteRole('team_member');
+      fetchUsers();
+    } catch (error) {
+      console.error('Error promoting user:', error);
+      setError('Failed to promote user. Please try again.');
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const openPromoteModal = (user: AuthUser) => {
+    setPromoteUser(user);
+    setPromoteName(user.team_name || '');
+    setPromoteRole((user.team_role as 'team_member' | 'admin') || 'team_member');
+    setShowPromoteModal(true);
+    setError(null);
+  };
+
   const formatDate = (dateString: string | null) => {
     if (!dateString) return '—';
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
     });
+  };
+
+  const stats = {
+    total: users.length,
+    team: users.filter(u => u.is_team_member).length,
+    verified: users.filter(u => u.email_confirmed_at).length,
+    active: users.filter(u => u.last_sign_in_at).length,
   };
 
   return (
     <div className="min-h-screen">
       <AdminHeader
-        title="User Management"
-        subtitle="Create and manage authentication users"
+        title="Users"
+        subtitle="All system users and team access"
       />
 
-      <div className="py-8 md:py-12 relative overflow-hidden">
-        {/* Background atmosphere */}
+      <div className="py-4 md:py-8 relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
         <Container size="wide" className="relative z-10">
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="relative bg-depth-surface border border-depth-border rounded-xl p-4 overflow-hidden">
-              <div
-                className="absolute inset-0 opacity-[0.02] pointer-events-none"
-                style={{
-                  backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
-                  backgroundSize: '24px 24px',
-                }}
-              />
-              <div className="relative z-10">
-                <p className="text-2xl font-bold text-text-primary">
-                  {isLoading ? '-' : users.length}
+          <CollapsibleStats>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+              <div className="bg-depth-surface border border-depth-border rounded-xl p-3 md:p-4">
+                <p className="text-xl md:text-2xl font-bold text-text-primary">
+                  {isLoading ? '-' : stats.total}
                 </p>
-                <p className="text-text-muted text-sm">Total Users</p>
+                <p className="text-text-muted text-xs md:text-sm">Total Users</p>
+              </div>
+              <div className="bg-depth-surface border border-depth-border rounded-xl p-3 md:p-4">
+                <p className="text-xl md:text-2xl font-bold text-radiance-gold">
+                  {isLoading ? '-' : stats.team}
+                </p>
+                <p className="text-text-muted text-xs md:text-sm">Team Members</p>
+              </div>
+              <div className="bg-depth-surface border border-depth-border rounded-xl p-3 md:p-4">
+                <p className="text-xl md:text-2xl font-bold text-green-400">
+                  {isLoading ? '-' : stats.verified}
+                </p>
+                <p className="text-text-muted text-xs md:text-sm">Verified</p>
+              </div>
+              <div className="bg-depth-surface border border-depth-border rounded-xl p-3 md:p-4">
+                <p className="text-xl md:text-2xl font-bold text-blue-400">
+                  {isLoading ? '-' : stats.active}
+                </p>
+                <p className="text-text-muted text-xs md:text-sm">Active</p>
               </div>
             </div>
-            <div className="relative bg-depth-surface border border-depth-border rounded-xl p-4 overflow-hidden">
-              <div
-                className="absolute inset-0 opacity-[0.02] pointer-events-none"
-                style={{
-                  backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
-                  backgroundSize: '24px 24px',
-                }}
-              />
-              <div className="relative z-10">
-                <p className="text-2xl font-bold text-text-primary">
-                  {isLoading ? '-' : users.filter(u => u.email_confirmed_at).length}
-                </p>
-                <p className="text-text-muted text-sm">Verified Users</p>
-              </div>
-            </div>
-            <div className="relative bg-depth-surface border border-depth-border rounded-xl p-4 overflow-hidden">
-              <div
-                className="absolute inset-0 opacity-[0.02] pointer-events-none"
-                style={{
-                  backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
-                  backgroundSize: '24px 24px',
-                }}
-              />
-              <div className="relative z-10">
-                <p className="text-2xl font-bold text-text-primary">
-                  {isLoading ? '-' : users.filter(u => u.last_sign_in_at).length}
-                </p>
-                <p className="text-text-muted text-sm">Active Users</p>
-              </div>
-            </div>
-          </div>
+          </CollapsibleStats>
 
           {/* Success/Error Messages */}
           {success && (
@@ -166,32 +205,12 @@ export default function AdminUsersPage() {
 
           {/* Create User Form */}
           {showForm ? (
-            <div className="relative bg-depth-surface border border-depth-border rounded-2xl p-6 mb-8 overflow-hidden">
-              <div
-                className="absolute inset-0 opacity-[0.015] pointer-events-none"
-                style={{
-                  backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
-                  backgroundSize: '32px 32px',
-                }}
-              />
+            <div className="relative bg-depth-surface border border-depth-border rounded-2xl p-4 md:p-6 mb-6 overflow-hidden">
               <div className="relative z-10">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
-                      <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
-                        Users::Create_New
-                      </span>
-                    </div>
-                    <h2 className="text-lg font-semibold text-text-primary">
-                      Create New User
-                    </h2>
-                  </div>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold text-text-primary">Create New User</h2>
                   <button
-                    onClick={() => {
-                      setShowForm(false);
-                      setError(null);
-                    }}
+                    onClick={() => { setShowForm(false); setError(null); }}
                     className="p-2 text-text-muted hover:text-text-primary hover:bg-depth-elevated rounded-lg transition-colors"
                   >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -211,7 +230,7 @@ export default function AdminUsersPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-radiance-gold focus:outline-none focus:ring-1 focus:ring-radiance-gold/30 transition-colors"
+                      className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-radiance-gold focus:outline-none transition-colors"
                       placeholder="user@example.com"
                     />
                   </div>
@@ -226,26 +245,15 @@ export default function AdminUsersPage() {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       minLength={6}
-                      className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-radiance-gold focus:outline-none focus:ring-1 focus:ring-radiance-gold/30 transition-colors"
+                      className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-radiance-gold focus:outline-none transition-colors"
                       placeholder="Minimum 6 characters"
                     />
                   </div>
-                  <div className="flex justify-end gap-3 pt-4">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={() => {
-                        setShowForm(false);
-                        setError(null);
-                      }}
-                    >
+                  <div className="flex justify-end gap-3 pt-2">
+                    <Button type="button" variant="ghost" onClick={() => { setShowForm(false); setError(null); }}>
                       Cancel
                     </Button>
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      disabled={isCreating}
-                    >
+                    <Button type="submit" variant="primary" disabled={isCreating}>
                       {isCreating ? 'Creating...' : 'Create User'}
                     </Button>
                   </div>
@@ -254,13 +262,7 @@ export default function AdminUsersPage() {
             </div>
           ) : (
             <div className="mb-6">
-              <Button
-                variant="primary"
-                onClick={() => {
-                  setShowForm(true);
-                  setSuccess(null);
-                }}
-              >
+              <Button variant="primary" onClick={() => { setShowForm(true); setSuccess(null); }}>
                 <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
@@ -271,25 +273,10 @@ export default function AdminUsersPage() {
 
           {/* Users Table */}
           <div className="relative bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
-            <div
-              className="absolute inset-0 opacity-[0.015] pointer-events-none"
-              style={{
-                backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
-                backgroundSize: '32px 32px',
-              }}
-            />
-
             <div className="relative z-10">
-              <div className="p-6 border-b border-depth-border">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-radiance-gold/50" />
-                  <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
-                    Users::All_Users
-                  </span>
-                </div>
-                <h2 className="text-lg font-semibold text-text-primary">
-                  Authentication Users
-                </h2>
+              <div className="p-4 md:p-6 border-b border-depth-border">
+                <h2 className="text-lg font-semibold text-text-primary">All Users</h2>
+                <p className="text-sm text-text-muted">Users with team access can manage the admin portal</p>
               </div>
 
               {isLoading ? (
@@ -300,55 +287,65 @@ export default function AdminUsersPage() {
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[600px]">
+                  <table className="w-full min-w-[700px]">
                     <thead className="bg-depth-elevated">
                       <tr>
                         <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
-                          Email
+                          User
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
-                          Status
+                          Team Status
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
-                          Created
+                          Verified
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                           Last Sign In
+                        </th>
+                        <th className="px-4 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
+                          Actions
                         </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-depth-border">
                       {users.map((user) => (
-                        <tr
-                          key={user.id}
-                          className="hover:bg-depth-elevated transition-colors"
-                        >
+                        <tr key={user.id} className="hover:bg-depth-elevated transition-colors">
                           <td className="px-4 py-3 whitespace-nowrap">
-                            <p className="font-medium text-text-primary">
-                              {user.email}
-                            </p>
-                            <p className="text-xs text-text-muted font-mono mt-1">
-                              {user.id.slice(0, 8)}...
-                            </p>
+                            <p className="font-medium text-text-primary">{user.email}</p>
+                            {user.team_name && (
+                              <p className="text-sm text-text-muted">{user.team_name}</p>
+                            )}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
-                            {user.email_confirmed_at ? (
-                              <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
-                                <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                                Verified
+                            {user.is_team_member ? (
+                              <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium bg-radiance-gold/10 text-radiance-gold border border-radiance-gold/20">
+                                <span className="w-1.5 h-1.5 rounded-full bg-radiance-gold" />
+                                {user.team_role === 'admin' ? 'Admin' : 'Team Member'}
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                                <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                                Pending
+                              <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium bg-gray-500/10 text-gray-400 border border-gray-500/20">
+                                <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
+                                User
                               </span>
                             )}
                           </td>
-                          <td className="px-4 py-3 text-sm text-text-muted whitespace-nowrap">
-                            {formatDate(user.created_at)}
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            {user.email_confirmed_at ? (
+                              <span className="text-green-400 text-sm">Yes</span>
+                            ) : (
+                              <span className="text-amber-400 text-sm">No</span>
+                            )}
                           </td>
                           <td className="px-4 py-3 text-sm text-text-muted whitespace-nowrap">
                             {formatDate(user.last_sign_in_at)}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-right">
+                            <button
+                              onClick={() => openPromoteModal(user)}
+                              className="px-3 py-1.5 text-xs font-medium bg-radiance-gold/10 text-radiance-gold hover:bg-radiance-gold/20 rounded-lg transition-colors"
+                            >
+                              {user.is_team_member ? 'Edit Team' : 'Add to Team'}
+                            </button>
                           </td>
                         </tr>
                       ))}
@@ -360,6 +357,73 @@ export default function AdminUsersPage() {
           </div>
         </Container>
       </div>
+
+      {/* Promote to Team Modal */}
+      {showPromoteModal && promoteUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-depth-surface border border-depth-border rounded-2xl p-6 w-full max-w-md">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-text-primary">
+                {promoteUser.is_team_member ? 'Edit Team Member' : 'Add to Team'}
+              </h2>
+              <button
+                onClick={() => { setShowPromoteModal(false); setPromoteUser(null); setError(null); }}
+                className="p-2 text-text-muted hover:text-text-primary hover:bg-depth-elevated rounded-lg transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <p className="text-sm text-text-muted mb-4">
+              {promoteUser.is_team_member
+                ? `Update team settings for ${promoteUser.email}`
+                : `Add ${promoteUser.email} to the team to grant admin portal access.`
+              }
+            </p>
+
+            <form onSubmit={handlePromoteToTeam} className="space-y-4">
+              <div>
+                <label htmlFor="promoteName" className="block text-sm font-medium text-text-secondary mb-2">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  id="promoteName"
+                  value={promoteName}
+                  onChange={(e) => setPromoteName(e.target.value)}
+                  required
+                  className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-radiance-gold focus:outline-none transition-colors"
+                  placeholder="John Smith"
+                />
+              </div>
+              <div>
+                <label htmlFor="promoteRole" className="block text-sm font-medium text-text-secondary mb-2">
+                  Role
+                </label>
+                <select
+                  id="promoteRole"
+                  value={promoteRole}
+                  onChange={(e) => setPromoteRole(e.target.value as 'team_member' | 'admin')}
+                  className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-3 text-text-primary focus:border-radiance-gold focus:outline-none transition-colors"
+                >
+                  <option value="team_member">Team Member</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              <div className="flex justify-end gap-3 pt-2">
+                <Button type="button" variant="ghost" onClick={() => { setShowPromoteModal(false); setPromoteUser(null); setError(null); }}>
+                  Cancel
+                </Button>
+                <Button type="submit" variant="primary" disabled={isCreating}>
+                  {isCreating ? 'Saving...' : (promoteUser.is_team_member ? 'Update' : 'Add to Team')}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
