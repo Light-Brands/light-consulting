@@ -9,7 +9,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { AdminHeader } from '@/components/admin';
+import { AdminHeader, CollapsibleStats } from '@/components/admin';
 import { Container, Button } from '@/components/ui';
 import {
   CommandCenterStats,
@@ -263,11 +263,13 @@ export default function CommandCenterPage() {
           </div>
 
           {/* Stats */}
-          <CommandCenterStats
-            stats={stats}
-            isLoading={isLoading}
-            onFilterClick={handleFilterClick}
-          />
+          <CollapsibleStats>
+            <CommandCenterStats
+              stats={stats}
+              isLoading={isLoading}
+              onFilterClick={handleFilterClick}
+            />
+          </CollapsibleStats>
 
           {/* Active Filters */}
           {activeFilters.length > 0 && (

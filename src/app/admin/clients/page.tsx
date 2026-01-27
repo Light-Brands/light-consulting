@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { AdminHeader, ViewToggle } from '@/components/admin';
+import { AdminHeader, ViewToggle, CollapsibleStats } from '@/components/admin';
 import type { ViewMode } from '@/components/admin';
 import { Container, Button } from '@/components/ui';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
@@ -122,26 +122,28 @@ export default function AdminClientsPage() {
 
         <Container size="wide" className="relative z-10">
           {/* Stats Row */}
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3 mb-4 md:mb-8">
-            {[
-              { label: 'Total', value: stats.total, color: 'text-radiance-gold' },
-              { label: 'Active', value: stats.active, color: 'text-green-400' },
-              { label: 'Inactive', value: stats.inactive, color: 'text-gray-400' },
-              { label: 'Archived', value: stats.archived, color: 'text-amber-400' },
-              { label: 'Projects', value: stats.totalProjects, color: 'text-blue-400' },
-              { label: 'Value', value: formatCurrency(stats.totalValue), color: 'text-radiance-gold', isValue: true },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="bg-depth-surface border border-depth-border rounded-lg md:rounded-xl px-2 py-2 md:px-4 md:py-3 text-center"
-              >
-                <p className={`font-bold ${stat.color} ${stat.isValue ? 'text-sm md:text-lg' : 'text-lg md:text-2xl'}`}>
-                  {isLoading ? '-' : stat.value}
-                </p>
-                <p className="text-[10px] md:text-sm text-text-muted truncate">{stat.label}</p>
-              </div>
-            ))}
-          </div>
+          <CollapsibleStats>
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
+              {[
+                { label: 'Total', value: stats.total, color: 'text-radiance-gold' },
+                { label: 'Active', value: stats.active, color: 'text-green-400' },
+                { label: 'Inactive', value: stats.inactive, color: 'text-gray-400' },
+                { label: 'Archived', value: stats.archived, color: 'text-amber-400' },
+                { label: 'Projects', value: stats.totalProjects, color: 'text-blue-400' },
+                { label: 'Value', value: formatCurrency(stats.totalValue), color: 'text-radiance-gold', isValue: true },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="bg-depth-surface border border-depth-border rounded-lg md:rounded-xl px-2 py-2 md:px-4 md:py-3 text-center"
+                >
+                  <p className={`font-bold ${stat.color} ${stat.isValue ? 'text-sm md:text-lg' : 'text-lg md:text-2xl'}`}>
+                    {isLoading ? '-' : stat.value}
+                  </p>
+                  <p className="text-[10px] md:text-sm text-text-muted truncate">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </CollapsibleStats>
 
           {/* Filters */}
           <div className="flex flex-wrap items-center gap-4 mb-6">

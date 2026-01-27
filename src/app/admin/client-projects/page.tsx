@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { AdminHeader, ViewToggle } from '@/components/admin';
+import { AdminHeader, ViewToggle, CollapsibleStats } from '@/components/admin';
 import type { ViewMode } from '@/components/admin';
 import { Container, Button } from '@/components/ui';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
@@ -126,24 +126,26 @@ export default function AdminClientProjectsPage() {
 
         <Container size="wide" className="relative z-10">
           {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-depth-surface border border-depth-border rounded-xl p-4">
-              <p className="text-text-muted text-sm mb-1">Total Projects</p>
-              <p className="text-2xl font-bold text-text-primary">{stats.total}</p>
+          <CollapsibleStats>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-depth-surface border border-depth-border rounded-xl p-4">
+                <p className="text-text-muted text-sm mb-1">Total Projects</p>
+                <p className="text-2xl font-bold text-text-primary">{stats.total}</p>
+              </div>
+              <div className="bg-depth-surface border border-depth-border rounded-xl p-4">
+                <p className="text-text-muted text-sm mb-1">Active</p>
+                <p className="text-2xl font-bold text-green-400">{stats.active}</p>
+              </div>
+              <div className="bg-depth-surface border border-depth-border rounded-xl p-4">
+                <p className="text-text-muted text-sm mb-1">Completed</p>
+                <p className="text-2xl font-bold text-radiance-gold">{stats.completed}</p>
+              </div>
+              <div className="bg-depth-surface border border-depth-border rounded-xl p-4">
+                <p className="text-text-muted text-sm mb-1">Total Value</p>
+                <p className="text-2xl font-bold text-text-primary">{formatCurrency(stats.totalValue)}</p>
+              </div>
             </div>
-            <div className="bg-depth-surface border border-depth-border rounded-xl p-4">
-              <p className="text-text-muted text-sm mb-1">Active</p>
-              <p className="text-2xl font-bold text-green-400">{stats.active}</p>
-            </div>
-            <div className="bg-depth-surface border border-depth-border rounded-xl p-4">
-              <p className="text-text-muted text-sm mb-1">Completed</p>
-              <p className="text-2xl font-bold text-radiance-gold">{stats.completed}</p>
-            </div>
-            <div className="bg-depth-surface border border-depth-border rounded-xl p-4">
-              <p className="text-text-muted text-sm mb-1">Total Value</p>
-              <p className="text-2xl font-bold text-text-primary">{formatCurrency(stats.totalValue)}</p>
-            </div>
-          </div>
+          </CollapsibleStats>
 
           {/* Filters */}
           <div className="bg-depth-surface border border-depth-border rounded-xl p-4 mb-6">

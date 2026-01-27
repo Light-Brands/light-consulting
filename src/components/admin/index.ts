@@ -9,3 +9,4 @@ export { MobileAdminNav } from './MobileAdminNav';
 export { ImageUpload } from './ImageUpload';
 export { ViewToggle } from './ViewToggle';
 export type { ViewMode } from './ViewToggle';
+export { CollapsibleStats } from './CollapsibleStats';
