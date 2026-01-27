@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
 
-    // Fetch all projects with client info
+    // Fetch all projects with client info, ordered by last updated
     let query = supabaseAdmin
       .from('client_projects')
       .select(`
@@ -47,9 +47,10 @@ export async function GET(request: NextRequest) {
         start_date,
         end_date,
         created_at,
+        updated_at,
         client:clients(id, client_name, client_company)
       `)
-      .order('created_at', { ascending: false });
+      .order('updated_at', { ascending: false });
 
     if (status && status !== 'all') {
       query = query.eq('status', status);
