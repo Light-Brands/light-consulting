@@ -350,6 +350,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
     const limit = searchParams.get('limit');
+    const clientId = searchParams.get('client_id');
 
     // If Supabase is not configured, return placeholder data
     if (!isSupabaseConfigured()) {
@@ -358,6 +359,9 @@ export async function GET(request: NextRequest) {
       if (status) {
         const statusValues = status.split(',').map(s => s.trim()).filter(Boolean);
         filteredProposals = filteredProposals.filter((p) => statusValues.includes(p.status));
+      }
+      if (clientId) {
+        filteredProposals = filteredProposals.filter((p) => p.client_id === clientId);
       }
       if (limit) {
         filteredProposals = filteredProposals.slice(0, parseInt(limit, 10));
@@ -385,6 +389,9 @@ export async function GET(request: NextRequest) {
       } else if (statusValues.length > 1) {
         query = query.in('status', statusValues);
       }
+    }
+    if (clientId) {
+      query = query.eq('client_id', clientId);
     }
     if (limit) {
       query = query.limit(parseInt(limit, 10));

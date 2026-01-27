@@ -63,6 +63,9 @@ export default function AdminClientProjectDetailPage({ params }: { params: Promi
   const [project, setProject] = useState<ClientProjectWithDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showLinkModal, setShowLinkModal] = useState(false);
+  const [availableProposals, setAvailableProposals] = useState<Proposal[]>([]);
+  const [loadingProposals, setLoadingProposals] = useState(false);
 
   const fetchProject = useCallback(async () => {
     try {
@@ -98,6 +101,68 @@ export default function AdminClientProjectDetailPage({ params }: { params: Promi
     } catch (error) {
       console.error('Error deleting project:', error);
     }
+  };
+
+  // Fetch proposals that can be linked to this project
+  const fetchAvailableProposals = useCallback(async () => {
+    if (!project?.client_id) return;
+
+    setLoadingProposals(true);
+    try {
+      // Fetch all proposals for this client that aren't already linked to this project
+      const response = await authFetch(`/api/proposals?client_id=${project.client_id}`);
+      const data = await response.json();
+
+      if (data.data) {
+        // Filter out proposals already linked to this project
+        const unlinked = data.data.filter(
+          (p: Proposal) => p.project_id !== id
+        );
+        setAvailableProposals(unlinked);
+      }
+    } catch (error) {
+      console.error('Error fetching available proposals:', error);
+    } finally {
+      setLoadingProposals(false);
+    }
+  }, [authFetch, project?.client_id, id]);
+
+  const handleLinkProposal = async (proposalId: string) => {
+    try {
+      const response = await authFetch(`/api/proposals/${proposalId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ project_id: id }),
+      });
+
+      if (response.ok) {
+        // Refresh the project data
+        fetchProject();
+        setShowLinkModal(false);
+      }
+    } catch (error) {
+      console.error('Error linking proposal:', error);
+    }
+  };
+
+  const handleUnlinkProposal = async (proposalId: string) => {
+    try {
+      const response = await authFetch(`/api/proposals/${proposalId}`, {
+        method: 'PUT',
+        body: JSON.stringify({ project_id: null }),
+      });
+
+      if (response.ok) {
+        // Refresh the project data
+        fetchProject();
+      }
+    } catch (error) {
+      console.error('Error unlinking proposal:', error);
+    }
+  };
+
+  const openLinkModal = () => {
+    fetchAvailableProposals();
+    setShowLinkModal(true);
   };
 
   const formatCurrency = (amount: number) => {
@@ -267,14 +332,22 @@ export default function AdminClientProjectDetailPage({ params }: { params: Promi
                   Proposals
                 </h2>
               </div>
-              <Link href={`/admin/proposals/new?project_id=${id}&client_id=${project.client_id}`}>
-                <Button variant="ghost" size="sm">
+              <div className="flex gap-2">
+                <Button variant="ghost" size="sm" onClick={openLinkModal}>
                   <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                   </svg>
-                  Add Proposal
+                  Link Existing
                 </Button>
-              </Link>
+                <Link href={`/admin/proposals/new?project_id=${id}&client_id=${project.client_id}`}>
+                  <Button variant="ghost" size="sm">
+                    <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    New Proposal
+                  </Button>
+                </Link>
+              </div>
             </div>
 
             {project.proposals.length === 0 ? (
@@ -337,6 +410,16 @@ export default function AdminClientProjectDetailPage({ params }: { params: Promi
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                           </svg>
                         </Link>
+                        <button
+                          onClick={() => handleUnlinkProposal(proposal.id)}
+                          className="p-2 text-text-muted hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-colors"
+                          title="Unlink from Project"
+                        >
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6" />
+                          </svg>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -367,6 +450,78 @@ export default function AdminClientProjectDetailPage({ params }: { params: Promi
               </Button>
               <Button variant="danger" onClick={handleDeleteProject}>
                 Delete
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Link Proposal Modal */}
+      {showLinkModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={() => setShowLinkModal(false)}
+          />
+          <div className="relative bg-depth-surface border border-depth-border rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-hidden flex flex-col">
+            <h3 className="text-lg font-semibold text-text-primary mb-2">
+              Link Existing Proposal
+            </h3>
+            <p className="text-text-secondary text-sm mb-4">
+              Select a proposal to link to this project.
+            </p>
+
+            {loadingProposals ? (
+              <div className="py-8 text-center text-text-muted">Loading proposals...</div>
+            ) : availableProposals.length === 0 ? (
+              <div className="py-8 text-center text-text-muted">
+                <p>No unlinked proposals available for this client.</p>
+                <Link
+                  href={`/admin/proposals/new?project_id=${id}&client_id=${project.client_id}`}
+                  className="text-radiance-gold hover:underline mt-2 inline-block"
+                  onClick={() => setShowLinkModal(false)}
+                >
+                  Create a new proposal
+                </Link>
+              </div>
+            ) : (
+              <div className="flex-1 overflow-y-auto -mx-6 px-6">
+                <div className="space-y-2">
+                  {availableProposals.map((proposal) => (
+                    <button
+                      key={proposal.id}
+                      onClick={() => handleLinkProposal(proposal.id)}
+                      className="w-full p-4 bg-depth-elevated border border-depth-border rounded-xl hover:border-radiance-gold/50 transition-colors text-left"
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0 flex-1">
+                          <h4 className="font-medium text-text-primary truncate">
+                            {proposal.project_name}
+                          </h4>
+                          <div className="flex items-center gap-3 text-sm text-text-muted mt-1">
+                            <span>{formatCurrency(proposal.final_amount || 0)}</span>
+                            <span
+                              className={`px-2 py-0.5 text-xs rounded-full font-medium ${
+                                PROPOSAL_STATUS_COLORS[proposal.status] || 'bg-gray-500/10 text-gray-400'
+                              }`}
+                            >
+                              {PROPOSAL_STATUS_LABELS[proposal.status] || proposal.status}
+                            </span>
+                          </div>
+                        </div>
+                        <svg className="w-5 h-5 text-text-muted flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-depth-border">
+              <Button variant="ghost" onClick={() => setShowLinkModal(false)}>
+                Cancel
               </Button>
             </div>
           </div>

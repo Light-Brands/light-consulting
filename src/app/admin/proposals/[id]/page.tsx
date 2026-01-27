@@ -12,6 +12,8 @@ import { Container, Button } from '@/components/ui';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { ProposalWithDetails, ProposalStatus, ProposalPhase, PortalSections } from '@/types/proposals';
 import { DEFAULT_PORTAL_SECTIONS } from '@/types/proposals';
+import type { Client } from '@/types/clients';
+import type { ClientProject } from '@/types/client-projects';
 
 const STATUS_LABELS: Record<ProposalStatus, string> = {
   draft: 'Draft',
@@ -44,6 +46,9 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
   const [copied, setCopied] = useState(false);
   const [updatingPhaseId, setUpdatingPhaseId] = useState<string | null>(null);
   const [updatingSection, setUpdatingSection] = useState<string | null>(null);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [projects, setProjects] = useState<ClientProject[]>([]);
+  const [updatingProject, setUpdatingProject] = useState(false);
   const { authFetch } = useAuthFetch();
 
   const fetchProposal = useCallback(async () => {
@@ -64,6 +69,91 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
   useEffect(() => {
     fetchProposal();
   }, [fetchProposal]);
+
+  // Fetch clients for the dropdown
+  const fetchClients = useCallback(async () => {
+    try {
+      const response = await authFetch('/api/clients');
+      const data = await response.json();
+      if (data.data) {
+        setClients(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching clients:', error);
+    }
+  }, [authFetch]);
+
+  // Fetch projects for selected client
+  const fetchProjects = useCallback(async (clientId: string) => {
+    if (!clientId) {
+      setProjects([]);
+      return;
+    }
+    try {
+      const response = await authFetch(`/api/clients/${clientId}/projects`);
+      const data = await response.json();
+      if (data.data) {
+        setProjects(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    }
+  }, [authFetch]);
+
+  useEffect(() => {
+    fetchClients();
+  }, [fetchClients]);
+
+  useEffect(() => {
+    if (proposal?.client_id) {
+      fetchProjects(proposal.client_id);
+    }
+  }, [proposal?.client_id, fetchProjects]);
+
+  const handleClientChange = async (clientId: string) => {
+    setUpdatingProject(true);
+    try {
+      const response = await authFetch(`/api/proposals/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          client_id: clientId || null,
+          project_id: null // Reset project when client changes
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setProposal((prev) => prev ? { ...prev, client_id: clientId || null, project_id: null } : null);
+        if (clientId) {
+          fetchProjects(clientId);
+        } else {
+          setProjects([]);
+        }
+      }
+    } catch (error) {
+      console.error('Error updating client:', error);
+    } finally {
+      setUpdatingProject(false);
+    }
+  };
+
+  const handleProjectChange = async (projectId: string) => {
+    setUpdatingProject(true);
+    try {
+      const response = await authFetch(`/api/proposals/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ project_id: projectId || null }),
+      });
+
+      if (response.ok) {
+        setProposal((prev) => prev ? { ...prev, project_id: projectId || null } : null);
+      }
+    } catch (error) {
+      console.error('Error updating project:', error);
+    } finally {
+      setUpdatingProject(false);
+    }
+  };
 
   const handleStatusChange = async (newStatus: ProposalStatus) => {
     if (!proposal) return;
@@ -608,6 +698,73 @@ export default function AdminProposalDetailPage({ params }: PageProps) {
                     </a>
                     {proposal.client_company && (
                       <p className="text-text-muted text-xs sm:text-sm">{proposal.client_company}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Project Assignment */}
+              <div className="relative bg-depth-surface border border-depth-border rounded-xl sm:rounded-2xl overflow-hidden">
+                <div
+                  className="absolute inset-0 opacity-[0.015] pointer-events-none"
+                  style={{
+                    backgroundImage: 'radial-gradient(circle, #E8B84A 1px, transparent 1px)',
+                    backgroundSize: '32px 32px',
+                  }}
+                />
+                <div className="relative z-10 p-4 sm:p-6 space-y-3 sm:space-y-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500/50" />
+                    <span className="text-[9px] font-mono tracking-widest text-text-muted uppercase">
+                      Organization
+                    </span>
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-text-muted text-xs mb-1.5">Client Entity</label>
+                      <select
+                        value={proposal.client_id || ''}
+                        onChange={(e) => handleClientChange(e.target.value)}
+                        disabled={updatingProject}
+                        className="w-full bg-depth-base border border-depth-border rounded-lg px-3 py-2 text-sm text-text-primary focus:border-radiance-gold focus:outline-none disabled:opacity-50"
+                      >
+                        <option value="">No client linked</option>
+                        {clients.map((client) => (
+                          <option key={client.id} value={client.id}>
+                            {client.client_name}{client.client_company ? ` (${client.client_company})` : ''}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-text-muted text-xs mb-1.5">Project</label>
+                      <select
+                        value={proposal.project_id || ''}
+                        onChange={(e) => handleProjectChange(e.target.value)}
+                        disabled={updatingProject || !proposal.client_id}
+                        className="w-full bg-depth-base border border-depth-border rounded-lg px-3 py-2 text-sm text-text-primary focus:border-radiance-gold focus:outline-none disabled:opacity-50"
+                      >
+                        <option value="">No project linked</option>
+                        {projects.map((project) => (
+                          <option key={project.id} value={project.id}>
+                            {project.project_name}
+                          </option>
+                        ))}
+                      </select>
+                      {!proposal.client_id && (
+                        <p className="text-text-muted text-xs mt-1">Select a client first</p>
+                      )}
+                    </div>
+                    {proposal.project_id && (
+                      <Link
+                        href={`/admin/client-projects/${proposal.project_id}`}
+                        className="inline-flex items-center gap-1 text-radiance-gold text-xs hover:text-radiance-amber"
+                      >
+                        View Project
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </Link>
                     )}
                   </div>
                 </div>
