@@ -65,7 +65,7 @@ export const TeamScaleComparison: React.FC<TeamScaleComparisonProps> = ({
   if (loading || !metrics) {
     return (
       <div className={cn(
-        'bg-depth-elevated rounded-xl p-6 border border-border-subtle',
+        'bg-gradient-to-br from-depth-elevated to-depth-surface rounded-xl p-6 border border-border-subtle',
         className
       )}>
         <div className="h-6 w-64 bg-depth-surface rounded animate-pulse mb-6" />
@@ -103,7 +103,7 @@ export const TeamScaleComparison: React.FC<TeamScaleComparisonProps> = ({
 
   return (
     <div className={cn(
-      'bg-depth-elevated rounded-xl p-6 border border-border-subtle',
+      'bg-gradient-to-br from-depth-elevated to-depth-surface rounded-xl p-6 border border-border-subtle',
       className
     )}>
       {/* Career Equivalent Hero */}
@@ -140,34 +140,14 @@ export const TeamScaleComparison: React.FC<TeamScaleComparisonProps> = ({
         </div>
       )}
 
-      {/* Team Size Comparison */}
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-text-primary mb-4">
-          Time to Complete with Traditional Teams
-        </h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {estimates.map((estimate) => (
-            <div
-              key={estimate.size}
-              className="p-4 bg-depth-surface rounded-lg border border-border-subtle text-center"
-            >
-              <div className="text-2xl font-bold text-text-primary">
-                {formatTime(estimate.timeYears)}
-              </div>
-              <div className="text-sm text-text-muted mt-1">
-                {estimate.label}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Cost Comparison */}
+      {/* Team Size Comparison - Grid Layout */}
       <div>
         <h3 className="text-lg font-semibold text-text-primary mb-4">
-          Traditional Team Cost Comparison
+          Traditional Team Comparison
         </h3>
-        <div className="space-y-3">
+
+        {/* 4 Traditional Team Cards in a Row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           {estimates.map((estimate) => {
             const savings = estimate.cost - currentTeamCost;
             const savingsPercent = currentTeamCost > 0 ? ((savings / estimate.cost) * 100) : 0;
@@ -175,21 +155,23 @@ export const TeamScaleComparison: React.FC<TeamScaleComparisonProps> = ({
             return (
               <div
                 key={estimate.size}
-                className="flex items-center justify-between p-4 bg-depth-surface rounded-lg border border-border-subtle"
+                className="p-4 bg-depth-base/50 rounded-lg text-center"
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-20 text-sm font-medium text-text-primary">
-                    {estimate.label}
-                  </div>
-                  <div className="text-lg font-semibold text-text-primary">
-                    {formatCurrency(estimate.cost)}
-                  </div>
+                <div className="text-sm font-medium text-text-muted mb-3">
+                  {estimate.size} Developers
                 </div>
+                <div className="text-2xl font-bold text-text-primary">
+                  {formatTime(estimate.timeYears)}
+                </div>
+                <div className="text-xs text-text-muted mb-2">to complete</div>
+                <div className="text-lg font-semibold text-text-primary">
+                  {formatCurrency(estimate.cost)}
+                </div>
+                <div className="text-xs text-text-muted mb-3">total cost</div>
                 {savings > 0 && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-text-muted">vs your team:</span>
-                    <span className="px-2 py-1 text-sm font-medium bg-green-500/10 text-green-400 rounded">
-                      Save {formatCurrency(savings)} ({savingsPercent.toFixed(0)}%)
+                  <div className="pt-2 border-t border-border-subtle">
+                    <span className="text-xs font-medium text-green-400">
+                      Save {formatCurrency(savings)}
                     </span>
                   </div>
                 )}
@@ -198,19 +180,35 @@ export const TeamScaleComparison: React.FC<TeamScaleComparisonProps> = ({
           })}
         </div>
 
-        {/* Your Team's Cost */}
-        <div className="mt-4 p-4 bg-radiance-gold/10 rounded-lg border border-radiance-gold/20">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-sm font-medium text-text-primary">
-                Your AI-Augmented Team ({metrics.team_developer_count} {metrics.team_developer_count === 1 ? 'developer' : 'developers'})
-              </div>
-              <div className="text-xs text-text-muted mt-0.5">
-                {formatTime(currentTeamTimeYears)} at ${(AVG_DEVELOPER_COST_PER_YEAR / 1000).toFixed(0)}K/dev/year
-              </div>
+        {/* Your Team Card - Full Width Below */}
+        <div className="p-5 bg-radiance-gold/10 rounded-lg border border-radiance-gold/20">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 items-center">
+            <div className="text-center md:text-left">
+              <div className="text-sm font-medium text-radiance-gold">Your AI-Augmented Team</div>
+              <div className="text-xs text-text-muted">{metrics.team_developer_count} {metrics.team_developer_count === 1 ? 'developer' : 'developers'}</div>
             </div>
-            <div className="text-xl font-bold text-radiance-gold">
-              {formatCurrency(currentTeamCost)}
+            <div className="text-center">
+              <div className="text-2xl font-bold text-radiance-gold">
+                {formatTime(currentTeamTimeYears)}
+              </div>
+              <div className="text-xs text-text-muted">actual time</div>
+            </div>
+            <div className="text-center">
+              <div className="text-xl font-semibold text-radiance-gold">
+                {formatCurrency(currentTeamCost)}
+              </div>
+              <div className="text-xs text-text-muted">your cost</div>
+            </div>
+            <div className="text-center">
+              <div className="text-xl font-semibold text-radiance-gold">
+                {formatNumber(metrics.net_lines)}
+              </div>
+              <div className="text-xs text-text-muted">net LOC delivered</div>
+            </div>
+            <div className="text-center col-span-2 md:col-span-1">
+              <span className="inline-block px-3 py-1.5 text-sm font-medium bg-radiance-gold/20 text-radiance-gold rounded-lg">
+                {metrics.efficiency_multiplier.toFixed(1)}x Output
+              </span>
             </div>
           </div>
         </div>

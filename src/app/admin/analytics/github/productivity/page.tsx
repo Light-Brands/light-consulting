@@ -166,13 +166,21 @@ export default function TeamProductivityPage() {
           />
 
           {/* Team Averages Card */}
-          <div className="bg-depth-elevated rounded-xl p-6 border border-border-subtle">
-            <h3 className="text-lg font-semibold text-text-primary mb-4">
-              Per-Developer Averages ({developerCount} {developerCount === 1 ? 'developer' : 'developers'})
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-text-primary">
+          <div className="bg-gradient-to-br from-depth-elevated to-depth-surface rounded-xl p-6 border border-border-subtle">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-radiance-gold/10 rounded-lg">
+                <svg className="w-5 h-5 text-radiance-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-text-primary">Per-Developer Averages</h3>
+                <p className="text-sm text-text-muted">{developerCount} {developerCount === 1 ? 'developer' : 'developers'} on the team</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="p-4 bg-depth-base/50 rounded-lg text-center">
+                <div className="text-3xl font-bold text-radiance-gold">
                   {loading ? (
                     <div className="h-9 w-20 mx-auto bg-depth-surface rounded animate-pulse" />
                   ) : (
@@ -181,8 +189,8 @@ export default function TeamProductivityPage() {
                 </div>
                 <div className="text-sm text-text-muted mt-1">Avg Net Lines</div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-text-primary">
+              <div className="p-4 bg-depth-base/50 rounded-lg text-center">
+                <div className="text-3xl font-bold text-radiance-gold">
                   {loading ? (
                     <div className="h-9 w-20 mx-auto bg-depth-surface rounded animate-pulse" />
                   ) : (
@@ -191,7 +199,7 @@ export default function TeamProductivityPage() {
                 </div>
                 <div className="text-sm text-text-muted mt-1">Avg Commits</div>
               </div>
-              <div className="text-center">
+              <div className="p-4 bg-depth-base/50 rounded-lg text-center">
                 <div className="text-3xl font-bold text-green-400">
                   {loading ? (
                     <div className="h-9 w-20 mx-auto bg-depth-surface rounded animate-pulse" />
@@ -201,7 +209,7 @@ export default function TeamProductivityPage() {
                 </div>
                 <div className="text-sm text-text-muted mt-1">Avg Lines Added</div>
               </div>
-              <div className="text-center">
+              <div className="p-4 bg-depth-base/50 rounded-lg text-center">
                 <div className="text-3xl font-bold text-red-400">
                   {loading ? (
                     <div className="h-9 w-20 mx-auto bg-depth-surface rounded animate-pulse" />
@@ -211,6 +219,45 @@ export default function TeamProductivityPage() {
                 </div>
                 <div className="text-sm text-text-muted mt-1">Avg Lines Removed</div>
               </div>
+            </div>
+          </div>
+
+          {/* AI Tooling Card */}
+          <div className="bg-gradient-to-br from-depth-elevated to-depth-surface rounded-xl p-6 border border-border-subtle">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-radiance-gold/10 rounded-lg">
+                <svg className="w-5 h-5 text-radiance-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-text-primary">AI Development Tooling</h3>
+                <p className="text-sm text-text-muted">Custom automation powering our productivity</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="p-4 bg-depth-base/50 rounded-lg text-center">
+                <div className="text-3xl font-bold text-radiance-gold">22</div>
+                <div className="text-sm text-text-muted mt-1">Commands</div>
+              </div>
+              <div className="p-4 bg-depth-base/50 rounded-lg text-center">
+                <div className="text-3xl font-bold text-radiance-gold">35</div>
+                <div className="text-sm text-text-muted mt-1">Agents</div>
+              </div>
+              <div className="p-4 bg-depth-base/50 rounded-lg text-center">
+                <div className="text-3xl font-bold text-radiance-gold">8</div>
+                <div className="text-sm text-text-muted mt-1">Skills</div>
+              </div>
+              <div className="p-4 bg-depth-base/50 rounded-lg text-center">
+                <div className="text-3xl font-bold text-radiance-gold">8</div>
+                <div className="text-sm text-text-muted mt-1">Orchestration Workflows</div>
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-border-subtle">
+              <p className="text-xs text-text-muted">
+                Our AI-augmented workflow includes custom Claude Code commands, specialized agents for different tasks,
+                reusable skills, and orchestration workflows that automate complex multi-step processes.
+              </p>
             </div>
           </div>
 
@@ -239,11 +286,13 @@ export default function TeamProductivityPage() {
           />
 
           {/* Footer info */}
-          <div className="p-4 bg-depth-elevated rounded-xl border border-border-subtle">
+          <div className="bg-gradient-to-br from-depth-elevated to-depth-surface rounded-xl p-6 border border-border-subtle">
             <div className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-text-muted flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <div className="p-2 bg-radiance-gold/10 rounded-lg flex-shrink-0">
+                <svg className="w-5 h-5 text-radiance-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
               <div>
                 <h4 className="font-medium text-text-primary">About the Benchmark</h4>
                 <p className="text-sm text-text-muted mt-1">

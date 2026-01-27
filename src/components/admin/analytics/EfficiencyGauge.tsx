@@ -34,7 +34,7 @@ export const EfficiencyGauge: React.FC<EfficiencyGaugeProps> = ({
   if (loading || !metrics) {
     return (
       <div className={cn(
-        'bg-depth-elevated rounded-xl p-6 border border-border-subtle',
+        'bg-gradient-to-br from-depth-elevated to-depth-surface rounded-xl p-6 border border-border-subtle',
         className
       )}>
         <div className="flex items-center justify-center py-8">
@@ -62,7 +62,7 @@ export const EfficiencyGauge: React.FC<EfficiencyGaugeProps> = ({
 
   return (
     <div className={cn(
-      'bg-depth-elevated rounded-xl p-6 border border-border-subtle',
+      'bg-gradient-to-br from-depth-elevated to-depth-surface rounded-xl p-6 border border-border-subtle',
       className
     )}>
       <h3 className="text-lg font-semibold text-text-primary mb-6 text-center">

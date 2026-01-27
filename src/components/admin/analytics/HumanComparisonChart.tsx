@@ -35,7 +35,7 @@ export const HumanComparisonChart: React.FC<HumanComparisonChartProps> = ({
   if (loading || !metrics) {
     return (
       <div className={cn(
-        'bg-depth-elevated rounded-xl p-6 border border-border-subtle',
+        'bg-gradient-to-br from-depth-elevated to-depth-surface rounded-xl p-6 border border-border-subtle',
         className
       )}>
         <div className="h-6 w-48 bg-depth-surface rounded animate-pulse mb-6" />
@@ -55,7 +55,7 @@ export const HumanComparisonChart: React.FC<HumanComparisonChartProps> = ({
 
   return (
     <div className={cn(
-      'bg-depth-elevated rounded-xl p-6 border border-border-subtle',
+      'bg-gradient-to-br from-depth-elevated to-depth-surface rounded-xl p-6 border border-border-subtle',
       className
     )}>
       <h3 className="text-lg font-semibold text-text-primary mb-2">

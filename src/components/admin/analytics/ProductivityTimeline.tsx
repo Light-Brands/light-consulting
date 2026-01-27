@@ -20,6 +20,7 @@ import {
 } from 'recharts';
 import { cn } from '@/lib/utils';
 import type { ProductivityMetrics } from '@/types/github-analytics';
+import { INDUSTRY_BENCHMARK_LOC_PER_MONTH } from '@/types/github-analytics';
 
 interface ProductivityTimelineProps {
   metrics: ProductivityMetrics | null;
@@ -39,9 +40,15 @@ export const ProductivityTimeline: React.FC<ProductivityTimelineProps> = ({
     let cumulativeNet = 0;
     let cumulativeCommits = 0;
 
-    return metrics.daily_stats.map((d) => {
+    // Traditional benchmark: team size × 5000 LOC/month ÷ 30 days
+    const dailyBenchmark = (metrics.team_developer_count * INDUSTRY_BENCHMARK_LOC_PER_MONTH) / 30;
+
+    return metrics.daily_stats.map((d, index) => {
       cumulativeNet += d.net_lines;
       cumulativeCommits += d.commits_count;
+
+      // Traditional cumulative is linear growth at benchmark rate
+      const traditionalCumulative = Math.round(dailyBenchmark * (index + 1));
 
       return {
         date: new Date(d.stat_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
@@ -52,13 +59,20 @@ export const ProductivityTimeline: React.FC<ProductivityTimelineProps> = ({
         daily_commits: d.commits_count,
         cumulative_net: cumulativeNet,
         cumulative_commits: cumulativeCommits,
+        traditional_cumulative: traditionalCumulative,
       };
     });
   }, [metrics]);
 
+  // Get traditional total for comparison stats
+  const traditionalTotal = useMemo(() => {
+    if (!chartData.length) return 0;
+    return chartData[chartData.length - 1].traditional_cumulative;
+  }, [chartData]);
+
   if (loading) {
     return (
-      <div className={cn('bg-depth-elevated rounded-xl p-6 border border-border-subtle', className)}>
+      <div className={cn('bg-gradient-to-br from-depth-elevated to-depth-surface rounded-xl p-6 border border-border-subtle', className)}>
         <div className="h-5 w-40 bg-depth-surface rounded animate-pulse mb-4" />
         <div className="h-[300px] bg-depth-surface rounded animate-pulse" />
       </div>
@@ -67,7 +81,7 @@ export const ProductivityTimeline: React.FC<ProductivityTimelineProps> = ({
 
   if (!metrics || chartData.length === 0) {
     return (
-      <div className={cn('bg-depth-elevated rounded-xl p-6 border border-border-subtle', className)}>
+      <div className={cn('bg-gradient-to-br from-depth-elevated to-depth-surface rounded-xl p-6 border border-border-subtle', className)}>
         <h3 className="text-lg font-semibold text-text-primary mb-4">Productivity Timeline</h3>
         <div className="h-[300px] flex items-center justify-center text-text-muted">
           No timeline data available
@@ -77,17 +91,21 @@ export const ProductivityTimeline: React.FC<ProductivityTimelineProps> = ({
   }
 
   return (
-    <div className={cn('bg-depth-elevated rounded-xl p-6 border border-border-subtle', className)}>
+    <div className={cn('bg-gradient-to-br from-depth-elevated to-depth-surface rounded-xl p-6 border border-border-subtle', className)}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-text-primary">Productivity Timeline</h3>
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-full bg-radiance-gold" />
-            <span className="text-text-muted">Cumulative Net LOC</span>
+            <span className="text-text-muted">Your Team</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-0.5 bg-gray-500" style={{ borderTop: '2px dashed #6B7280' }} />
+            <span className="text-text-muted">Traditional ({metrics?.team_developer_count} devs)</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-full bg-blue-500" />
-            <span className="text-text-muted">Daily Net LOC</span>
+            <span className="text-text-muted">Daily</span>
           </div>
         </div>
       </div>
@@ -146,24 +164,25 @@ export const ProductivityTimeline: React.FC<ProductivityTimelineProps> = ({
               labelStyle={{ color: '#E8E8E8' }}
               formatter={(value: number, name: string) => {
                 const labels: Record<string, string> = {
-                  cumulative_net: 'Cumulative Net LOC',
+                  cumulative_net: 'Your Team',
+                  traditional_cumulative: 'Traditional Team',
                   daily_net: 'Daily Net LOC',
                 };
                 return [value.toLocaleString(), labels[name] || name];
               }}
               labelFormatter={(label) => `Date: ${label}`}
             />
-            <Legend
-              verticalAlign="top"
-              height={36}
-              wrapperStyle={{ fontSize: '12px' }}
-              formatter={(value: string) => {
-                const labels: Record<string, string> = {
-                  cumulative_net: 'Cumulative Net LOC',
-                  daily_net: 'Daily Net LOC',
-                };
-                return labels[value] || value;
-              }}
+            {/* Traditional benchmark line - dashed at the bottom */}
+            <Area
+              yAxisId="cumulative"
+              type="monotone"
+              dataKey="traditional_cumulative"
+              stroke="#6B7280"
+              strokeWidth={2}
+              strokeDasharray="6 4"
+              fill="none"
+              dot={false}
+              activeDot={{ fill: '#6B7280', strokeWidth: 2, stroke: '#fff', r: 4 }}
             />
             <Area
               yAxisId="cumulative"
@@ -191,7 +210,7 @@ export const ProductivityTimeline: React.FC<ProductivityTimelineProps> = ({
 
       {/* Summary stats */}
       <div className="mt-4 pt-4 border-t border-border-subtle">
-        <div className="grid grid-cols-3 gap-4 text-center text-sm">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
           <div>
             <div className="text-text-muted">Avg Daily Net LOC</div>
             <div className="font-semibold text-text-primary">
@@ -212,6 +231,17 @@ export const ProductivityTimeline: React.FC<ProductivityTimelineProps> = ({
             <div className="text-text-muted">Active Days</div>
             <div className="font-semibold text-text-primary">
               {chartData.filter(d => d.daily_commits > 0).length}
+            </div>
+          </div>
+          <div>
+            <div className="text-text-muted">vs Traditional</div>
+            <div className="font-semibold text-radiance-gold">
+              {chartData.length > 0 && traditionalTotal > 0
+                ? `${Math.round(chartData[chartData.length - 1].cumulative_net / traditionalTotal)}x output`
+                : '—'}
+            </div>
+            <div className="text-xs text-text-muted">
+              {traditionalTotal > 0 ? `(${traditionalTotal.toLocaleString()} LOC benchmark)` : ''}
             </div>
           </div>
         </div>
