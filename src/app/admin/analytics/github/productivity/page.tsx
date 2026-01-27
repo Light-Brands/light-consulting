@@ -20,6 +20,7 @@ import {
   HumanComparisonChart,
   EfficiencyGauge,
   ProductivityTimeline,
+  TeamScaleComparison,
 } from '@/components/admin/analytics';
 import { formatNumber } from '@/types/github-analytics';
 
@@ -224,6 +225,12 @@ export default function TeamProductivityPage() {
               loading={loading}
             />
           </div>
+
+          {/* Team Scale & Cost Comparison */}
+          <TeamScaleComparison
+            metrics={metrics}
+            loading={loading}
+          />
 
           {/* Timeline */}
           <ProductivityTimeline

@@ -20,3 +20,4 @@ export { HumanComparisonChart } from './HumanComparisonChart';
 export { EfficiencyGauge } from './EfficiencyGauge';
 export { DeveloperBreakdown } from './DeveloperBreakdown';
 export { ProductivityTimeline } from './ProductivityTimeline';
+export { TeamScaleComparison } from './TeamScaleComparison';
