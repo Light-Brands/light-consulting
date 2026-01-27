@@ -22,13 +22,27 @@ interface NavigationProps {
 export const Navigation: React.FC<NavigationProps> = ({ activePage, onNavigate }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const [isLoginMenuOpen, setIsLoginMenuOpen] = useState(false);
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
+  const loginMenuRef = useRef<HTMLDivElement>(null);
 
   const handleNavigate = (page: PageKey) => {
     onNavigate(page);
     setIsMobileMenuOpen(false);
   };
+
+  // Close login menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (loginMenuRef.current && !loginMenuRef.current.contains(event.target as Node)) {
+        setIsLoginMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -106,6 +120,58 @@ export const Navigation: React.FC<NavigationProps> = ({ activePage, onNavigate }
           {/* CTA Button with Palette Switcher */}
           <div className="hidden md:flex items-center gap-4">
             <PaletteSwitcher variant="minimal" />
+
+            {/* Login Dropdown */}
+            <div className="relative" ref={loginMenuRef}>
+              <button
+                onClick={() => setIsLoginMenuOpen(!isLoginMenuOpen)}
+                className={cn(
+                  'px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200',
+                  isLoginMenuOpen
+                    ? 'text-radiance-gold bg-radiance-gold/10'
+                    : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
+                )}
+              >
+                Login
+              </button>
+
+              {isLoginMenuOpen && (
+                <div className={cn(
+                  'absolute top-full right-0 mt-2 w-44',
+                  'bg-[#1A1918] backdrop-blur-xl',
+                  'rounded-xl',
+                  'shadow-[0_8px_32px_rgba(0,0,0,0.32)]',
+                  'border border-white/[0.08]',
+                  'overflow-hidden',
+                  'animate-fade-in'
+                )}>
+                  <a
+                    href="/client-portal/login"
+                    className={cn(
+                      'block px-4 py-3 text-sm font-medium',
+                      'text-white/70 hover:text-white hover:bg-white/[0.06]',
+                      'transition-all duration-200'
+                    )}
+                    onClick={() => setIsLoginMenuOpen(false)}
+                  >
+                    Clients
+                  </a>
+                  <a
+                    href="/admin/login"
+                    className={cn(
+                      'block px-4 py-3 text-sm font-medium',
+                      'text-white/70 hover:text-white hover:bg-white/[0.06]',
+                      'transition-all duration-200',
+                      'border-t border-white/[0.08]'
+                    )}
+                    onClick={() => setIsLoginMenuOpen(false)}
+                  >
+                    Team
+                  </a>
+                </div>
+              )}
+            </div>
+
             <button
               onClick={() => handleNavigate('book')}
               className={cn(
@@ -155,6 +221,36 @@ export const Navigation: React.FC<NavigationProps> = ({ activePage, onNavigate }
               <div className="px-4 py-3">
                 <PaletteSwitcher variant="full" className="w-full [&>button]:w-full [&>button]:justify-between" />
               </div>
+
+              {/* Login Options for Mobile */}
+              <div className="border-t border-white/[0.08] mt-2 pt-2">
+                <p className="px-4 py-2 text-xs font-medium text-white/40 uppercase tracking-wider">
+                  Login
+                </p>
+                <a
+                  href="/client-portal/login"
+                  className={cn(
+                    'block px-4 py-3 text-sm font-medium rounded-xl',
+                    'text-white/70 hover:bg-white/[0.06] hover:text-white',
+                    'transition-all duration-200'
+                  )}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Clients
+                </a>
+                <a
+                  href="/admin/login"
+                  className={cn(
+                    'block px-4 py-3 text-sm font-medium rounded-xl',
+                    'text-white/70 hover:bg-white/[0.06] hover:text-white',
+                    'transition-all duration-200'
+                  )}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Team
+                </a>
+              </div>
+
               <div className="pt-3">
                 <button
                   onClick={() => handleNavigate('book')}
