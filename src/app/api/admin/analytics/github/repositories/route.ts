@@ -18,10 +18,11 @@ export interface RepositoryWithStats extends GitHubRepository {
   stats_end_date: string | null;
 }
 
-interface DailyStatsRow {
-  stat_date: string;
-  additions: number | null;
-  deletions: number | null;
+interface ContributorStatsRow {
+  total_additions: number;
+  total_deletions: number;
+  first_commit_at: string | null;
+  last_commit_at: string | null;
 }
 
 /**
@@ -84,22 +85,31 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get line stats for each repository
+    // Get line stats for each repository from contributors table (accurate lifetime totals)
     const reposWithStats: RepositoryWithStats[] = [];
 
     for (const repo of (repos || []) as GitHubRepository[]) {
-      // Get aggregated stats from daily_stats
-      const { data: statsData } = await supabaseAdmin
-        .from('github_daily_stats')
-        .select('stat_date, additions, deletions')
-        .eq('repository_id', repo.id)
-        .order('stat_date', { ascending: true });
+      // Get aggregated stats from contributors (same source as dashboard totals)
+      const { data: contributorData } = await supabaseAdmin
+        .from('github_contributors')
+        .select('total_additions, total_deletions, first_commit_at, last_commit_at')
+        .eq('repository_id', repo.id);
 
-      const stats = (statsData || []) as DailyStatsRow[];
-      const totalAdditions = stats.reduce((sum, s) => sum + (s.additions || 0), 0);
-      const totalDeletions = stats.reduce((sum, s) => sum + (s.deletions || 0), 0);
-      const statsStartDate = stats.length > 0 ? stats[0].stat_date : null;
-      const statsEndDate = stats.length > 0 ? stats[stats.length - 1].stat_date : null;
+      const contributors = (contributorData || []) as ContributorStatsRow[];
+      const totalAdditions = contributors.reduce((sum, c) => sum + (c.total_additions || 0), 0);
+      const totalDeletions = contributors.reduce((sum, c) => sum + (c.total_deletions || 0), 0);
+
+      // Get date range from contributor data
+      let statsStartDate: string | null = null;
+      let statsEndDate: string | null = null;
+      for (const c of contributors) {
+        if (c.first_commit_at && (!statsStartDate || c.first_commit_at < statsStartDate)) {
+          statsStartDate = c.first_commit_at.split('T')[0];
+        }
+        if (c.last_commit_at && (!statsEndDate || c.last_commit_at > statsEndDate)) {
+          statsEndDate = c.last_commit_at.split('T')[0];
+        }
+      }
 
       reposWithStats.push({
         ...repo,

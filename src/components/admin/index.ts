@@ -10,3 +10,4 @@ export { ImageUpload } from './ImageUpload';
 export { ViewToggle } from './ViewToggle';
 export type { ViewMode } from './ViewToggle';
 export { CollapsibleStats } from './CollapsibleStats';
+export { FloatingSyncWidget } from './FloatingSyncWidget';

@@ -130,8 +130,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Calculate 'since' date for incremental sync (last 30 days)
-    const since = syncType === 'incremental' ? new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) : undefined;
+    // Calculate 'since' date for incremental sync
+    let since: Date | undefined;
+    if (syncType === 'incremental') {
+      // Check when the last successful sync completed
+      const { data: lastSync } = await supabaseAdmin
+        .from('github_sync_log')
+        .select('completed_at')
+        .eq('status', 'completed')
+        .order('completed_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (lastSync?.completed_at) {
+        // Use last sync time, with a small buffer (1 hour overlap to catch any edge cases)
+        since = new Date(new Date(lastSync.completed_at).getTime() - 60 * 60 * 1000);
+      } else {
+        // No previous sync, fall back to last 30 days
+        since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      }
+    }
 
     // Run sync
     const result = await runSync(client, {

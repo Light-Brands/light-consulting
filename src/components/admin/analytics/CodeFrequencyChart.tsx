@@ -7,8 +7,8 @@
 
 import React, { useMemo } from 'react';
 import {
-  BarChart,
-  Bar,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -71,18 +71,28 @@ export const CodeFrequencyChart: React.FC<CodeFrequencyChartProps> = ({
         <h3 className="text-sm font-medium text-text-primary">Code Frequency</h3>
         <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded bg-green-500" />
+            <div className="w-4 h-0.5 rounded-full bg-green-500" />
             <span className="text-text-muted">Additions</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded bg-red-500" />
+            <div className="w-4 h-0.5 rounded-full bg-red-500" />
             <span className="text-text-muted">Deletions</span>
           </div>
         </div>
       </div>
       <div className="h-[200px]">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
+          <AreaChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
+            <defs>
+              <linearGradient id="additionsGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#22C55E" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#22C55E" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="deletionsGradient" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="5%" stopColor="#EF4444" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#EF4444" stopOpacity={0} />
+              </linearGradient>
+            </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#2D2D30" vertical={false} />
             <XAxis
               dataKey="date"
@@ -116,10 +126,26 @@ export const CodeFrequencyChart: React.FC<CodeFrequencyChartProps> = ({
               }}
               labelFormatter={(label) => `Date: ${label}`}
             />
-            <ReferenceLine y={0} stroke="#2D2D30" />
-            <Bar dataKey="additions" fill="#22C55E" radius={[2, 2, 0, 0]} />
-            <Bar dataKey="deletions" fill="#EF4444" radius={[0, 0, 2, 2]} />
-          </BarChart>
+            <ReferenceLine y={0} stroke="#3D3D40" strokeWidth={1} />
+            <Area
+              type="monotone"
+              dataKey="additions"
+              stroke="#22C55E"
+              strokeWidth={2}
+              fill="url(#additionsGradient)"
+              dot={{ fill: '#22C55E', strokeWidth: 0, r: 3 }}
+              activeDot={{ fill: '#22C55E', strokeWidth: 2, stroke: '#fff', r: 5 }}
+            />
+            <Area
+              type="monotone"
+              dataKey="deletions"
+              stroke="#EF4444"
+              strokeWidth={2}
+              fill="url(#deletionsGradient)"
+              dot={{ fill: '#EF4444', strokeWidth: 0, r: 3 }}
+              activeDot={{ fill: '#EF4444', strokeWidth: 2, stroke: '#fff', r: 5 }}
+            />
+          </AreaChart>
         </ResponsiveContainer>
       </div>
     </div>

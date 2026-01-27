@@ -15,7 +15,10 @@ interface RepositoryListProps {
   showRanks?: boolean;
   showLineStats?: boolean;
   showToggle?: boolean;
+  showSyncButton?: boolean;
+  syncingRepoId?: string | null;
   onToggleTracked?: (id: string, tracked: boolean) => void;
+  onSyncRepo?: (id: string, fullName: string) => void;
   className?: string;
 }
 
@@ -25,7 +28,10 @@ export const RepositoryList: React.FC<RepositoryListProps> = ({
   showRanks = false,
   showLineStats = false,
   showToggle = false,
+  showSyncButton = false,
+  syncingRepoId,
   onToggleTracked,
+  onSyncRepo,
   className,
 }) => {
   if (loading) {
@@ -72,7 +78,10 @@ export const RepositoryList: React.FC<RepositoryListProps> = ({
           rank={showRanks ? index + 1 : undefined}
           showLineStats={showLineStats}
           showToggle={showToggle}
+          showSyncButton={showSyncButton}
+          syncingRepoId={syncingRepoId}
           onToggleTracked={onToggleTracked}
+          onSyncRepo={onSyncRepo}
         />
       ))}
     </div>

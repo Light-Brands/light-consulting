@@ -11,6 +11,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { AdminHeader } from '@/components/admin';
 import { Container } from '@/components/ui';
+import { useSyncProgress } from '@/contexts/SyncProgressContext';
 import type {
   TimeRange,
   GitHubConfigPublic,
@@ -58,22 +59,11 @@ const tabs: { id: TabId; label: string }[] = [
   { id: 'prs', label: 'Pull Requests' },
 ];
 
-interface SyncProgress {
-  progress_message?: string | null;
-  current_repo?: string | null;
-  current_repo_index?: number | null;
-  total_repos?: number | null;
-  commits_synced?: number;
-  prs_synced?: number;
-  contributors_synced?: number;
-}
-
 export default function GitHubAnalyticsPage() {
+  const { isSyncing, startSync, lastSyncCompleted } = useSyncProgress();
   const [timeRange, setTimeRange] = useState<TimeRange>('30d');
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [loading, setLoading] = useState(true);
-  const [syncing, setSyncing] = useState(false);
-  const [syncProgress, setSyncProgress] = useState<SyncProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [orgModalOpen, setOrgModalOpen] = useState(false);
   const [trackedOrgsCount, setTrackedOrgsCount] = useState(0);
@@ -84,6 +74,7 @@ export default function GitHubAnalyticsPage() {
   // Additional data for tabs
   const [repositories, setRepositories] = useState<RepositoryWithStats[]>([]);
   const [reposLoading, setReposLoading] = useState(false);
+  const [syncingRepoId, setSyncingRepoId] = useState<string | null>(null);
   const [contributors, setContributors] = useState<AggregatedContributor[]>([]);
   const [pullRequests, setPullRequests] = useState<(GitHubPullRequest & { github_repositories?: { name: string; full_name: string } })[]>([]);
 
@@ -181,6 +172,20 @@ export default function GitHubAnalyticsPage() {
     }
   }, [fetchDashboard]);
 
+  // Sync individual repository
+  const handleSyncRepo = useCallback(async (repoId: string, fullName: string) => {
+    try {
+      setSyncingRepoId(repoId);
+      setError(null);
+      await startSync('full', repoId);
+    } catch (err) {
+      setError(`Failed to sync ${fullName}`);
+      console.error('Repo sync error:', err);
+    } finally {
+      setSyncingRepoId(null);
+    }
+  }, [startSync]);
+
   // Fetch contributors
   const fetchContributors = useCallback(async () => {
     try {
@@ -207,83 +212,21 @@ export default function GitHubAnalyticsPage() {
     }
   }, []);
 
-  // Poll for sync progress
-  const pollSyncProgress = useCallback(async () => {
-    try {
-      const response = await fetch('/api/admin/analytics/github/sync');
-      const result = await response.json();
-
-      if (result.data?.history?.[0]) {
-        const latest = result.data.history[0];
-        if (latest.status === 'running') {
-          setSyncProgress({
-            progress_message: latest.progress_message,
-            current_repo: latest.current_repo,
-            current_repo_index: latest.current_repo_index,
-            total_repos: latest.total_repos,
-            commits_synced: latest.commits_synced,
-            prs_synced: latest.prs_synced,
-            contributors_synced: latest.contributors_synced,
-          });
-          return true; // Still running
-        }
-      }
-      return false; // Not running
-    } catch (err) {
-      console.error('Failed to poll sync status:', err);
-      return false;
-    }
-  }, []);
-
-  // Trigger sync
+  // Trigger sync using global context
   const handleSync = async (syncType: 'incremental' | 'full' = 'incremental') => {
-    try {
-      setSyncing(true);
-      setSyncProgress({ progress_message: 'Starting sync...' });
-      setError(null);
-
-      const response = await fetch('/api/admin/analytics/github/sync', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sync_type: syncType }),
-      });
-
-      const result = await response.json();
-
-      if (result.error) {
-        setError(result.error);
-        setSyncProgress(null);
-        return;
-      }
-
-      // Refresh data after sync
-      setSyncProgress({ progress_message: 'Refreshing dashboard...' });
-      await fetchDashboard();
-      if (activeTab === 'repositories') await fetchRepositories();
-      if (activeTab === 'contributors') await fetchContributors();
-      if (activeTab === 'prs') await fetchPullRequests();
-    } catch (err) {
-      setError('Failed to trigger sync');
-      console.error('Sync error:', err);
-    } finally {
-      setSyncing(false);
-      setSyncProgress(null);
-    }
+    setError(null);
+    await startSync(syncType);
   };
 
-  // Poll for sync progress while syncing
+  // Refresh data when sync completes
   useEffect(() => {
-    if (!syncing) return;
-
-    const interval = setInterval(async () => {
-      const stillRunning = await pollSyncProgress();
-      if (!stillRunning && syncing) {
-        // Sync finished on server side
-      }
-    }, 1500);
-
-    return () => clearInterval(interval);
-  }, [syncing, pollSyncProgress]);
+    if (lastSyncCompleted) {
+      fetchDashboard();
+      if (activeTab === 'repositories') fetchRepositories();
+      if (activeTab === 'contributors') fetchContributors();
+      if (activeTab === 'prs') fetchPullRequests();
+    }
+  }, [lastSyncCompleted, activeTab, fetchDashboard, fetchRepositories, fetchContributors, fetchPullRequests]);
 
   // Initial fetch
   useEffect(() => {
@@ -309,25 +252,25 @@ export default function GitHubAnalyticsPage() {
       <div className="flex">
         <button
           onClick={() => handleSync('incremental')}
-          disabled={syncing || loading}
+          disabled={isSyncing || loading}
           className={cn(
             'flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-l-lg transition-all',
-            syncing || loading
+            isSyncing || loading
               ? 'bg-depth-elevated text-text-muted cursor-not-allowed'
               : 'bg-radiance-gold text-depth-base hover:bg-radiance-amber'
           )}
         >
-          <svg className={cn('w-4 h-4', syncing && 'animate-spin')} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className={cn('w-4 h-4', isSyncing && 'animate-spin')} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          {syncing ? 'Syncing...' : 'Sync'}
+          {isSyncing ? 'Syncing...' : 'Sync'}
         </button>
         <button
           onClick={() => setSyncMenuOpen(!syncMenuOpen)}
-          disabled={syncing || loading}
+          disabled={isSyncing || loading}
           className={cn(
             'px-2 py-2 text-sm font-medium rounded-r-lg border-l border-depth-base/20 transition-all',
-            syncing || loading
+            isSyncing || loading
               ? 'bg-depth-elevated text-text-muted cursor-not-allowed'
               : 'bg-radiance-gold text-depth-base hover:bg-radiance-amber'
           )}
@@ -337,7 +280,7 @@ export default function GitHubAnalyticsPage() {
           </svg>
         </button>
       </div>
-      {syncMenuOpen && !syncing && (
+      {syncMenuOpen && !isSyncing && (
         <div className="absolute right-0 mt-1 w-48 bg-depth-elevated border border-depth-border rounded-lg shadow-xl z-[9999]">
           <button
             onClick={() => {
@@ -347,7 +290,7 @@ export default function GitHubAnalyticsPage() {
             className="w-full px-4 py-2 text-left text-sm text-text-primary hover:bg-depth-surface rounded-t-lg"
           >
             Quick Sync
-            <span className="block text-xs text-text-muted">Last 30 days</span>
+            <span className="block text-xs text-text-muted">Since last sync</span>
           </button>
           <button
             onClick={() => {
@@ -364,60 +307,8 @@ export default function GitHubAnalyticsPage() {
     </div>
   );
 
-  // Sync progress modal
-  const syncProgressModal = syncing && syncProgress && (
-    <div className="fixed inset-0 bg-depth-base/80 backdrop-blur-sm z-[10000] flex items-center justify-center">
-      <div className="bg-depth-elevated border border-depth-border rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
-        <div className="flex items-center gap-3 mb-4">
-          <svg className="w-6 h-6 text-radiance-gold animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          <h3 className="text-lg font-semibold text-text-primary">Syncing GitHub Data</h3>
-        </div>
-
-        <div className="space-y-3">
-          <p className="text-sm text-text-secondary">{syncProgress.progress_message || 'Working...'}</p>
-
-          {syncProgress.current_repo && syncProgress.total_repos && (
-            <div>
-              <div className="flex justify-between text-xs text-text-muted mb-1">
-                <span>Repository {syncProgress.current_repo_index} of {syncProgress.total_repos}</span>
-                <span>{Math.round(((syncProgress.current_repo_index || 0) / syncProgress.total_repos) * 100)}%</span>
-              </div>
-              <div className="w-full h-2 bg-depth-surface rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-radiance-gold transition-all duration-300"
-                  style={{ width: `${((syncProgress.current_repo_index || 0) / syncProgress.total_repos) * 100}%` }}
-                />
-              </div>
-              <p className="text-xs text-text-muted mt-1 truncate">{syncProgress.current_repo}</p>
-            </div>
-          )}
-
-          <div className="grid grid-cols-3 gap-3 pt-2">
-            <div className="text-center">
-              <p className="text-lg font-semibold text-text-primary">{(syncProgress.commits_synced || 0).toLocaleString()}</p>
-              <p className="text-xs text-text-muted">Commits</p>
-            </div>
-            <div className="text-center">
-              <p className="text-lg font-semibold text-text-primary">{(syncProgress.prs_synced || 0).toLocaleString()}</p>
-              <p className="text-xs text-text-muted">PRs</p>
-            </div>
-            <div className="text-center">
-              <p className="text-lg font-semibold text-text-primary">{(syncProgress.contributors_synced || 0).toLocaleString()}</p>
-              <p className="text-xs text-text-muted">Contributors</p>
-            </div>
-          </div>
-        </div>
-
-        <p className="text-xs text-text-muted text-center mt-4">This may take several minutes for large repositories...</p>
-      </div>
-    </div>
-  );
-
   return (
     <div className="min-h-screen">
-      {syncProgressModal}
       <AdminHeader
         title="GitHub Analytics"
         subtitle="Track development activity across your organization's repositories"
@@ -529,7 +420,10 @@ export default function GitHubAnalyticsPage() {
                 loading={reposLoading && repositories.length === 0}
                 showLineStats
                 showToggle
+                showSyncButton
+                syncingRepoId={syncingRepoId}
                 onToggleTracked={handleToggleTracked}
+                onSyncRepo={handleSyncRepo}
               />
             </div>
           )}
@@ -567,7 +461,7 @@ export default function GitHubAnalyticsPage() {
           {/* Sync status footer */}
           <SyncStatusFooter
             lastSyncAt={dashboardData?.summary?.last_sync_at || null}
-            isRunning={syncing}
+            isRunning={isSyncing}
             onSync={handleSync}
             loading={loading}
           />

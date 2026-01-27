@@ -23,7 +23,10 @@ interface RepositoryCardProps {
   showStats?: boolean;
   showLineStats?: boolean;
   showToggle?: boolean;
+  showSyncButton?: boolean;
+  syncingRepoId?: string | null;
   onToggleTracked?: (id: string, tracked: boolean) => void;
+  onSyncRepo?: (id: string, fullName: string) => void;
   className?: string;
 }
 
@@ -33,9 +36,13 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
   showStats = true,
   showLineStats = false,
   showToggle = false,
+  showSyncButton = false,
+  syncingRepoId,
   onToggleTracked,
+  onSyncRepo,
   className,
 }) => {
+  const isSyncing = syncingRepoId === repository.id;
   const languageColors: Record<string, string> = {
     TypeScript: 'bg-blue-500',
     JavaScript: 'bg-yellow-500',
@@ -79,20 +86,45 @@ export const RepositoryCard: React.FC<RepositoryCardProps> = ({
                 </span>
               )}
             </div>
-            {showToggle && (
-              <button
-                onClick={handleToggle}
-                className={cn(
-                  'shrink-0 px-2 py-1 text-xs font-medium rounded transition-colors',
-                  repository.is_tracked
-                    ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
-                    : 'bg-depth-surface text-text-muted hover:bg-depth-border'
-                )}
-                title={repository.is_tracked ? 'Included in totals - click to exclude' : 'Excluded from totals - click to include'}
-              >
-                {repository.is_tracked ? 'Included' : 'Excluded'}
-              </button>
-            )}
+            <div className="flex items-center gap-2 shrink-0">
+              {showSyncButton && onSyncRepo && (
+                <button
+                  onClick={() => onSyncRepo(repository.id, repository.full_name)}
+                  disabled={isSyncing}
+                  className={cn(
+                    'px-2 py-1 text-xs font-medium rounded transition-colors flex items-center gap-1',
+                    isSyncing
+                      ? 'bg-radiance-gold/20 text-radiance-gold cursor-not-allowed'
+                      : 'bg-depth-surface text-text-muted hover:bg-radiance-gold/20 hover:text-radiance-gold'
+                  )}
+                  title="Sync this repository"
+                >
+                  <svg
+                    className={cn('w-3 h-3', isSyncing && 'animate-spin')}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  {isSyncing ? 'Syncing...' : 'Sync'}
+                </button>
+              )}
+              {showToggle && (
+                <button
+                  onClick={handleToggle}
+                  className={cn(
+                    'px-2 py-1 text-xs font-medium rounded transition-colors',
+                    repository.is_tracked
+                      ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
+                      : 'bg-depth-surface text-text-muted hover:bg-depth-border'
+                  )}
+                  title={repository.is_tracked ? 'Included in totals - click to exclude' : 'Excluded from totals - click to include'}
+                >
+                  {repository.is_tracked ? 'Included' : 'Excluded'}
+                </button>
+              )}
+            </div>
           </div>
 
           {repository.description && (

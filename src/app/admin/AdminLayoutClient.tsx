@@ -11,7 +11,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
-import { AdminSidebar, MobileAdminNav } from '@/components/admin';
+import { SyncProgressProvider } from '@/contexts/SyncProgressContext';
+import { AdminSidebar, MobileAdminNav, FloatingSyncWidget } from '@/components/admin';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
 
 interface TeamStatus {
@@ -150,36 +151,44 @@ function AdminContent({ children }: { children: React.ReactNode }) {
   // If Supabase is not configured, show warning but allow access (development mode)
   if (!isConfigured) {
     return (
+      <SyncProgressProvider>
+        <div className="flex min-h-screen bg-depth-base">
+          {/* Sidebar - hidden on mobile */}
+          <div className="hidden md:block">
+            <AdminSidebar />
+          </div>
+          <main className="flex-1 min-h-screen pb-20 md:pb-0">
+            {/* Development warning banner */}
+            <div className="bg-yellow-500/10 border-b border-yellow-500/30 px-4 py-2">
+              <p className="text-yellow-500 text-sm text-center">
+                <strong>Development Mode:</strong> Supabase auth is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to enable authentication.
+              </p>
+            </div>
+            {children}
+          </main>
+          {/* Mobile bottom navigation */}
+          <MobileAdminNav />
+          {/* Floating sync progress widget */}
+          <FloatingSyncWidget />
+        </div>
+      </SyncProgressProvider>
+    );
+  }
+
+  return (
+    <SyncProgressProvider>
       <div className="flex min-h-screen bg-depth-base">
         {/* Sidebar - hidden on mobile */}
         <div className="hidden md:block">
           <AdminSidebar />
         </div>
-        <main className="flex-1 min-h-screen pb-20 md:pb-0">
-          {/* Development warning banner */}
-          <div className="bg-yellow-500/10 border-b border-yellow-500/30 px-4 py-2">
-            <p className="text-yellow-500 text-sm text-center">
-              <strong>Development Mode:</strong> Supabase auth is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to enable authentication.
-            </p>
-          </div>
-          {children}
-        </main>
+        <main className="flex-1 min-h-screen pb-20 md:pb-0">{children}</main>
         {/* Mobile bottom navigation */}
         <MobileAdminNav />
+        {/* Floating sync progress widget */}
+        <FloatingSyncWidget />
       </div>
-    );
-  }
-
-  return (
-    <div className="flex min-h-screen bg-depth-base">
-      {/* Sidebar - hidden on mobile */}
-      <div className="hidden md:block">
-        <AdminSidebar />
-      </div>
-      <main className="flex-1 min-h-screen pb-20 md:pb-0">{children}</main>
-      {/* Mobile bottom navigation */}
-      <MobileAdminNav />
-    </div>
+    </SyncProgressProvider>
   );
 }
 

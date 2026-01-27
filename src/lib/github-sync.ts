@@ -321,16 +321,26 @@ async function syncCommits(
         maxPages: Math.ceil(maxPerRepo / 100),
       });
 
-      for (const commit of commits.slice(0, maxPerRepo)) {
-        // Get commit details for stats if not present
+      const commitsToSync = commits.slice(0, maxPerRepo);
+
+      for (let j = 0; j < commitsToSync.length; j++) {
+        const commit = commitsToSync[j];
+
+        // Fetch commit details to get line stats (list commits API doesn't include stats)
         let additions = 0;
         let deletions = 0;
         let changedFiles = 0;
 
-        if (commit.stats) {
-          additions = commit.stats.additions;
-          deletions = commit.stats.deletions;
-          changedFiles = commit.files?.length || 0;
+        try {
+          const details = await client.getCommitDetails(owner, repoName, commit.sha);
+          if (details.stats) {
+            additions = details.stats.additions || 0;
+            deletions = details.stats.deletions || 0;
+            changedFiles = details.files?.length || 0;
+          }
+        } catch (e) {
+          // If we can't get details, continue with zeros
+          console.warn(`Could not fetch details for commit ${commit.sha.slice(0, 7)}`);
         }
 
         const insert: GitHubCommitInsert = {
@@ -352,6 +362,14 @@ async function syncCommits(
 
         if (!error) {
           totalSynced++;
+        }
+
+        // Update progress periodically
+        if (syncLogId && j % 10 === 0) {
+          await updateSyncLog(syncLogId, {
+            progress_message: `Syncing commits from ${repo.full_name} (${j + 1}/${commitsToSync.length})`,
+            commits_synced: totalSynced,
+          });
         }
       }
     } catch (e) {
@@ -583,72 +601,45 @@ async function aggregateDailyStats(repositoryId?: string): Promise<void> {
   if (!repos) return;
 
   for (const repo of repos as { id: string }[]) {
-    // First, get existing daily stats (which may have code_frequency data)
-    const { data: existingStats } = await supabaseAdmin
-      .from('github_daily_stats')
-      .select('stat_date, additions, deletions')
-      .eq('repository_id', repo.id);
-
-    // Build a map of existing code frequency data
-    const existingCodeFreq: Record<string, { additions: number; deletions: number }> = {};
-    for (const stat of (existingStats || []) as { stat_date: string; additions: number | null; deletions: number | null }[]) {
-      if (stat.additions || stat.deletions) {
-        existingCodeFreq[stat.stat_date] = {
-          additions: stat.additions || 0,
-          deletions: stat.deletions || 0,
-        };
-      }
-    }
-
-    // Aggregate commits by date
+    // Aggregate commits by date - always use commit-level data for daily granularity
     const { data: commits } = await supabaseAdmin
       .from('github_commits')
       .select('committed_at, additions, deletions, author_github_login')
       .eq('repository_id', repo.id);
 
-    if (!commits) continue;
+    if (!commits || commits.length === 0) continue;
 
     // Group by date
     const dailyData: Record<string, GitHubDailyStatsInsert> = {};
+    const contributorsByDate: Record<string, Set<string>> = {};
 
     for (const commit of commits as CommitRow[]) {
       const date = new Date(commit.committed_at).toISOString().split('T')[0];
 
       if (!dailyData[date]) {
-        // Preserve existing code frequency data if present
-        const existingFreq = existingCodeFreq[date];
         dailyData[date] = {
           repository_id: repo.id,
           stat_date: date,
           commits_count: 0,
-          additions: existingFreq?.additions || 0,
-          deletions: existingFreq?.deletions || 0,
+          additions: 0,
+          deletions: 0,
           prs_opened: 0,
           prs_merged: 0,
           unique_contributors: 0,
         };
+        contributorsByDate[date] = new Set();
       }
 
       dailyData[date].commits_count = (dailyData[date].commits_count || 0) + 1;
-      // Only add commit line stats if we don't have code_frequency data for this date
-      if (!existingCodeFreq[date]) {
-        dailyData[date].additions = (dailyData[date].additions || 0) + (commit.additions || 0);
-        dailyData[date].deletions = (dailyData[date].deletions || 0) + (commit.deletions || 0);
-      }
-    }
+      dailyData[date].additions = (dailyData[date].additions || 0) + (commit.additions || 0);
+      dailyData[date].deletions = (dailyData[date].deletions || 0) + (commit.deletions || 0);
 
-    // Calculate unique contributors per day
-    const contributorsByDate: Record<string, Set<string>> = {};
-    for (const commit of commits as CommitRow[]) {
-      const date = new Date(commit.committed_at).toISOString().split('T')[0];
-      if (!contributorsByDate[date]) {
-        contributorsByDate[date] = new Set();
-      }
       if (commit.author_github_login) {
         contributorsByDate[date].add(commit.author_github_login);
       }
     }
 
+    // Set unique contributors count
     for (const [date, contributors] of Object.entries(contributorsByDate)) {
       if (dailyData[date]) {
         dailyData[date].unique_contributors = contributors.size;
@@ -674,22 +665,6 @@ async function aggregateDailyStats(repositoryId?: string): Promise<void> {
             dailyData[mergedDate].prs_merged = (dailyData[mergedDate].prs_merged || 0) + 1;
           }
         }
-      }
-    }
-
-    // Also include dates that have code_frequency data but no commits
-    for (const [date, freq] of Object.entries(existingCodeFreq)) {
-      if (!dailyData[date]) {
-        dailyData[date] = {
-          repository_id: repo.id,
-          stat_date: date,
-          commits_count: 0,
-          additions: freq.additions,
-          deletions: freq.deletions,
-          prs_opened: 0,
-          prs_merged: 0,
-          unique_contributors: 0,
-        };
       }
     }
 
@@ -765,12 +740,6 @@ export async function runSync(
         contributors_synced: result.contributorsSynced,
         progress_message: `Synced ${result.contributorsSynced} contributors`,
       });
-    }
-
-    // Sync code frequency (line stats) - this gets accurate additions/deletions
-    if (syncType === 'full' || syncType === 'incremental') {
-      await updateSyncLog(syncLogId, { progress_message: 'Syncing code frequency data...' });
-      await syncCodeFrequency(client, repositoryId);
     }
 
     // Aggregate daily stats

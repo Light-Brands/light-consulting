@@ -75,29 +75,48 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ data: emptyStats, error: null });
     }
 
-    // Get commit stats
-    let commitsQuery = supabaseAdmin
-      .from('github_commits')
-      .select('additions, deletions')
+    // Get commit stats from github_contributors table (accurate totals from GitHub API)
+    // The github_commits table only has a limited subset of commits that were synced
+    const { data: contributorStats } = await supabaseAdmin
+      .from('github_contributors')
+      .select('total_commits, total_additions, total_deletions')
       .in('repository_id', repoIdsToQuery);
 
-    if (startDate) {
-      commitsQuery = commitsQuery.gte('committed_at', startDate.toISOString());
-    }
-    commitsQuery = commitsQuery.lte('committed_at', endDate.toISOString());
-
-    const { data: commits } = await commitsQuery;
-
-    type CommitRow = { additions: number | null; deletions: number | null };
+    type ContributorStatsRow = { total_commits: number; total_additions: number; total_deletions: number };
     type CommitAcc = { count: number; additions: number; deletions: number };
-    const commitStats = ((commits || []) as CommitRow[]).reduce<CommitAcc>(
+    const commitStats = ((contributorStats || []) as ContributorStatsRow[]).reduce<CommitAcc>(
       (acc, c) => ({
-        count: acc.count + 1,
-        additions: acc.additions + (c.additions || 0),
-        deletions: acc.deletions + (c.deletions || 0),
+        count: acc.count + (c.total_commits || 0),
+        additions: acc.additions + (c.total_additions || 0),
+        deletions: acc.deletions + (c.total_deletions || 0),
       }),
       { count: 0, additions: 0, deletions: 0 }
     );
+
+    // For time-filtered queries, we still need to use the commits table
+    // since contributor stats don't have date filtering
+    if (startDate) {
+      const { data: filteredCommits } = await supabaseAdmin
+        .from('github_commits')
+        .select('additions, deletions')
+        .in('repository_id', repoIdsToQuery)
+        .gte('committed_at', startDate.toISOString())
+        .lte('committed_at', endDate.toISOString());
+
+      type CommitRow = { additions: number | null; deletions: number | null };
+      const filteredStats = ((filteredCommits || []) as CommitRow[]).reduce<CommitAcc>(
+        (acc, c) => ({
+          count: acc.count + 1,
+          additions: acc.additions + (c.additions || 0),
+          deletions: acc.deletions + (c.deletions || 0),
+        }),
+        { count: 0, additions: 0, deletions: 0 }
+      );
+      // Use filtered counts when a date range is specified
+      commitStats.count = filteredStats.count;
+      commitStats.additions = filteredStats.additions;
+      commitStats.deletions = filteredStats.deletions;
+    }
 
     // Get PR stats
     let openPrsQuery = supabaseAdmin

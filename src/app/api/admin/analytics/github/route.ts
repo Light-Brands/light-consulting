@@ -123,7 +123,7 @@ export async function GET(request: NextRequest) {
 
     // Parallel queries for dashboard data
     const [
-      commitsResult,
+      commitsCountResult,
       openPrsResult,
       mergedPrsResult,
       totalReposResult,
@@ -134,11 +134,11 @@ export async function GET(request: NextRequest) {
       dailyStatsResult,
       lastSyncResult,
     ] = await Promise.all([
-      // Commit stats
+      // Commit count (use count instead of fetching all rows - Supabase default limit is 1000!)
       (async () => {
         let query = supabaseAdmin
           .from('github_commits')
-          .select('additions, deletions')
+          .select('*', { count: 'exact', head: true })
           .in('repository_id', repoIds);
         if (startDate) query = query.gte('committed_at', startDate.toISOString());
         return query.lte('committed_at', endDate.toISOString());
@@ -220,8 +220,8 @@ export async function GET(request: NextRequest) {
         .single(),
     ]);
 
-    // Process commit count
-    const commitCount = (commitsResult.data || []).length;
+    // Process commit count (now using proper count query)
+    const commitCount = commitsCountResult.count || 0;
 
     // Aggregate contributors
     type ContributorRow = {
