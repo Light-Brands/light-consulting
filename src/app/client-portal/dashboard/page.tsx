@@ -17,6 +17,7 @@ import type {
   ClientProposalSummary,
   PROPOSAL_STATUS_DISPLAY,
 } from '@/types/client-portal';
+import type { ClientProject } from '@/types/client-projects';
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -191,6 +192,28 @@ export default function CommandCenterDashboardPage() {
                 <div className="divide-y divide-depth-border">
                   {data.action_items.slice(0, 5).map((item) => (
                     <ActionItemCard key={item.id} item={item} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Your Projects */}
+            {data.projects && data.projects.length > 0 && (
+              <div className="bg-depth-surface border border-depth-border rounded-2xl overflow-hidden">
+                <div className="p-4 md:p-6 border-b border-depth-border flex items-center justify-between">
+                  <h2 className="text-lg font-semibold text-text-primary">
+                    Your Projects
+                  </h2>
+                  <Link
+                    href="/client-portal/projects"
+                    className="text-radiance-gold text-sm hover:underline"
+                  >
+                    View All
+                  </Link>
+                </div>
+                <div className="divide-y divide-depth-border">
+                  {data.projects.slice(0, 5).map((project: ClientProject) => (
+                    <ProjectCard key={project.id} project={project} />
                   ))}
                 </div>
               </div>
@@ -402,6 +425,52 @@ function ActionItemCard({ item }: { item: ClientActionItem }) {
         </div>
       </div>
     </div>
+  );
+}
+
+// Project Card Component
+function ProjectCard({ project }: { project: ClientProject }) {
+  const getProjectStatusDisplay = (status: string) => {
+    const displays: Record<string, { label: string; color: string; bgColor: string; borderColor: string }> = {
+      draft: { label: 'Draft', color: 'text-gray-400', bgColor: 'bg-gray-500/10', borderColor: 'border-gray-500/30' },
+      active: { label: 'Active', color: 'text-green-400', bgColor: 'bg-green-500/10', borderColor: 'border-green-500/30' },
+      completed: { label: 'Completed', color: 'text-blue-400', bgColor: 'bg-blue-500/10', borderColor: 'border-blue-500/30' },
+      on_hold: { label: 'On Hold', color: 'text-amber-400', bgColor: 'bg-amber-500/10', borderColor: 'border-amber-500/30' },
+      cancelled: { label: 'Cancelled', color: 'text-red-400', bgColor: 'bg-red-500/10', borderColor: 'border-red-500/30' },
+    };
+    return displays[status] || displays.draft;
+  };
+
+  const statusDisplay = getProjectStatusDisplay(project.status);
+
+  return (
+    <Link
+      href={`/client-portal/projects/${project.id}`}
+      className="block p-4 md:p-6 hover:bg-depth-elevated/50 transition-colors"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <h3 className="text-text-primary font-semibold truncate">
+            {project.project_name}
+          </h3>
+          {project.description && (
+            <p className="text-text-muted text-sm line-clamp-1 mt-1">
+              {project.description}
+            </p>
+          )}
+          {project.start_date && (
+            <p className="text-text-muted/60 text-xs mt-2">
+              Started {formatDate(project.start_date)}
+            </p>
+          )}
+        </div>
+        <span
+          className={`px-3 py-1 text-xs rounded-full border flex-shrink-0 ${statusDisplay.bgColor} ${statusDisplay.color} ${statusDisplay.borderColor}`}
+        >
+          {statusDisplay.label}
+        </span>
+      </div>
+    </Link>
   );
 }
 
