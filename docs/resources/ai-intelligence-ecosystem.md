@@ -13,7 +13,7 @@ We've taken **60+ years of combined human expertise** across three critical busi
 ### 60+ Years of Domain Mastery
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#fff', 'primaryBorderColor': '#4a4a6a', 'lineColor': '#4a4a6a', 'secondaryColor': '#16213e', 'tertiaryColor': '#0f3460'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': { 'primaryColor': '#e0f2fe', 'primaryTextColor': '#0c4a6e', 'primaryBorderColor': '#7dd3fc', 'lineColor': '#38bdf8', 'secondaryColor': '#f0fdf4', 'tertiaryColor': '#fef3c7'}}}%%
 flowchart TB
     subgraph foundation["HUMAN INTELLIGENCE FOUNDATION — 60+ Years Combined"]
         direction TB
@@ -43,10 +43,10 @@ flowchart TB
         end
     end
 
-    style foundation fill:#1a1a2e,stroke:#4a4a6a,stroke-width:3px
-    style business fill:#16213e,stroke:#e94560,stroke-width:2px
-    style brand fill:#16213e,stroke:#e94560,stroke-width:2px
-    style tech fill:#16213e,stroke:#e94560,stroke-width:2px
+    style foundation fill:#f8fafc,stroke:#64748b,stroke-width:2px
+    style business fill:#dbeafe,stroke:#3b82f6,stroke-width:2px
+    style brand fill:#dcfce7,stroke:#22c55e,stroke-width:2px
+    style tech fill:#fef3c7,stroke:#f59e0b,stroke-width:2px
 ```
 
 This isn't theoretical knowledge. It's **battle-tested wisdom** from:
@@ -62,7 +62,7 @@ This isn't theoretical knowledge. It's **battle-tested wisdom** from:
 ### From Inputs to Outputs: The Complete Flow
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#fff', 'lineColor': '#e94560'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': { 'primaryColor': '#e0f2fe', 'primaryTextColor': '#0c4a6e', 'lineColor': '#38bdf8'}}}%%
 flowchart TB
     subgraph inputs["CONTEXTUAL INTELLIGENCE INPUTS"]
         direction LR
@@ -93,11 +93,11 @@ flowchart TB
         techout["Technical<br/>Deliverables"]
     end
 
-    style inputs fill:#0f3460,stroke:#e94560,stroke-width:2px
-    style ai fill:#1a1a2e,stroke:#e94560,stroke-width:3px
-    style outputs fill:#16213e,stroke:#e94560,stroke-width:2px
-    style core fill:#e94560,stroke:#fff,stroke-width:2px,color:#fff
-    style metrics fill:#0f3460,stroke:#4a4a6a,stroke-width:1px
+    style inputs fill:#f0f9ff,stroke:#0ea5e9,stroke-width:2px
+    style ai fill:#faf5ff,stroke:#a855f7,stroke-width:3px
+    style outputs fill:#f0fdf4,stroke:#22c55e,stroke-width:2px
+    style core fill:#e9d5ff,stroke:#a855f7,stroke-width:2px
+    style metrics fill:#fef3c7,stroke:#f59e0b,stroke-width:1px
 ```
 
 ---
@@ -105,7 +105,7 @@ flowchart TB
 ## The Complete Ecosystem View
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#fff', 'lineColor': '#e94560'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': { 'primaryColor': '#e0f2fe', 'primaryTextColor': '#0c4a6e', 'lineColor': '#6366f1'}}}%%
 flowchart TB
     subgraph experience["60+ YEARS HUMAN EXPERIENCE"]
         direction LR
@@ -154,11 +154,11 @@ flowchart TB
         d6["Technical Roadmaps<br/>Build Specs"]
     end
 
-    style experience fill:#0f3460,stroke:#e94560,stroke-width:2px
-    style convergence fill:#e94560,stroke:#fff,stroke-width:2px,color:#fff
-    style aicore fill:#1a1a2e,stroke:#e94560,stroke-width:3px
-    style output fill:#e94560,stroke:#fff,stroke-width:2px,color:#fff
-    style deliverables fill:#16213e,stroke:#e94560,stroke-width:2px
+    style experience fill:#dbeafe,stroke:#3b82f6,stroke-width:2px
+    style convergence fill:#c7d2fe,stroke:#6366f1,stroke-width:2px
+    style aicore fill:#faf5ff,stroke:#a855f7,stroke-width:3px
+    style output fill:#c7d2fe,stroke:#6366f1,stroke-width:2px
+    style deliverables fill:#dcfce7,stroke:#22c55e,stroke-width:2px
 ```
 
 ---
@@ -181,7 +181,7 @@ The same deliverables McKinsey, BCG, and Bain produce—but **faster and at a fr
 ### Complete Business Strategy Suite
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#fff'}}}%%
+%%{init: {'theme': 'default'}}%%
 mindmap
   root((CLIENT<br/>DELIVERABLES))
     Strategic Planning
@@ -233,7 +233,7 @@ mindmap
 We understand the consulting business. We're not competing for your clients—we're positioning ourselves as your **trusted AI advisors**.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#fff', 'lineColor': '#e94560'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': { 'primaryColor': '#e0f2fe', 'primaryTextColor': '#0c4a6e', 'lineColor': '#6366f1'}}}%%
 flowchart LR
     subgraph yourfirm["YOUR FIRM"]
         direction TB
@@ -265,15 +265,15 @@ flowchart LR
         c5["Access our entire book of business"]
     end
 
-    style yourfirm fill:#0f3460,stroke:#e94560,stroke-width:2px
-    style ourcap fill:#0f3460,stroke:#e94560,stroke-width:2px
-    style combined fill:#e94560,stroke:#fff,stroke-width:3px,color:#fff
+    style yourfirm fill:#dbeafe,stroke:#3b82f6,stroke-width:2px
+    style ourcap fill:#dcfce7,stroke:#22c55e,stroke-width:2px
+    style combined fill:#e9d5ff,stroke:#a855f7,stroke-width:3px
 ```
 
 ### Partnership Tiers
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#fff'}}}%%
+%%{init: {'theme': 'default'}}%%
 flowchart TB
     subgraph tiers["PARTNERSHIP OPTIONS"]
         direction LR
@@ -297,9 +297,10 @@ flowchart TB
         end
     end
 
-    style white fill:#16213e,stroke:#4a4a6a,stroke-width:2px
-    style referral fill:#16213e,stroke:#e94560,stroke-width:2px
-    style strategic fill:#1a1a2e,stroke:#e94560,stroke-width:3px
+    style tiers fill:#f8fafc,stroke:#64748b,stroke-width:1px
+    style white fill:#f0f9ff,stroke:#0ea5e9,stroke-width:2px
+    style referral fill:#fef3c7,stroke:#f59e0b,stroke-width:2px
+    style strategic fill:#e9d5ff,stroke:#a855f7,stroke-width:3px
 ```
 
 ---
@@ -313,7 +314,7 @@ Traditional consulting is **linear**: more work = more hours = more cost.
 Our model is **exponential**: the AI layer continuously learns and improves, making each engagement faster and better than the last.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#000'}}}%%
+%%{init: {'theme': 'default'}}%%
 xychart-beta
     title "Traditional vs AI-Powered: Hours Per Engagement"
     x-axis ["Engagement 1", "Engagement 2", "Engagement 3", "Engagement 4", "Engagement 5"]
@@ -323,7 +324,7 @@ xychart-beta
 ```
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#000'}}}%%
+%%{init: {'theme': 'default'}}%%
 xychart-beta
     title "Traditional vs AI-Powered: Cost Per Engagement ($K)"
     x-axis ["Engagement 1", "Engagement 2", "Engagement 3", "Engagement 4", "Engagement 5"]
@@ -335,7 +336,7 @@ xychart-beta
 ### The Compounding Advantage
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#fff', 'lineColor': '#e94560'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': { 'primaryColor': '#e0f2fe', 'primaryTextColor': '#0c4a6e', 'lineColor': '#6366f1'}}}%%
 flowchart LR
     e1["Engagement 1"] --> learn1["Learning<br/>Captured"]
     learn1 --> e2["Engagement 2"]
@@ -352,11 +353,11 @@ flowchart LR
 
     learn4 --> result
 
-    style learn1 fill:#e94560,stroke:#fff,color:#fff
-    style learn2 fill:#e94560,stroke:#fff,color:#fff
-    style learn3 fill:#e94560,stroke:#fff,color:#fff
-    style learn4 fill:#e94560,stroke:#fff,color:#fff
-    style result fill:#0f3460,stroke:#e94560,stroke-width:2px
+    style learn1 fill:#c7d2fe,stroke:#6366f1
+    style learn2 fill:#a5b4fc,stroke:#6366f1
+    style learn3 fill:#818cf8,stroke:#4f46e5,color:#fff
+    style learn4 fill:#6366f1,stroke:#4f46e5,color:#fff
+    style result fill:#dcfce7,stroke:#22c55e,stroke-width:2px
 ```
 
 ---
@@ -366,7 +367,7 @@ flowchart LR
 ### Against Traditional Consulting Firms
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#fff'}}}%%
+%%{init: {'theme': 'default'}}%%
 quadrantChart
     title Consulting Market Positioning
     x-axis Low Speed --> High Speed
@@ -393,7 +394,7 @@ quadrantChart
 ### Our Position: The Force Multiplier
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#fff', 'lineColor': '#e94560'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': { 'primaryColor': '#e0f2fe', 'primaryTextColor': '#0c4a6e', 'lineColor': '#6366f1'}}}%%
 flowchart TB
     position["OUR POSITION"]
 
@@ -402,10 +403,10 @@ flowchart TB
 
     amplify --> superpower["We're not replacing your<br/>strategy team.<br/><br/>We're giving them<br/>SUPERPOWERS."]
 
-    style position fill:#1a1a2e,stroke:#e94560,stroke-width:2px
-    style notcompete fill:#0f3460,stroke:#4a4a6a,stroke-width:1px
-    style amplify fill:#e94560,stroke:#fff,stroke-width:2px,color:#fff
-    style superpower fill:#16213e,stroke:#e94560,stroke-width:3px
+    style position fill:#f0f9ff,stroke:#0ea5e9,stroke-width:2px
+    style notcompete fill:#fee2e2,stroke:#ef4444,stroke-width:1px
+    style amplify fill:#dcfce7,stroke:#22c55e,stroke-width:2px
+    style superpower fill:#e9d5ff,stroke:#a855f7,stroke-width:3px
 ```
 
 ---
@@ -413,7 +414,7 @@ flowchart TB
 ## The Value Proposition Summary
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#fff'}}}%%
+%%{init: {'theme': 'default'}}%%
 flowchart TB
     subgraph value["THE LIGHT INTELLIGENCE VALUE PROPOSITION"]
         direction TB
@@ -427,8 +428,8 @@ flowchart TB
 
     value --> outcome["Enterprise-Grade Deliverables<br/>at Startup Speed & Pricing"]
 
-    style value fill:#1a1a2e,stroke:#e94560,stroke-width:2px
-    style outcome fill:#e94560,stroke:#fff,stroke-width:3px,color:#fff
+    style value fill:#f0f9ff,stroke:#0ea5e9,stroke-width:2px
+    style outcome fill:#e9d5ff,stroke:#a855f7,stroke-width:3px
 ```
 
 ---
@@ -445,7 +446,7 @@ Stop turning away work due to capacity constraints. Partner with us.
 The future of consulting isn't human vs. AI. It's **human intelligence, amplified by AI, delivered at scale**.
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a2e', 'primaryTextColor': '#fff', 'lineColor': '#e94560'}}}%%
+%%{init: {'theme': 'default', 'themeVariables': { 'primaryColor': '#e0f2fe', 'primaryTextColor': '#0c4a6e', 'lineColor': '#6366f1'}}}%%
 flowchart LR
     step1["Discovery Call<br/>30 minutes"]
     step2["Capability Demo<br/>See it in action"]
@@ -454,10 +455,10 @@ flowchart LR
 
     step1 --> step2 --> step3 --> step4
 
-    style step1 fill:#0f3460,stroke:#e94560,stroke-width:2px
-    style step2 fill:#16213e,stroke:#e94560,stroke-width:2px
-    style step3 fill:#1a1a2e,stroke:#e94560,stroke-width:2px
-    style step4 fill:#e94560,stroke:#fff,stroke-width:3px,color:#fff
+    style step1 fill:#dbeafe,stroke:#3b82f6,stroke-width:2px
+    style step2 fill:#c7d2fe,stroke:#6366f1,stroke-width:2px
+    style step3 fill:#e9d5ff,stroke:#a855f7,stroke-width:2px
+    style step4 fill:#dcfce7,stroke:#22c55e,stroke-width:3px
 ```
 
 ---
