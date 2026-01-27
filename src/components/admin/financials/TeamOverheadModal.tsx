@@ -7,7 +7,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui';
+import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { TeamOverhead, CostType } from '@/types/financials';
+
+interface TeamMember {
+  id: string;
+  full_name: string | null;
+  email: string;
+  system_role: string;
+}
 
 interface TeamOverheadModalProps {
   onClose: () => void;
@@ -40,6 +48,33 @@ export const TeamOverheadModal: React.FC<TeamOverheadModalProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Team member dropdown state
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [selectedMemberId, setSelectedMemberId] = useState<string>('');
+  const [isLoadingTeam, setIsLoadingTeam] = useState(true);
+
+  const { authFetch } = useAuthFetch();
+
+  // Fetch team members on mount
+  useEffect(() => {
+    const fetchTeamMembers = async () => {
+      try {
+        const response = await authFetch('/api/admin/team');
+        const data = await response.json();
+        if (data.data) {
+          setTeamMembers(data.data);
+        }
+      } catch (err) {
+        console.error('Error fetching team members:', err);
+      } finally {
+        setIsLoadingTeam(false);
+      }
+    };
+
+    fetchTeamMembers();
+  }, [authFetch]);
+
+  // Populate form when editing
   useEffect(() => {
     if (editData) {
       setName(editData.name);
@@ -49,6 +84,21 @@ export const TeamOverheadModal: React.FC<TeamOverheadModalProps> = ({
       setNotes(editData.notes || '');
     }
   }, [editData]);
+
+  // Handle team member selection
+  const handleMemberSelect = (memberId: string) => {
+    setSelectedMemberId(memberId);
+
+    if (memberId) {
+      const member = teamMembers.find(m => m.id === memberId);
+      if (member) {
+        setName(member.full_name || member.email);
+        // Set role based on system_role
+        const roleLabel = member.system_role === 'admin' ? 'Admin' : 'Team Member';
+        setRole(roleLabel);
+      }
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,6 +154,34 @@ export const TeamOverheadModal: React.FC<TeamOverheadModalProps> = ({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Quick select from team */}
+          {!editData && (
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-2">
+                Quick Select from Team
+              </label>
+              <select
+                value={selectedMemberId}
+                onChange={(e) => handleMemberSelect(e.target.value)}
+                disabled={isLoadingTeam}
+                className="w-full bg-depth-base border border-depth-border rounded-lg px-4 py-2.5 text-text-primary focus:border-radiance-gold focus:outline-none disabled:opacity-50"
+              >
+                <option value="">
+                  {isLoadingTeam ? 'Loading team...' : '-- Select a team member --'}
+                </option>
+                {teamMembers.map((member) => (
+                  <option key={member.id} value={member.id}>
+                    {member.full_name || member.email}
+                    {member.system_role === 'admin' ? ' (Admin)' : ''}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-text-muted mt-1">
+                Or enter details manually below
+              </p>
+            </div>
+          )}
+
           <div>
             <label className="block text-sm font-medium text-text-primary mb-2">
               Name *
