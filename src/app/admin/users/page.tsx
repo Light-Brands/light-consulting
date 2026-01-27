@@ -300,19 +300,19 @@ export default function AdminUsersPage() {
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full">
+                  <table className="w-full min-w-[600px]">
                     <thead className="bg-depth-elevated">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                           Email
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                           Status
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                           Created
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                        <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                           Last Sign In
                         </th>
                       </tr>
@@ -323,7 +323,7 @@ export default function AdminUsersPage() {
                           key={user.id}
                           className="hover:bg-depth-elevated transition-colors"
                         >
-                          <td className="px-6 py-4">
+                          <td className="px-4 py-3 whitespace-nowrap">
                             <p className="font-medium text-text-primary">
                               {user.email}
                             </p>
@@ -331,23 +331,23 @@ export default function AdminUsersPage() {
                               {user.id.slice(0, 8)}...
                             </p>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-4 py-3 whitespace-nowrap">
                             {user.email_confirmed_at ? (
-                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
+                              <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
                                 <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
                                 Verified
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                              <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
                                 <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
                                 Pending
                               </span>
                             )}
                           </td>
-                          <td className="px-6 py-4 text-sm text-text-muted">
+                          <td className="px-4 py-3 text-sm text-text-muted whitespace-nowrap">
                             {formatDate(user.created_at)}
                           </td>
-                          <td className="px-6 py-4 text-sm text-text-muted">
+                          <td className="px-4 py-3 text-sm text-text-muted whitespace-nowrap">
                             {formatDate(user.last_sign_in_at)}
                           </td>
                         </tr>

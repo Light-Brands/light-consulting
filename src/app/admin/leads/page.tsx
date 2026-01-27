@@ -328,25 +328,25 @@ export default function AdminLeadsPage() {
                   {/* List View */}
                   {viewMode === 'list' && (
                     <div className="overflow-x-auto">
-                    <table className="w-full">
+                    <table className="w-full min-w-[800px]">
                       <thead className="bg-depth-elevated">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Contact
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Website
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Readiness
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Status
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Date
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Actions
                           </th>
                         </tr>
@@ -357,26 +357,26 @@ export default function AdminLeadsPage() {
                             key={lead.id}
                             className="hover:bg-depth-elevated transition-colors"
                           >
-                            <td className="px-6 py-4">
-                              <div>
-                                <p className="font-medium text-text-primary">
+                            <td className="px-4 py-3">
+                              <div className="min-w-[150px]">
+                                <p className="font-medium text-text-primary whitespace-nowrap">
                                   {lead.name}
                                 </p>
-                                <p className="text-sm text-text-muted">{lead.email}</p>
+                                <p className="text-sm text-text-muted whitespace-nowrap">{lead.email}</p>
                                 {lead.company && (
-                                  <p className="text-sm text-text-muted">
+                                  <p className="text-sm text-text-muted whitespace-nowrap">
                                     {lead.company}
                                   </p>
                                 )}
                               </div>
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-4 py-3">
                               {lead.website_url ? (
                                 <a
                                   href={lead.website_url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-radiance-gold hover:text-radiance-amber transition-colors text-sm break-all max-w-xs truncate block"
+                                  className="text-radiance-gold hover:text-radiance-amber transition-colors text-sm whitespace-nowrap max-w-[150px] truncate block"
                                   title={lead.website_url}
                                 >
                                   {lead.website_url.replace(/^https?:\/\//, '')}
@@ -385,9 +385,9 @@ export default function AdminLeadsPage() {
                                 <span className="text-text-muted text-sm">—</span>
                               )}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-4 py-3 whitespace-nowrap">
                               {lead.readiness_score !== null ? (
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-1">
                                   <span className="text-lg font-semibold text-radiance-gold">
                                     {lead.readiness_score}
                                   </span>
@@ -397,13 +397,13 @@ export default function AdminLeadsPage() {
                                 <span className="text-text-muted text-sm">—</span>
                               )}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-4 py-3 whitespace-nowrap">
                               <select
                                 value={lead.status}
                                 onChange={(e) =>
                                   handleStatusChange(lead.id, e.target.value as LeadStatus)
                                 }
-                                className="bg-depth-base border border-depth-border rounded-lg px-3 py-1.5 text-sm text-text-primary focus:border-radiance-gold focus:outline-none"
+                                className="bg-depth-base border border-depth-border rounded-lg px-2 py-1 text-sm text-text-primary focus:border-radiance-gold focus:outline-none"
                               >
                                 {Object.entries(STATUS_LABELS).map(([value, label]) => (
                                   <option key={value} value={value}>
@@ -412,10 +412,10 @@ export default function AdminLeadsPage() {
                                 ))}
                               </select>
                             </td>
-                            <td className="px-6 py-4 text-sm text-text-muted">
+                            <td className="px-4 py-3 text-sm text-text-muted whitespace-nowrap">
                               {formatDate(lead.created_at)}
                             </td>
-                            <td className="px-6 py-4 text-right">
+                            <td className="px-4 py-3 text-right whitespace-nowrap">
                               <div className="flex items-center justify-end gap-2">
                                 <Link
                                   href={`/admin/leads/${lead.id}`}

@@ -255,51 +255,51 @@ export default function AdminClientProjectsPage() {
 
                 {/* List View */}
                 {viewMode === 'list' && (
-                  <div className="divide-y divide-depth-border">
-                    {filteredProjects.map((project) => (
-                      <Link
-                        key={project.id}
-                        href={`/admin/client-projects/${project.id}`}
-                        className="block p-4 md:p-6 hover:bg-depth-elevated transition-colors"
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-3 mb-2">
-                              <h3 className="font-medium text-text-primary truncate">
-                                {project.project_name}
-                              </h3>
-                              <span
-                                className={`px-2 py-0.5 text-xs rounded-full font-medium ${
-                                  PROJECT_STATUS_COLORS[project.status]
-                                }`}
-                              >
-                                {PROJECT_STATUS_LABELS[project.status]}
-                              </span>
-                            </div>
-                            <div className="flex flex-wrap items-center gap-4 text-sm text-text-muted">
+                  <div className="overflow-x-auto">
+                    <div className="divide-y divide-depth-border min-w-[600px]">
+                      {filteredProjects.map((project) => (
+                        <Link
+                          key={project.id}
+                          href={`/admin/client-projects/${project.id}`}
+                          className="block p-3 md:p-4 hover:bg-depth-elevated transition-colors"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <h3 className="font-medium text-text-primary whitespace-nowrap">
+                                  {project.project_name}
+                                </h3>
+                                <span
+                                  className={`px-2 py-0.5 text-xs rounded-full font-medium whitespace-nowrap ${
+                                    PROJECT_STATUS_COLORS[project.status]
+                                  }`}
+                                >
+                                  {PROJECT_STATUS_LABELS[project.status]}
+                                </span>
+                              </div>
                               {(project.client_name || project.client_company) && (
-                                <span className="flex items-center gap-1">
-                                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                  </svg>
+                                <p className="text-sm text-text-muted whitespace-nowrap">
                                   {project.client_name}
                                   {project.client_company && ` (${project.client_company})`}
-                                </span>
-                              )}
-                              <span>{project.proposal_count || 0} proposals</span>
-                              <span>{formatCurrency(project.total_value || 0)}</span>
-                              {project.start_date && (
-                                <span>Started {formatDate(project.start_date)}</span>
+                                </p>
                               )}
                             </div>
-                          </div>
 
-                          <svg className="w-5 h-5 text-text-muted flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
-                        </div>
-                      </Link>
-                    ))}
+                            <div className="flex items-center gap-4 text-sm text-text-muted whitespace-nowrap">
+                              <span>{project.proposal_count || 0} proposals</span>
+                              <span className="text-radiance-gold font-medium">{formatCurrency(project.total_value || 0)}</span>
+                              {project.start_date && (
+                                <span className="hidden md:inline">{formatDate(project.start_date)}</span>
+                              )}
+                            </div>
+
+                            <svg className="w-5 h-5 text-text-muted flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 )}
               </>

@@ -305,25 +305,25 @@ export default function AdminClientsPage() {
                   {/* List View */}
                   {viewMode === 'list' && (
                     <div className="overflow-x-auto">
-                    <table className="w-full">
+                    <table className="w-full min-w-[800px]">
                       <thead className="bg-depth-elevated">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Client
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Contact
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Projects
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Total Value
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Status
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Actions
                           </th>
                         </tr>
@@ -334,40 +334,40 @@ export default function AdminClientsPage() {
                             key={client.id}
                             className="hover:bg-depth-elevated transition-colors"
                           >
-                            <td className="px-6 py-4">
-                              <div className="flex items-center gap-3">
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-3 min-w-[180px]">
                                 {client.logo_url ? (
                                   <img
                                     src={client.logo_url}
                                     alt={client.client_name}
-                                    className="w-10 h-10 rounded-full object-cover"
+                                    className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                                   />
                                 ) : (
-                                  <div className="w-10 h-10 rounded-full bg-radiance-gold/10 flex items-center justify-center">
-                                    <span className="text-radiance-gold font-semibold">
+                                  <div className="w-8 h-8 rounded-full bg-radiance-gold/10 flex items-center justify-center flex-shrink-0">
+                                    <span className="text-radiance-gold font-semibold text-sm">
                                       {client.client_name.charAt(0).toUpperCase()}
                                     </span>
                                   </div>
                                 )}
                                 <div>
-                                  <p className="font-medium text-text-primary">
+                                  <p className="font-medium text-text-primary whitespace-nowrap">
                                     {client.client_name}
                                   </p>
                                   {client.client_company && (
-                                    <p className="text-sm text-text-muted">
+                                    <p className="text-sm text-text-muted whitespace-nowrap">
                                       {client.client_company}
                                     </p>
                                   )}
                                 </div>
                               </div>
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-4 py-3 whitespace-nowrap">
                               <p className="text-sm text-text-primary">{client.client_email}</p>
                               {client.client_phone && (
                                 <p className="text-sm text-text-muted">{client.client_phone}</p>
                               )}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-4 py-3 whitespace-nowrap">
                               <p className="text-text-primary">
                                 {client.project_count || 0} projects
                               </p>
@@ -375,22 +375,22 @@ export default function AdminClientsPage() {
                                 {client.proposal_count || 0} proposals
                               </p>
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-4 py-3 whitespace-nowrap">
                               <p className="font-medium text-text-primary">
                                 {formatCurrency(client.total_value || 0)}
                               </p>
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-4 py-3 whitespace-nowrap">
                               <span
-                                className={`px-3 py-1 text-xs rounded-full font-medium ${
+                                className={`px-2 py-1 text-xs rounded-full font-medium ${
                                   STATUS_COLORS[client.status]
                                 }`}
                               >
                                 {STATUS_LABELS[client.status]}
                               </span>
                             </td>
-                            <td className="px-6 py-4">
-                              <div className="flex items-center justify-end gap-2">
+                            <td className="px-4 py-3 whitespace-nowrap">
+                              <div className="flex items-center justify-end gap-1">
                                 <Link
                                   href={`/admin/clients/${client.id}`}
                                   className="p-2 text-text-muted hover:text-radiance-gold hover:bg-radiance-gold/10 rounded-lg transition-colors"

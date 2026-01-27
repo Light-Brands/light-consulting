@@ -384,7 +384,7 @@ export default function AdminProjectsPage() {
 
                   {/* Desktop Table View */}
                   <div className="hidden md:block overflow-x-auto">
-                    <table className="w-full">
+                    <table className="w-full min-w-[900px]">
                       <thead className="bg-depth-elevated">
                         <tr>
                           <th className="px-3 py-4 text-center text-xs font-semibold text-text-muted uppercase tracking-wider w-24">

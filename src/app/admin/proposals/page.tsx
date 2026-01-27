@@ -301,22 +301,22 @@ export default function AdminProposalsPage() {
                   {/* List View */}
                   {viewMode === 'list' && (
                     <div className="overflow-x-auto">
-                    <table className="w-full">
+                    <table className="w-full min-w-[700px]">
                       <thead className="bg-depth-elevated">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Project / Client
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Amount
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Status
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Sent
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider">
+                          <th className="px-4 py-3 text-right text-xs font-medium text-text-muted uppercase tracking-wider whitespace-nowrap">
                             Actions
                           </th>
                         </tr>
@@ -327,18 +327,18 @@ export default function AdminProposalsPage() {
                             key={proposal.id}
                             className="hover:bg-depth-elevated transition-colors"
                           >
-                            <td className="px-6 py-4">
-                              <div>
-                                <p className="font-medium text-text-primary">
+                            <td className="px-4 py-3">
+                              <div className="min-w-[180px]">
+                                <p className="font-medium text-text-primary whitespace-nowrap">
                                   {proposal.project_name}
                                 </p>
-                                <p className="text-sm text-text-muted">
+                                <p className="text-sm text-text-muted whitespace-nowrap">
                                   {proposal.client_name}
                                   {proposal.client_company && ` - ${proposal.client_company}`}
                                 </p>
                               </div>
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-4 py-3 whitespace-nowrap">
                               <div>
                                 <p className="font-medium text-text-primary">
                                   {formatCurrency(proposal.final_amount)}
@@ -350,19 +350,19 @@ export default function AdminProposalsPage() {
                                 )}
                               </div>
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-4 py-3 whitespace-nowrap">
                               <span
-                                className={`px-3 py-1 text-xs rounded-full font-medium ${
+                                className={`px-2 py-1 text-xs rounded-full font-medium ${
                                   STATUS_COLORS[proposal.status]
                                 }`}
                               >
                                 {STATUS_LABELS[proposal.status]}
                               </span>
                             </td>
-                            <td className="px-6 py-4 text-sm text-text-muted">
+                            <td className="px-4 py-3 text-sm text-text-muted whitespace-nowrap">
                               {formatDate(proposal.sent_at)}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-4 py-3 whitespace-nowrap">
                               <div className="flex items-center justify-end gap-2">
                                 <button
                                   onClick={() => copyAccessLink(proposal.access_token)}
