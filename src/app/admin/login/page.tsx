@@ -60,7 +60,7 @@ export default function AdminLogin() {
             <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center shadow-illumination mx-auto mb-4">
               <span className="text-depth-base font-bold text-xl">LB</span>
             </div>
-            <h1 className="text-2xl font-bold text-text-primary">Admin Access</h1>
+            <h1 className="text-2xl font-bold text-text-primary">Team Access</h1>
             <p className="text-text-secondary mt-2">Authentication Not Configured</p>
           </div>
 
@@ -100,8 +100,8 @@ export default function AdminLogin() {
           <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-radiance-gold to-radiance-amber flex items-center justify-center shadow-illumination mx-auto mb-4">
             <span className="text-depth-base font-bold text-xl">LB</span>
           </div>
-          <h1 className="text-2xl font-bold text-text-primary">Admin Login</h1>
-          <p className="text-text-secondary mt-2">Sign in to access the admin dashboard</p>
+          <h1 className="text-2xl font-bold text-text-primary">Team Login</h1>
+          <p className="text-text-secondary mt-2">Sign in to access the team dashboard</p>
         </div>
 
         {/* Login Form */}
@@ -125,7 +125,7 @@ export default function AdminLogin() {
                 required
                 autoComplete="email"
                 className="w-full px-4 py-3 bg-depth-elevated border border-depth-border rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-radiance-gold/50 focus:border-radiance-gold transition-colors"
-                placeholder="admin@example.com"
+                placeholder="name@lightbrands.ai"
                 disabled={isSubmitting}
               />
             </div>
