@@ -8,7 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { getServerSession } from '@/lib/supabase-server-auth';
+import { isAdminAuthenticated } from '@/lib/supabase-server-auth';
 import { stripe } from '@/lib/stripe';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -22,8 +22,8 @@ export async function GET(
     const { milestoneId } = await params;
 
     // Verify admin session
-    const session = await getServerSession();
-    if (!session) {
+    const isAdmin = await isAdminAuthenticated(request);
+    if (!isAdmin) {
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: 401 }
