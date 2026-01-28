@@ -104,10 +104,23 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      // Invoice paid, void, or uncollectible - may need to create new one
+      // Invoice paid - sync the database and return appropriate response
       if (existingInvoice?.status === 'paid') {
+        // Sync milestone status from Stripe (webhook may have failed or been delayed)
+        await supabaseAdmin
+          .from('milestones')
+          .update({
+            payment_status: 'paid',
+            paid_at: existingInvoice.status_transitions?.paid_at
+              ? new Date(existingInvoice.status_transitions.paid_at * 1000).toISOString()
+              : new Date().toISOString(),
+            stripe_payment_intent_id: existingInvoice.payment_intent as string,
+          })
+          .eq('id', milestone_id)
+          .neq('payment_status', 'paid');
+
         return NextResponse.json(
-          { error: 'This milestone has already been paid' },
+          { error: 'This milestone has already been paid', already_paid: true },
           { status: 400 }
         );
       }
