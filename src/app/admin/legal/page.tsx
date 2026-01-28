@@ -3,6 +3,7 @@
  * Light Brand Consulting
  *
  * Displays legal documents from the brand-factory repository
+ * Folder-based navigation with inline markdown preview
  */
 
 'use client';
@@ -11,6 +12,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { AdminHeader } from '@/components/admin';
 import { Container, Button } from '@/components/ui';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
+import ReactMarkdown from 'react-markdown';
 
 interface LegalDocument {
   name: string;
@@ -20,71 +22,156 @@ interface LegalDocument {
   downloadUrl: string | null;
   githubUrl: string;
   category: string;
+  subcategory: string | null;
+  fullCategory: string;
   extension: string | null;
 }
 
 interface LegalResponse {
   documents: LegalDocument[];
   categories: string[];
+  fullCategories: string[];
   total: number;
   repoUrl: string;
   error?: string;
 }
 
-// Format file size
-function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 B';
-  const k = 1024;
-  const sizes = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+// Format category name for display
+function formatCategoryName(category: string): string {
+  return category
+    .split('/')
+    .map(part => part.replace(/-/g, ' '))
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' / ');
 }
 
-// Get file icon based on extension
-function getFileIcon(extension: string | null): React.ReactNode {
-  const iconClass = "w-8 h-8";
-
-  switch (extension?.toLowerCase()) {
-    case 'pdf':
-      return (
-        <svg className={`${iconClass} text-red-400`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-          <text x="7" y="17" fontSize="6" fill="currentColor" fontWeight="bold">PDF</text>
-        </svg>
-      );
-    case 'md':
-      return (
-        <svg className={`${iconClass} text-blue-400`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-      );
-    case 'txt':
-      return (
-        <svg className={`${iconClass} text-gray-400`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-      );
-    default:
-      return (
-        <svg className={`${iconClass} text-radiance-gold`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-        </svg>
-      );
-  }
+// Format document name (remove extension for display)
+function formatDocumentName(name: string): string {
+  return name.replace(/\.md$/i, '').replace(/-/g, ' ');
 }
 
-// Category badge colors
-function getCategoryColor(category: string): string {
-  switch (category.toLowerCase()) {
-    case 'tax-forms':
-      return 'bg-green-500/20 text-green-400 border-green-500/30';
-    case 'agreements':
-      return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-    case 'root':
-      return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
-    default:
-      return 'bg-radiance-gold/20 text-radiance-gold border-radiance-gold/30';
-  }
+// Folder icon
+function FolderIcon({ isOpen = false }: { isOpen?: boolean }) {
+  return isOpen ? (
+    <svg className="w-5 h-5 text-radiance-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" />
+    </svg>
+  ) : (
+    <svg className="w-5 h-5 text-radiance-gold/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+    </svg>
+  );
+}
+
+// Document icon
+function DocumentIcon() {
+  return (
+    <svg className="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+  );
+}
+
+// Chevron icon
+function ChevronIcon({ isOpen }: { isOpen: boolean }) {
+  return (
+    <svg
+      className={`w-4 h-4 text-text-muted transition-transform ${isOpen ? 'rotate-90' : ''}`}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+    </svg>
+  );
+}
+
+// Document Preview Component
+function DocumentPreview({
+  document,
+  content,
+  isLoading,
+  onClose,
+}: {
+  document: LegalDocument;
+  content: string | null;
+  isLoading: boolean;
+  onClose: () => void;
+}) {
+  return (
+    <div className="mt-4 bg-depth-base border border-depth-border rounded-xl overflow-hidden">
+      {/* Preview Header */}
+      <div className="flex items-center justify-between px-4 py-3 bg-depth-elevated border-b border-depth-border">
+        <h4 className="font-medium text-text-primary">{formatDocumentName(document.name)}</h4>
+        <div className="flex items-center gap-2">
+          <a
+            href={document.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-1.5 text-text-muted hover:text-text-primary transition-colors"
+            title="View on GitHub"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+            </svg>
+          </a>
+          {document.downloadUrl && (
+            <a
+              href={document.downloadUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1.5 text-text-muted hover:text-radiance-gold transition-colors"
+              title="Download"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+            </a>
+          )}
+          <button
+            onClick={onClose}
+            className="p-1.5 text-text-muted hover:text-text-primary transition-colors"
+            title="Close"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-6 max-h-[60vh] overflow-auto">
+        {isLoading ? (
+          <div className="flex items-center justify-center py-8">
+            <div className="w-6 h-6 border-2 border-radiance-gold border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : content ? (
+          <article className="prose prose-invert prose-lg max-w-none
+            prose-headings:text-text-primary prose-headings:font-semibold
+            prose-h1:text-2xl prose-h1:border-b prose-h1:border-depth-border prose-h1:pb-3 prose-h1:mb-6
+            prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4
+            prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3
+            prose-p:text-text-secondary prose-p:leading-relaxed
+            prose-li:text-text-secondary prose-li:my-1
+            prose-strong:text-text-primary prose-strong:font-semibold
+            prose-code:text-radiance-gold prose-code:bg-depth-elevated prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:before:content-none prose-code:after:content-none
+            prose-pre:bg-depth-elevated prose-pre:border prose-pre:border-depth-border
+            prose-blockquote:border-l-radiance-gold prose-blockquote:text-text-muted prose-blockquote:italic
+            prose-a:text-radiance-gold prose-a:no-underline hover:prose-a:underline
+            prose-hr:border-depth-border
+            prose-table:border-collapse
+            prose-th:bg-depth-elevated prose-th:px-4 prose-th:py-2 prose-th:text-left prose-th:border prose-th:border-depth-border
+            prose-td:px-4 prose-td:py-2 prose-td:border prose-td:border-depth-border
+          ">
+            <ReactMarkdown>{content}</ReactMarkdown>
+          </article>
+        ) : (
+          <p className="text-text-muted text-center py-8">Unable to load document content</p>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default function LegalPage() {
@@ -93,8 +180,10 @@ export default function LegalPage() {
   const [repoUrl, setRepoUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [categoryFilter, setCategoryFilter] = useState<string>('');
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set());
+  const [selectedDocument, setSelectedDocument] = useState<LegalDocument | null>(null);
+  const [documentContent, setDocumentContent] = useState<string | null>(null);
+  const [isLoadingContent, setIsLoadingContent] = useState(false);
   const { authFetch } = useAuthFetch();
 
   const fetchDocuments = useCallback(async () => {
@@ -124,34 +213,75 @@ export default function LegalPage() {
     fetchDocuments();
   }, [fetchDocuments]);
 
-  // Filter documents
-  const filteredDocuments = documents.filter(doc => {
-    const matchesCategory = !categoryFilter || doc.category.toLowerCase() === categoryFilter.toLowerCase();
-    const matchesSearch = !searchTerm ||
-      doc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doc.category.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  // Fetch document content for preview
+  const fetchDocumentContent = useCallback(async (doc: LegalDocument) => {
+    if (!doc.downloadUrl) {
+      setDocumentContent(null);
+      return;
+    }
 
-  // Group by category
-  const groupedDocuments = filteredDocuments.reduce((acc, doc) => {
-    const cat = doc.category;
+    setIsLoadingContent(true);
+    try {
+      const response = await fetch(doc.downloadUrl);
+      const text = await response.text();
+      setDocumentContent(text);
+    } catch (err) {
+      console.error('Error fetching document content:', err);
+      setDocumentContent(null);
+    } finally {
+      setIsLoadingContent(false);
+    }
+  }, []);
+
+  const toggleFolder = (category: string) => {
+    setExpandedFolders(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(category)) {
+        newSet.delete(category);
+        // Close document preview if it's in this folder
+        if (selectedDocument?.fullCategory === category) {
+          setSelectedDocument(null);
+          setDocumentContent(null);
+        }
+      } else {
+        newSet.add(category);
+      }
+      return newSet;
+    });
+  };
+
+  const handleDocumentClick = (doc: LegalDocument) => {
+    if (selectedDocument?.path === doc.path) {
+      // Toggle off if clicking the same document
+      setSelectedDocument(null);
+      setDocumentContent(null);
+    } else {
+      setSelectedDocument(doc);
+      fetchDocumentContent(doc);
+    }
+  };
+
+  // Group documents by fullCategory
+  const groupedDocuments = documents.reduce((acc, doc) => {
+    const cat = doc.fullCategory;
     if (!acc[cat]) acc[cat] = [];
     acc[cat].push(doc);
     return acc;
   }, {} as Record<string, LegalDocument[]>);
 
-  const stats = {
-    total: documents.length,
-    categories: categories.length,
-    pdfs: documents.filter(d => d.extension === 'pdf').length,
-  };
+  // Build folder structure
+  const folderStructure: { [key: string]: string[] } = {};
+  categories.forEach(cat => {
+    folderStructure[cat] = Object.keys(groupedDocuments)
+      .filter(fc => fc === cat || fc.startsWith(cat + '/'))
+      .sort();
+  });
 
   return (
     <div className="min-h-screen">
       <AdminHeader
         title="Legal Vault"
-        subtitle="Company legal documents and tax forms"
+        subtitle="Company legal documents and agreements"
         action={
           repoUrl && (
             <Button
@@ -171,71 +301,7 @@ export default function LegalPage() {
       <div className="py-4 md:py-8 relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-radial-gradient from-radiance-gold/3 to-transparent blur-[100px] pointer-events-none" />
 
-        <Container size="wide" className="relative z-10 space-y-6">
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-depth-surface border border-depth-border rounded-lg p-4">
-              <div className="text-2xl font-bold text-text-primary">{stats.total}</div>
-              <div className="text-sm text-text-muted">Total Documents</div>
-            </div>
-            <div className="bg-depth-surface border border-depth-border rounded-lg p-4">
-              <div className="text-2xl font-bold text-text-primary">{stats.categories}</div>
-              <div className="text-sm text-text-muted">Categories</div>
-            </div>
-            <div className="bg-depth-surface border border-depth-border rounded-lg p-4">
-              <div className="text-2xl font-bold text-red-400">{stats.pdfs}</div>
-              <div className="text-sm text-text-muted">PDF Files</div>
-            </div>
-          </div>
-
-          {/* Filters */}
-          <div className="bg-depth-surface border border-depth-border rounded-lg p-4">
-            <div className="flex flex-col md:flex-row gap-4">
-              {/* Search */}
-              <div className="flex-1">
-                <div className="relative">
-                  <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                  <input
-                    type="text"
-                    placeholder="Search documents..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 bg-depth-elevated border border-depth-border rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:border-radiance-gold/50"
-                  />
-                </div>
-              </div>
-
-              {/* Category Filter */}
-              <div className="flex gap-2 flex-wrap">
-                <button
-                  onClick={() => setCategoryFilter('')}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                    !categoryFilter
-                      ? 'bg-radiance-gold text-depth-base'
-                      : 'bg-depth-elevated text-text-secondary hover:text-text-primary'
-                  }`}
-                >
-                  All
-                </button>
-                {categories.map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => setCategoryFilter(cat)}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all capitalize ${
-                      categoryFilter === cat
-                        ? 'bg-radiance-gold text-depth-base'
-                        : 'bg-depth-elevated text-text-secondary hover:text-text-primary'
-                    }`}
-                  >
-                    {cat.replace('-', ' ')}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
+        <Container size="wide" className="relative z-10">
           {/* Loading State */}
           {isLoading && (
             <div className="flex items-center justify-center py-12">
@@ -269,71 +335,126 @@ export default function LegalPage() {
             </div>
           )}
 
-          {/* Documents Grid by Category */}
-          {!isLoading && !error && Object.keys(groupedDocuments).length > 0 && (
-            <div className="space-y-8">
-              {Object.entries(groupedDocuments).map(([category, docs]) => (
-                <div key={category}>
-                  <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2 capitalize">
-                    <span className={`px-2 py-0.5 text-xs rounded border ${getCategoryColor(category)}`}>
-                      {category.replace('-', ' ')}
-                    </span>
-                    <span className="text-text-muted text-sm font-normal">({docs.length} files)</span>
-                  </h3>
+          {/* Folder Structure */}
+          {!isLoading && !error && categories.length > 0 && (
+            <div className="bg-depth-surface border border-depth-border rounded-xl overflow-hidden">
+              {categories.sort().map((category, index) => {
+                const isExpanded = expandedFolders.has(category);
+                const categoryDocs = groupedDocuments[category] || [];
+                const subfolders = Object.keys(groupedDocuments)
+                  .filter(fc => fc.startsWith(category + '/') && !fc.slice(category.length + 1).includes('/'))
+                  .sort();
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {docs.map((doc) => (
-                      <div
-                        key={doc.path}
-                        className="group bg-depth-surface border border-depth-border rounded-lg p-4 hover:border-radiance-gold/30 transition-all"
-                      >
-                        <div className="flex items-start gap-4">
-                          <div className="flex-shrink-0">
-                            {getFileIcon(doc.extension)}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h4 className="text-text-primary font-medium truncate" title={doc.name}>
-                              {doc.name}
-                            </h4>
-                            <p className="text-text-muted text-sm mt-1">
-                              {formatFileSize(doc.size)}
-                              {doc.extension && (
-                                <span className="ml-2 uppercase text-xs">{doc.extension}</span>
-                              )}
-                            </p>
-                          </div>
-                        </div>
+                return (
+                  <div key={category} className={index > 0 ? 'border-t border-depth-border' : ''}>
+                    {/* Top-level folder */}
+                    <button
+                      onClick={() => toggleFolder(category)}
+                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-depth-elevated/50 transition-colors"
+                    >
+                      <ChevronIcon isOpen={isExpanded} />
+                      <FolderIcon isOpen={isExpanded} />
+                      <span className="font-medium text-text-primary capitalize">
+                        {category.replace(/-/g, ' ')}
+                      </span>
+                      <span className="text-text-muted text-sm ml-auto">
+                        {Object.keys(groupedDocuments)
+                          .filter(fc => fc === category || fc.startsWith(category + '/'))
+                          .reduce((sum, fc) => sum + (groupedDocuments[fc]?.length || 0), 0)} files
+                      </span>
+                    </button>
 
-                        <div className="flex gap-2 mt-4">
-                          {doc.downloadUrl && (
-                            <a
-                              href={doc.downloadUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-radiance-gold/10 text-radiance-gold rounded-lg text-sm font-medium hover:bg-radiance-gold/20 transition-colors"
+                    {/* Expanded content */}
+                    {isExpanded && (
+                      <div className="bg-depth-base border-t border-depth-border">
+                        {/* Direct files in this category */}
+                        {categoryDocs.map((doc) => (
+                          <div key={doc.path}>
+                            <button
+                              onClick={() => handleDocumentClick(doc)}
+                              className={`w-full flex items-center gap-3 pl-12 pr-4 py-2.5 hover:bg-depth-elevated/30 transition-colors ${
+                                selectedDocument?.path === doc.path ? 'bg-radiance-gold/5' : ''
+                              }`}
                             >
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                              </svg>
-                              Download
-                            </a>
-                          )}
-                          <a
-                            href={doc.githubUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 px-3 py-2 bg-depth-elevated text-text-secondary rounded-lg text-sm font-medium hover:text-text-primary transition-colors"
-                          >
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                              <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
-                            </svg>
-                          </a>
-                        </div>
+                              <DocumentIcon />
+                              <span className="text-text-secondary hover:text-text-primary transition-colors">
+                                {formatDocumentName(doc.name)}
+                              </span>
+                            </button>
+                            {selectedDocument?.path === doc.path && (
+                              <div className="px-4 pb-4">
+                                <DocumentPreview
+                                  document={doc}
+                                  content={documentContent}
+                                  isLoading={isLoadingContent}
+                                  onClose={() => {
+                                    setSelectedDocument(null);
+                                    setDocumentContent(null);
+                                  }}
+                                />
+                              </div>
+                            )}
+                          </div>
+                        ))}
+
+                        {/* Subfolders */}
+                        {subfolders.map((subfolder) => {
+                          const subfolderName = subfolder.slice(category.length + 1);
+                          const isSubExpanded = expandedFolders.has(subfolder);
+                          const subDocs = groupedDocuments[subfolder] || [];
+
+                          return (
+                            <div key={subfolder}>
+                              <button
+                                onClick={() => toggleFolder(subfolder)}
+                                className="w-full flex items-center gap-3 pl-8 pr-4 py-2.5 hover:bg-depth-elevated/30 transition-colors"
+                              >
+                                <ChevronIcon isOpen={isSubExpanded} />
+                                <FolderIcon isOpen={isSubExpanded} />
+                                <span className="text-text-secondary capitalize">
+                                  {subfolderName.replace(/-/g, ' ')}
+                                </span>
+                                <span className="text-text-muted text-sm ml-auto">
+                                  {subDocs.length} files
+                                </span>
+                              </button>
+
+                              {isSubExpanded && subDocs.map((doc) => (
+                                <div key={doc.path}>
+                                  <button
+                                    onClick={() => handleDocumentClick(doc)}
+                                    className={`w-full flex items-center gap-3 pl-20 pr-4 py-2.5 hover:bg-depth-elevated/30 transition-colors ${
+                                      selectedDocument?.path === doc.path ? 'bg-radiance-gold/5' : ''
+                                    }`}
+                                  >
+                                    <DocumentIcon />
+                                    <span className="text-text-secondary hover:text-text-primary transition-colors">
+                                      {formatDocumentName(doc.name)}
+                                    </span>
+                                  </button>
+                                  {selectedDocument?.path === doc.path && (
+                                    <div className="px-4 pb-4">
+                                      <DocumentPreview
+                                        document={doc}
+                                        content={documentContent}
+                                        isLoading={isLoadingContent}
+                                        onClose={() => {
+                                          setSelectedDocument(null);
+                                          setDocumentContent(null);
+                                        }}
+                                      />
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        })}
                       </div>
-                    ))}
+                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </Container>

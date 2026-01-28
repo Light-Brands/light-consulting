@@ -1,6 +1,7 @@
 /**
  * Legal Documents API
  * Fetches documents from the brand-factory GitHub repository's legal-vault
+ * Recursively traverses all subdirectories to find all documents
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -29,7 +30,9 @@ interface LegalDocument {
   size: number;
   downloadUrl: string | null;
   githubUrl: string;
-  category: string;
+  category: string;        // Top-level category (e.g., "agreements", "tax-forms")
+  subcategory: string | null;  // Subcategory if nested (e.g., "ndas", "mou")
+  fullCategory: string;    // Full path category (e.g., "agreements/ndas")
   extension: string | null;
 }
 
@@ -56,6 +59,54 @@ async function fetchGitHubContents(path: string, token: string): Promise<GitHubC
   return Array.isArray(data) ? data : [data];
 }
 
+/**
+ * Recursively fetch all files from a directory and its subdirectories
+ */
+async function fetchDirectoryRecursive(
+  path: string,
+  token: string,
+  category: string,
+  subcategory: string | null = null
+): Promise<LegalDocument[]> {
+  const documents: LegalDocument[] = [];
+  const contents = await fetchGitHubContents(path, token);
+
+  for (const item of contents) {
+    if (item.type === 'file') {
+      // Skip hidden files and README files
+      if (item.name.startsWith('.')) continue;
+      if (item.name.toLowerCase() === 'readme.md') continue;
+
+      const extension = item.name.includes('.')
+        ? item.name.split('.').pop()?.toLowerCase() || null
+        : null;
+
+      const fullCategory = subcategory ? `${category}/${subcategory}` : category;
+
+      documents.push({
+        name: item.name,
+        path: item.path,
+        type: 'file',
+        size: item.size,
+        downloadUrl: item.download_url,
+        githubUrl: item.html_url,
+        category,
+        subcategory,
+        fullCategory,
+        extension,
+      });
+    } else if (item.type === 'dir') {
+      // Recursively fetch subdirectory contents
+      // The subdirectory name becomes the subcategory (or extends it)
+      const newSubcategory = subcategory ? `${subcategory}/${item.name}` : item.name;
+      const subDocs = await fetchDirectoryRecursive(item.path, token, category, newSubcategory);
+      documents.push(...subDocs);
+    }
+  }
+
+  return documents;
+}
+
 async function fetchAllDocuments(token: string): Promise<LegalDocument[]> {
   const documents: LegalDocument[] = [];
 
@@ -64,28 +115,14 @@ async function fetchAllDocuments(token: string): Promise<LegalDocument[]> {
 
   for (const item of rootContents) {
     if (item.type === 'dir') {
-      // Fetch subdirectory contents
-      const subContents = await fetchGitHubContents(item.path, token);
-
-      for (const subItem of subContents) {
-        if (subItem.type === 'file') {
-          const extension = subItem.name.includes('.')
-            ? subItem.name.split('.').pop()?.toLowerCase() || null
-            : null;
-
-          documents.push({
-            name: subItem.name,
-            path: subItem.path,
-            type: 'file',
-            size: subItem.size,
-            downloadUrl: subItem.download_url,
-            githubUrl: subItem.html_url,
-            category: item.name,
-            extension,
-          });
-        }
-      }
+      // Recursively fetch all files from this directory
+      const dirDocs = await fetchDirectoryRecursive(item.path, token, item.name);
+      documents.push(...dirDocs);
     } else if (item.type === 'file') {
+      // Skip hidden files and README files
+      if (item.name.startsWith('.')) continue;
+      if (item.name.toLowerCase() === 'readme.md') continue;
+
       const extension = item.name.includes('.')
         ? item.name.split('.').pop()?.toLowerCase() || null
         : null;
@@ -98,6 +135,8 @@ async function fetchAllDocuments(token: string): Promise<LegalDocument[]> {
         downloadUrl: item.download_url,
         githubUrl: item.html_url,
         category: 'root',
+        subcategory: null,
+        fullCategory: 'root',
         extension,
       });
     }
@@ -123,17 +162,25 @@ export async function GET(request: NextRequest) {
 
     const allDocuments = await fetchAllDocuments(token);
 
-    // Filter by category if specified
+    // Filter by category if specified (matches either category or fullCategory)
     const documents = category
-      ? allDocuments.filter(doc => doc.category.toLowerCase() === category.toLowerCase())
+      ? allDocuments.filter(doc =>
+          doc.category.toLowerCase() === category.toLowerCase() ||
+          doc.fullCategory.toLowerCase() === category.toLowerCase() ||
+          doc.fullCategory.toLowerCase().startsWith(category.toLowerCase() + '/')
+        )
       : allDocuments;
 
-    // Get unique categories for filtering
-    const categories = [...new Set(allDocuments.map(doc => doc.category))];
+    // Get unique categories for filtering (use top-level categories)
+    const categories = [...new Set(allDocuments.map(doc => doc.category))].filter(c => c !== 'root');
+
+    // Get unique full categories for more granular filtering
+    const fullCategories = [...new Set(allDocuments.map(doc => doc.fullCategory))].filter(c => c !== 'root');
 
     return NextResponse.json({
       documents,
       categories,
+      fullCategories,
       total: documents.length,
       repoUrl: `https://github.com/${REPO_OWNER}/${REPO_NAME}/tree/main/${LEGAL_VAULT_PATH}`,
     });
