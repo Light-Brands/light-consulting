@@ -1,16 +1,16 @@
 /**
- * Stripe Checkout Session API Route
+ * Stripe Invoice/Payment Session API Route
  * Light Brand Consulting
  *
- * POST /api/stripe/create-checkout-session - Create a checkout session for milestone payment
+ * POST /api/stripe/create-checkout-session - Create a Stripe Invoice for milestone payment
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 import {
-  createMilestoneCheckoutSession,
+  createMilestoneInvoice,
+  getInvoice,
   isStripeConfigured,
-  isCheckoutSessionValid,
 } from '@/lib/stripe';
 
 interface CreateCheckoutRequest {
@@ -20,7 +20,7 @@ interface CreateCheckoutRequest {
 
 /**
  * POST /api/stripe/create-checkout-session
- * Creates a Stripe checkout session for a milestone payment
+ * Creates a Stripe Invoice for a milestone payment
  * Accessible by clients with valid proposal access token
  */
 export async function POST(request: NextRequest) {
@@ -47,15 +47,15 @@ export async function POST(request: NextRequest) {
     if (!isSupabaseConfigured()) {
       // Mock response for development
       return NextResponse.json({
-        checkout_url: 'https://checkout.stripe.com/mock-session',
-        session_id: 'mock_session_id',
+        invoice_url: 'https://invoice.stripe.com/mock-invoice',
+        invoice_id: 'mock_invoice_id',
       });
     }
 
     // Get proposal by access token
     const { data: proposal, error: proposalError } = await supabaseAdmin
       .from('proposals')
-      .select('id, client_name, client_email, project_name, access_token')
+      .select('id, client_name, client_email, client_company, project_name, access_token')
       .eq('access_token', access_token)
       .single();
 
@@ -89,60 +89,73 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if there's an existing checkout session and if it's still valid
-    if (milestone.stripe_checkout_session_id && milestone.stripe_payment_url) {
-      const sessionValid = await isCheckoutSessionValid(milestone.stripe_checkout_session_id);
-      if (sessionValid) {
-        // Return existing checkout URL if still valid
+    // Check if there's an existing invoice and if it's still valid
+    if (milestone.stripe_invoice_id && milestone.stripe_invoice_url) {
+      const existingInvoice = await getInvoice(milestone.stripe_invoice_id);
+
+      if (existingInvoice && (existingInvoice.status === 'open' || existingInvoice.status === 'draft')) {
+        // Return existing invoice URL if still valid
         return NextResponse.json({
-          checkout_url: milestone.stripe_payment_url,
-          session_id: milestone.stripe_checkout_session_id,
+          invoice_url: milestone.stripe_invoice_url,
+          invoice_id: milestone.stripe_invoice_id,
+          // Also return checkout_url for backwards compatibility
+          checkout_url: milestone.stripe_invoice_url,
+          session_id: milestone.stripe_invoice_id,
         });
       }
-      // Session expired or completed - will create a new one below
-      console.log(`Checkout session ${milestone.stripe_checkout_session_id} expired, creating new one`);
+
+      // Invoice paid, void, or uncollectible - may need to create new one
+      if (existingInvoice?.status === 'paid') {
+        return NextResponse.json(
+          { error: 'This milestone has already been paid' },
+          { status: 400 }
+        );
+      }
+
+      console.log(`Invoice ${milestone.stripe_invoice_id} is ${existingInvoice?.status}, creating new one`);
     }
 
-    // Build success and cancel URLs
-    const baseUrl = request.headers.get('origin') || process.env.NEXTAUTH_URL || 'http://localhost:3000';
-    const successUrl = `${baseUrl}/proposals/${access_token}?payment=success&milestone=${milestone_id}`;
-    const cancelUrl = `${baseUrl}/proposals/${access_token}?payment=cancelled&milestone=${milestone_id}`;
-
-    // Create new checkout session
-    const session = await createMilestoneCheckoutSession({
+    // Create new invoice
+    const invoiceResult = await createMilestoneInvoice({
       milestoneId: milestone_id,
       milestoneName: milestone.milestone_name,
+      milestoneDescription: milestone.description,
       amount: milestone.amount,
       proposalId: proposal.id,
       clientEmail: proposal.client_email,
       clientName: proposal.client_name,
+      clientCompany: proposal.client_company,
       projectName: proposal.project_name,
-      successUrl,
-      cancelUrl,
+      dueDate: milestone.due_date ? new Date(milestone.due_date) : undefined,
     });
 
-    if (!session) {
+    if (!invoiceResult) {
       return NextResponse.json(
-        { error: 'Failed to create checkout session' },
+        { error: 'Failed to create invoice' },
         { status: 500 }
       );
     }
 
-    // Update milestone with checkout session info
+    // Update milestone with invoice info
     await supabaseAdmin
       .from('milestones')
       .update({
-        stripe_checkout_session_id: session.id,
-        stripe_payment_url: session.url,
+        stripe_invoice_id: invoiceResult.invoiceId,
+        stripe_invoice_url: invoiceResult.invoiceUrl,
+        invoice_number: invoiceResult.invoiceNumber,
       })
       .eq('id', milestone_id);
 
     return NextResponse.json({
-      checkout_url: session.url,
-      session_id: session.id,
+      invoice_url: invoiceResult.invoiceUrl,
+      invoice_id: invoiceResult.invoiceId,
+      invoice_number: invoiceResult.invoiceNumber,
+      // Also return these for backwards compatibility
+      checkout_url: invoiceResult.invoiceUrl,
+      session_id: invoiceResult.invoiceId,
     });
   } catch (error) {
-    console.error('Error creating checkout session:', error);
+    console.error('Error creating invoice:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

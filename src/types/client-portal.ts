@@ -308,6 +308,7 @@ export interface ClientPaymentItem {
   paid_at: string | null;
   status: 'pending' | 'due' | 'overdue' | 'paid';
   stripe_payment_url: string | null;
+  stripe_invoice_url: string | null;
   access_token: string;
 }
 

@@ -265,6 +265,160 @@ export async function createAssessmentCheckout(
   }
 }
 
+// Types for invoice creation
+export interface CreateMilestoneInvoiceParams {
+  milestoneId: string;
+  milestoneName: string;
+  milestoneDescription?: string;
+  amount: number; // in dollars
+  proposalId: string;
+  clientEmail: string;
+  clientName: string;
+  clientCompany?: string;
+  projectName: string;
+  dueDate?: Date;
+}
+
+export interface MilestoneInvoiceResult {
+  invoiceId: string;
+  invoiceUrl: string;
+  invoiceNumber: string;
+  status: string;
+}
+
+// Find or create a Stripe customer by email
+async function findOrCreateCustomer(
+  email: string,
+  name: string,
+  company?: string,
+  metadata?: Record<string, string>
+): Promise<Stripe.Customer> {
+  if (!stripe) {
+    throw new Error('Stripe is not configured');
+  }
+
+  // Search for existing customer
+  const existingCustomers = await stripe.customers.list({
+    email: email.toLowerCase(),
+    limit: 1,
+  });
+
+  if (existingCustomers.data.length > 0) {
+    return existingCustomers.data[0];
+  }
+
+  // Create new customer
+  return await stripe.customers.create({
+    email: email.toLowerCase(),
+    name: company ? `${name} (${company})` : name,
+    metadata: metadata || {},
+  });
+}
+
+// Create a Stripe Invoice for a milestone payment
+export async function createMilestoneInvoice(
+  params: CreateMilestoneInvoiceParams
+): Promise<MilestoneInvoiceResult | null> {
+  if (!stripe) {
+    console.error('Stripe is not configured');
+    return null;
+  }
+
+  const {
+    milestoneId,
+    milestoneName,
+    milestoneDescription,
+    amount,
+    proposalId,
+    clientEmail,
+    clientName,
+    clientCompany,
+    projectName,
+    dueDate,
+  } = params;
+
+  try {
+    // Find or create customer
+    const customer = await findOrCreateCustomer(
+      clientEmail,
+      clientName,
+      clientCompany,
+      {
+        proposal_id: proposalId,
+      }
+    );
+
+    // Create invoice item
+    await stripe.invoiceItems.create({
+      customer: customer.id,
+      amount: Math.round(amount * 100), // Convert to cents
+      currency: 'usd',
+      description: `${milestoneName} - ${projectName}${milestoneDescription ? `\n${milestoneDescription}` : ''}`,
+      metadata: {
+        milestone_id: milestoneId,
+        proposal_id: proposalId,
+        project_name: projectName,
+      },
+    });
+
+    // Calculate due date (default to 30 days if not specified)
+    const invoiceDueDate = dueDate
+      ? Math.floor(dueDate.getTime() / 1000)
+      : Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60;
+
+    // Create and finalize the invoice
+    const invoice = await stripe.invoices.create({
+      customer: customer.id,
+      collection_method: 'send_invoice',
+      days_until_due: dueDate
+        ? Math.max(1, Math.ceil((dueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+        : 30,
+      metadata: {
+        milestone_id: milestoneId,
+        proposal_id: proposalId,
+        project_name: projectName,
+      },
+      custom_fields: [
+        {
+          name: 'Project',
+          value: projectName.substring(0, 30), // Stripe limits to 30 chars
+        },
+      ],
+    });
+
+    // Finalize the invoice to make it payable
+    const finalizedInvoice = await stripe.invoices.finalizeInvoice(invoice.id);
+
+    if (!finalizedInvoice.hosted_invoice_url) {
+      throw new Error('Invoice created but no hosted URL available');
+    }
+
+    return {
+      invoiceId: finalizedInvoice.id,
+      invoiceUrl: finalizedInvoice.hosted_invoice_url,
+      invoiceNumber: finalizedInvoice.number || finalizedInvoice.id,
+      status: finalizedInvoice.status || 'open',
+    };
+  } catch (error) {
+    console.error('Error creating Stripe invoice:', error);
+    throw error;
+  }
+}
+
+// Get an existing invoice's details
+export async function getInvoice(invoiceId: string): Promise<Stripe.Invoice | null> {
+  if (!stripe) {
+    return null;
+  }
+
+  try {
+    return await stripe.invoices.retrieve(invoiceId);
+  } catch (error) {
+    console.error('Error retrieving invoice:', error);
+    return null;
+  }
+}
+
 // Check if a checkout session is still valid (not expired, completed, or cancelled)
 export async function isCheckoutSessionValid(sessionId: string): Promise<boolean> {
   if (!stripe) {

@@ -82,6 +82,7 @@ export async function GET() {
             ? 'due'
             : 'pending',
           stripe_payment_url: milestone.stripe_payment_url,
+          stripe_invoice_url: milestone.stripe_invoice_url,
           access_token: proposal.access_token,
         };
 

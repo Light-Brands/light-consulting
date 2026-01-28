@@ -64,6 +64,14 @@ export async function POST(request: NextRequest) {
         await handleCheckoutSessionExpired(event.data.object as Stripe.Checkout.Session);
         break;
 
+      case 'invoice.paid':
+        await handleInvoicePaid(event.data.object as Stripe.Invoice);
+        break;
+
+      case 'invoice.payment_failed':
+        await handleInvoicePaymentFailed(event.data.object as Stripe.Invoice);
+        break;
+
       case 'payment_intent.succeeded':
         await handlePaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent);
         break;
@@ -83,6 +91,91 @@ export async function POST(request: NextRequest) {
       { error: 'Webhook processing failed' },
       { status: 500 }
     );
+  }
+}
+
+/**
+ * Handle successful invoice payment
+ */
+async function handleInvoicePaid(invoice: Stripe.Invoice) {
+  console.log('Processing invoice.paid:', invoice.id);
+
+  const milestoneId = invoice.metadata?.milestone_id;
+  const proposalId = invoice.metadata?.proposal_id;
+
+  if (!milestoneId) {
+    console.log('No milestone_id in invoice metadata - may be a different type of invoice');
+    return;
+  }
+
+  if (!isSupabaseConfigured()) {
+    console.log('Supabase not configured, skipping database update');
+    return;
+  }
+
+  // Update milestone payment status
+  const { error } = await supabaseAdmin
+    .from('milestones')
+    .update({
+      payment_status: 'paid',
+      paid_at: new Date().toISOString(),
+      stripe_payment_intent_id: invoice.payment_intent as string,
+    })
+    .eq('id', milestoneId);
+
+  if (error) {
+    console.error('Error updating milestone payment status:', error);
+    return;
+  }
+
+  console.log(`Milestone ${milestoneId} marked as paid via invoice ${invoice.id}`);
+
+  // Check if all milestones are paid and update proposal status if needed
+  if (proposalId) {
+    await checkAndUpdateProposalStatus(proposalId);
+  }
+
+  // Create a dashboard update for the payment
+  const amountPaid = invoice.amount_paid ? invoice.amount_paid / 100 : 0;
+  await supabaseAdmin.from('dashboard_updates').insert({
+    proposal_id: proposalId,
+    milestone_id: milestoneId,
+    update_type: 'milestone_update',
+    title: 'Payment Received',
+    content: `Payment of ${formatCurrency(amountPaid)} has been received. Thank you!`,
+  });
+}
+
+/**
+ * Handle failed invoice payment
+ */
+async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
+  console.log('Processing invoice.payment_failed:', invoice.id);
+
+  const milestoneId = invoice.metadata?.milestone_id;
+
+  if (!milestoneId) {
+    return;
+  }
+
+  // Log the failed payment attempt
+  console.log(`Invoice payment failed for milestone ${milestoneId}`);
+
+  // Optionally update milestone status to overdue if past due date
+  if (isSupabaseConfigured()) {
+    const { data: milestone } = await supabaseAdmin
+      .from('milestones')
+      .select('due_date')
+      .eq('id', milestoneId)
+      .single();
+
+    if (milestone?.due_date && new Date(milestone.due_date) < new Date()) {
+      await supabaseAdmin
+        .from('milestones')
+        .update({ payment_status: 'overdue' })
+        .eq('id', milestoneId)
+        .neq('payment_status', 'paid');
+    }
   }
 }
 

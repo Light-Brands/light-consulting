@@ -378,6 +378,8 @@ export interface Milestone {
   stripe_checkout_session_id: string | null;
   stripe_payment_intent_id: string | null;
   stripe_payment_url: string | null;
+  stripe_invoice_id: string | null;
+  stripe_invoice_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -397,6 +399,8 @@ export interface MilestoneInsert {
   stripe_checkout_session_id?: string | null;
   stripe_payment_intent_id?: string | null;
   stripe_payment_url?: string | null;
+  stripe_invoice_id?: string | null;
+  stripe_invoice_url?: string | null;
 }
 
 export interface MilestoneUpdate {
@@ -414,6 +418,8 @@ export interface MilestoneUpdate {
   stripe_checkout_session_id?: string | null;
   stripe_payment_intent_id?: string | null;
   stripe_payment_url?: string | null;
+  stripe_invoice_id?: string | null;
+  stripe_invoice_url?: string | null;
 }
 
 // ============================================================================
