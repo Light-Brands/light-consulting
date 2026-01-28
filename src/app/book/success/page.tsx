@@ -18,7 +18,7 @@ function BookingSuccessContent() {
   const [isScheduling, setIsScheduling] = useState(false);
   const [hasScheduled, setHasScheduled] = useState(false);
 
-  const calendlyUrl = process.env.NEXT_PUBLIC_BOOKING_URL || 'https://calendly.com/your-link';
+  const calendlyUrl = process.env.NEXT_PUBLIC_BOOKING_URL || 'https://api.leadconnectorhq.com/widget/booking/cyOx6pxq3yWi3iQDCBrT';
 
   // Handle scheduling the call
   const handleScheduleCall = async () => {

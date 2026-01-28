@@ -50,7 +50,7 @@ export const ReadinessReport: React.FC<ReadinessReportProps> = ({
   const [activeTab, setActiveTab] = useState<'overview' | 'business' | 'technical' | 'opportunities'>('overview');
 
   // Booking URL from environment
-  const BOOKING_URL = process.env.NEXT_PUBLIC_BOOKING_URL || 'https://api.leadconnectorhq.com/widget/bookings/light-brands-ai-assessment-call';
+  const BOOKING_URL = process.env.NEXT_PUBLIC_BOOKING_URL || 'https://api.leadconnectorhq.com/widget/booking/cyOx6pxq3yWi3iQDCBrT';
 
   // Check if we have analysis data
   const hasAnalysis = readinessScore !== undefined && readinessScore !== null;

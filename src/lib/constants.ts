@@ -811,7 +811,7 @@ export const ASSESSMENT_CONFIG = {
   // Calendar Configuration (LeadConnector/GHL)
   calendar: {
     // Group calendar with assessment agents
-    url: 'https://api.leadconnectorhq.com/widget/booking/Wk1pAr8Wz4PNCUjrVJtZ',
+    url: 'https://api.leadconnectorhq.com/widget/booking/cyOx6pxq3yWi3iQDCBrT',
     provider: 'leadconnector',
   },
 
@@ -890,7 +890,7 @@ export const ASSESSMENT_FUNNEL_CONFIG = {
 
   // Calendar Configuration
   calendar: {
-    url: 'https://api.leadconnectorhq.com/widget/booking/Wk1pAr8Wz4PNCUjrVJtZ',
+    url: 'https://api.leadconnectorhq.com/widget/booking/cyOx6pxq3yWi3iQDCBrT',
     provider: 'leadconnector',
   },
 
