@@ -90,16 +90,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if there's an existing invoice and if it's still valid
-    if (milestone.stripe_invoice_id && milestone.stripe_invoice_url) {
+    if (milestone.stripe_invoice_id) {
       const existingInvoice = await getInvoice(milestone.stripe_invoice_id);
 
+      // Invoice exists and is open/draft - return existing URL
       if (existingInvoice && (existingInvoice.status === 'open' || existingInvoice.status === 'draft')) {
-        // Return existing invoice URL if still valid
         return NextResponse.json({
-          invoice_url: milestone.stripe_invoice_url,
+          invoice_url: milestone.stripe_invoice_url || existingInvoice.hosted_invoice_url,
           invoice_id: milestone.stripe_invoice_id,
           // Also return checkout_url for backwards compatibility
-          checkout_url: milestone.stripe_invoice_url,
+          checkout_url: milestone.stripe_invoice_url || existingInvoice.hosted_invoice_url,
           session_id: milestone.stripe_invoice_id,
         });
       }
@@ -125,7 +125,19 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      console.log(`Invoice ${milestone.stripe_invoice_id} is ${existingInvoice?.status}, creating new one`);
+      // Invoice is void, uncollectible, or doesn't exist in Stripe (stale data)
+      // Clear the old data so we can create a fresh invoice
+      console.log(`Invoice ${milestone.stripe_invoice_id} is ${existingInvoice?.status || 'not found'}, clearing stale data and creating new one`);
+
+      await supabaseAdmin
+        .from('milestones')
+        .update({
+          stripe_invoice_id: null,
+          stripe_invoice_url: null,
+          stripe_checkout_session_id: null,
+          stripe_payment_url: null,
+        })
+        .eq('id', milestone_id);
     }
 
     // Create new invoice
