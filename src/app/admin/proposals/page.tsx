@@ -7,9 +7,11 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { AdminHeader, ViewToggle, CollapsibleStats } from '@/components/admin';
 import type { ViewMode } from '@/components/admin';
 import { Container, Button } from '@/components/ui';
+import { DuplicateProposalModal } from '@/components/admin/DuplicateProposalModal';
 import { useAuthFetch } from '@/hooks/useAuthFetch';
 import type { Proposal, ProposalStatus } from '@/types/proposals';
 
@@ -38,8 +40,10 @@ export default function AdminProposalsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [duplicateProposal, setDuplicateProposal] = useState<Proposal | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const { authFetch } = useAuthFetch();
+  const router = useRouter();
 
   const fetchProposals = useCallback(async () => {
     try {
@@ -285,6 +289,15 @@ export default function AdminProposalsPage() {
                               Copy Link
                             </button>
                             <button
+                              onClick={() => setDuplicateProposal(proposal)}
+                              className="p-2 text-text-muted hover:text-radiance-gold hover:bg-radiance-gold/10 rounded-lg transition-colors flex-shrink-0"
+                              title="Duplicate"
+                            >
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                              </svg>
+                            </button>
+                            <button
                               onClick={() => setDeleteId(proposal.id)}
                               className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors flex-shrink-0"
                             >
@@ -393,6 +406,15 @@ export default function AdminProposalsPage() {
                                   </svg>
                                 </Link>
                                 <button
+                                  onClick={() => setDuplicateProposal(proposal)}
+                                  className="p-2 text-text-muted hover:text-radiance-gold hover:bg-radiance-gold/10 rounded-lg transition-colors"
+                                  title="Duplicate"
+                                >
+                                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                  </svg>
+                                </button>
+                                <button
                                   onClick={() => setDeleteId(proposal.id)}
                                   className="p-2 text-text-muted hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                                   title="Delete"
@@ -440,6 +462,24 @@ export default function AdminProposalsPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Duplicate Proposal Modal */}
+      {duplicateProposal && (
+        <DuplicateProposalModal
+          proposalId={duplicateProposal.id}
+          originalProjectName={duplicateProposal.project_name}
+          originalClientName={duplicateProposal.client_name}
+          originalClientEmail={duplicateProposal.client_email}
+          originalClientCompany={duplicateProposal.client_company}
+          originalClientPhone={duplicateProposal.client_phone}
+          onClose={() => setDuplicateProposal(null)}
+          onDuplicate={(newProposalId) => {
+            setDuplicateProposal(null);
+            router.push(`/admin/proposals/${newProposalId}`);
+          }}
+          authFetch={authFetch}
+        />
       )}
     </div>
   );
