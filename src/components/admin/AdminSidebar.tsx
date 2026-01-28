@@ -133,6 +133,26 @@ const icons = {
       <path d="M45.317 2.07103C48.1765 -1.53037 53.9745 0.442937 54.0434 5.04088L54.4849 72.2922H9.83113C1.64038 72.2922 -2.92775 62.8321 2.16518 56.4175L45.317 2.07103Z" />
     </svg>
   ),
+  legal: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+    </svg>
+  ),
+  documents: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+    </svg>
+  ),
+  taxForms: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
+    </svg>
+  ),
+  agreements: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+  ),
   chevron: (
     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -208,6 +228,18 @@ const bottomItems: NavItem[] = [
     icon: icons.portfolio,
   },
 ];
+
+// Legal section
+const legalSection: NavSection = {
+  label: 'Legal',
+  icon: icons.legal,
+  defaultOpen: false,
+  items: [
+    { label: 'All Documents', href: '/admin/legal', icon: icons.documents },
+    { label: 'Tax Forms', href: '/admin/legal/tax-forms', icon: icons.taxForms },
+    { label: 'Agreements', href: '/admin/legal/agreements', icon: icons.agreements },
+  ],
+};
 
 // Manage section
 const manageSection: NavSection = {
@@ -321,6 +353,7 @@ export const AdminSidebar: React.FC = () => {
     });
     initial[marketingSection.label] = marketingSection.defaultOpen ?? false;
     initial[analyticsSection.label] = analyticsSection.defaultOpen ?? false;
+    initial[legalSection.label] = legalSection.defaultOpen ?? false;
     initial[manageSection.label] = manageSection.defaultOpen ?? false;
     return initial;
   });
@@ -404,6 +437,16 @@ export const AdminSidebar: React.FC = () => {
             pathname={pathname}
             isOpen={openSections[analyticsSection.label]}
             onToggle={() => toggleSection(analyticsSection.label)}
+          />
+        </div>
+
+        {/* Legal section */}
+        <div className="mb-4">
+          <CollapsibleSection
+            section={legalSection}
+            pathname={pathname}
+            isOpen={openSections[legalSection.label]}
+            onToggle={() => toggleSection(legalSection.label)}
           />
         </div>
 

@@ -219,38 +219,45 @@ INSERT INTO agreements (
   proposal_uuid,
   '# Consulting Services Agreement
 
-This Consulting Services Agreement ("Agreement") is entered into by and between Light Brand Consulting ("Consultant") and Cho Ventures ("Client").
+This Consulting Services Agreement ("Agreement") is entered into by and between Light Brand Consulting ("Consultant") and Cho Ventures ("Client"). This Agreement incorporates by reference all terms, pricing, scope, deliverables, timelines, and payment schedules set forth in the associated Proposal ("Proposal").
 
-## 1. Services
+## 1. Services & Scope
 
-Consultant agrees to provide the AI Readiness Diagnostic services described in the proposal. Services include ecosystem mapping, opportunity analysis, and strategic recommendations.
+Consultant agrees to provide the services as described in the Proposal. The specific scope of work, deliverables, project phases, and timelines are defined in the Proposal and are incorporated herein by reference. The services will be performed in a professional and workmanlike manner consistent with industry standards.
 
-## 2. Compensation
+## 2. Compensation & Payment Terms
 
-Client agrees to pay Consultant $5,000 USD upon signing this agreement.
+Client agrees to pay Consultant the total project fee as specified in the Proposal. Payment shall be made according to the milestone schedule and payment terms outlined in the Proposal.
 
-## 3. Timeline
+- **Total Project Fee:** As specified in the Proposal
+- **Payment Schedule:** Per the milestones defined in the Proposal
+- **Payment Terms:** Due upon milestone completion as outlined in the Proposal
 
-Following receipt of payment, Consultant will complete the diagnostic within 2-3 weeks and schedule a presentation call at Client''s earliest convenience.
+## 3. Term & Timeline
+
+This Agreement shall commence on the project start date indicated in the Proposal and continue until all services described in the Proposal are completed, unless earlier terminated. The estimated project timeline and completion date are as specified in the Proposal.
 
 ## 4. Deliverables
 
-Upon completion, Client will receive:
-- Full Ecosystem Map
-- AI Opportunity Matrix
-- Connection Architecture Documentation
-- Priority Recommendation Report
-- Live Findings Presentation
+Upon completion, Client will receive all deliverables as specified in the Proposal, including any phase-specific deliverables outlined therein.
 
 ## 5. Confidentiality
 
-Both parties agree to maintain the confidentiality of proprietary information shared during the engagement.
+Both parties agree to maintain the confidentiality of proprietary information shared during the engagement. Neither party shall disclose confidential information to third parties without prior written consent.
 
 ## 6. Intellectual Property
 
-Upon full payment, all deliverables created specifically for Client shall become Client''s property.
+Upon full payment of all fees specified in the Proposal, all deliverables created specifically for Client shall become Client''s property. Consultant retains rights to general methodologies, frameworks, and pre-existing materials.
 
-By signing below, both parties agree to the terms set forth in this Agreement.',
+## 7. Limitation of Liability
+
+Consultant''s total liability under this Agreement shall not exceed the total fees actually paid by Client under the Proposal.
+
+## 8. Entire Agreement
+
+This Agreement, together with the Proposal incorporated herein by reference, constitutes the entire agreement between the parties.
+
+By signing below, Client acknowledges having read and understood the Proposal and agrees to the terms and conditions set forth in this Agreement and the incorporated Proposal.',
   '[
     {"id": "t1", "title": "Payment Terms", "content": "Due upon agreement signing"},
     {"id": "t2", "title": "Delivery", "content": "Findings presentation scheduled after payment receipt"}

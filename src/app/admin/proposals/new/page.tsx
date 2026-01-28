@@ -45,41 +45,55 @@ const SERVICE_OPTIONS = [
 
 const DEFAULT_AGREEMENT_TEXT = `# Consulting Services Agreement
 
-This Consulting Services Agreement ("Agreement") is entered into by and between Light Brand Consulting ("Consultant") and the Client identified in the associated proposal.
+This Consulting Services Agreement ("Agreement") is entered into by and between Light Brand Consulting ("Consultant") and the Client identified in the associated proposal ("Proposal"). This Agreement incorporates by reference all terms, pricing, scope, deliverables, timelines, and payment schedules set forth in the Proposal.
 
-## 1. Services
+## 1. Services & Scope
 
-Consultant agrees to provide the services described in the proposal attached hereto. The services will be performed in a professional and workmanlike manner.
+Consultant agrees to provide the services as described in the Proposal. The specific scope of work, deliverables, project phases, and timelines are defined in the Proposal and are incorporated herein by reference. The services will be performed in a professional and workmanlike manner consistent with industry standards.
 
-## 2. Compensation
+## 2. Compensation & Payment Terms
 
-Client agrees to pay Consultant the fees set forth in the proposal according to the milestone schedule provided.
+Client agrees to pay Consultant the total project fee as specified in the Proposal. Payment shall be made according to the milestone schedule and payment terms outlined in the Proposal. All pricing, discounts, and payment due dates are as set forth in the Proposal.
 
-## 3. Term
+- **Total Project Fee:** As specified in the Proposal
+- **Payment Schedule:** Per the milestones defined in the Proposal
+- **Payment Terms:** Due upon milestone completion as outlined in the Proposal
 
-This Agreement shall commence on the start date indicated in the proposal and continue until all services are completed, unless earlier terminated.
+## 3. Term & Timeline
 
-## 4. Confidentiality
+This Agreement shall commence on the project start date indicated in the Proposal and continue until all services described in the Proposal are completed, unless earlier terminated pursuant to this Agreement. The estimated project timeline and completion date are as specified in the Proposal.
 
-Both parties agree to maintain the confidentiality of proprietary information shared during the engagement.
+## 4. Changes to Scope
 
-## 5. Intellectual Property
+Any changes to the scope of services, deliverables, timeline, or pricing must be agreed upon in writing by both parties. Such changes may result in adjustments to the project fee and timeline as mutually agreed.
 
-Upon full payment, all deliverables created specifically for Client shall become Client's property. Consultant retains rights to general methodologies and pre-existing materials.
+## 5. Confidentiality
 
-## 6. Limitation of Liability
+Both parties agree to maintain the confidentiality of proprietary information shared during the engagement. Neither party shall disclose confidential information to third parties without prior written consent.
 
-Consultant's liability shall be limited to the total fees paid under this Agreement.
+## 6. Intellectual Property
 
-## 7. Termination
+Upon full payment of all fees specified in the Proposal, all deliverables created specifically for Client shall become Client's property. Consultant retains rights to general methodologies, frameworks, and pre-existing materials, as well as the right to use anonymized project information in portfolios and case studies.
 
-Either party may terminate this Agreement with 30 days written notice. Client shall pay for all services rendered through the termination date.
+## 7. Limitation of Liability
 
-## 8. General Provisions
+Consultant's total liability under this Agreement shall not exceed the total fees actually paid by Client under the Proposal. Neither party shall be liable for indirect, incidental, or consequential damages.
 
-This Agreement constitutes the entire agreement between the parties and supersedes all prior discussions and agreements.
+## 8. Termination
 
-By signing below, both parties agree to the terms and conditions set forth in this Agreement.`;
+Either party may terminate this Agreement with 30 days written notice. Upon termination, Client shall pay for all services rendered and expenses incurred through the termination date, calculated on a pro-rata basis according to the Proposal pricing.
+
+## 9. Governing Law
+
+This Agreement shall be governed by and construed in accordance with applicable laws.
+
+## 10. Entire Agreement
+
+This Agreement, together with the Proposal incorporated herein by reference, constitutes the entire agreement between the parties regarding the subject matter hereof. In the event of any conflict between this Agreement and the Proposal, the terms of this Agreement shall prevail.
+
+---
+
+By signing below, Client acknowledges having read and understood the Proposal and agrees to the terms and conditions set forth in this Agreement and the incorporated Proposal.`;
 
 function NewProposalContent() {
   const router = useRouter();
