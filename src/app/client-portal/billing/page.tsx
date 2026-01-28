@@ -63,8 +63,22 @@ export default function BillingCenterPage() {
     }
   }, [authLoading, session]);
 
+  const fetchBillingData = useCallback(async () => {
+    try {
+      const response = await fetch('/api/client-portal/billing');
+      const result = await response.json();
+
+      if (response.ok) {
+        setData(result.data);
+      }
+    } catch (err) {
+      console.error('Failed to refresh billing:', err);
+    }
+  }, []);
+
   const handlePayment = useCallback(async (payment: ClientPaymentItem) => {
     setPaymentLoading(payment.id);
+    setError(null);
 
     try {
       const response = await fetch('/api/stripe/create-checkout-session', {
@@ -79,6 +93,12 @@ export default function BillingCenterPage() {
       const result = await response.json();
 
       if (!response.ok) {
+        // Check if the milestone was already paid - refresh data to show updated status
+        if (result.already_paid || result.error?.includes('already been paid')) {
+          // Refresh billing data to show updated payment status
+          await fetchBillingData();
+          return; // Don't show error - data will refresh and show milestone as paid
+        }
         throw new Error(result.error || 'Failed to create invoice');
       }
 
@@ -89,11 +109,11 @@ export default function BillingCenterPage() {
       }
     } catch (err) {
       console.error('Payment error:', err);
-      alert('Failed to load invoice. Please try again.');
+      setError('Failed to load invoice. Please try again.');
     } finally {
       setPaymentLoading(null);
     }
-  }, []);
+  }, [fetchBillingData]);
 
   if (authLoading || isLoading) {
     return (
@@ -173,6 +193,28 @@ export default function BillingCenterPage() {
             </p>
           </div>
         </div>
+
+        {/* Payment Error Banner */}
+        {error && (
+          <div className="mb-6 bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
+                <svg className="w-4 h-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <p className="text-red-400 text-sm">{error}</p>
+            </div>
+            <button
+              onClick={() => setError(null)}
+              className="text-red-400/60 hover:text-red-400 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}

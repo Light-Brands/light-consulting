@@ -90,29 +90,54 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if there's an existing invoice and if it's still valid
-    if (milestone.stripe_invoice_id && milestone.stripe_invoice_url) {
+    if (milestone.stripe_invoice_id) {
       const existingInvoice = await getInvoice(milestone.stripe_invoice_id);
 
+      // Invoice exists and is open/draft - return existing URL
       if (existingInvoice && (existingInvoice.status === 'open' || existingInvoice.status === 'draft')) {
-        // Return existing invoice URL if still valid
         return NextResponse.json({
-          invoice_url: milestone.stripe_invoice_url,
+          invoice_url: milestone.stripe_invoice_url || existingInvoice.hosted_invoice_url,
           invoice_id: milestone.stripe_invoice_id,
           // Also return checkout_url for backwards compatibility
-          checkout_url: milestone.stripe_invoice_url,
+          checkout_url: milestone.stripe_invoice_url || existingInvoice.hosted_invoice_url,
           session_id: milestone.stripe_invoice_id,
         });
       }
 
-      // Invoice paid, void, or uncollectible - may need to create new one
+      // Invoice paid - sync the database and return appropriate response
       if (existingInvoice?.status === 'paid') {
+        // Sync milestone status from Stripe (webhook may have failed or been delayed)
+        await supabaseAdmin
+          .from('milestones')
+          .update({
+            payment_status: 'paid',
+            paid_at: existingInvoice.status_transitions?.paid_at
+              ? new Date(existingInvoice.status_transitions.paid_at * 1000).toISOString()
+              : new Date().toISOString(),
+            stripe_payment_intent_id: existingInvoice.payment_intent as string,
+          })
+          .eq('id', milestone_id)
+          .neq('payment_status', 'paid');
+
         return NextResponse.json(
-          { error: 'This milestone has already been paid' },
+          { error: 'This milestone has already been paid', already_paid: true },
           { status: 400 }
         );
       }
 
-      console.log(`Invoice ${milestone.stripe_invoice_id} is ${existingInvoice?.status}, creating new one`);
+      // Invoice is void, uncollectible, or doesn't exist in Stripe (stale data)
+      // Clear the old data so we can create a fresh invoice
+      console.log(`Invoice ${milestone.stripe_invoice_id} is ${existingInvoice?.status || 'not found'}, clearing stale data and creating new one`);
+
+      await supabaseAdmin
+        .from('milestones')
+        .update({
+          stripe_invoice_id: null,
+          stripe_invoice_url: null,
+          stripe_checkout_session_id: null,
+          stripe_payment_url: null,
+        })
+        .eq('id', milestone_id);
     }
 
     // Create new invoice
