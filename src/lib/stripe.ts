@@ -348,31 +348,14 @@ export async function createMilestoneInvoice(
       }
     );
 
-    // Create invoice item
-    await stripe.invoiceItems.create({
-      customer: customer.id,
-      amount: Math.round(amount * 100), // Convert to cents
-      currency: 'usd',
-      description: `${milestoneName} - ${projectName}${milestoneDescription ? `\n${milestoneDescription}` : ''}`,
-      metadata: {
-        milestone_id: milestoneId,
-        proposal_id: proposalId,
-        project_name: projectName,
-      },
-    });
-
-    // Calculate due date (default to 30 days if not specified)
-    const invoiceDueDate = dueDate
-      ? Math.floor(dueDate.getTime() / 1000)
-      : Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60;
-
-    // Create and finalize the invoice
+    // Create draft invoice first (don't include any pending items from previous failed attempts)
     const invoice = await stripe.invoices.create({
       customer: customer.id,
       collection_method: 'send_invoice',
       days_until_due: dueDate
         ? Math.max(1, Math.ceil((dueDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
         : 30,
+      pending_invoice_items_behavior: 'exclude', // Don't auto-include orphaned items
       metadata: {
         milestone_id: milestoneId,
         proposal_id: proposalId,
@@ -384,6 +367,20 @@ export async function createMilestoneInvoice(
           value: projectName.substring(0, 30), // Stripe limits to 30 chars
         },
       ],
+    });
+
+    // Create invoice item attached to this specific invoice
+    await stripe.invoiceItems.create({
+      customer: customer.id,
+      invoice: invoice.id, // Attach to this specific invoice
+      amount: Math.round(amount * 100), // Convert to cents
+      currency: 'usd',
+      description: `${milestoneName} - ${projectName}${milestoneDescription ? `\n${milestoneDescription}` : ''}`,
+      metadata: {
+        milestone_id: milestoneId,
+        proposal_id: proposalId,
+        project_name: projectName,
+      },
     });
 
     // Finalize the invoice to make it payable

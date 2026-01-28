@@ -84,19 +84,6 @@ async function createInvoiceForMilestone(milestone: Milestone): Promise<{
       proposal.client_company
     );
 
-    // Create invoice item
-    await stripe.invoiceItems.create({
-      customer: customer.id,
-      amount: Math.round(milestone.amount * 100), // Convert to cents
-      currency: 'usd',
-      description: `${milestone.milestone_name} - ${proposal.project_name}${milestone.description ? `\n${milestone.description}` : ''}`,
-      metadata: {
-        milestone_id: milestone.id,
-        proposal_id: proposal.id,
-        project_name: proposal.project_name,
-      },
-    });
-
     // Calculate days until due
     let daysUntilDue = 30;
     if (milestone.due_date) {
@@ -105,11 +92,12 @@ async function createInvoiceForMilestone(milestone: Milestone): Promise<{
       daysUntilDue = Math.max(1, Math.ceil((dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
     }
 
-    // Create the invoice
+    // Create draft invoice first (don't include orphaned pending items)
     const invoice = await stripe.invoices.create({
       customer: customer.id,
       collection_method: 'send_invoice',
       days_until_due: daysUntilDue,
+      pending_invoice_items_behavior: 'exclude',
       metadata: {
         milestone_id: milestone.id,
         proposal_id: proposal.id,
@@ -121,6 +109,20 @@ async function createInvoiceForMilestone(milestone: Milestone): Promise<{
           value: proposal.project_name.substring(0, 30),
         },
       ],
+    });
+
+    // Create invoice item attached to this specific invoice
+    await stripe.invoiceItems.create({
+      customer: customer.id,
+      invoice: invoice.id,
+      amount: Math.round(milestone.amount * 100), // Convert to cents
+      currency: 'usd',
+      description: `${milestone.milestone_name} - ${proposal.project_name}${milestone.description ? `\n${milestone.description}` : ''}`,
+      metadata: {
+        milestone_id: milestone.id,
+        proposal_id: proposal.id,
+        project_name: proposal.project_name,
+      },
     });
 
     // Finalize the invoice
