@@ -49,6 +49,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Facebook Domain Verification */}
+        <meta name="facebook-domain-verification" content="vw4qqgv6a9ma72rj9oq5l0zgudfrp6" />
+
         {/* PWA Meta Tags */}
         <meta name="theme-color" content="#FAFAF8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
