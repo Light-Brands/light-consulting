@@ -47,12 +47,10 @@ export const ReadinessReport: React.FC<ReadinessReportProps> = ({
   userName,
   onBookCall,
 }) => {
-  const [isBooking, setIsBooking] = useState(false);
-  const [bookingError, setBookingError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'business' | 'technical' | 'opportunities'>('overview');
 
-  // Strategic session price
-  const SESSION_PRICE = 500;
+  // Booking URL from environment
+  const BOOKING_URL = process.env.NEXT_PUBLIC_BOOKING_URL || 'https://api.leadconnectorhq.com/widget/bookings/light-brands-ai-assessment-call';
 
   // Check if we have analysis data
   const hasAnalysis = readinessScore !== undefined && readinessScore !== null;
@@ -75,44 +73,17 @@ export const ReadinessReport: React.FC<ReadinessReportProps> = ({
     return 'from-amber-500/20 to-amber-600/5';
   };
 
-  const handleBookSession = async () => {
-    if (!leadId) {
-      setBookingError('Unable to process booking. Please try again.');
-      return;
-    }
+  const handleBookSession = () => {
+    // Open Calendly booking link directly
+    window.open(BOOKING_URL, '_blank');
 
-    setIsBooking(true);
-    setBookingError(null);
-
-    try {
-      const response = await fetch('/api/stripe/create-session-booking', {
+    // Optionally track the booking click
+    if (leadId) {
+      fetch('/api/book-call', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          lead_id: leadId,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        if (data.already_paid) {
-          // Redirect to success page if already paid
-          window.location.href = `/book/success?lead_id=${leadId}&payment=success`;
-          return;
-        }
-        throw new Error(data.error || 'Failed to create checkout session');
-      }
-
-      // Redirect to Stripe checkout
-      if (data.checkout_url) {
-        window.location.href = data.checkout_url;
-      }
-    } catch (error) {
-      console.error('Error booking session:', error);
-      setBookingError(error instanceof Error ? error.message : 'An error occurred');
-    } finally {
-      setIsBooking(false);
+        body: JSON.stringify({ lead_id: leadId }),
+      }).catch(console.error);
     }
   };
 
@@ -186,19 +157,15 @@ export const ReadinessReport: React.FC<ReadinessReportProps> = ({
               Ready to Transform Your Business?
             </h3>
             <p className="text-text-secondary max-w-xl mx-auto">
-              Book your 90-minute strategic session to receive personalized AI implementation strategies and a complete roadmap for your business.
+              Book your strategic session to receive personalized AI implementation strategies and a complete roadmap for your business.
             </p>
           </div>
-          {bookingError && (
-            <p className="text-red-400 text-sm mb-4">{bookingError}</p>
-          )}
           <Button
             onClick={handleBookSession}
-            isLoading={isBooking}
             size="lg"
             className="px-10"
           >
-            Book Strategic Session - $500
+            Schedule Your Session
           </Button>
           <p className="mt-4 text-sm text-text-muted">
             90-minute deep-dive session • Personalized AI roadmap • Expert consultation
@@ -765,19 +732,15 @@ export const ReadinessReport: React.FC<ReadinessReportProps> = ({
           </div>
         </div>
 
-        {bookingError && (
-          <p className="text-red-400 text-sm mb-4">{bookingError}</p>
-        )}
         <Button
           onClick={handleBookSession}
-          isLoading={isBooking}
           size="lg"
           className="px-10"
         >
-          Book Strategic Session - $500
+          Schedule Your Session
         </Button>
         <p className="mt-4 text-sm text-text-muted">
-          Secure payment via Stripe • Schedule after purchase
+          Pick a time that works for you
         </p>
       </div>
     </div>

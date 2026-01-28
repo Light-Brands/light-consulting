@@ -227,7 +227,7 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
                 onClick={onSkipToBooking}
                 className="w-full"
               >
-                {hasUrl ? 'Skip Analysis & Book Session' : 'Book Strategic Session - $500'}
+                {hasUrl ? 'Skip Analysis & Book Session' : 'Book Strategic Session'}
               </Button>
               {!hasUrl && (
                 <p className="mt-2 text-xs text-text-muted text-center">
@@ -237,18 +237,25 @@ export const WebsiteInputVisual: React.FC<WebsiteInputVisualProps> = ({
             </div>
           )}
 
+          {/* Form-level error */}
+          {errors.form && (
+            <div className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+              <p className="text-sm text-red-400 text-center">{errors.form}</p>
+            </div>
+          )}
+
           {/* Help text */}
-          {!isContactReady && (
+          {!isContactReady && !errors.form && (
             <p className="mt-2 text-sm text-text-muted text-center">
               Fill in your name and email to continue
             </p>
           )}
-          {isContactReady && !hasUrl && (
+          {isContactReady && !hasUrl && !errors.form && (
             <p className="mt-2 text-sm text-text-muted text-center">
               Add your website URL for a personalized AI readiness analysis
             </p>
           )}
-          {hasUrl && !isUrlReady && isContactReady && (
+          {hasUrl && !isUrlReady && isContactReady && !errors.form && (
             <p className="mt-2 text-sm text-text-muted text-center">
               Enter a valid URL to analyze, or skip to book directly
             </p>

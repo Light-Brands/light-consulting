@@ -160,6 +160,16 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
 
       const result = await response.json();
 
+      if (!response.ok || !result.success) {
+        console.error('Error creating lead:', result.error);
+        // Show error to user
+        setErrors((prev) => ({
+          ...prev,
+          form: result.error || 'Failed to save your information. Please try again.',
+        }));
+        return;
+      }
+
       // Store lead ID and go to step 3 with no analysis data
       updateFormData({
         isComplete: true,
@@ -171,13 +181,10 @@ export const BookPage: React.FC<BookPageProps> = ({ onNavigate }) => {
       setStep(3);
     } catch (error) {
       console.error('Error creating lead:', error);
-      // Still go to booking even if lead creation fails
-      updateFormData({
-        isComplete: true,
-        websiteAnalysis: undefined,
-        businessIntelligence: undefined,
-      });
-      setStep(3);
+      setErrors((prev) => ({
+        ...prev,
+        form: 'An error occurred. Please try again or contact us directly.',
+      }));
     }
   }, [validateStep1, formData.name, formData.email, formData.company, formData.phone, updateFormData]);
 

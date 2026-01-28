@@ -1272,6 +1272,11 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnalyzeWe
           leadId = (data as { id: string }).id;
         } else if (error) {
           console.error('Error creating lead submission:', error);
+          // Return error to frontend so user knows something went wrong
+          return NextResponse.json({
+            success: false,
+            error: 'Failed to save your information. Please try again or contact us directly.',
+          }, { status: 500 });
         }
       } else {
         // Mock ID for development
@@ -1361,6 +1366,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnalyzeWe
     const { supabaseAdmin, isSupabaseConfigured } = await import('@/lib/supabase');
 
     let leadId: string | null = null;
+    let leadCreationError: string | null = null;
 
     if (isSupabaseConfigured()) {
       const leadData = {
@@ -1377,6 +1383,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnalyzeWe
         capacity_gap_analysis: capacityGap,
         full_readiness_report: fullReadinessReport,
         business_intelligence: businessIntelligence,
+        scraped_content: scrapedData.content.substring(0, 100000), // Store first 100K chars for reference
         status: 'new',
         intake_data: {
           source: 'website-diagnostic',
@@ -1394,6 +1401,36 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnalyzeWe
         leadId = (data as { id: string }).id;
       } else if (error) {
         console.error('Error creating lead submission:', error);
+        leadCreationError = error.message;
+
+        // Try a fallback insert without newer columns that might not exist
+        const fallbackLeadData = {
+          service: 'diagnostic',
+          name,
+          email,
+          company: company || null,
+          phone: phone || null,
+          website_url: url.toString(),
+          status: 'new',
+          intake_data: {
+            source: 'website-diagnostic',
+            analysis_version: '2.0',
+            original_error: error.message,
+          },
+        };
+
+        const { data: fallbackData, error: fallbackError } = await supabaseAdmin
+          .from('lead_submissions')
+          .insert(fallbackLeadData as unknown as never)
+          .select('id')
+          .single();
+
+        if (!fallbackError && fallbackData) {
+          leadId = (fallbackData as { id: string }).id;
+          console.log('Lead created with fallback insert:', leadId);
+        } else if (fallbackError) {
+          console.error('Fallback lead creation also failed:', fallbackError);
+        }
       }
     } else {
       // Mock ID for development
