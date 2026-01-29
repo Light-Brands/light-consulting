@@ -153,6 +153,21 @@ const icons = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
     </svg>
   ),
+  salesTools: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />
+    </svg>
+  ),
+  stackDiagnostic: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L12 12.75 6.429 9.75m11.142 0l4.179 2.25-4.179 2.25m0 0L12 17.25l-5.571-3m11.142 0l4.179 2.25L12 21.75l-9.75-5.25 4.179-2.25" />
+    </svg>
+  ),
+  planning: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+    </svg>
+  ),
   chevron: (
     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -186,6 +201,14 @@ const navSections: NavSection[] = [
     ],
   },
   {
+    label: 'Sales Tools',
+    icon: icons.salesTools,
+    defaultOpen: false,
+    items: [
+      { label: 'Stack Diagnostic', href: '/admin/stack-diagnostic', icon: icons.stackDiagnostic },
+    ],
+  },
+  {
     label: 'Brands',
     icon: icons.brands,
     defaultOpen: false,
@@ -196,6 +219,16 @@ const navSections: NavSection[] = [
     ],
   },
 ];
+
+// Strategy section
+const strategySection: NavSection = {
+  label: 'Strategy',
+  icon: icons.planning,
+  defaultOpen: false,
+  items: [
+    { label: 'Planning', href: '/admin/planning', icon: icons.documents },
+  ],
+};
 
 // Marketing section
 const marketingSection: NavSection = {
@@ -350,6 +383,7 @@ export const AdminSidebar: React.FC = () => {
     navSections.forEach(section => {
       initial[section.label] = section.defaultOpen ?? false;
     });
+    initial[strategySection.label] = strategySection.defaultOpen ?? false;
     initial[marketingSection.label] = marketingSection.defaultOpen ?? false;
     initial[analyticsSection.label] = analyticsSection.defaultOpen ?? false;
     initial[legalSection.label] = legalSection.defaultOpen ?? false;
@@ -417,6 +451,16 @@ export const AdminSidebar: React.FC = () => {
               onToggle={() => toggleSection(section.label)}
             />
           ))}
+        </div>
+
+        {/* Strategy section */}
+        <div className="mb-4">
+          <CollapsibleSection
+            section={strategySection}
+            pathname={pathname}
+            isOpen={openSections[strategySection.label]}
+            onToggle={() => toggleSection(strategySection.label)}
+          />
         </div>
 
         {/* Marketing section */}
