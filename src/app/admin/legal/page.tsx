@@ -174,9 +174,114 @@ function DocumentPreview({
   );
 }
 
+// Count all files recursively in a folder node
+function countFiles(node: { docs: LegalDocument[]; children: Record<string, { docs: LegalDocument[]; children: Record<string, unknown> }> }): number {
+  let count = node.docs.length;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Object.values(node.children).forEach((child: any) => { count += countFiles(child); });
+  return count;
+}
+
+// Recursive folder row component
+function FolderRow({
+  node,
+  depth,
+  isFirst,
+  expandedFolders,
+  toggleFolder,
+  selectedDocument,
+  documentContent,
+  isLoadingContent,
+  onDocumentClick,
+  onClosePreview,
+}: {
+  node: { name: string; path: string; children: Record<string, { name: string; path: string; children: Record<string, unknown>; docs: LegalDocument[] }>; docs: LegalDocument[] };
+  depth: number;
+  isFirst: boolean;
+  expandedFolders: Set<string>;
+  toggleFolder: (path: string) => void;
+  selectedDocument: LegalDocument | null;
+  documentContent: string | null;
+  isLoadingContent: boolean;
+  onDocumentClick: (doc: LegalDocument) => void;
+  onClosePreview: () => void;
+}) {
+  const isExpanded = expandedFolders.has(node.path);
+  const totalFiles = countFiles(node);
+  const childNodes = Object.values(node.children).sort((a, b) => a.name.localeCompare(b.name));
+
+  return (
+    <div className={!isFirst && depth === 0 ? 'border-t border-depth-border' : ''}>
+      <button
+        onClick={() => toggleFolder(node.path)}
+        className="w-full flex items-center gap-3 pr-4 py-2.5 hover:bg-depth-elevated/50 transition-colors"
+        style={{ paddingLeft: `${1 + depth * 1}rem` }}
+      >
+        <ChevronIcon isOpen={isExpanded} />
+        <FolderIcon isOpen={isExpanded} />
+        <span className={`capitalize ${depth === 0 ? 'font-medium text-text-primary' : 'text-text-secondary'}`}>
+          {node.name.replace(/-/g, ' ')}
+        </span>
+        <span className="text-text-muted text-sm ml-auto">
+          {totalFiles} {totalFiles === 1 ? 'file' : 'files'}
+        </span>
+      </button>
+
+      {isExpanded && (
+        <div className={depth === 0 ? 'bg-depth-base border-t border-depth-border' : ''}>
+          {/* Direct files */}
+          {node.docs.map((doc) => (
+            <div key={doc.path}>
+              <button
+                onClick={() => onDocumentClick(doc)}
+                className={`w-full flex items-center gap-3 pr-4 py-2.5 hover:bg-depth-elevated/30 transition-colors ${
+                  selectedDocument?.path === doc.path ? 'bg-radiance-gold/5' : ''
+                }`}
+                style={{ paddingLeft: `${2.5 + depth * 1}rem` }}
+              >
+                <DocumentIcon />
+                <span className="text-text-secondary hover:text-text-primary transition-colors text-left">
+                  {formatDocumentName(doc.name)}
+                </span>
+              </button>
+              {selectedDocument?.path === doc.path && (
+                <div className="px-4 pb-4">
+                  <DocumentPreview
+                    document={doc}
+                    content={documentContent}
+                    isLoading={isLoadingContent}
+                    onClose={onClosePreview}
+                  />
+                </div>
+              )}
+            </div>
+          ))}
+
+          {/* Child folders (recursive) */}
+          {childNodes.map((child, i) => (
+            <FolderRow
+              key={child.path}
+              node={child}
+              depth={depth + 1}
+              isFirst={i === 0 && node.docs.length === 0}
+              expandedFolders={expandedFolders}
+              toggleFolder={toggleFolder}
+              selectedDocument={selectedDocument}
+              documentContent={documentContent}
+              isLoadingContent={isLoadingContent}
+              onDocumentClick={onDocumentClick}
+              onClosePreview={onClosePreview}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function LegalPage() {
   const [documents, setDocuments] = useState<LegalDocument[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [, setCategories] = useState<string[]>([]);
   const [repoUrl, setRepoUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -269,13 +374,55 @@ export default function LegalPage() {
     return acc;
   }, {} as Record<string, LegalDocument[]>);
 
-  // Build folder structure
-  const folderStructure: { [key: string]: string[] } = {};
-  categories.forEach(cat => {
-    folderStructure[cat] = Object.keys(groupedDocuments)
-      .filter(fc => fc === cat || fc.startsWith(cat + '/'))
-      .sort();
-  });
+  // Build a nested tree from flat fullCategory paths
+  interface FolderNode {
+    name: string;
+    path: string;
+    children: Record<string, FolderNode>;
+    docs: LegalDocument[];
+  }
+
+  const buildTree = (): Record<string, FolderNode> => {
+    const root: Record<string, FolderNode> = {};
+
+    // Ensure all category path segments exist as nodes
+    const allPaths = new Set<string>();
+    Object.keys(groupedDocuments).forEach(fc => {
+      const parts = fc.split('/');
+      for (let i = 1; i <= parts.length; i++) {
+        allPaths.add(parts.slice(0, i).join('/'));
+      }
+    });
+
+    allPaths.forEach(p => {
+      const parts = p.split('/');
+      let current = root;
+      let builtPath = '';
+      parts.forEach(part => {
+        builtPath = builtPath ? `${builtPath}/${part}` : part;
+        if (!current[part]) {
+          current[part] = { name: part, path: builtPath, children: {}, docs: [] };
+        }
+        current = current[part].children;
+      });
+    });
+
+    // Place documents into their leaf nodes
+    Object.entries(groupedDocuments).forEach(([fc, docs]) => {
+      const parts = fc.split('/');
+      let current = root;
+      let node: FolderNode | null = null;
+      parts.forEach(part => {
+        node = current[part];
+        current = node.children;
+      });
+      if (node) node.docs = docs;
+    });
+
+    return root;
+  };
+
+  const folderTree = buildTree();
 
   return (
     <div className="min-h-screen">
@@ -336,125 +483,23 @@ export default function LegalPage() {
           )}
 
           {/* Folder Structure */}
-          {!isLoading && !error && categories.length > 0 && (
+          {!isLoading && !error && Object.keys(folderTree).length > 0 && (
             <div className="bg-depth-surface border border-depth-border rounded-xl overflow-hidden">
-              {categories.sort().map((category, index) => {
-                const isExpanded = expandedFolders.has(category);
-                const categoryDocs = groupedDocuments[category] || [];
-                const subfolders = Object.keys(groupedDocuments)
-                  .filter(fc => fc.startsWith(category + '/') && !fc.slice(category.length + 1).includes('/'))
-                  .sort();
-
-                return (
-                  <div key={category} className={index > 0 ? 'border-t border-depth-border' : ''}>
-                    {/* Top-level folder */}
-                    <button
-                      onClick={() => toggleFolder(category)}
-                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-depth-elevated/50 transition-colors"
-                    >
-                      <ChevronIcon isOpen={isExpanded} />
-                      <FolderIcon isOpen={isExpanded} />
-                      <span className="font-medium text-text-primary capitalize">
-                        {category.replace(/-/g, ' ')}
-                      </span>
-                      <span className="text-text-muted text-sm ml-auto">
-                        {Object.keys(groupedDocuments)
-                          .filter(fc => fc === category || fc.startsWith(category + '/'))
-                          .reduce((sum, fc) => sum + (groupedDocuments[fc]?.length || 0), 0)} files
-                      </span>
-                    </button>
-
-                    {/* Expanded content */}
-                    {isExpanded && (
-                      <div className="bg-depth-base border-t border-depth-border">
-                        {/* Direct files in this category */}
-                        {categoryDocs.map((doc) => (
-                          <div key={doc.path}>
-                            <button
-                              onClick={() => handleDocumentClick(doc)}
-                              className={`w-full flex items-center gap-3 pl-12 pr-4 py-2.5 hover:bg-depth-elevated/30 transition-colors ${
-                                selectedDocument?.path === doc.path ? 'bg-radiance-gold/5' : ''
-                              }`}
-                            >
-                              <DocumentIcon />
-                              <span className="text-text-secondary hover:text-text-primary transition-colors">
-                                {formatDocumentName(doc.name)}
-                              </span>
-                            </button>
-                            {selectedDocument?.path === doc.path && (
-                              <div className="px-4 pb-4">
-                                <DocumentPreview
-                                  document={doc}
-                                  content={documentContent}
-                                  isLoading={isLoadingContent}
-                                  onClose={() => {
-                                    setSelectedDocument(null);
-                                    setDocumentContent(null);
-                                  }}
-                                />
-                              </div>
-                            )}
-                          </div>
-                        ))}
-
-                        {/* Subfolders */}
-                        {subfolders.map((subfolder) => {
-                          const subfolderName = subfolder.slice(category.length + 1);
-                          const isSubExpanded = expandedFolders.has(subfolder);
-                          const subDocs = groupedDocuments[subfolder] || [];
-
-                          return (
-                            <div key={subfolder}>
-                              <button
-                                onClick={() => toggleFolder(subfolder)}
-                                className="w-full flex items-center gap-3 pl-8 pr-4 py-2.5 hover:bg-depth-elevated/30 transition-colors"
-                              >
-                                <ChevronIcon isOpen={isSubExpanded} />
-                                <FolderIcon isOpen={isSubExpanded} />
-                                <span className="text-text-secondary capitalize">
-                                  {subfolderName.replace(/-/g, ' ')}
-                                </span>
-                                <span className="text-text-muted text-sm ml-auto">
-                                  {subDocs.length} files
-                                </span>
-                              </button>
-
-                              {isSubExpanded && subDocs.map((doc) => (
-                                <div key={doc.path}>
-                                  <button
-                                    onClick={() => handleDocumentClick(doc)}
-                                    className={`w-full flex items-center gap-3 pl-20 pr-4 py-2.5 hover:bg-depth-elevated/30 transition-colors ${
-                                      selectedDocument?.path === doc.path ? 'bg-radiance-gold/5' : ''
-                                    }`}
-                                  >
-                                    <DocumentIcon />
-                                    <span className="text-text-secondary hover:text-text-primary transition-colors">
-                                      {formatDocumentName(doc.name)}
-                                    </span>
-                                  </button>
-                                  {selectedDocument?.path === doc.path && (
-                                    <div className="px-4 pb-4">
-                                      <DocumentPreview
-                                        document={doc}
-                                        content={documentContent}
-                                        isLoading={isLoadingContent}
-                                        onClose={() => {
-                                          setSelectedDocument(null);
-                                          setDocumentContent(null);
-                                        }}
-                                      />
-                                    </div>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              {Object.values(folderTree).sort((a, b) => a.name.localeCompare(b.name)).map((node, index) => (
+                <FolderRow
+                  key={node.path}
+                  node={node}
+                  depth={0}
+                  isFirst={index === 0}
+                  expandedFolders={expandedFolders}
+                  toggleFolder={toggleFolder}
+                  selectedDocument={selectedDocument}
+                  documentContent={documentContent}
+                  isLoadingContent={isLoadingContent}
+                  onDocumentClick={handleDocumentClick}
+                  onClosePreview={() => { setSelectedDocument(null); setDocumentContent(null); }}
+                />
+              ))}
             </div>
           )}
         </Container>

@@ -236,7 +236,6 @@ const legalSection: NavSection = {
   defaultOpen: false,
   items: [
     { label: 'All Documents', href: '/admin/legal', icon: icons.documents },
-    { label: 'Tax Forms', href: '/admin/legal/tax-forms', icon: icons.taxForms },
     { label: 'Agreements', href: '/admin/legal/agreements', icon: icons.agreements },
   ],
 };
