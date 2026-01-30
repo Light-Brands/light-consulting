@@ -43,6 +43,12 @@ import type {
   TeamDeveloperUpdate,
 } from './github-analytics';
 
+import type {
+  StackSession,
+  StackSessionInsert,
+  StackSessionUpdate,
+} from './stack-diagnostic';
+
 // Assessment Types
 export type AssessmentStage = 'qualify' | 'book' | 'educate' | 'confirm' | 'commit' | 'intake' | 'status';
 export type AssessmentVerdict = 'GO' | 'CONDITIONAL_GO' | 'NO_GO';
@@ -183,6 +189,11 @@ export interface Database {
         Row: TeamDeveloper;
         Insert: TeamDeveloperInsert;
         Update: TeamDeveloperUpdate;
+      };
+      stack_sessions: {
+        Row: StackSession;
+        Insert: StackSessionInsert;
+        Update: StackSessionUpdate;
       };
     };
   };
