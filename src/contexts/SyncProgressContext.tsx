@@ -9,6 +9,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
+import { useAuthFetch } from '@/hooks/useAuthFetch';
 
 // Storage key for persistence
 const STORAGE_KEY = 'github_sync_state';
@@ -118,6 +119,7 @@ export function SyncProgressProvider({ children }: { children: React.ReactNode }
   const [lastSyncCompleted, setLastSyncCompleted] = useState<Date | null>(null);
   const [hasNotified, setHasNotified] = useState<Set<string>>(new Set());
 
+  const { authFetch } = useAuthFetch();
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const queueRef = useRef<{ repoId: string; repoName: string }[]>([]);
   const processingRef = useRef(false);
@@ -151,7 +153,7 @@ export function SyncProgressProvider({ children }: { children: React.ReactNode }
   // Poll for sync progress
   const pollSyncProgress = useCallback(async () => {
     try {
-      const response = await fetch('/api/admin/analytics/github/sync');
+      const response = await authFetch('/api/admin/analytics/github/sync');
       const result = await response.json();
 
       if (result.data?.history) {
@@ -246,7 +248,7 @@ export function SyncProgressProvider({ children }: { children: React.ReactNode }
       console.error('Failed to poll sync status:', err);
       return false;
     }
-  }, [globalJob?.status, hasNotified, sendNotification]);
+  }, [authFetch, globalJob?.status, hasNotified, sendNotification]);
 
   // Process the queue - run one repo sync at a time
   const processQueue = useCallback(async () => {
@@ -264,7 +266,7 @@ export function SyncProgressProvider({ children }: { children: React.ReactNode }
       ));
 
       try {
-        const response = await fetch('/api/admin/analytics/github/sync', {
+        const response = await authFetch('/api/admin/analytics/github/sync', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -311,7 +313,7 @@ export function SyncProgressProvider({ children }: { children: React.ReactNode }
     } else {
       processingRef.current = false;
     }
-  }, [pollSyncProgress, sendNotification]);
+  }, [authFetch, pollSyncProgress, sendNotification]);
 
   // Add repo to sync queue
   const startRepoSync = useCallback((repoId: string, repoName: string) => {
@@ -353,7 +355,7 @@ export function SyncProgressProvider({ children }: { children: React.ReactNode }
     });
 
     try {
-      const response = await fetch('/api/admin/analytics/github/sync', {
+      const response = await authFetch('/api/admin/analytics/github/sync', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sync_type: syncType }),
@@ -381,7 +383,7 @@ export function SyncProgressProvider({ children }: { children: React.ReactNode }
     } catch (err) {
       setGlobalJob(prev => prev ? { ...prev, status: 'failed', error: 'Network error' } : null);
     }
-  }, [pollSyncProgress, startRepoSync]);
+  }, [authFetch, pollSyncProgress, startRepoSync]);
 
   // Clear error (legacy)
   const clearError = useCallback(() => {
@@ -433,7 +435,7 @@ export function SyncProgressProvider({ children }: { children: React.ReactNode }
 
       // Check server for running syncs
       try {
-        const response = await fetch('/api/admin/analytics/github/sync');
+        const response = await authFetch('/api/admin/analytics/github/sync');
         const result = await response.json();
 
         if (result.data?.history?.[0]?.status === 'running') {
@@ -464,7 +466,7 @@ export function SyncProgressProvider({ children }: { children: React.ReactNode }
         clearInterval(pollingRef.current);
       }
     };
-  }, [pollSyncProgress, processQueue]);
+  }, [authFetch, pollSyncProgress, processQueue]);
 
   // Legacy compatibility - compute from current state
   const isSyncing = globalJob?.status === 'running' || repoJobs.some(j => j.status === 'running');
