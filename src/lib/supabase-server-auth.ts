@@ -7,6 +7,8 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
 import type { Database } from '@/types/database';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -77,12 +79,22 @@ export async function isAdminAuthenticated(request: Request): Promise<boolean> {
     return true;
   }
 
+  // Check NextAuth session (cookie-based, used by admin login)
+  try {
+    const session = await getServerSession(authOptions);
+    if (session?.user) {
+      return true;
+    }
+  } catch {
+    // NextAuth not available, continue to Supabase check
+  }
+
   // If Supabase auth is not configured, deny access in production
   if (!isSupabaseAuthConfigured()) {
     return false;
   }
 
-  // Verify Supabase auth
+  // Verify Supabase auth (Bearer token, used by API clients)
   const user = await verifySupabaseAuth(request);
   return user !== null;
 }
