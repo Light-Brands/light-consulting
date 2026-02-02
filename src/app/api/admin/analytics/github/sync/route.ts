@@ -6,12 +6,14 @@
  * GET /api/admin/analytics/github/sync - Get sync status
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, after } from 'next/server';
 import { isAdminAuthenticated } from '@/lib/supabase-server-auth';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 import { createGitHubClient } from '@/lib/github-api';
-import { runSync, getLatestSyncStatus } from '@/lib/github-sync';
+import { runSync, getLatestSyncStatus, createSyncLog } from '@/lib/github-sync';
 import type { SyncType, GitHubSyncLog } from '@/types/github-analytics';
+
+export const maxDuration = 300; // 5 minutes (Vercel Pro max)
 
 /**
  * GET /api/admin/analytics/github/sync
@@ -151,22 +153,30 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Run sync
-    const result = await runSync(client, {
-      syncType,
-      repositoryId,
-      since,
-      maxCommitsPerRepo: syncType === 'full' ? 5000 : 200,
+    // Create sync log upfront so frontend can poll immediately
+    const syncLogId = await createSyncLog(syncType);
+
+    // Fire-and-forget: run sync in background after response is sent
+    after(async () => {
+      try {
+        await runSync(client, {
+          syncType,
+          repositoryId,
+          since,
+          syncLogId,
+          maxCommitsPerRepo: syncType === 'full' ? 5000 : 200,
+          skipCommitDetails: !repositoryId, // Only fetch per-commit details for single-repo syncs
+        });
+      } catch (error) {
+        console.error('Background sync failed:', error);
+      }
     });
 
-    if (!result.success) {
-      return NextResponse.json(
-        { data: result, error: result.error || 'Sync failed' },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({ data: result, error: null }, { status: 201 });
+    // Return immediately with the sync log ID
+    return NextResponse.json(
+      { data: { syncLogId, started: true }, error: null },
+      { status: 202 }
+    );
   } catch (error) {
     console.error('Error in POST /api/admin/analytics/github/sync:', error);
     return NextResponse.json(

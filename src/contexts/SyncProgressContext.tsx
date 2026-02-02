@@ -368,7 +368,7 @@ export function SyncProgressProvider({ children }: { children: React.ReactNode }
         return;
       }
 
-      // Start polling
+      // Server returns immediately with syncLogId - start polling for progress
       if (pollingRef.current) {
         clearInterval(pollingRef.current);
       }
@@ -415,47 +415,62 @@ export function SyncProgressProvider({ children }: { children: React.ReactNode }
     const init = async () => {
       // Load persisted state
       const persisted = loadPersistedState();
-      if (persisted) {
-        // Restore jobs that were running (they might still be running on server)
-        const activeJobs = persisted.repoJobs.filter(j => j.status === 'running' || j.status === 'queued');
-        if (activeJobs.length > 0) {
-          setRepoJobs(activeJobs);
-          setIsWidgetVisible(true);
 
-          // Re-queue any that were queued
-          queueRef.current = activeJobs
-            .filter(j => j.status === 'queued')
-            .map(j => ({ repoId: j.repoId, repoName: j.repoName }));
-        }
-        if (persisted.globalJob?.status === 'running') {
-          setGlobalJob(persisted.globalJob);
-          setIsWidgetVisible(true);
-        }
-      }
-
-      // Check server for running syncs
+      // Check server for running syncs first
+      let serverHasRunningSync = false;
       try {
         const response = await authFetch('/api/admin/analytics/github/sync');
         const result = await response.json();
-
-        if (result.data?.history?.[0]?.status === 'running') {
-          setIsWidgetVisible(true);
-
-          // Start polling
-          pollingRef.current = setInterval(async () => {
-            const stillRunning = await pollSyncProgress();
-            if (!stillRunning && pollingRef.current) {
-              clearInterval(pollingRef.current);
-              pollingRef.current = null;
-              processQueue(); // Process queue after server sync completes
-            }
-          }, 1500);
-        } else {
-          // No running sync on server, process our queue
-          processQueue();
-        }
+        serverHasRunningSync = result.data?.history?.[0]?.status === 'running';
       } catch (err) {
         console.error('Failed to check existing sync:', err);
+      }
+
+      if (persisted) {
+        // Clear stale persisted state: if it's older than 10 minutes and server has no running sync
+        const isStale = persisted.globalJob?.status === 'running' && !serverHasRunningSync;
+        const hasStaleRepoJobs = persisted.repoJobs.some(j =>
+          j.status === 'running' && j.startedAt &&
+          Date.now() - new Date(j.startedAt).getTime() > 10 * 60 * 1000
+        ) && !serverHasRunningSync;
+
+        if (isStale || hasStaleRepoJobs) {
+          // Clear stale state - server says nothing is running
+          localStorage.removeItem(STORAGE_KEY);
+        } else {
+          // Restore active jobs
+          const activeJobs = persisted.repoJobs.filter(j => j.status === 'running' || j.status === 'queued');
+          if (activeJobs.length > 0) {
+            setRepoJobs(activeJobs);
+            setIsWidgetVisible(true);
+
+            // Re-queue any that were queued
+            queueRef.current = activeJobs
+              .filter(j => j.status === 'queued')
+              .map(j => ({ repoId: j.repoId, repoName: j.repoName }));
+          }
+          if (persisted.globalJob?.status === 'running' && serverHasRunningSync) {
+            setGlobalJob(persisted.globalJob);
+            setIsWidgetVisible(true);
+          }
+        }
+      }
+
+      if (serverHasRunningSync) {
+        setIsWidgetVisible(true);
+
+        // Start polling
+        pollingRef.current = setInterval(async () => {
+          const stillRunning = await pollSyncProgress();
+          if (!stillRunning && pollingRef.current) {
+            clearInterval(pollingRef.current);
+            pollingRef.current = null;
+            processQueue(); // Process queue after server sync completes
+          }
+        }, 1500);
+      } else {
+        // No running sync on server, process our queue
+        processQueue();
       }
     };
 
