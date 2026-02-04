@@ -31,9 +31,9 @@ interface ApplicationFormProps {
 const REVENUE_OPTIONS = [
   { value: '', label: 'Select your range...' },
   { value: 'under-10k', label: 'Under $10K' },
-  { value: '10k-50k', label: '$10K \u2013 $50K' },
-  { value: '50k-100k', label: '$50K \u2013 $100K' },
-  { value: '100k-500k', label: '$100K \u2013 $500K' },
+  { value: '10k-50k', label: '$10K - $50K' },
+  { value: '50k-100k', label: '$50K - $100K' },
+  { value: '100k-500k', label: '$100K - $500K' },
   { value: '500k-plus', label: '$500K+' },
 ];
 

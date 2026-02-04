@@ -31,7 +31,7 @@ export const GoBookPage: React.FC = () => {
       <div className="pt-16 pb-8 text-center px-4">
         <Container size="narrow">
           <Heading level="h1" className="text-3xl md:text-4xl mb-3">
-            You&apos;re In &mdash; Book Your AI Readiness Call
+            You&apos;re In - Book Your AI Readiness Call
           </Heading>
           <Text variant="lead" align="center" className="text-text-secondary">
             Pick a time that works. We&apos;ll confirm via email.

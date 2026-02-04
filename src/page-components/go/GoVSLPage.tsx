@@ -45,7 +45,7 @@ export const GoVSLPage: React.FC = () => {
                 className="max-w-2xl mx-auto text-text-secondary"
               >
                 Discover how established businesses are using AI to cut costs,
-                multiply output, and unlock growth — in 30 days or less.
+                multiply output, and unlock growth - in 30 days or less.
               </Text>
             </div>
 
