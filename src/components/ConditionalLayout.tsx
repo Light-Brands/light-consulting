@@ -21,8 +21,9 @@ export function ConditionalLayout({
   const isDiagnosticRoute = pathname === '/book';
   const isAssessmentRoute = pathname?.startsWith('/assessment');
   const isClientPortalRoute = pathname?.startsWith('/client-portal');
+  const isGoRoute = pathname?.startsWith('/go');
 
-  if (isAdminRoute || isProposalRoute || isFunnelRoute || isDiagnosticRoute || isAssessmentRoute || isClientPortalRoute) {
+  if (isAdminRoute || isProposalRoute || isFunnelRoute || isDiagnosticRoute || isAssessmentRoute || isClientPortalRoute || isGoRoute) {
     // Admin, proposal, funnel, diagnostic, and assessment routes: no nav/footer
     return (
       <>
