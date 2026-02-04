@@ -318,7 +318,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
             isLoading={isSubmitting}
             disabled={!isStepValid()}
           >
-            Submit Application
+            See Available Times
           </Button>
         ) : (
           <Button

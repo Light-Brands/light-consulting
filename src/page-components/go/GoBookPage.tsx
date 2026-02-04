@@ -11,7 +11,7 @@ const GHL_CALENDAR_BASE =
 export const GoBookPage: React.FC = () => {
   const searchParams = useSearchParams();
 
-  // Build calendar URL with pre-filled contact data
+  // Pre-fill name and email on the GHL calendar so they only need to add phone
   const calendarParams = new URLSearchParams();
   const firstName = searchParams.get('first_name');
   const lastName = searchParams.get('last_name');
@@ -46,7 +46,7 @@ export const GoBookPage: React.FC = () => {
             <iframe
               src={calendarUrl}
               className="w-full border-0"
-              style={{ minHeight: '700px' }}
+              style={{ minHeight: '1200px' }}
               title="Book a call"
               allow="geolocation"
             />

@@ -48,9 +48,10 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
     return () => window.removeEventListener('keydown', onKey);
   }, [isOpen, onClose]);
 
-  // Submit handler — send to API, then redirect based on qualification
+  // Submit handler — send all data to GHL, then redirect based on qualification
   const handleSubmit = useCallback(
     async (data: ApplicationData) => {
+      // Send to GHL in the background — don't block the redirect
       try {
         await fetch('/api/go/application', {
           method: 'POST',
