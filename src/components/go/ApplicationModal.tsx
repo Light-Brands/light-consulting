@@ -5,16 +5,6 @@ import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ApplicationForm, type ApplicationData } from './ApplicationForm';
 
-// Qualification: revenue >= $10K AND timeline = "yes"
-const QUALIFIED_REVENUES = ['10k-50k', '50k-100k', '100k-500k', '500k-plus'];
-
-function isQualified(data: ApplicationData): boolean {
-  return (
-    QUALIFIED_REVENUES.includes(data.monthlyRevenue) &&
-    data.timeline === 'yes'
-  );
-}
-
 interface ApplicationModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -48,7 +38,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
     return () => window.removeEventListener('keydown', onKey);
   }, [isOpen, onClose]);
 
-  // Submit handler — send all data to GHL, then redirect based on qualification
+  // Submit handler — send all data to GHL, then redirect to booking
   const handleSubmit = useCallback(
     async (data: ApplicationData) => {
       // Send to GHL in the background — don't block the redirect
@@ -64,16 +54,12 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
 
       onClose();
 
-      if (isQualified(data)) {
-        const params = new URLSearchParams({
-          first_name: data.firstName,
-          last_name: data.lastName,
-          email: data.email,
-        });
-        router.push(`/go/book?${params.toString()}`);
-      } else {
-        router.push('/go/not-a-fit');
-      }
+      const params = new URLSearchParams({
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+      });
+      router.push(`/go/book?${params.toString()}`);
     },
     [onClose, router]
   );

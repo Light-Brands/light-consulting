@@ -31,10 +31,10 @@ export const GoBookPage: React.FC = () => {
       <div className="pt-16 pb-8 text-center px-4">
         <Container size="narrow">
           <Heading level="h1" className="text-3xl md:text-4xl mb-3">
-            You&apos;re In - Book Your AI Readiness Call
+            Growth Consult:
           </Heading>
           <Text variant="lead" align="center" className="text-text-secondary">
-            Pick a time that works. We&apos;ll confirm via email.
+            Grow Your Marketing Agency Or Coaching Business To $10k/mo, $100k/mo, Or Even $1M/month+ In The Next 90 Days Or Less
           </Text>
         </Container>
       </div>

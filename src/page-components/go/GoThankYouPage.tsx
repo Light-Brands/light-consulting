@@ -1,35 +1,17 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { Container } from '@/components/ui/Container';
 import { Heading, Text } from '@/components/ui/Typography';
 import { Card } from '@/components/ui/Card';
 import { Grid } from '@/components/ui/Container';
 import { YouTubeEmbed } from '@/components/go/YouTubeEmbed';
+import { TESTIMONIALS } from '@/lib/constants';
+import { PORTFOLIO_PROJECTS } from '@/data/projects';
 
-// Placeholder — replace with actual pre-frame video ID
+// Placeholder - replace with actual pre-frame video ID
 const PREFRAME_VIDEO_ID = 'dQw4w9WgXcQ';
-
-const TESTIMONIALS = [
-  {
-    name: 'Sarah M.',
-    role: 'CEO, E-commerce Brand',
-    quote:
-      'We cut our operations costs by 40% within the first month. The AI systems they built are now the backbone of our business.',
-  },
-  {
-    name: 'James R.',
-    role: 'Founder, SaaS Company',
-    quote:
-      'Finally someone who understands both the tech and the business side. Our team is 3x more productive with the tools they built.',
-  },
-  {
-    name: 'Michelle T.',
-    role: 'Director of Ops, Agency',
-    quote:
-      'The clarity we got from the AI readiness call alone was worth more than months of trying to figure it out ourselves.',
-  },
-];
 
 export const GoThankYouPage: React.FC = () => {
   return (
@@ -39,7 +21,7 @@ export const GoThankYouPage: React.FC = () => {
         <Container size="narrow" className="text-center space-y-4">
           <div className="inline-block px-4 py-2 rounded-lg bg-error/10 border border-error/20">
             <p className="text-error font-bold text-sm uppercase tracking-wider">
-              Important
+              Disclaimer
             </p>
           </div>
           <Heading level="h1" className="text-3xl md:text-4xl">
@@ -50,14 +32,14 @@ export const GoThankYouPage: React.FC = () => {
             align="center"
             className="text-text-secondary max-w-xl mx-auto"
           >
-            Please watch the short video below to understand exactly how our
-            offer and pricing works <strong>before</strong> your call.
+            Please Watch The Short Video Below To Understand Exactly How Our
+            Offer And Pricing Works <strong>BEFORE</strong> Your Call...
           </Text>
         </Container>
       </section>
 
       {/* Pre-Frame Video */}
-      <section className="pb-16 px-4">
+      <section className="pb-4 px-4">
         <Container size="default">
           <div className="max-w-[900px] mx-auto">
             <YouTubeEmbed videoId={PREFRAME_VIDEO_ID} />
@@ -65,19 +47,52 @@ export const GoThankYouPage: React.FC = () => {
         </Container>
       </section>
 
-      {/* Social Proof */}
+      {/* Video Speed Instruction */}
+      <section className="pb-16 px-4">
+        <Container size="default">
+          <p className="text-text-muted text-sm text-center">
+            Click The &apos;Cog&apos; Icon Above For 1.5x Or 2x Speed
+          </p>
+        </Container>
+      </section>
+
+      {/* Logo Grid */}
       <section className="py-16 bg-depth-surface px-4">
         <Container size="wide">
-          {/* Trust strip */}
-          <p className="text-text-muted text-xs font-bold uppercase tracking-wider text-center mb-12">
-            Trusted by 7 &amp; 8-figure businesses
+          <p className="text-text-muted text-xs font-bold uppercase tracking-wider text-center mb-12 max-w-3xl mx-auto">
+            Trusted By Over 2,100+ High-Ticket Coaches, Agencies, And Online Service Providers Like:
           </p>
 
-          {/* Testimonials */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {PORTFOLIO_PROJECTS.map((project) => (
+              <div
+                key={project.id}
+                className="relative aspect-video rounded-lg overflow-hidden border border-depth-border bg-depth-elevated"
+              >
+                <Image
+                  src={project.image_url}
+                  alt={project.client_name || project.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16vw"
+                />
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Testimonials & Case Studies */}
+      <section className="py-16 px-4">
+        <Container size="wide">
+          <Heading level="h2" className="text-2xl md:text-3xl text-center mb-12">
+            Used By 7 &amp; 8-Figure Agencies And Enterprise Businesses
+          </Heading>
+
           <Grid cols={3} gap={6}>
             {TESTIMONIALS.map((t) => (
               <Card
-                key={t.name}
+                key={t.id}
                 elevation="elevated"
                 padding="lg"
                 className="flex flex-col"
@@ -87,9 +102,11 @@ export const GoThankYouPage: React.FC = () => {
                 </blockquote>
                 <div className="mt-6 pt-4 border-t border-depth-border">
                   <p className="font-semibold text-text-primary text-sm">
-                    {t.name}
+                    {t.author}
                   </p>
-                  <p className="text-text-muted text-xs">{t.role}</p>
+                  <p className="text-text-muted text-xs">
+                    {t.role}, {t.company}
+                  </p>
                 </div>
               </Card>
             ))}

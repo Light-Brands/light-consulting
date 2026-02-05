@@ -5,10 +5,9 @@ interface ApplicationBody {
   firstName: string;
   lastName: string;
   email: string;
-  companyName: string;
-  monthlyRevenue: string;
-  bottleneck: string;
-  timeline: string;
+  coreBusiness: string;
+  monthlyIncome: string;
+  creditScore: string;
 }
 
 export async function POST(request: Request) {
@@ -22,7 +21,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { firstName, lastName, email, companyName, monthlyRevenue, bottleneck, timeline } = body;
+  const { firstName, lastName, email, coreBusiness, monthlyIncome, creditScore } = body;
 
   if (!firstName || !lastName || !email) {
     return NextResponse.json(
@@ -42,12 +41,11 @@ export async function POST(request: Request) {
       firstName,
       lastName,
       email,
-      companyName,
       tags: ['LB \u2013 Applied'],
       customField: {
-        monthly_revenue: monthlyRevenue,
-        bottleneck,
-        ai_timeline: timeline,
+        core_business: coreBusiness,
+        monthly_income: monthlyIncome,
+        credit_score: creditScore,
       },
     });
 

@@ -408,6 +408,41 @@ export const TESTIMONIALS: Testimonial[] = [
     avatar: '/images/avatars/avatar-joseph-mcveen.jpg',
     avatarPrompt: 'Professional headshot portrait of a confident male entrepreneur in his 30s-40s, founder of an AI growth company. Warm, genuine expression with an approachable smile. Smart business casual attire. Warm, natural lighting creating depth. Background in warm earth tones or soft charcoal, slightly blurred. He conveys both innovation and authenticity. High-quality editorial portrait photography style. Sharp focus, natural but polished look.',
   },
+  {
+    id: '2',
+    quote: 'Before working with Light Brand, we were stuck at a plateau. They came in, restructured our entire digital presence, and within 60 days we saw a 3x increase in qualified leads. The AI systems they built for our follow-up process alone saved us 20+ hours a week. If you are on the fence, just do it.',
+    author: 'Sydney Griffith',
+    role: 'Founder',
+    company: 'The Planetary Party',
+  },
+  {
+    id: '3',
+    quote: 'We needed someone who could translate our vision into a brand that actually converts. Light Brand did not just build us a website, they built us a machine. Our booking rate doubled in the first month and the automated systems they put in place mean I can finally focus on running my business instead of chasing leads.',
+    author: 'Krista Dimo',
+    role: 'Founder',
+    company: 'BusyBees IPC',
+  },
+  {
+    id: '4',
+    quote: 'Working with Light Brand was a turning point for Iboga Life. They understood the sensitivity of our space and created a digital experience that educates and builds trust before someone ever picks up the phone. Our retreat bookings are up 60% and the quality of inquiries has completely transformed.',
+    author: 'Jay',
+    role: 'Founder',
+    company: 'Iboga Life',
+  },
+  {
+    id: '5',
+    quote: 'I had been burned by agencies before who promised the world and delivered templates. Light Brand is the real deal. They took the time to understand our methodology, built AI workflows that actually match how we operate, and the results speak for themselves. Our revenue jumped 40% in 90 days.',
+    author: 'Jennifer',
+    role: 'Founder',
+    company: 'Light Field Institute',
+  },
+  {
+    id: '6',
+    quote: 'Light Brand Consulting does not just build brands, they build ecosystems. The strategy they developed for Industree connected our community platform, our content pipeline, and our sales funnel into one cohesive system. We went from scattered efforts to a streamlined operation that runs 24/7.',
+    author: 'Brandon Beachaum',
+    role: 'Founder',
+    company: 'Industree',
+  },
 ];
 
 // ============================================================================

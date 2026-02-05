@@ -13,10 +13,9 @@ export interface ApplicationData {
   firstName: string;
   lastName: string;
   email: string;
-  companyName: string;
-  monthlyRevenue: string;
-  bottleneck: string;
-  timeline: string;
+  coreBusiness: string;
+  monthlyIncome: string;
+  creditScore: string;
 }
 
 interface ApplicationFormProps {
@@ -28,7 +27,7 @@ interface ApplicationFormProps {
 // Steps configuration
 // ---------------------------------------------------------------------------
 
-const REVENUE_OPTIONS = [
+const INCOME_OPTIONS = [
   { value: '', label: 'Select your range...' },
   { value: 'under-10k', label: 'Under $10K' },
   { value: '10k-50k', label: '$10K - $50K' },
@@ -37,7 +36,14 @@ const REVENUE_OPTIONS = [
   { value: '500k-plus', label: '$500K+' },
 ];
 
-const TOTAL_STEPS = 7;
+const CREDIT_SCORE_OPTIONS = [
+  { value: 'below-600', label: 'Below 600' },
+  { value: '650-700', label: '650 - 700' },
+  { value: '750-800', label: '750 - 800' },
+  { value: 'above-800', label: 'Above 800' },
+];
+
+const TOTAL_STEPS = 6;
 
 // ---------------------------------------------------------------------------
 // Component
@@ -54,10 +60,9 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
     firstName: '',
     lastName: '',
     email: '',
-    companyName: '',
-    monthlyRevenue: '',
-    bottleneck: '',
-    timeline: '',
+    coreBusiness: '',
+    monthlyIncome: '',
+    creditScore: '',
   });
 
   // Field updater
@@ -78,13 +83,11 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       case 2:
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email);
       case 3:
-        return data.companyName.trim().length > 0;
+        return data.coreBusiness.trim().length > 0;
       case 4:
-        return data.monthlyRevenue !== '';
+        return data.monthlyIncome !== '';
       case 5:
-        return data.bottleneck.trim().length > 0;
-      case 6:
-        return data.timeline === 'yes' || data.timeline === 'no';
+        return data.creditScore !== '';
       default:
         return false;
     }
@@ -193,13 +196,15 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
         );
       case 3:
         return (
-          <StepWrapper key="company" label="What's your company name?">
-            <Input
-              inputSize="lg"
-              placeholder="Company name"
-              value={data.companyName}
-              onChange={(e) => updateField('companyName', e.target.value)}
+          <StepWrapper key="coreBusiness" label="What is your core business?">
+            <Textarea
+              textareaSize="lg"
+              placeholder="Please describe, in detail, what your current offer is, who you serve, how you help them, your price point, etc."
+              value={data.coreBusiness}
+              onChange={(e) => updateField('coreBusiness', e.target.value)}
               onKeyDown={handleKeyDown}
+              rows={4}
+              resize="none"
               autoFocus
             />
           </StepWrapper>
@@ -207,15 +212,15 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       case 4:
         return (
           <StepWrapper
-            key="revenue"
-            label="What's your approximate monthly revenue?"
+            key="income"
+            label="What is your current monthly income?"
           >
             <Select
               selectSize="lg"
-              value={data.monthlyRevenue}
-              onChange={(e) => updateField('monthlyRevenue', e.target.value)}
+              value={data.monthlyIncome}
+              onChange={(e) => updateField('monthlyIncome', e.target.value)}
               onKeyDown={handleKeyDown}
-              options={REVENUE_OPTIONS}
+              options={INCOME_OPTIONS}
               autoFocus
             />
           </StepWrapper>
@@ -223,38 +228,18 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       case 5:
         return (
           <StepWrapper
-            key="bottleneck"
-            label="What's your biggest bottleneck right now?"
-          >
-            <Textarea
-              textareaSize="lg"
-              placeholder="E.g., hiring, lead generation, fulfillment, operations..."
-              value={data.bottleneck}
-              onChange={(e) => updateField('bottleneck', e.target.value)}
-              onKeyDown={handleKeyDown}
-              rows={3}
-              resize="none"
-              autoFocus
-            />
-          </StepWrapper>
-        );
-      case 6:
-        return (
-          <StepWrapper
-            key="timeline"
-            label="Are you actively looking to implement AI in the next 30-60 days?"
+            key="creditScore"
+            label="If needed, we have financing available. What is your credit score?"
           >
             <div className="flex flex-col gap-3">
-              <RadioOption
-                selected={data.timeline === 'yes'}
-                onClick={() => updateField('timeline', 'yes')}
-                label="Yes, I'm ready to move"
-              />
-              <RadioOption
-                selected={data.timeline === 'no'}
-                onClick={() => updateField('timeline', 'no')}
-                label="No, just exploring"
-              />
+              {CREDIT_SCORE_OPTIONS.map((opt) => (
+                <RadioOption
+                  key={opt.value}
+                  selected={data.creditScore === opt.value}
+                  onClick={() => updateField('creditScore', opt.value)}
+                  label={opt.label}
+                />
+              ))}
             </div>
           </StepWrapper>
         );

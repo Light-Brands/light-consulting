@@ -28,25 +28,17 @@ export const GoVSLPage: React.FC = () => {
             {/* Headline */}
             <div className="space-y-4 animate-fade-in">
               <p className="text-radiance-gold text-sm font-bold uppercase tracking-wider">
-                For 7 &amp; 8-Figure Business Owners
+                Website Development Agencies:
               </p>
               <Heading
                 level="h1"
                 className="text-4xl md:text-5xl lg:text-6xl leading-tight"
               >
-                Scale Your Business With AI{' '}
+                We&apos;ll Install AI OS That Guarantees You To Add $100K In Profit &amp; Save You 100 Hours Per Week{' '}
                 <span className="block text-radiance-gold mt-2">
-                  Without Hiring a Team
+                  -- Or You Don&apos;t Pay
                 </span>
               </Heading>
-              <Text
-                variant="lead"
-                align="center"
-                className="max-w-2xl mx-auto text-text-secondary"
-              >
-                Discover how established businesses are using AI to cut costs,
-                multiply output, and unlock growth - in 30 days or less.
-              </Text>
             </div>
 
             {/* VSL Video */}
@@ -62,21 +54,12 @@ export const GoVSLPage: React.FC = () => {
                 onClick={openModal}
                 className="shadow-illumination hover:shadow-[0_0_40px_rgba(201,148,10,0.35)] transition-shadow duration-500"
               >
-                Apply for an AI Readiness Call
+                Schedule Call Here
               </Button>
-              <p className="text-text-muted text-sm mt-3">
-                Free. No obligation. Only for qualified businesses.
-              </p>
             </div>
           </div>
         </Container>
 
-        {/* Trust Strip */}
-        <div className="relative z-10 pb-16">
-          <p className="text-text-muted text-xs font-medium uppercase tracking-wider text-center">
-            Trusted by 7 &amp; 8-figure businesses
-          </p>
-        </div>
       </section>
 
       {/* Mobile Sticky CTA */}
@@ -88,7 +71,7 @@ export const GoVSLPage: React.FC = () => {
           onClick={openModal}
           className="shadow-illumination"
         >
-          Apply for an AI Readiness Call
+          Schedule Call Here
         </Button>
       </div>
 
